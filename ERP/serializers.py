@@ -10,6 +10,17 @@ from fabric.api import *
 import os
 from django.conf import settings as globalSettings
 
+class deviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = device
+        fields = ('pk', 'sshKey' , 'created' , 'name')
+
+class profileSerializer(serializers.ModelSerializer):
+    devices = deviceSerializer(many = True , read_only = True)
+    class Meta:
+        model = profile
+        fields = ('pk', 'user' , 'devices')
+
 class moduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = module

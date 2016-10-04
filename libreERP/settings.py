@@ -57,7 +57,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'India'
 
-BRAND_LOGO = '/static/images/brandLogo.png'
+BRAND_LOGO = '/static/images/brandLogo.jpg'
 
 INSTALLED_APPS = (
     'django.contrib.admin',

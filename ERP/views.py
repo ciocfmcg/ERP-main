@@ -13,7 +13,50 @@ from .serializers import *
 from API.permissions import *
 from django.db.models import Q
 from allauth.account.adapter import DefaultAccountAdapter
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
 
+class registerDeviceApi(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        if 'username' in request.data and 'password' in request.data and 'sshKey' in request.data:
+            sshKey = request.data['sshKey']
+            deviceName =sshKey.split()[2]
+            mode = request.data['mode']
+            print sshKey
+            user = authenticate(username =  request.data['username'] , password = request.data['password'])
+            if user is not None:
+                if user.is_active:
+                    d , n = device.objects.get_or_create(name = deviceName , sshKey = sshKey)
+                    gp , n = profile.objects.get_or_create(user = user)
+                    if mode == 'logout':
+                        print "deleted"
+                        gp.devices.remove(d)
+                        d.delete()
+                        generateGitoliteConf()
+                        return Response(status=status.HTTP_200_OK)
+                    gp.devices.add(d)
+                    gp.save()
+                    generateGitoliteConf()
+            else:
+                raise NotAuthenticated(detail=None)
+
+        else:
+            raise ValidationError(detail={'PARAMS' : 'No data provided'} )
+        return Response(status=status.HTTP_200_OK)
+
+class deviceViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = deviceSerializer
+    queryset = device.objects.all()
+
+class profileViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = profileSerializer
+    queryset = profile.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['id']
 
 class AccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):

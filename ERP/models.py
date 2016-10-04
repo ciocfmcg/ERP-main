@@ -5,6 +5,14 @@ from django.db import models
 
 # Create your models here.
 
+class device(models.Model):
+    sshKey = models.CharField(max_length = 500 , null = True)
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length = 50)
+
+class profile(models.Model):
+    user = models.ForeignKey(User , null =False , related_name='gitProfile')
+    devices = models.ManyToManyField(device)
 
 class module(models.Model):
     created = models.DateTimeField(auto_now_add = True)

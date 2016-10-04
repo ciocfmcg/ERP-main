@@ -18,17 +18,6 @@ class codeCommentSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
-class deviceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = device
-        fields = ('pk', 'sshKey' , 'created' , 'name')
-
-class profileSerializer(serializers.ModelSerializer):
-    devices = deviceSerializer(many = True , read_only = True)
-    class Meta:
-        model = profile
-        fields = ('pk', 'user' , 'devices')
-
 class repoPermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = repoPermission

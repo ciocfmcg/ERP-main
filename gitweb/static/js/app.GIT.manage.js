@@ -9,7 +9,7 @@ app.config(function($stateProvider){
 
 app.controller('projectManagement.GIT.manage.profile' , function($scope ,$http, $users , Flash , $permissions){
   $scope.deleteKey = function(pk) {
-    $http({method : 'DELETE' , url : '/api/git/device/' + pk + '/'}).
+    $http({method : 'DELETE' , url : '/api/ERP/device/' + pk + '/'}).
     then((function(pk) {
       return function(response) {
         Flash.create('success' , response.status + ' : ' + response.statusText);
@@ -49,7 +49,7 @@ app.controller('projectManagement.GIT.manage' , function($scope ,$http, $users ,
   ];
   $scope.config = {
     views : views,
-    url : '/api/git/profile/',
+    url : '/api/ERP/profile/',
     // fields : ['pk','title' , 'description' , 'priceModel' , 'approved' , 'category' , 'parentType'],
     searchField: 'id',
     multiselectOptions : multiselectOptions,
