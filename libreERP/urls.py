@@ -5,8 +5,8 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root
-from ecommerce.views import ecommerceHome , partnerRegistration
-
+from ecommerce.views import ecommerceHome
+from ERP.views import serviceRegistration
 urlpatterns = [
     url(r'^$', root , name ='root'),
     url(r"^ecommerce/", ecommerceHome , name = 'ecommerce'), # public  ecommerce app
@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login', loginView , name ='login'),
     url(r'^register', registerView , name ='register'),
-    url(r'^partners', partnerRegistration , name ='partnerRegistration'),
+    url(r'^services', serviceRegistration , name ='serviceRegistration'),
     url(r'^token', tokenAuthentication , name ='tokenAuthentication'),
     url(r'^logout/', logoutView , name ='logout'),
     url(r'^corporate/', index , name ='index'),

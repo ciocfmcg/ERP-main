@@ -13,8 +13,11 @@ router.register(r'appSettingsAdminMode' , applicationSettingsAdminViewSet , base
 router.register(r'groupPermission' , groupPermissionViewSet , base_name = 'groupAccess')
 router.register(r'permission' , permissionViewSet , base_name = 'access')
 router.register(r'profile' , profileViewSet , base_name = 'profile')
+router.register(r'address' , addressViewSet , base_name = 'address')
+router.register(r'service' , serviceViewSet , base_name = 'service')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'registerDevice/$' , registerDeviceApi.as_view()),
+    url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
 ]

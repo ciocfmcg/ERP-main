@@ -7,6 +7,8 @@ from PIM.serializers import *
 from HR.serializers import userSearchSerializer
 from rest_framework.response import Response
 from API.permissions import has_application_permission
+from ERP.serializers import serviceLiteSerializer, addressSerializer
+
 
 class fieldSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,24 +59,6 @@ class genericProductSerializer(serializers.ModelSerializer):
             instance.fields.add(field.objects.get(pk = f))
         instance.save()
         return instance
-
-class addressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = address
-        fields = ('pk' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon')
-
-class serviceSerializer(serializers.ModelSerializer):
-    # user = userSearchSerializer(many = False , read_only = True)
-    address = addressSerializer(many = False, read_only = True)
-    class Meta:
-        model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about')
-
-class serviceLiteSerializer(serializers.ModelSerializer):
-    address = addressSerializer(many = False, read_only = True)
-    class Meta:
-        model = service
-        fields = ('pk'  ,'name' , 'address' , 'mobile' )
 
 class mediaSerializer(serializers.ModelSerializer):
     class Meta:

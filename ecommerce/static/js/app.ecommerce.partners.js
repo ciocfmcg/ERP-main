@@ -22,7 +22,7 @@ app.controller('businessManagement.ecommerce.partners' , function($scope , $http
 
   $scope.config = {
     views : views,
-    url : '/api/ecommerce/service/',
+    url : '/api/ERP/service/',
     fields : ['pk','name','cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo'],
     searchField: 'name',
     itemsNumPerView : [6,12,24],

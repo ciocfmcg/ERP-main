@@ -5,6 +5,10 @@ from django.db import models
 
 # Create your models here.
 
+def getERPPictureUploadPath(instance , filename ):
+    return 'ERP/pictureUploads/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+
+
 class device(models.Model):
     sshKey = models.CharField(max_length = 500 , null = True)
     created = models.DateTimeField(auto_now_add=True)
@@ -70,3 +74,39 @@ class groupPermission(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     def __unicode__(self):
         return self.app
+
+MEDIA_TYPE_CHOICES = (
+    ('onlineVideo' , 'onlineVideo'),
+    ('video' , 'video'),
+    ('image' , 'image'),
+    ('onlineImage' , 'onlineImage'),
+    ('doc' , 'doc'),
+)
+
+class media(models.Model):
+    user = models.ForeignKey(User , related_name = 'serviceDocsUploaded' , null = False)
+    created = models.DateTimeField(auto_now_add = True)
+    link = models.TextField(null = True , max_length = 300) # can be youtube link or an image link
+    attachment = models.FileField(upload_to = getERPPictureUploadPath , null = True ) # can be image , video or document
+    mediaType = models.CharField(choices = MEDIA_TYPE_CHOICES , max_length = 10 , default = 'image')
+
+class address(models.Model):
+    street = models.CharField(max_length=300 , null = True)
+    city = models.CharField(max_length=100 , null = True)
+    state = models.CharField(max_length=50 , null = True)
+    pincode = models.PositiveIntegerField(null = True)
+    lat = models.CharField(max_length=15 ,null = True)
+    lon = models.CharField(max_length=15 ,null = True)
+
+class service(models.Model): # contains other companies datails
+    created = models.DateTimeField(auto_now_add = True)
+    name = models.CharField(max_length = 100 , null = False)
+    user = models.ForeignKey(User , related_name = 'servicesCreated' , null = False) # the responsible person for this service
+    cin = models.CharField(max_length = 100 , null = True) # company identification number
+    tin = models.CharField(max_length = 100 , null = True) # tax identification number
+    address = models.ForeignKey(address , null = False )
+    mobile = models.PositiveIntegerField( null = False)
+    telephone = models.CharField(max_length = 20 , null = False)
+    logo = models.CharField(max_length = 200 , null = True) # image/svg link to the logo
+    about = models.TextField(max_length = 2000 , null = False) # image/svg link to the logo
+    doc  = models.ForeignKey(media , related_name = 'services' , null = True)

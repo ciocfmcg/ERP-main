@@ -32,7 +32,7 @@ app.controller('main' , function($scope , $http ,Flash){
     for(key in $scope.form.serviceForm2){
       dataToSend[key] = $scope.form.serviceForm2[key];
     }
-    $http({method: 'POST' , url : '/api/ecommerce/providerRegistration/' , data : dataToSend}).
+    $http({method: 'POST' , url : '/api/ERP/serviceRegistration/' , data : dataToSend}).
     then(function(response){
       $scope.stage = 'confirm';
       $scope.resetForm();

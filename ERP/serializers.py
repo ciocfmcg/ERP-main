@@ -10,6 +10,24 @@ from fabric.api import *
 import os
 from django.conf import settings as globalSettings
 
+class addressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = address
+        fields = ('pk' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon')
+
+class serviceSerializer(serializers.ModelSerializer):
+    # user = userSearchSerializer(many = False , read_only = True)
+    address = addressSerializer(many = False, read_only = True)
+    class Meta:
+        model = service
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc')
+
+class serviceLiteSerializer(serializers.ModelSerializer):
+    address = addressSerializer(many = False, read_only = True)
+    class Meta:
+        model = service
+        fields = ('pk'  ,'name' , 'address' , 'mobile' )
+
 class deviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = device

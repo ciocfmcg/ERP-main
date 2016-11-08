@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save , pre_delete
 from django.dispatch import receiver
-
+from ERP.models import address , service
 # Create your models here.
 
 def getEcommercePictureUploadPath(instance , filename ):
@@ -13,25 +13,6 @@ def getEcommercePictureUploadPath(instance , filename ):
 def getEcommerceBannerUploadPath(instance , filename ):
     return 'ecommerce/bannerUploads/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
-class address(models.Model):
-    street = models.CharField(max_length=300 , null = True)
-    city = models.CharField(max_length=100 , null = True)
-    state = models.CharField(max_length=50 , null = True)
-    pincode = models.PositiveIntegerField(null = True)
-    lat = models.CharField(max_length=15 ,null = True)
-    lon = models.CharField(max_length=15 ,null = True)
-
-class service(models.Model):
-    created = models.DateTimeField(auto_now_add = True)
-    name = models.CharField(max_length = 100 , null = False)
-    user = models.ForeignKey(User , related_name = 'ecommerceServices' , null = False) # the responsible person for this service
-    cin = models.CharField(max_length = 100 , null = False) # company identification number
-    tin = models.CharField(max_length = 100 , null = False) # tax identification number
-    address = models.ForeignKey(address , null = False )
-    mobile = models.PositiveIntegerField( null = False)
-    telephone = models.CharField(max_length = 20 , null = False)
-    logo = models.CharField(max_length = 200 , null = False) # image/svg link to the logo
-    about = models.TextField(max_length = 2000 , null = False) # image/svg link to the logo
 
 MEDIA_TYPE_CHOICES = (
     ('onlineVideo' , 'onlineVideo'),
