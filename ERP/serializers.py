@@ -17,10 +17,18 @@ class addressSerializer(serializers.ModelSerializer):
 
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
-    address = addressSerializer(many = False, read_only = True)
+    address = addressSerializer(many = False, read_only = False)
     class Meta:
         model = service
         fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc')
+    def create(self , validated_data):
+        print 'came here'
+        ad = address(**validated_data['address'])
+        ad.save()
+        s = service(name = validated_data['name'] , user =validated_data['user'] , cin = validated_data['cin'] , tin = validated_data['tin'] , mobile = validated_data['mobile'] , telephone = validated_data['telephone'] , logo = validated_data['logo'] , about = validated_data['about'] , doc = validated_data['doc'] , address = ad)
+        print s
+        s.save()
+        return s
 
 class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
