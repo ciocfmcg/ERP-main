@@ -39,6 +39,7 @@ def loginView(request):
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
     authStatus = {'status' : 'default' , 'message' : '' }
+    statusCode = 200
     if request.user.is_authenticated():
         if request.GET:
             return redirect(request.GET['next'])
@@ -52,21 +53,24 @@ def loginView(request):
             username = u.username
         else:
             username = usernameOrEmail
+            u = User.objects.get(username = username)
 
         user = authenticate(username = username , password = password)
     	if user is not None:
-            if user.is_active:
-                login(request , user)
-                if request.GET:
-                    return redirect(request.GET['next'])
-                else:
-                    return redirect(reverse(globalSettings.LOGIN_REDIRECT))
+            login(request , user)
+            if request.GET:
+                return redirect(request.GET['next'])
             else:
-                authStatus = {'status' : 'warning' , 'message' : 'Your account is not active.' }
+                return redirect(reverse(globalSettings.LOGIN_REDIRECT))
         else:
-            authStatus = {'status' : 'danger' , 'message' : 'Incorrect username or password.' }
+            if not u.is_active:
+                authStatus = {'status' : 'warning' , 'message' : 'Your account is not active.'}
+                statusCode = 423
+            else:
+                authStatus = {'status' : 'danger' , 'message' : 'Incorrect username or password.'}
+                statusCode = 401
 
-    return render(request , 'login.html' , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
+    return render(request , 'login.html' , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN}, status=statusCode)
 
 def registerView(request):
     if globalSettings.REGISTER_URL != 'register':
