@@ -91,6 +91,7 @@ INSTALLED_APPS = (
     'projects',
     'blogs', # publically accesible blogging site
     'virtualWorkforce',
+	'finance',# billing , invoicing , finance etc
 )
 
 SITE_ID = 1

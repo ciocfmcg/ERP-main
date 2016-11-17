@@ -116,8 +116,7 @@ class applicationAdminSerializer(serializers.ModelSerializer):
             f = open(jsPath, 'w')
             f.write('/*here you can place all your app specific css class*/')
             f.close()
-        doNothing()
-        # app.save()
+        app.save()
         return app
 
     def update (self, instance, validated_data):
