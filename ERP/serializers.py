@@ -80,11 +80,15 @@ class applicationAdminSerializer(serializers.ModelSerializer):
         #         -----ngTemplates
         parts = app.name.split('.')
         appName = parts[1]
+        if len(parts)>=3:
+            app.save()
+            return app
         if len(app.name.split('.'))==2:
             with lcd(globalSettings.BASE_DIR):
                 cmd = 'python manage.py startapp %s' %(appName)
                 local(cmd)
 
+        # adding the new app definition in the settings.py and creating the folders and files
         fileName = os.path.join(globalSettings.BASE_DIR , 'libreERP' , 'settings.py') # filepath for settings.py
         f = open(fileName , 'r')
         search = False

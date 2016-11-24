@@ -4,7 +4,7 @@ app.config(function($stateProvider){
 
   $stateProvider
   .state('businessManagement.finance', {
-    url: "/GIT",
+    url: "/finance",
     views: {
        "": {
           templateUrl: '/static/ngTemplates/genericAppBase.html',
@@ -18,6 +18,11 @@ app.config(function($stateProvider){
           controller : 'businessManagement.finance.default',
         }
     }
+  })
+  .state('businessManagement.finance.expenses', {
+    url: "/expenses",
+    templateUrl: '/static/ngTemplates/app.finance.expenses.html',
+    controller: 'businessManagement.finance.expenses'
   })
 });
 
