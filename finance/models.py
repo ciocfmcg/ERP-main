@@ -17,13 +17,13 @@ class Account(models.Model):
     contactPerson = models.ForeignKey(User , null = False , related_name = 'accountsManaging')
     authorizedSignaturies = models.ManyToManyField(User , related_name = 'checkingAccounts')
 
-
 class CostCenter(models.Model):
     head = models.ForeignKey(User , null = False)
     name = models.CharField(max_length = 100 , blank = False)
     code = models.CharField(max_length = 50 , blank = False)
     created = models.DateTimeField(auto_now_add=True)
     account = models.ForeignKey(Account)
+    projects = models.ManyToManyField(project , related_name = 'costCenters')
 
 
 class Transaction(models.Model):
@@ -31,6 +31,7 @@ class Transaction(models.Model):
     toAcc = models.ForeignKey(Account , null = False , related_name = 'credits')
     ammount = models.PositiveIntegerField()
     user = models.ForeignKey(User , related_name='transactions' , null = False)
+    balance = models.PositiveIntegerField()
 
 CURRENCY_CHOICES = (
     ('INR' , 'INR'),
@@ -44,9 +45,10 @@ class ExpenseSheet(models.Model):
     approvalMatrix = models.PositiveSmallIntegerField(default=1)
     approvalStage = models.PositiveSmallIntegerField(default=0)
     dispensed = models.BooleanField(default = False)
-    settlement = models.ForeignKey(Transaction , null = True)
+    settled = models.ForeignKey(Transaction , null = True)
     notes = models.TextField(max_length = 500 , null = True)
     project = models.ForeignKey(project , null = False)
+    transaction = models.ForeignKey(Transaction , null = True , related_name = 'expenseSheet')
 
 class Invoice(models.Model):
     user = models.ForeignKey(User , related_name='invoiceGeneratedOrSubmitted' , null = False)

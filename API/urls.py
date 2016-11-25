@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^projects/', include('projects.urls')),
     url(r'^taskBoard/', include('taskBoard.urls')),
     url(r'^virtualWorkforce/', include('virtualWorkforce.urls')),
+    url(r'^finance/', include('finance.urls')),
 ]
