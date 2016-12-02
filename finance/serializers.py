@@ -24,11 +24,9 @@ class TransactionSerializer(serializers.ModelSerializer):
 class ExpenseSheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpenseSheet
-        fields = ('user' , 'created' , 'approved' , 'approvalMatrix' , 'approvalStage' , 'dispensed' , 'settled' , 'notes' , 'project' , 'transaction')
+        fields = ('user' , 'created' , 'approved' , 'approvalMatrix' , 'approvalStage' , 'dispensed' , 'notes' , 'project' , 'transaction')
 
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = ('user' , 'created' , 'service' , 'amount' , 'currency' , 'dated' , 'attachment' , 'sheet')
-
-    

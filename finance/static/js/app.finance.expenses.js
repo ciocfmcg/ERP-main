@@ -2,7 +2,7 @@ app.controller('businessManagement.finance.expenses' , function($scope , $http ,
   // settings main page controller
   views = [{name : 'list' , icon : 'fa-th-large' ,
       template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
-      itemTemplate : '/static/ngTemplates/app.GIT.groups.item.html',
+      itemTemplate : '/static/ngTemplates/app.finance.expenseSheet.item.html',
     },
   ];
 
@@ -13,10 +13,8 @@ app.controller('businessManagement.finance.expenses' , function($scope , $http ,
   $scope.config = {
     views : views,
     url : '/api/finance/expenseSheet/',
-    searchField: 'title',
+    searchField: 'notes',
     deletable : true,
-    editorTemplate : '/static/ngTemplates/app.GIT.form.groups.html',
-    canCreate : true,
     itemsNumPerView : [12,24,48],
   }
 
