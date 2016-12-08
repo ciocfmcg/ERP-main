@@ -17,6 +17,10 @@ class Account(models.Model):
     contactPerson = models.ForeignKey(User , null = False , related_name = 'accountsManaging')
     authorizedSignaturies = models.ManyToManyField(User , related_name = 'checkingAccounts')
 
+    def __unicode__(self):
+        return '<Number : %s > , <responsible : %s > , <bank : %s>' %(self.number , self.contactPerson.username , self.bank)
+
+
 class CostCenter(models.Model):
     head = models.ForeignKey(User , null = False)
     name = models.CharField(max_length = 100 , blank = False)
@@ -25,6 +29,10 @@ class CostCenter(models.Model):
     account = models.ForeignKey(Account)
     projects = models.ManyToManyField(project , related_name = 'costCenters')
 
+    def __unicode__(self):
+        return '<name : %s > , <head : %s > , <code : %s>' %(self.name , self.head.username , self.code)
+
+
 
 class Transaction(models.Model):
     fromAcc = models.ForeignKey(Account , null = False , related_name = 'debits')
@@ -32,6 +40,10 @@ class Transaction(models.Model):
     ammount = models.PositiveIntegerField()
     user = models.ForeignKey(User , related_name='transactions' , null = False)
     balance = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return '<from : %s > , <to : %s > , <amount : %s> , < user : %s>' %(self.fromAcc , self.toAcc , self.ammount , self.user.username)
+
 
 CURRENCY_CHOICES = (
     ('INR' , 'INR'),
@@ -48,6 +60,8 @@ class ExpenseSheet(models.Model):
     notes = models.TextField(max_length = 500 , null = True)
     project = models.ForeignKey(project , null = False)
     transaction = models.ForeignKey(Transaction , null = True , related_name = 'expenseSheet')
+    def __unicode__(self):
+        return '<notes : %s > , <approved : %s > , <project : %s > , < user : %s >' %(self.notes , self.approved , self.project , self.user.username)
 
 class Invoice(models.Model):
     user = models.ForeignKey(User , related_name='invoiceGeneratedOrSubmitted' , null = False)
@@ -58,3 +72,5 @@ class Invoice(models.Model):
     dated = models.DateField(null = False)
     attachment = models.FileField(upload_to = getInvoicesPath ,  null = True)
     sheet = models.ForeignKey(ExpenseSheet , related_name='invoices' , null = False)
+    def __unicode__(self):
+        return '<service : %s > , <amount : %s > , <sheet : %s > , < user : %s >' %(self.service , self.amount , self.sheet , self.user.username)

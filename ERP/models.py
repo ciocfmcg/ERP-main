@@ -98,6 +98,9 @@ class address(models.Model):
     lat = models.CharField(max_length=15 ,null = True)
     lon = models.CharField(max_length=15 ,null = True)
 
+    def __unicode__(self):
+        return '< street :%s>,<city :%s>,<state :%s>' %(self.street ,self.city, self.state)
+
 class service(models.Model): # contains other companies datails
     created = models.DateTimeField(auto_now_add = True)
     name = models.CharField(max_length = 100 , null = False)
@@ -110,3 +113,6 @@ class service(models.Model): # contains other companies datails
     logo = models.CharField(max_length = 200 , null = True) # image/svg link to the logo
     about = models.TextField(max_length = 2000 , null = False) # image/svg link to the logo
     doc  = models.ForeignKey(media , related_name = 'services' , null = True)
+
+    def __unicode__(self):
+        return '< name :%s>,<user :%s>,<address :%s>' %(self.name ,self.user.username, self.address)
