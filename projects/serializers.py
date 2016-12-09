@@ -58,7 +58,7 @@ class projectSerializer(serializers.ModelSerializer):
 class projectLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = project
-        fields = ('pk' , 'title')
+        fields = ('pk' , 'title', 'description')
 
 
 class timelineItemSerializer(serializers.ModelSerializer):

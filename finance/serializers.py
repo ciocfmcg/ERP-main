@@ -21,12 +21,16 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ('fromAcc' , 'toAcc' , 'ammount' , 'user' , 'balance')
 
-class ExpenseSheetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ExpenseSheet
-        fields = ('user' , 'created' , 'approved' , 'approvalMatrix' , 'approvalStage' , 'dispensed' , 'notes' , 'project' , 'transaction')
 
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = ('user' , 'created' , 'service' , 'amount' , 'currency' , 'dated' , 'attachment' , 'sheet')
+
+
+
+class ExpenseSheetSerializer(serializers.ModelSerializer):
+    invoices = InvoiceSerializer(many = True , read_only = True)
+    class Meta:
+        model = ExpenseSheet
+        fields = ('pk','user' , 'created' , 'approved' , 'approvalMatrix' , 'approvalStage' , 'dispensed' , 'notes' , 'project' , 'transaction', 'invoices')
