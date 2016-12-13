@@ -53,7 +53,10 @@ def loginView(request):
             username = u.username
         else:
             username = usernameOrEmail
-            u = User.objects.get(username = username)
+            try:
+                u = User.objects.get(username = username)
+            except:
+                statusCode = 404
 
         user = authenticate(username = username , password = password)
     	if user is not None:
@@ -63,7 +66,7 @@ def loginView(request):
             else:
                 return redirect(reverse(globalSettings.LOGIN_REDIRECT))
         else:
-            if not u.is_active:
+            if statusCode == 200 and not u.is_active:
                 authStatus = {'status' : 'warning' , 'message' : 'Your account is not active.'}
                 statusCode = 423
             else:

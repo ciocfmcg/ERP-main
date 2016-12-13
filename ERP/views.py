@@ -15,7 +15,7 @@ from django.db.models import Q
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
-
+from gitweb.views import generateGitoliteConf
 def serviceRegistration(request): # the landing page for the vendors registration page
     return render(request , 'app.ecommerce.register.partner.html')
 
