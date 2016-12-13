@@ -65,11 +65,15 @@ app.controller('businessManagement.finance.expenses' , function($scope , $http ,
 
 app.controller('businessManagement.finance.expenses.item' , function($scope , $http ){
 
-  $http({method : 'GET', url : '/api/projects/projectSearch/' + $scope.data.project + '/' }).
-  then(function(response){
-    $scope.project = response.data;
-  }, function(response){
-  })
+
+
+
+});
+
+app.controller('businessManagement.finance.expenses.explore' , function($scope , $http ){
+
+  $scope.expense = $scope.data.tableData[$scope.tab.data.index]
+
 
 
 })

@@ -73,5 +73,7 @@ class Invoice(models.Model):
     dated = models.DateField(null = False)
     attachment = models.FileField(upload_to = getInvoicesPath ,  null = True)
     sheet = models.ForeignKey(ExpenseSheet , related_name='invoices' , null = False)
+    description = models.TextField(max_length = 200 , null = False) # describe or justify the expense
+    approved = models.BooleanField(default = False) # it is possible to have a sheet with some of the invoices rejected and if the sheet is approved the amount to be paid will be the sum of claims in the approved invoices only
     def __unicode__(self):
         return '<service : %s > , <amount : %s > , <sheet : %s > , < user : %s >' %(self.service , self.amount , self.sheet , self.user.username)
