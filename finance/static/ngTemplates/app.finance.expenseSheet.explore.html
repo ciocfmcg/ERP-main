@@ -3,7 +3,7 @@
 
     <h3>Invocies</h3>
     <div ng-repeat="i in expense.invoices">
-      <div class="card row" style="margin-bottom:20px;padding:10px;position:relative;cursor:pointer;">
+      <div class="card row" ng-click="viewInvoice($index)"  style="margin-bottom:20px;padding:10px;position:relative;cursor:pointer;">
         <i class="fa fa-lg fa-check-circle text-{{i.approved ? 'success': 'danger'}}" style="position:absolute;top:10px;right:10px;" ></i>
         <div class="col-md-2">
           <div class="row">

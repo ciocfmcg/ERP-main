@@ -70,10 +70,36 @@ app.controller('businessManagement.finance.expenses.item' , function($scope , $h
 
 });
 
-app.controller('businessManagement.finance.expenses.explore' , function($scope , $http ){
+
+
+
+app.controller('businessManagement.finance.expenseSheet.invoiceView' , function($scope , $http, input ){
+  console.log(input);
+
+  $scope.invoice = input;
+
+
+});
+
+
+app.controller('businessManagement.finance.expenses.explore' , function($scope , $http, $aside ){
 
   $scope.expense = $scope.data.tableData[$scope.tab.data.index]
 
+  $scope.viewInvoice = function(ind) {
+    $aside.open({
+      templateUrl : '/static/ngTemplates/app.finance.aside.invoiceView.html',
+      position:'right',
+      size : 'xl',
+      backdrop : true,
+      resolve : {
+        input : function() {
+          return $scope.expense.invoices[ind];
+        }
+      },
+      controller : 'businessManagement.finance.expenseSheet.invoiceView',
+    })
+  }
 
 
 })
