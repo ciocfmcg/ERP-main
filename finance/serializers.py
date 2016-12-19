@@ -27,8 +27,26 @@ class InvoiceSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)
     class Meta:
         model = Invoice
-        fields = ('user' , 'created' , 'service' , 'amount' , 'currency' , 'dated' , 'attachment' , 'sheet', 'description', 'approved')
+        fields = ('pk', 'user' , 'created' , 'service' , 'amount' , 'currency' , 'dated' , 'attachment' , 'sheet', 'description', 'approved')
+        read_only_fields = ('user',)
 
+    def create(self , validated_data):
+        u = self.context['request'].user
+        print 'came to create an Invoce' , u
+        inv = Invoice(**validated_data)
+        inv.user = u
+        inv.service = service.objects.get(pk = self.context['request'].data['service'])
+        inv.approved = False
+        inv.save()
+        return inv
+
+    def update(self, instance, validated_data):
+        # if the user is manager or something then he can update the approved flag
+        instance.service = service.objects.get(pk = self.context['request'].data['service'])
+        for f in ['amount' , 'currency' , 'dated' , 'attachment' , 'sheet' , 'description']:
+            setattr(instance , f , validated_data.pop(f))
+        instance.save()
+        return instance
 
 
 class ExpenseSheetSerializer(serializers.ModelSerializer):
