@@ -1,0 +1,22 @@
+<div class="col-md-6" style="padding-bottom:10px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.finance.accounts.item">
+  <div class="card" style="padding:10px;">
+    <div class="row">
+      <div class="col-md-2">
+        <img ng-src="{{getBankIcon(data.bank)}}" class="img-circle pull-right" width="50"/>
+      </div>
+      <div class="col-md-10">
+        <div class="row">
+          <span style="font-size:20px;" class="text-muted"><strong>Account : </strong> {{data.number}}</span>
+        </div>
+        <div class="row">
+          <strong>Contact Person: </strong> <span>{{data.contactPerson | getName}}</span>
+        </div>
+        <div class="row">
+          <strong>IFSC : </strong> <span>{{data.ifsc}}</span>
+        </div>
+      </div>
+      <i class="fa fa-info-circle fa-2x text-primary" ng-click="rowActionClicked('accountBrowser')" style="position:absolute;right:20px;bottom:20px;cursor:pointer;">
+      </i>
+    </div>
+  </div>
+</div>

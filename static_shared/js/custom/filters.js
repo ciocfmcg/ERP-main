@@ -100,7 +100,7 @@ app.filter('getIcon' , function(){
 
 app.filter('explodeObj' , function($filter){
   return function(input){
-
+    // console.log(input);
     if (typeof input =='object' && input!=null){
       toReturn = '';
       // console.log(input);

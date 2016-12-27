@@ -24,6 +24,11 @@ app.config(function($stateProvider){
     templateUrl: '/static/ngTemplates/app.finance.expenses.html',
     controller: 'businessManagement.finance.expenses'
   })
+  .state('businessManagement.finance.accounts', {
+    url: "/accounts",
+    templateUrl: '/static/ngTemplates/app.finance.accounts.html',
+    controller: 'businessManagement.finance.accounts'
+  })
 });
 
 

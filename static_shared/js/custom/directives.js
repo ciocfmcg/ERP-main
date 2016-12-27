@@ -53,12 +53,17 @@ app.directive('usersField', function () {
       url : '@',
       col : '@',
       label : '@',
+      viewOnly : '@'
     },
     controller : function($scope , $state , $http , Flash){
         if (typeof $scope.col != 'undefined') {
             $scope.showResults = true;
         }else{
             $scope.showResults = false;
+        }
+
+        if (typeof $scope.viewOnly != 'undefined') {
+            $scope.viewOnly = false;
         }
         $scope.user = undefined;
         $scope.userSearch = function(query) {

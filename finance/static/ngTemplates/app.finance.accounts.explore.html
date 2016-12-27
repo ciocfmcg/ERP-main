@@ -1,0 +1,63 @@
+<div class="container-fluid" ng-controller="businessManagement.finance.accounts.explore">
+  <!-- {{account}} -->
+  <div class="row">
+    <h3 class="text-muted" style="margin-left:15px;">Details</h3>
+    <div class="col-md-6">
+
+      <table class="table table-bordered">
+        <tr>
+          <td>
+            <strong>Number</strong>
+          </td>
+          <td>
+            {{account.number}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>IFSC</strong>
+          </td>
+          <td>
+            {{account.ifsc}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Bank</strong>
+          </td>
+          <td>
+            {{account.bank | uppercase}} <br>
+            <img ng-src="{{getBankIcon(account.bank)}}" class="img-thumbnail" width="50"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Address</strong>
+          </td>
+          <td>
+            {{account.bankAddress}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Contact Person</strong>
+          </td>
+          <td>
+            {{account.contactPerson | getName}} <br><img ng-src="{{account.contactPerson | getDP}}" class="img-circle" width="50"/>
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+    <div class="col-md-6">
+      <users-Field data="account.authorizedSignaturies" url="/api/HR/userSearch/" col="6" label="Authorized Signaturies" view-Only="true"></users-Field>
+    </div>
+
+  </div>
+  <div class="row">
+    <generic-Table data="transactions.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+  </div>
+
+
+</div>

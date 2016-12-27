@@ -10,7 +10,7 @@ from projects.serializers import projectLiteSerializer
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('created' , 'number' , 'ifsc' , 'bank'  , 'bankAddress' , 'contactPerson' , 'authorizedSignaturies')
+        fields = ('pk', 'created' , 'number' , 'ifsc' , 'bank'  , 'bankAddress' , 'contactPerson' , 'authorizedSignaturies')
 
 class CostCenterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,7 +20,7 @@ class CostCenterSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ('fromAcc' , 'toAcc' , 'ammount' , 'user' , 'balance')
+        fields = ('pk', 'fromAcc' , 'toAcc' , 'ammount' , 'user' , 'balance')
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
