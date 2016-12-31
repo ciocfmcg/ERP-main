@@ -17,7 +17,7 @@ The current state of the project is as follows :
 
 Ongoing work
 ------------
-Currently working on task board and managerial part of project management. The closest example can be Asana or Trello.
+Currently working on finance module which will take care of inbound and outbound expenses. The closest example can be Asana or Trello.
 
 
 > The best part of the project is that the architecture I designed for this project is absolutely state of the art. Its uses RESTful API interaction, Angular JS bases interactive and responsive frontend makes it fun to work on and more importantly enjoyable to the users.
