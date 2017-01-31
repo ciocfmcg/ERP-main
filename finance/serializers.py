@@ -5,7 +5,10 @@ from rest_framework.exceptions import *
 from .models import *
 from gitweb.serializers import repoLiteSerializer
 from ERP.serializers import serviceSerializer
+from ERP.models import service
+from projects.models import project
 from projects.serializers import projectLiteSerializer
+from datetime import datetime
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,9 +46,17 @@ class InvoiceSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         # if the user is manager or something then he can update the approved flag
         instance.service = service.objects.get(pk = self.context['request'].data['service'])
-        for f in ['amount' , 'currency' , 'dated' , 'attachment' , 'sheet' , 'description']:
+        reqData = self.context['request'].data
+        dateStr = reqData['dated']
+        instance.dated = datetime.strptime(dateStr, '%Y-%m-%d').date()
+        print service.objects.get(pk = reqData['service'])
+        instance.service = service.objects.get(pk = reqData['service'])
+        for f in ['amount' , 'currency' , 'sheet' , 'description']:
             setattr(instance , f , validated_data.pop(f))
+        if 'attachment' in reqData:
+            instance.attachment = validated_data.pop('attachment')
         instance.save()
+        print instance.service
         return instance
 
 
@@ -54,4 +65,31 @@ class ExpenseSheetSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = ExpenseSheet
-        fields = ('pk','user' , 'created' , 'approved' , 'approvalMatrix' , 'approvalStage' , 'dispensed' , 'notes' , 'project' , 'transaction', 'invoices')
+        fields = ('pk','user' , 'created' , 'approved' , 'approvalMatrix' , 'approvalStage' , 'dispensed' , 'notes' , 'project' , 'transaction', 'invoices', 'submitted')
+        read_only_fields = ('transaction', 'invoices', 'user', 'project' )
+    def create(self , validated_data):
+        u = self.context['request'].user
+        reqData = self.context['request'].data
+        es = ExpenseSheet(**validated_data)
+        es.approvalStage = 0
+        if 'project' in reqData:
+            es.project = project.objects.get(id = int(reqData['project']))
+        else:
+            raise ValidationError(detail= 'project ID not found')
+        es.dispensed = False
+        es.submitted = False
+        es.user = u
+        es.save()
+        return es
+    def update(self , instance , validated_data):
+        print 'came'
+        reqData = self.context['request'].data
+        if 'notes' in reqData:
+            instance.notes = validated_data.pop('notes')
+        if 'project' in reqData:
+            instance.project = project.objects.get(pk = int(reqData['project']))
+        if instance.user == self.context['request'].user and 'submitted' in reqData:
+            if not instance.submitted:
+                instance.submitted = True
+        instance.save()
+        return instance

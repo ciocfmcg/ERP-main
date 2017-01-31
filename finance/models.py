@@ -61,6 +61,7 @@ class ExpenseSheet(models.Model):
     notes = models.TextField(max_length = 500 , null = True)
     project = models.ForeignKey(project , null = False)
     transaction = models.ForeignKey(Transaction , null = True , related_name = 'expenseSheet')
+    submitted = models.BooleanField(default = False)
     def __unicode__(self):
         return '<notes : %s > , <approved : %s > , <project : %s > , < user : %s >' %(self.notes , self.approved , self.project , self.user.username)
 
