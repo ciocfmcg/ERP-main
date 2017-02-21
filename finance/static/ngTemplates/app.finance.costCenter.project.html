@@ -1,0 +1,32 @@
+<div class="container-fluid card" style="padding:10px;border-left:4px solid #f4aa42;position:relative;">
+
+  <div class="col-md-1">
+    <i class="fa fa-globe fa-2x text-muted"></i>
+  </div>
+
+  <div class="col-md-6">
+    <div class="row">
+      <span style="font-size:12px;" class="text-muted">Details</span>
+    </div>
+    <div class="row">
+      <span class="text-primary" style="font-size:15px;">{{data.title}}</span><br>
+      <span class="text-muted">Description</span> : {{data.description}} <br>
+    </div>
+  </div>
+  <div class="col-md-2 pull-right">
+    <div class="row text-center text-muted">
+      Administrator
+    </div>
+    <div class="row">
+      <img style="width: 50px;height:50px;display: table-caption;margin: 0 auto;" class="img-circle" ng-src="{{data.user | getDP}}" >
+    </div>
+    <div class="row" style="text-align:center;">
+      <span>{{data.user | getName}} </span>
+    </div>
+  </div>
+  <!-- <div class="col-md-1" >
+    <div class="row">
+      <button type="button" class="btn btn-primary btn-block" ng-click="rowActionClicked('more')">More</button>
+    </div>
+  </div> -->
+</div>

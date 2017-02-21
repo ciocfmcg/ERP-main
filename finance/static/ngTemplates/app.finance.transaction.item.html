@@ -1,0 +1,44 @@
+<div class="container-fluid card" style="padding:10px;border-left:4px solid #0c9a9e;position:relative;">
+
+  <div class="col-md-1">
+    <i class="fa fa-bank fa-2x text-muted"></i>
+  </div>
+
+  <div class="col-md-3">
+    <div class="row">
+      <span style="font-size:12px;" class="text-muted">From</span>
+    </div>
+    <div class="row">
+      <span class="text-muted">Account Number</span> : {{data.fromAcc.number}} <br>
+      <span class="text-muted">Bank</span> : {{data.fromAcc.bank}} <br>
+    </div>
+
+  </div>
+  <div class="col-md-3">
+    <div class="row">
+      <span style="font-size:12px;" class="text-muted">To</span>
+    </div>
+    <div class="row">
+      <span class="text-muted">Account Number</span> : {{data.toAcc.number}} <br>
+      <span class="text-muted">Bank</span> : {{data.toAcc.bank}} <br>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="row">
+      <span style="font-size:12px;" class="text-muted">Amount</span> : {{data.ammount}}
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="row">
+      <img style="width: 50px;height:50px;display: table-caption;margin: 0 auto;" class="img-circle" ng-src="{{data.user | getDP}}" >
+    </div>
+    <div class="row" style="text-align:center;">
+      <span>{{data.user | getName}} </span>
+    </div>
+  </div>
+  <div class="col-md-1" >
+    <div class="row">
+      <button type="button" class="btn btn-primary btn-block" ng-click="rowActionClicked('more')">More</button>
+    </div>
+  </div>
+</div>

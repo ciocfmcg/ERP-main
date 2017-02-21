@@ -41,6 +41,11 @@ class Transaction(models.Model):
     ammount = models.PositiveIntegerField()
     user = models.ForeignKey(User , related_name='transactions' , null = False)
     balance = models.PositiveIntegerField()
+    externalReferenceID = models.CharField(max_length = 30 , null = False)
+    externalConfirmationID = models.CharField(max_length = 30 , null = False)
+    created = models.DateTimeField(auto_now_add=True)
+    api = models.CharField(max_length = 20 , null = False)
+    apiCallParams = models.CharField(max_length = 1500 , null = False)
 
     def __unicode__(self):
         return '<from : %s > , <to : %s > , <amount : %s> , < user : %s>' %(self.fromAcc , self.toAcc , self.ammount , self.user.username)

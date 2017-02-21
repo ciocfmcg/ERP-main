@@ -1,0 +1,23 @@
+<div class="col-md-5 card" style="padding-top:10px;" ng-controller="businessManagement.finance.expenses.item">
+  <div class="row">
+    <div class="col-md-2">
+      <img ng-src="{{data.head | getDP}}" class="img-circle pull-right" width="50"/>
+    </div>
+    <div class="col-md-10">
+      <div class="row">
+        <span style="font-size:20px;" class="text-muted"><strong>Name : </strong> {{data.name}}</span>
+      </div>
+      <div class="row">
+        <strong>Code : </strong> <span>{{data.code}}</span>
+      </div>
+      <div class="row">
+        <strong>Account : </strong> <span>{{data.account}}</span>
+      </div>
+      <div class="row">
+        <strong>Projects : </strong> <span>{{data.projects}}</span>
+      </div>
+    </div>
+    <i class="fa fa-info-circle fa-4x text-primary" ng-click="rowActionClicked('costCenterBrowser')" style="position:absolute;right:20px;bottom:10px;cursor:pointer;">
+    </i>
+  </div>
+</div>
