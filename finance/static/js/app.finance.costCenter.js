@@ -60,7 +60,7 @@ app.controller('businessManagement.finance.costCenter' , function($scope , $http
     }
   }
 
-  $scope.addTab({"title":"Browse Cost Center : 1","cancel":true,"app":"costCenterBrowser","data":{"pk":1,"index":0},"active":true});
+  // $scope.addTab({"title":"Browse Cost Center : 1","cancel":true,"app":"costCenterBrowser","data":{"pk":1,"index":0},"active":true});
 
 })
 

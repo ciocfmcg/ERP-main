@@ -11,6 +11,11 @@ class AccountViewSet(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
 
+class InflowViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = InflowSerializer
+    queryset = Inflow.objects.all()
+
 class CostCenterViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = CostCenterSerializer

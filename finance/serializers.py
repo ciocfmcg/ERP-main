@@ -29,6 +29,19 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ('pk', 'fromAcc' , 'toAcc' , 'ammount' , 'user' , 'balance', 'externalReferenceID', 'externalConfirmationID', 'created', 'api', 'apiCallParams')
 
+class InflowSerializer(serializers.ModelSerializer):
+    toAcc = AccountLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = Inflow
+        fields = ('pk', 'toAcc' , 'created' , 'referenceID' , 'user', 'service', 'currency', 'dated', 'attachment', 'description', 'verified' , 'fromBank', 'chequeNo' , 'mode')
+        read_only_fields = ('user' , 'amount', 'balance')
+    def create(self , validated_data):
+        u = self.context['request'].user
+        inf = Inflow(**validated_data)
+        inf.user = u
+        inf.save()
+        return inf
+
 class InvoiceSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)
     class Meta:
