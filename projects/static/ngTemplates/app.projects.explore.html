@@ -1,5 +1,5 @@
-<div style="position:relative; min-height:90vh;top:0px;right:0px;padding:0px;" ng-controller="projectManagement.projects.project.explore">
-    <div class="col-md-4" style="padding:0px;overflow:auto;height:100%;position:absolute;">
+<div style="position:relative; min-height:83vh;top:0px;right:0px;padding:0px;" ng-controller="projectManagement.projects.project.explore">
+    <div class="col-md-4" style="padding:0px;overflow:auto;height:100%;position:absolute;border-right:solid 2px #eee;">
         <div class="col-md-10" style="padding-top:25px;overflow:auto;height:100%;position:absolute;">
             <div class="card" ng-repeat="u in project.team" style="margin-bottom:20px;">
                 <div class="container-fluid" style="padding-top:15px;">
@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <div class="col-md-8 col-md-offset-4" style="overflow:auto;height:80%;position:absolute;">
+    <div class="col-md-8 col-md-offset-4" style="overflow:auto;height:85%;position:absolute;">
 
         <div class="col-md-12" ng-if="explore.mode == 'issues'">
             <h3 class="text-muted">Issues</h3>
@@ -192,7 +192,7 @@
             </ul>
         </div>
     </div>
-    <div style="position:absolute;padding:20px;padding-top:10px;bottom:0px;height:20%;border-top:solid 2px #eee;" class="col-md-8 col-md-offset-4">
+    <div style="position:absolute;padding:20px;padding-top:10px;bottom:0px;height:15%;background:#eee;border-top:solid 2px #eee;" class="col-md-8 col-md-offset-4">
         <div class="row">
             <div class="col-md-10">
                 <textarea class="form-control " rows="3" cols="40" placeholder="Add a comment" ng-model="commentEditor.text"></textarea>

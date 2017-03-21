@@ -59,6 +59,20 @@ class appSettingsField(models.Model):
     class Meta:
         unique_together = ('name', 'app',)
 
+class PublicApiKeys(models.Model):
+    active = models.BooleanField(default = False)
+    user = models.ForeignKey(User , related_name='publicApiKeysOwned') # the user who is authorized to use this api
+    key = models.CharField(max_length = 30 , null = False)
+    created = models.DateTimeField(auto_now_add=True)
+    admin = models.ForeignKey(User , related_name = 'apiKeyAdministrator') # who kind of created it and can toggle active flag
+    usageRemaining = models.PositiveIntegerField(default=0) # balance remaining
+    app = models.ForeignKey(application , null = False)
+
+class ApiUsage(models.Model): # to store the monthly api usage for the api
+    api = models.ForeignKey(PublicApiKeys, related_name= 'usages')
+    count = models.PositiveIntegerField(default=0)
+    month = models.PositiveIntegerField(default=0) # assuming 0 for the month of January 2017 and 1 for february and so on
+
 class permission(models.Model):
     app = models.ForeignKey(application , null=False)
     user = models.ForeignKey(User , related_name = "accessibleApps" , null=False)

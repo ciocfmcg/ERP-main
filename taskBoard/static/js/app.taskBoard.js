@@ -99,6 +99,15 @@ app.controller('projectManagement.taskBoard.createTask' , function($scope ,$http
         }
     }
 
+    $scope.subAction = function(action) {
+      if (action == 'addToDash') {
+        // add to dash
+        console.log("will add to dash");
+      }else if (action == 'archive') {
+        console.log("will archive");
+      }
+    }
+
     $scope.exploreNotification = function(index) {
       $aside.open({
         templateUrl : '/static/ngTemplates/app.GIT.aside.exploreNotification.html',
