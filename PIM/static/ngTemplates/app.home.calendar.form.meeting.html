@@ -1,66 +1,83 @@
 <form ng-submit="saveMeeting()">
-  <div class="form-group">
-    <label class="control-label col-sm-3" for="agenda">Agenda:</label>
-    <div class="col-md-9">
-      <textarea type="text" rows="3"  value="" class="form-control " required ng-model="data.text"></textarea>
-    </div>
-  </div>
 
-  <div class="form-group">
-    <label class="control-label col-sm-3" for="attachment">Attachment:</label>
-    <div class="col-sm-7">
-      <input type="file" file-model="data.attachment">
-    </div>
-  </div>
-  <div class= "form-group">
-    <label class="control-label col-sm-3" for="with">With :</label>
-    <div class="col-md-9">
-      <tags-input ng-model="data.with" add-on-paste="true" add-From-Autocomplete-Only="true" display-property="username">
-        <auto-complete source="loadTags($query)" load-on-down-arrow="true"></auto-complete>
-      </tags-input>
-    </div>
-  </div>
-
-  <div class= "form-group">
-    <label class="control-label col-sm-3" style="margin-top:35px;">When :</label>
-    <div class="col-md-5">
-      <div class="input-group" style="margin-top:35px;">
-        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.when" is-open="status.opened"  />
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-        </span>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="row container-fluid">
-        <uib-timepicker ng-model="data.when" hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+  <div class="row padded10px">
+    <div class="form-group">
+      <label class="control-label col-sm-3" for="agenda">Agenda:</label>
+      <div class="col-md-9">
+        <textarea type="text" rows="3"  value="" class="form-control " required ng-model="data.text"></textarea>
       </div>
     </div>
   </div>
 
-  <div class= "form-group">
-    <label class="control-label col-sm-3" for="when">Duration :</label>
-    <div class="col-md-9">
-      <input type="text" class = "form-control" placeholder="Duration in Hrs ?" ng-model = "data.duration">
+  <div class="row padded10px">
+    <div class="form-group">
+      <label class="control-label col-sm-3" for="attachment">Attachment:</label>
+      <div class="col-sm-7">
+        <input type="file" file-model="data.attachment">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row padded10px">
+    <div class= "form-group">
+      <label class="control-label col-md-3" for="with">With :</label>
+      <div class="col-md-9">
+        <tags-input ng-model="data.with" add-on-paste="true" add-From-Autocomplete-Only="true" display-property="username">
+          <auto-complete source="loadTags($query)" load-on-down-arrow="true"></auto-complete>
+        </tags-input>
+      </div>
     </div>
   </div>
 
-  <div class= "form-group">
-    <label class="control-label col-sm-3" for="where">Where :</label>
-    <div class="col-md-9">
-      <input type="text" class = "form-control" placeholder="Where ?" ng-model = "data.venue">
+  <div class="row padded10px">
+    <div class= "form-group">
+      <label class="control-label col-sm-3" style="margin-top:35px;">When :</label>
+      <div class="col-md-5">
+        <div class="input-group" style="margin-top:35px;">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.when" is-open="status.opened"  />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="row container-fluid">
+          <uib-timepicker ng-model="data.when" hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class= "form-group">
-    <label class="control-label col-sm-3" for="tagged">Priority :</label>
-    <div class="col-md-9">
-      <select class="form-control" ng-model="data.level">
-        <option value="Normal">Normal</option>
-        <option value="Critical">Critical</option>
-        <option value="Mandatory">Mandatory</option>
-        <option value="Optional">Optional</option>
-      </select>
+  <div class="row padded10px">
+    <div class= "form-group">
+      <label class="control-label col-sm-3" for="when">Duration :</label>
+      <div class="col-md-9">
+        <input type="text" class = "form-control" placeholder="Duration in Hrs ?" ng-model = "data.duration">
+      </div>
+    </div>
+  </div>
+
+  <div class="row padded10px">
+    <div class= "form-group">
+      <label class="control-label col-sm-3" for="where">Where :</label>
+      <div class="col-md-9">
+        <input type="text" class = "form-control" placeholder="Where ?" ng-model = "data.venue">
+      </div>
+    </div>
+  </div>
+
+  <div class="row padded10px">
+    <div class= "form-group">
+      <label class="control-label col-sm-3" for="tagged">Priority :</label>
+      <div class="col-md-9">
+        <select class="form-control" ng-model="data.level">
+          <option value="Normal">Normal</option>
+          <option value="Critical">Critical</option>
+          <option value="Mandatory">Mandatory</option>
+          <option value="Optional">Optional</option>
+        </select>
+      </div>
     </div>
   </div>
 

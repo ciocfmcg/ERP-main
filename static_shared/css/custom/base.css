@@ -2,6 +2,10 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.padded10px{
+  padding: 10px;
+}
+
 .draggable{
   cursor: move;
 }
@@ -125,7 +129,7 @@
 
 body {
   background-color: #eee;
-  padding-top:66px;
+  padding-top:65px;
 }
 
 .hoverableDiv :hover{

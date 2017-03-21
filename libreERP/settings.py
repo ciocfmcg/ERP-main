@@ -92,6 +92,7 @@ INSTALLED_APPS = (
     'blogs', # publically accesible blogging site
     'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
+	'tools',# general purpose tools like OCR, AI or big data related stuffs
 )
 
 SITE_ID = 1
