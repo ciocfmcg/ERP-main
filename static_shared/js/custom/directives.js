@@ -56,6 +56,7 @@ app.directive('usersField', function () {
       viewOnly : '@'
     },
     controller : function($scope , $state , $http , Flash){
+        $scope.d = {user : undefined};
         if (typeof $scope.col != 'undefined') {
             $scope.showResults = true;
         }else{
@@ -65,7 +66,7 @@ app.directive('usersField', function () {
         if (typeof $scope.viewOnly != 'undefined') {
             $scope.viewOnly = false;
         }
-        $scope.user = undefined;
+        // $scope.user = undefined;
         $scope.userSearch = function(query) {
           return $http.get( $scope.url +'?username__contains=' + query).
           then(function(response){
@@ -90,13 +91,13 @@ app.directive('usersField', function () {
 
         $scope.addUser = function() {
           for (var i = 0; i < $scope.data.length; i++) {
-            if ($scope.data[i] == $scope.user.pk){
+            if ($scope.data[i] == $scope.d.user.pk){
               Flash.create('danger' , 'User already a member of this group')
               return;
             }
           }
-          $scope.data.push($scope.user.pk);
-          $scope.user = undefined;
+          $scope.data.push($scope.d.user.pk);
+          $scope.d.user = undefined;
         }
     },
   };

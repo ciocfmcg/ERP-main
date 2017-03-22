@@ -48,6 +48,10 @@ from HR.models import accountsKey
 
 from django.core import serializers
 from django.http import JsonResponse
+
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from scripts.knnocr.captchaSolver import main as toolFn
 # Create your views here.
 
 class KNNOcrApi(APIView):
@@ -56,5 +60,7 @@ class KNNOcrApi(APIView):
 
     def post(self , request , format = None):
         user = self.request.user
-        content = {'key': 'val', 'key2':'value2'}
+        imgFile = request.FILES['screenshot']
+        res = toolFn(imgFile)
+        content = {'keyname': res[0]}
         return Response(content, status=status.HTTP_200_OK)

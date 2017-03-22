@@ -2,7 +2,7 @@
     <div class="form-group" >
         <label>{{label | humanize}}</label>
         <div class="input-group" ng-if="!viewOnly">
-          <input type="text" class="form-control" ng-model = "user" uib-typeahead="user as getName(user) for user in userSearch($viewValue)" placeholder="Search and select a user to add him/her in this group">
+          <input type="text" class="form-control" ng-model = "d.user" uib-typeahead="user as getName(user) for user in userSearch($viewValue)" placeholder="Search and select a user to add him/her in this group">
           <span class="input-group-btn">
             <button class="btn btn-success" type="button" ng-click="addUser()">Add <i class="fa fa-plus"></i></button>
           </span>
