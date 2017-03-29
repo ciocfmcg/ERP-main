@@ -32,6 +32,7 @@ class task(models.Model):
     personal = models.BooleanField(default = False)
     project = models.ForeignKey(project , null = True)
     completion = models.PositiveIntegerField(default=0)
+    archived = models.BooleanField(default = False)
 
 TASK_STATUS_CHOICES = (
     ('notStarted','notStarted'),

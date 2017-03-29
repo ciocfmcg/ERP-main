@@ -1,0 +1,30 @@
+<div class="modal-header">
+  Transaction details
+</div>
+
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="row">
+      <strong>From : </strong>{{transaction.fromAcc.number}}<span class="text-muted">{{transaction.fromAcc.bank}}</span>
+    </div>
+    <div class="row">
+      <strong>To : </strong>{{transaction.toAcc.number}}<span class="text-muted">{{transaction.toAcc.bank}}</span>
+    </div>
+    <div class="row">
+      <strong>Amount : </strong>{{transaction.ammount}}
+    </div>
+    <div class="row">
+      <strong>Transacted By : </strong>{{transaction.user | getName}}
+    </div>
+    <div class="row">
+      <strong>Balance Left : </strong>{{transaction.balance}}
+    </div>
+    <div class="row">
+      <strong>External Reference : </strong>{{transaction.externalReferenceID}}
+    </div>
+
+    <div class="row">
+      <strong>External Confirmation : </strong>{{transaction.externalConfirmationID}}
+    </div>
+  </div>
+</div>

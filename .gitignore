@@ -4,3 +4,4 @@
 !spec/*.pyc
 docs/build
 media_root
+tools/scripts

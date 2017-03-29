@@ -20,6 +20,7 @@ class taskViewSet(viewsets.ModelViewSet):
     filter_fields = ['title', 'project' , 'user', 'to']
     def get_queryset(self):
         u = self.request.user
+        # if archived , do not include , also have an option on the UI to view the archived one as well.
         if 'responsible' not in self.request.GET and 'assignee' not in self.request.GET and 'follower' not in self.request.GET:
             qs1 = task.objects.filter(user = u) # i assigned to sometone
             qs2 = task.objects.filter(to = u) # someone assigned to me

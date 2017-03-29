@@ -45,6 +45,7 @@ app.controller('businessManagement.finance.accounts' , function($scope , $http ,
   }
 
   $scope.addTab = function( input ){
+    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -59,8 +60,6 @@ app.controller('businessManagement.finance.accounts' , function($scope , $http ,
       $scope.tabs.push(input)
     }
   }
-
-  // $scope.addTab({"title":"Account details : 10001000","cancel":true,"app":"accountBrowser","data":{"pk":1,"index":0},"active":true})
 
 })
 
@@ -83,7 +82,7 @@ app.controller('businessManagement.finance.accounts.item' , function($scope , $h
 
 
 
-app.controller('businessManagement.finance.accounts.explore' , function($scope , $http, $aside ){
+app.controller('businessManagement.finance.accounts.explore' , function($scope , $http, $aside, $uibModal ){
 
   $scope.getBankIcon = function(bankName) {
     return bankIconMap[bankName];
@@ -93,12 +92,13 @@ app.controller('businessManagement.finance.accounts.explore' , function($scope ,
   $scope.transactions = {tableData : []};
 
   var views = [{name : 'list' , icon : 'fa-th-large' ,
-      template : '/static/ngTemplates/genericTable/tableDefault.html' ,
+      template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
+      itemTemplate : '/static/ngTemplates/app.finance.transaction.item.html',
     },
   ];
 
   var options = {
-    main : {icon : 'fa-info', text: 'More'} ,
+    main : {icon : 'fa-info', text: 'more'} ,
     };
 
   $scope.config = {
@@ -114,16 +114,27 @@ app.controller('businessManagement.finance.accounts.explore' , function($scope ,
 
   $scope.tableAction = function(target , action , mode){
     console.log(target , action , mode);
-    console.log($scope.data.tableData);
+    // console.log($scope.data.tableData);
 
-    if (action == 'accountBrowser') {
-      for (var i = 0; i < $scope.data.tableData.length; i++) {
-        if ($scope.data.tableData[i].pk == parseInt(target)){
-          $scope.addTab({title : 'Account details : ' + $scope.data.tableData[i].number , cancel : true , app : 'accountBrowser' , data : {pk : target, index : i} , active : true})
+    for (var i = 0; i < $scope.transactions.tableData.length; i++) {
+      if ($scope.transactions.tableData[i].pk == parseInt(target)){
+        var targetObj = $scope.transactions.tableData[i];
+        if (action == 'more') {
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.finance.transactionDetails.html',
+            size: 'lg',
+            resolve : {
+              transaction : function() {
+                return targetObj;
+              }
+            },
+            controller: function($scope , transaction){
+              $scope.transaction = transaction;
+            },
+          });
         }
       }
     }
-
   }
 
 

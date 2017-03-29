@@ -9,6 +9,9 @@ from time import time
 def getInvoicesPath(instance , filename ):
     return 'finance/invoices/%s_%s_%s' % (str(time()).replace('.', '_'),instance.user.username, filename)
 
+def getInflowAttachmentsPath(instance , filename ):
+    return 'finance/inflows/%s_%s_%s' % (str(time()).replace('.', '_'),instance.user.username, filename)
+
 class Account(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     number = models.PositiveIntegerField()
@@ -33,7 +36,34 @@ class CostCenter(models.Model):
     def __unicode__(self):
         return '<name : %s > , <head : %s > , <code : %s>' %(self.name , self.head.username , self.code)
 
+INFLOW_TYPES = (
+    ('cash' , 'cash'),
+    ('cheque' , 'cheque'),
+    ('wire' , 'wire'),
+)
 
+CURRENCY_CHOICES = (
+    ('INR' , 'INR'),
+    ('USD' , 'USD'),
+)
+
+
+class Inflow(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    ammount = models.PositiveIntegerField()
+    toAcc = models.ForeignKey(Account , null = False , related_name = 'inflowCredits')
+    referenceID = models.CharField(max_length = 30 , null = False)
+    user = models.ForeignKey(User , related_name='inflowsTransacted' , null = False)
+    service = models.ForeignKey(service , null = True, related_name="inflow")
+    currency = models.CharField(max_length = 5 , choices = CURRENCY_CHOICES)
+    dated = models.DateField(null = False)
+    attachment = models.FileField(upload_to = getInflowAttachmentsPath ,  null = True)
+    description = models.TextField(max_length = 200 , null = False) # describe the inflow
+    verified = models.BooleanField(default = False)
+    fromBank = models.CharField(max_length = 30 , null = True)
+    chequeNo = models.CharField(max_length = 30 , null = True)
+    mode = models.CharField(choices = INFLOW_TYPES , max_length = 20, default = 'cash')
+    balance =  models.PositiveIntegerField()
 
 class Transaction(models.Model):
     fromAcc = models.ForeignKey(Account , null = False , related_name = 'debits')
@@ -41,15 +71,14 @@ class Transaction(models.Model):
     ammount = models.PositiveIntegerField()
     user = models.ForeignKey(User , related_name='transactions' , null = False)
     balance = models.PositiveIntegerField()
+    externalReferenceID = models.CharField(max_length = 30 , null = False)
+    externalConfirmationID = models.CharField(max_length = 30 , null = False)
+    created = models.DateTimeField(auto_now_add=True)
+    api = models.CharField(max_length = 20 , null = False)
+    apiCallParams = models.CharField(max_length = 1500 , null = False)
 
     def __unicode__(self):
         return '<from : %s > , <to : %s > , <amount : %s> , < user : %s>' %(self.fromAcc , self.toAcc , self.ammount , self.user.username)
-
-
-CURRENCY_CHOICES = (
-    ('INR' , 'INR'),
-    ('USD' , 'USD'),
-)
 
 class ExpenseSheet(models.Model):
     user = models.ForeignKey(User , related_name='expenseGeneratedOrSubmitted' , null = False)

@@ -15,16 +15,35 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = ('pk', 'created' , 'number' , 'ifsc' , 'bank'  , 'bankAddress' , 'contactPerson' , 'authorizedSignaturies')
 
+class AccountLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ('pk', 'number', 'ifsc', 'bank')
+
 class CostCenterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CostCenter
-        fields = ('head' , 'name' , 'code' , 'created' , 'account' , 'projects')
+        fields = ('pk', 'head' , 'name' , 'code' , 'created' , 'account' , 'projects')
 
 class TransactionSerializer(serializers.ModelSerializer):
+    fromAcc = AccountLiteSerializer(many = False , read_only = True)
+    toAcc = AccountLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Transaction
-        fields = ('pk', 'fromAcc' , 'toAcc' , 'ammount' , 'user' , 'balance')
+        fields = ('pk', 'fromAcc' , 'toAcc' , 'ammount' , 'user' , 'balance', 'externalReferenceID', 'externalConfirmationID', 'created', 'api', 'apiCallParams')
 
+class InflowSerializer(serializers.ModelSerializer):
+    toAcc = AccountLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = Inflow
+        fields = ('pk', 'toAcc' , 'created' , 'referenceID' , 'user', 'service', 'currency', 'dated', 'attachment', 'description', 'verified' , 'fromBank', 'chequeNo' , 'mode')
+        read_only_fields = ('user' , 'amount', 'balance')
+    def create(self , validated_data):
+        u = self.context['request'].user
+        inf = Inflow(**validated_data)
+        inf.user = u
+        inf.save()
+        return inf
 
 class InvoiceSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)

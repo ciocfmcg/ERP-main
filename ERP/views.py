@@ -217,7 +217,7 @@ def getApps(user):
     for a in user.accessibleApps.all().values('app'):
         aa.append(a['app'])
     if user.appsManaging.all().count()>0:
-        return application.objects.filter(pk__in = aa).exclude(pk__in = user.appsManaging.all().values('pk')) | user.appsManaging.all()
+        return application.objects.filter(pk__in = aa).exclude(pk__in = user.appsManaging.all().values('pk')).exclude(module = module.objects.get(name = 'public')) | user.appsManaging.all()
     return application.objects.filter(pk__in = aa)
 
 class applicationViewSet(viewsets.ModelViewSet):

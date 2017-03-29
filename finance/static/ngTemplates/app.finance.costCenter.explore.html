@@ -1,0 +1,32 @@
+<div class="container-fluid" ng-controller="businessManagement.finance.costCenter.explore" style="padding:10px;">
+
+  <div class="row">
+    <div class="col-md-4" style="border-right:2px solid #eeeeee;">
+      <span class="text-muted" style="font-size:15px;">Title :</span> <span class="text-primary" style="font-size:20px;">{{costCenter.name | humanize}}</span> <br>
+      <span class="text-muted" style="font-size:15px;">Code :</span> {{costCenter.code}} <br>
+      <span class="text-muted" style="font-size:15px;">Created :</span> {{costCenter.created | date:'MMM-yy'}} <br>
+    </div>
+    <div class="col-md-4" style="border-right:2px solid #eeeeee;">
+      <div class="row">
+        <img style="width: 50px;height:50px;display: table-caption;margin: 0 auto;" class="img-circle" ng-src="{{costCenter.head | getDP}}" >
+      </div>
+      <div class="row" style="text-align:center;">
+        <span>{{costCenter.head | getName}} </span>
+      </div>
+    </div>
+    <div class="col-md-4" style="padding-left:30px;">
+      <div class="row">
+        <span class="text-muted" style="font-size:15px;">Account</span> <br>
+        <span class="text-muted">Number :</span>  {{costCenter.accountData.number}} <br>
+        <span class="text-muted">Bank :</span>  {{costCenter.accountData.bank}} <br>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row" style="padding-left:10px;padding-right:10px;">
+    <h4 class="text-muted">Projects</h4>
+    <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+  </div>
+
+
+</div>
