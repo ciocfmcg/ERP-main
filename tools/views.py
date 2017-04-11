@@ -45,7 +45,7 @@ from django.http import JsonResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 # from scripts.knnocr.captchaSolver import main as toolFn
-from scripts.pdfReader.main import processDoc as toolFn
+# from scripts.pdfReader.main import processDoc as toolFn
 # Create your views here.
 
 class KNNOcrApi(APIView):

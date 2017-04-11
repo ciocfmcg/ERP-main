@@ -1,3 +1,26 @@
+app.controller('businessManagement.finance.accounts.form' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+  // settings main page controller
+  $scope.mode = 'new';
+  $scope.form = {number : undefined , ifsc : undefined, bankAddress: undefined, personal : false}
+
+  if ($scope.form.personal== false) {
+    $scope.form.users = [];
+  }else {
+    if ($scope.form.users.length > 1) {
+      $scope.form.users = null;
+    }else {
+      $scope.form.users = $scope.form.users[0];
+
+    }
+  }
+
+  if ($scope.mode == 'new') {
+
+  }
+
+
+});
+
 app.controller('businessManagement.finance.accounts' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
   // settings main page controller
 
@@ -19,6 +42,8 @@ app.controller('businessManagement.finance.accounts' , function($scope , $http ,
     searchField: 'number',
     deletable : true,
     itemsNumPerView : [12,24,48],
+    canCreate : true,
+    editorTemplate :'/static/ngTemplates/app.finance.accounts.form.html',
   }
 
 
@@ -136,8 +161,5 @@ app.controller('businessManagement.finance.accounts.explore' , function($scope ,
       }
     }
   }
-
-
-
 
 })

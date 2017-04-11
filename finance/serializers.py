@@ -13,7 +13,7 @@ from datetime import datetime
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('pk', 'created' , 'number' , 'ifsc' , 'bank'  , 'bankAddress' , 'contactPerson' , 'authorizedSignaturies')
+        fields = ('pk', 'personal', 'created' , 'number' , 'ifsc' , 'bank'  , 'bankAddress' , 'contactPerson' , 'authorizedSignaturies')
 
 class AccountLiteSerializer(serializers.ModelSerializer):
     class Meta:

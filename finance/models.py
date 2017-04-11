@@ -20,7 +20,7 @@ class Account(models.Model):
     bankAddress = models.TextField(max_length = 500 , null = False)
     contactPerson = models.ForeignKey(User , null = False , related_name = 'accountsManaging')
     authorizedSignaturies = models.ManyToManyField(User , related_name = 'checkingAccounts')
-
+    personal = models.BooleanField(default = False) # if this account is personal account , in that case the authorized person will be the person to which this account belongs
     def __unicode__(self):
         return '<Number : %s > , <responsible : %s > , <bank : %s>' %(self.number , self.contactPerson.username , self.bank)
 
