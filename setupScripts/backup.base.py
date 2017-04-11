@@ -8,14 +8,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 tablesToBackup = ['ERP.module',
     'ERP.application',
     'ERP.appSettingsField',
-    'auth.User',
-    'gitweb.repo',
-    'gitweb.repoPermission',
-    'gitweb.gitGroup',
-    'gitweb.groupPermission',
-    'gitweb.device',
-    'gitweb.profile',
-    'gitweb.commitNotification',
+    # 'auth.User',
+    # 'gitweb.repo',
+    # 'gitweb.repoPermission',
+    # 'gitweb.gitGroup',
+    # 'gitweb.groupPermission',
+    # 'ERP.device',
+    # 'ERP.profile',
+    # 'gitweb.commitNotification',
 ]
 
 print sys.argv
