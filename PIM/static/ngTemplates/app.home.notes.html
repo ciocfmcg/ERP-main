@@ -5,7 +5,35 @@
     <button type="button"class="btn btn-default" ng-click="pencil()"> {{editor.pencil ? 'Text' : 'Pencil'}}</button>
     <div class="btn-group">
       <button type="button" class="btn btn-success" ng-click="save()"> <i class="fa fa-floppy-o"></i></button>
-      <button type="button" class="btn btn-default" ng-click="clearAll()"> <i class="fa fa-eraser"></i></button>
+      <button type="button" class="btn btn-default" ng-click="clearAll()"> <i class="fa fa-trash"></i></button>
+      <button type="button" class="btn btn-default" ng-click="addImage()"> <i class="fa fa-file"></i>Add Image</button>
+      <!-- <button type="button" class="btn btn-default" ng-click="bold()"> <i class="fa fa-bold"></i></button> -->
+    </div>
+
+
+    <div class="btn-group" ng-if="showTextOptions">
+      <button type="button" class="btn btn-default" ng-click="bold()"> <i class="fa fa-bold"></i></button>
+      <button type="button" class="btn btn-default" ng-click="italic()"> <i class="fa fa-italic"></i></button>
+      <button type="button" class="btn btn-default" ng-click="underline()"> <i class="fa fa-underline"></i></button>
+      <button type="button" class="btn btn-default" ng-click="rightalign()"> <i class="fa fa-align-right"></i></button>
+      <button type="button" class="btn btn-default" ng-click="leftalign()"> <i class="fa fa-align-left"></i></button>
+      <button type="button" class="btn btn-default" ng-click="centeralign()"> <i class="fa fa-align-justify"></i></button>
+      <button type="button" class="btn btn-default" ng-click="fontincrease()" id="fontincrease1"> <i class="fa fa-font"></i>++ 14</button>
+      <button type="button" class="btn btn-default" ng-click="fontdecrease()"> <i class="fa fa-font"></i>--</button>
+
+    </div>
+    <div class="btn-group" ng-if="showDeleteOption">
+      <button type="button" class="btn btn-default" ng-click="delete()"> <i class="fa fa-eraser"></i></button>
+    </div>
+    <div class="btn-group">
+      <select class="form-control" ng-model="fontName">
+        <option value = "Times New Roman" >Times New Roman</option>
+        <option value="Arial">Arial</option>
+        <option value="Arial Black">Arial Black</option>
+        <option value="Comic Sans">Comic Sans</option>
+        <option value="Sans-serif">Sans-serif</option>
+        <option value="Monospace">Monospace</option>
+      </select>
     </div>
     <canvas id="canvas" ></canvas>
   </div>
