@@ -1,6 +1,30 @@
 app.controller('businessManagement.finance.expenses' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
   // settings main page controller
 
+  $scope.loadTags = function(query) {
+    return $http.get('/api/HR/userSearch/?username__contains=' + query)
+  };
+
+  $scope.createExpense = function() {
+
+    var dataToSend = {
+      title : 'a sample title',
+      title : 'a sample title',
+    }
+
+    $http({method : 'post' , url : '/api/finance/expenseSheet/' , data : dataToSend}).
+    then(function(response) {
+      var pk = response.data.pk;
+      $scope.users = []
+    }, function(error) {
+
+    })
+
+  }
+
+
+  $scope.users = [];
+
   $scope.data = {tableData : []};
 
   views = [{name : 'list' , icon : 'fa-th-large' ,

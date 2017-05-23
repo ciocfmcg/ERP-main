@@ -45,7 +45,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.1.108', 'localhost']
+ALLOWED_HOSTS = ['10.0.1.108', 'localhost', '127.0.0.1','192.168.43.10', '192.168.1.4']
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate

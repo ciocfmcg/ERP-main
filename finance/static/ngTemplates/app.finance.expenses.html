@@ -2,6 +2,37 @@
 <div class="container-fluid">
 
   <uib-tabset>
+    <uib-tab>
+        <uib-tab-heading>
+            New
+            <i class="fa fa-plus"></i>
+        </uib-tab-heading>
+        <div class="container-fluid">
+
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control">
+          </div>
+
+          <div class= "form-group">
+            <label class="control-label col-md-3" for="with">With :</label>
+            <div class="col-md-9">
+              <tags-input ng-model="users" add-on-paste="true" add-From-Autocomplete-Only="true" display-property="username">
+                <auto-complete source="loadTags($query)" load-on-down-arrow="true"></auto-complete>
+              </tags-input>
+            </div>
+          </div>
+
+
+          <button type="button" class= "btn btn-primary" name="button" ng-click="createExpense()">Create</button>
+
+        </div>
+    </uib-tab>
       <uib-tab active="searchTabActive">
           <uib-tab-heading>
               Browse

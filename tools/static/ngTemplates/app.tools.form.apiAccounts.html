@@ -1,0 +1,32 @@
+<div class="modal-header">
+  Create new API account
+</div>
+
+<div class="modal-body" ng-controller="businessManagement.tools.apiAccounts.create">
+  <div class="container-fluid">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="text" class="form-control" ng-model="form.email">
+    </div>
+    <div class="form-group">
+      <label>Account type</label>
+      <select class="form-control" ng-model="form.accountType">
+        <option value="trial">Trial</option>
+        <option value="community">Community</option>
+        <option value="commercial">Commercial</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Initial Quota</label>
+      <input type="number" class="form-control" ng-model="form.remaining">
+    </div>
+
+    <div class="form-group">
+      <label>Active on creation ?</label>
+      <input type="checkbox" ng-model="form.active">
+    </div>
+
+
+    <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+  </div>
+</div>

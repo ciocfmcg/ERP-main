@@ -144,4 +144,17 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
 
 
 
+  $scope.addImage = function(){
+
+    fabric.Image.fromURL('/static/images/about/2.jpg', function(img) {
+    img.scale(0.5).set({
+        left: 100,
+        top: 100,
+      });
+      $scope.canvas.add(img).setActiveObject(img);
+    });
+  }
+
+
+
 });

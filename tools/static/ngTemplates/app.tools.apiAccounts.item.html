@@ -1,0 +1,28 @@
+<div class="col-md-12" style="padding-bottom:10px;padding-left:0px;padding-right:0px;" ng-controller="businessManagement.finance.expenses.item">
+  <div class="card" style="padding:10px;">
+    <div class="row">
+      <div class="col-md-1">
+        <img ng-src="{{data.user | getDP}}" class="img-circle pull-right" width="50"/>
+      </div>
+      <div class="col-md-11">
+        <div class="col-md-2">
+          <span class="text-muted"><strong>Acc ID : </strong> {{data.pk}}</span>
+        </div>
+        <div class="col-md-2">
+          <strong>Type : </strong> <span>{{data.accountType}}</span>
+        </div>
+        <div class="col-md-2">
+          <strong>Usage remaining : </strong> <span>{{data.remaining}}</span>
+        </div>
+        <div class="col-md-2">
+          <strong>active : </strong> <button type="button" class="btn btn-sm btn-{{data.active? 'success':'danger'}}"></button>
+        </div>
+        <div class="col-md-3">
+          <strong>Email : </strong> <span>{{data.email}}</span>
+        </div>
+      </div>
+      <i class="fa fa-info-circle fa-2x" ng-click="rowActionClicked('info')" style="position:absolute;right:20px;bottom:20px;cursor:pointer;color:#a8c8e6;">
+      </i>
+    </div>
+  </div>
+</div>
