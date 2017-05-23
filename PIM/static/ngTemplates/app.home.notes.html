@@ -1,3 +1,15 @@
+<style>
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+</style>
+
 <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
 
   <breadcrumb></breadcrumb>
@@ -6,8 +18,13 @@
     <div class="btn-group">
       <button type="button" class="btn btn-success" ng-click="save()"> <i class="fa fa-floppy-o"></i></button>
       <button type="button" class="btn btn-default" ng-click="clearAll()"> <i class="fa fa-trash"></i></button>
-      <button type="button" class="btn btn-default" ng-click="addImage()"> <i class="fa fa-file"></i>Add Image</button>
+      <!-- <button type="button" class="btn btn-default" ng-click="addImage()"> <i class="fa fa-file"></i>Add Image</button> -->
       <!-- <button type="button" class="btn btn-default" ng-click="bold()"> <i class="fa fa-bold"></i></button> -->
+      <!-- <input type="file" id="file" name="imageLoader"/> -->
+      <label class="custom-file-upload">
+        <input type="file" id="file"/>
+        Upload Image
+      </label>
     </div>
 
 
@@ -18,7 +35,7 @@
       <button type="button" class="btn btn-default" ng-click="rightalign()"> <i class="fa fa-align-right"></i></button>
       <button type="button" class="btn btn-default" ng-click="leftalign()"> <i class="fa fa-align-left"></i></button>
       <button type="button" class="btn btn-default" ng-click="centeralign()"> <i class="fa fa-align-justify"></i></button>
-      <button type="button" class="btn btn-default" ng-click="fontincrease()" id="fontincrease1"> <i class="fa fa-font"></i>++ 14</button>
+      <button type="button" class="btn btn-default" ng-click="fontincrease()" id="fontincrease1"> <i class="fa fa-font"></i>++</button>
       <button type="button" class="btn btn-default" ng-click="fontdecrease()"> <i class="fa fa-font"></i>--</button>
 
     </div>
@@ -27,6 +44,7 @@
     </div>
     <div class="btn-group">
       <select class="form-control" ng-model="fontName">
+        <<option value="Arial Black">Arial Black</option>
         <option value = "Times New Roman" >Times New Roman</option>
         <option value="Arial">Arial</option>
         <option value="Arial Black">Arial Black</option>
@@ -38,3 +56,7 @@
     <canvas id="canvas" ></canvas>
   </div>
 </div>
+
+<!-- <script type="javascript">
+
+</script> -->

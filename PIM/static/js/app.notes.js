@@ -11,10 +11,19 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
   var flag1 = true;
   var flag2 = true;
   var flag3 = true;
+  var enterpressed = false;
+  var enter;
+////////////////bullet point
+
+
+
+/////////////////////////////////
 
   $scope.$watch('fontName', function(newValue , oldValue) {
-    var selectedObj = $scope.fontName;
-    selectedObj.fontFamily = newValue;
+    console.log(newValue);
+    if(flag1 == false){
+      $scope.changefont(newValue);
+    }
   });
 
   //var temp = false;
@@ -100,45 +109,66 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
 
   $scope.addText = function(e){
     // console.log("will add text");
-    newText = new fabric.IText('', {
+    newText = new fabric.IText('\u2022 ', {
       fontFamily: 'arial black',
       left: e.layerX,
       top: e.layerY ,
       fontSize:14,
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+      textDecoration: 'normal',
     });
+
+    // newText.onKeyPress = function(evt) {
+    //   console.log(evt);
+    //   if(evt.keyCode === 13){
+    //   $scope.bullets(newText);
+    //   }
+    // }
     $scope.canvas.add(newText);
     $scope.canvas.setActiveObject(newText);
     newText.enterEditing();
     newText.hiddenTextarea.focus();
-
   }
 
-  $scope.canvas.on('object:selected',function(e){
+  // var canvasWrapper = document.getElementById('canvas');
+  // canvasWrapper.addEventListener("keydown", enterpress, false);
 
+
+  $scope.canvas.on('object:selected',function(e){
     obj = e.target;
     console.log(obj);
     flag1 = false;
       if(obj.get('type') == "i-text"){
       $scope.showTextOptions = true;
-  }
-  else
-    $scope.showTextOptions = false;
-  $scope.showDeleteOption = true;
+    }
+    else
+      $scope.showTextOptions = false;
+    $scope.showDeleteOption = true;
+    $scope.canvas.renderAll();
+
+
   });
   $scope.canvas.on('selection:cleared',function(e){
     flag1 = true;
     $scope.showTextOptions = false;
     $scope.showDeleteOption = false;
+    $scope.canvas.renderAll();
   });
 
   $scope.canvas.on('mouse:down', function(options) {
 
     if (!$scope.canvas.isDrawingMode && flag1==true){
-      console.log(options.e);
-      $scope.addText(options.e);
-      $scope.showTextOptions = false;
-      $scope.showDeleteOption = false;
+    //  console.log(options.e);
+
+      // $scope.addText(options.e);
+      // $scope.showTextOptions = false;
+      // $scope.showDeleteOption = false;
+      // $scope.canvas.renderAll();
+      $scope.bullets(options);
+      $scope.canvas.renderAll();
     }
+    $scope.canvas.renderAll();
   });
 
   window.addEventListener('resize', resizeCanvas, false);
@@ -177,77 +207,92 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
     //temp = true;
   });
 
+//add image new
 
-  $scope.addImage = function() {
-    fabric.Image.fromURL('/static/images/brandLogo.jpg', function(img) {
-      img.scale(0.5).set({
-        left: 100,
-        top: 100,
-        angle: -15,
-      });
-      $scope.canvas.add(img).setActiveObject(img);
+document.getElementById('file').addEventListener("change", function (e) {
+  var file = e.target.files[0];
+  var reader = new FileReader();
+  reader.onload = function (f) {
+    var data = f.target.result;
+    fabric.Image.fromURL(data, function (img) {
+      var oImg = img.set({left: 0, top: 0, angle: 00,width:200, height:200*(img.height/img.width)}).scale(0.9);
+      $scope.canvas.add(oImg).renderAll();
+      var a = $scope.canvas.setActiveObject(oImg);
+      var dataURL = $scope.canvas.toDataURL({format: 'png', quality: 0.8});
     });
-  }
-
+  };
+  reader.readAsDataURL(file);
+});
 //text options
-
 $scope.bold = function() {
-  if(obj.fontWeight == 'normal'){
+  if(obj.fontWeight != 'bold'){
       obj.fontWeight = 'bold';
+      $scope.canvas.renderAll();
+
    }
    else {
      obj.fontWeight = 'normal';
+     $scope.canvas.renderAll();
    }
+
  }
 $scope.italic = function(){
-    if(obj.fontStyle == 'normal'){
+    if(obj.fontStyle != 'italic'){
       obj.fontStyle = 'italic';
+      $scope.canvas.renderAll();
     }
     else {
       obj.fontStyle = 'normal';
+      $scope.canvas.renderAll();
     }
   }
   $scope.underline = function(){
-    if(obj.textDecoration == 'normal'){
+    if(obj.textDecoration != 'underline'){
       obj.textDecoration = 'underline';
+      $scope.canvas.renderAll();
     }
     else {
       obj.textDecoration = 'normal';
+      $scope.canvas.renderAll();
     }
   }
   $scope.rightalign = function(){
     if(obj.textAlign == 'left'){
       obj.textAlign = 'right';
+      $scope.canvas.renderAll();
     }
     else if (obj.textAlign == 'center') {
       obj.textAlign = 'right';
+      $scope.canvas.renderAll();
     }
   }
   $scope.leftalign = function(){
     if(obj.textAlign == 'right'){
       obj.textAlign = 'left';
+      $scope.canvas.renderAll();
     }
     else if (obj.textAlign == 'center') {
       obj.textAlign = 'left';
+      $scope.canvas.renderAll();
     }
   }
   $scope.centeralign = function(){
     if(obj.textAlign == 'right'){
       obj.textAlign = 'center';
+      $scope.canvas.renderAll();
     }
     else if (obj.textAlign == 'left') {
       obj.textAlign = 'center';
+      $scope.canvas.renderAll();
     }
   }
   $scope.fontincrease = function(){
     obj.fontSize += 1;
-    if(1){
-      console.log(obj.fontSize);
-    return;
-    }
+    $scope.canvas.renderAll();
   }
   $scope.fontdecrease = function(){
     obj.fontSize -= 1;
+    $scope.canvas.renderAll();
   }
 
 //delete selection
@@ -262,7 +307,25 @@ if($scope.canvas.getActiveGroup()){
 }
 
 //chage  fontFamily
-$scope.changefont = function(){
-  obj.fontFamily = $scope.fontName;
+$scope.changefont = function(newValue){
+  obj.fontFamily = newValue;
+  $scope.canvas.renderAll();;
 }
+
+// bullet points
+$scope.bullets = function(options){
+  $scope.addText(options.e);
+  $scope.showTextOptions = false;
+  $scope.showDeleteOption = false;
+
+  $scope.canvas.renderAll();
+}
+// var enterpress = function (evt) {
+//   console.log('ok1');
+//   var activeObject = $scope.canvas.getActiveObject();
+//   if(evt.keyCOde === 13){
+//     console.log('ok2');
+//     $scope.bullets(options);
+//   }
+// }
 });
