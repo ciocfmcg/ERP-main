@@ -26,6 +26,8 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
     }
   });
 
+
+
   //var temp = false;
   $scope.$watch('bookInView' , function(newValue , oldValue){
     if (newValue != -1) {
@@ -101,6 +103,9 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
   $scope.pencil = function(){
     $scope.canvas.isDrawingMode = !$scope.canvas.isDrawingMode;
     $scope.editor.pencil = !$scope.editor.pencil;
+    $scope.showTextOptions = false;
+    $scope.showDeleteOption = false;
+    $scope.canvas.renderAll();
   }
 
   $scope.clearAll = function(){
@@ -109,7 +114,7 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
 
   $scope.addText = function(e){
     // console.log("will add text");
-    newText = new fabric.IText('\u2022 ', {
+    newText = new fabric.IText('', {
       fontFamily: 'arial black',
       left: e.layerX,
       top: e.layerY ,
@@ -118,12 +123,14 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
       fontStyle: 'normal',
       textDecoration: 'normal',
     });
-
+    console.log(newText);
     // newText.onKeyPress = function(evt) {
     //   console.log(evt);
     //   if(evt.keyCode === 13){
-    //   $scope.bullets(newText);
+    //     console.log("okok");
     //   }
+    //   evt.target.value += evt.key;
+    //   $scope.canvas.renderAll();
     // }
     $scope.canvas.add(newText);
     $scope.canvas.setActiveObject(newText);
@@ -138,9 +145,11 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
   $scope.canvas.on('object:selected',function(e){
     obj = e.target;
     console.log(obj);
+
     flag1 = false;
       if(obj.get('type') == "i-text"){
       $scope.showTextOptions = true;
+
     }
     else
       $scope.showTextOptions = false;
@@ -161,13 +170,12 @@ app.controller("controller.home.notes", function($scope , $state , $users ,  $st
     if (!$scope.canvas.isDrawingMode && flag1==true){
     //  console.log(options.e);
 
-      // $scope.addText(options.e);
-      // $scope.showTextOptions = false;
-      // $scope.showDeleteOption = false;
-      // $scope.canvas.renderAll();
-      $scope.bullets(options);
+      $scope.addText(options.e);
+      $scope.showTextOptions = true;
+      $scope.showDeleteOption = true;
+
       $scope.canvas.renderAll();
-    }
+      }
     $scope.canvas.renderAll();
   });
 
@@ -313,19 +321,30 @@ $scope.changefont = function(newValue){
 }
 
 // bullet points
-$scope.bullets = function(options){
-  $scope.addText(options.e);
-  $scope.showTextOptions = false;
-  $scope.showDeleteOption = false;
 
-  $scope.canvas.renderAll();
-}
-// var enterpress = function (evt) {
-//   console.log('ok1');
-//   var activeObject = $scope.canvas.getActiveObject();
-//   if(evt.keyCOde === 13){
-//     console.log('ok2');
-//     $scope.bullets(options);
-//   }
+// $scope.bullet = function(obj) {
+//     var patt = /\n$/;
+//
+//     if(patt.test(obj.text)){
+//       console.log("ok1");
+//       obj.text = obj.text + "\n\u2022 ";
+//       console.log(obj.text);
+//       $scope.canvas.renderAll();
+//     }
+//
 // }
+//
+// $scope.check = function() {
+//   console.log("ok");
+//         if (window.event.keyCode == 13) {
+//             console.log("enter presses");
+//         }
+// }
+
+
+//change text color
+document.getElementById("text-color").onchange = function() {
+          $scope.canvas.getActiveObject().setFill(this.value);
+          $scope.canvas.renderAll();
+      };
 });
