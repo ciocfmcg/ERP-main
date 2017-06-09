@@ -1,5 +1,34 @@
 <breadcrumb></breadcrumb>
 <div class="container-fluid">
+  <div class="form-group">
+    <label>API Key</label>
+    <div class="form-group">
+      <div class="input-group">
+        <input type="search" name="searchBy" ng-model="data.apiKey" id="searchBy" class="form-control" ng-disabled="data.keyValid" />
+
+        <span ng-if="data.keyValid" class="input-group-addon" id="basic-addon2">{{data.remaining}} Remaining</span>
+
+        <div ng-if="!data.keyValid" class="input-group-btn">
+          <button class="btn btn-primary" type="button" ng-click="veryfyKey()">Verify</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Input</label>
+    <input type="text" class="form-control" ng-model="data.input">
+  </div>
+  <hr>
+  <div class="btn-group">
+    <button type="button" ng-click="process('parse')" class="btn btn-default">Parse</button>
+    <button type="button" ng-click="process('yearRelation')" class="btn btn-default">Year related values</button>
+    <button type="button" ng-click="process('labelObject')" class="btn btn-default">Object label</button>
+    <button type="button" ng-click="clear()" class="btn btn-warning">Clear</button>
+  </div>
+
+  <h2 class="text-muted">Results</h2>
+
 
 
 </div>
