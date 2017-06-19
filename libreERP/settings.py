@@ -27,7 +27,7 @@ ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user wi
 
 SITE_ADDRESS = 'http://127.0.0.1:8000' # the url prefix of the site
 
-ROOT_APP = 'ERP' # the defaulr app
+ROOT_APP = 'event' # the defaulr app
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
@@ -93,6 +93,7 @@ INSTALLED_APPS = (
     'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
+	'events',# to manage events like test, hackathon or something like that
 )
 
 SITE_ID = 1

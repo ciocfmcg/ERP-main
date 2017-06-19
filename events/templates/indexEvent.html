@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block specific_head %}
+  <title>Event</title>
+{% endblock %}
+
+{% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+{% endblock %}
+{% block header %}
+
+{% endblock %}
+<!-- Header -->
+{% block content %}
+<header  style="background-image: url({{ event.bannerImage.url }});">
+    <div class="container">
+        <div class="intro-text">
+            <div class="intro-lead-in">{{event.tagLine}}</div>
+        </div>
+    </div>
+</header>
+
+<!-- Services Section -->
+<section id="services">
+    <div class="container">
+        <div class="row text-center">
+            {{ event.htmlDescription | safe}}
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-success"> <i class="fa fa-clock-o fa-2x"></i> </h2>
+                <h3 class="section-subheading text-muted">
+                  {{event.dated |date:"d-M-y h:m a"}} <br>
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-danger"> <i class="fa fa-mobile fa-2x"></i> </h2>
+                <h3 class="section-subheading text-muted">
+                  Contact : +91-{{contact.profile.mobile}}
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-primary"> <i class="fa fa-map-marker fa-2x"></i> </h2>
+                <h3 class="section-subheading text-muted">
+                  {{address.street}} <br>
+                  {{address.city}}  {{address.state}} {{address.pincode}}
+                </h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="contact" style="background-image: url({% static 'images/map-image.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Register</h2>
+                <h3 class="section-subheading text-muted">To get updates and reminder</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post">
+                  {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="hidden" name="event" value="{{event.pk}}">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Your Name *" name="name" required >
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Your Email *" name="email" required >
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" class="form-control" placeholder="Your Phone *" name="phone" required >
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Your Message *" name="comments" ></textarea>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-lg-12 text-center">
+                            <input type="submit" class="btn btn-xl" value ="Register">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block footer %}
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="copyright">Copyright &copy; Your Website 2014</span>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline social-buttons">
+                    <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-facebook"></i></a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline quicklinks">
+                    <li><a href="#">Privacy Policy</a>
+                    </li>
+                    <li><a href="#">Terms of Use</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Portfolio Modals -->
+<!-- Use the modals below to showcase details about your portfolio projects! -->
+
+{% endblock %}
+{% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
+<script src="{% static 'js/agency.js' %}"></script>
+{% endblock %}

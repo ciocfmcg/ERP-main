@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
+from events.views import eventHome
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
@@ -19,6 +20,7 @@ urlpatterns = [
     url(r'^token', tokenAuthentication , name ='tokenAuthentication'),
     url(r'^logout/', logoutView , name ='logout'),
     url(r'^corporate/', index , name ='index'),
+    url(r'^events/', eventHome, name = 'event'), # public blogs app
     url(r'^blogs/', include('blogs.urls')), # public blogs app
     url(r'^api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
     url(r'^accounts/', include('allauth.urls')),
