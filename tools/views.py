@@ -191,11 +191,16 @@ class NLPParser(APIView):
 
     def post(self , request , format = None):
         user = self.request.user
-        line = request.data['line']
-        from scripts.kpmgPDFExtract.nlpEngine import parseLine
+        line = request.data['sent']
+        from scripts.nlp.nlpEngine import parseLine
         # res = toolFn(os.path.join(globalSettings.BASE_DIR , 'tools', 'scripts', 'pdfReader', 'pdfFile.pdf'), 9)
         datafields , words,percents, durations , persons , miscs , locations, cleanedTags, dates, money = parseLine(line)
-        res = {'percents': percents , 'persons' : persons , 'locations' : locations ,'dates':dates, 'money' : money}
+
+        dArray = []
+        for d in dates:
+            dArray.append(str(d))
+
+        res = {'percents': percents , 'persons' : persons , 'locations' : locations ,'dates':dArray, 'money' : money}
         return Response(res, status=status.HTTP_200_OK)
 
 class NLPParserRelation(APIView):

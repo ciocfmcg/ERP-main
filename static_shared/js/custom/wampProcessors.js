@@ -8,6 +8,8 @@ connection.onopen = function (session) {
    // our event handler we will subscribe on our topic
    //
   function chatResonse (args) {
+    console.log(args);
+    
     var status = args[0];
     var msg = args[1];
     var friend = args[2];

@@ -45,7 +45,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.105','10.0.1.108', 'localhost', '127.0.0.1','192.168.43.10', '192.168.1.4','192.168.1.8']
+ALLOWED_HOSTS = ['yadav-sve14a37cgs', '192.168.0.103', '192.168.2.75', '192.168.0.105','10.0.1.108', 'localhost', '127.0.0.1','192.168.43.10', '192.168.1.4','192.168.1.8']
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
@@ -143,6 +143,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'API.middleware.simple_middleware',
 )
 
 ROOT_URLCONF = 'libreERP.urls'
@@ -257,4 +258,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = '10.112.143.38'
+WAMP_SERVER = '52.35.168.83'
