@@ -49,7 +49,7 @@ import os
 # from scripts.pdfReader.main import processDoc as toolFn
 # Create your views here.
 # from scripts.kpmgPDFExtract.kpmgMain import main as kpmg
-from scripts.pdfEditor.markings import *
+# from scripts.pdfEditor.markings import *
 from shutil import copyfile
 
 class ApiAccountPublicApi(APIView):
