@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block specific_head %}
-  <title>LibreERP</title>
+  <title>CIOC</title>
 {% endblock %}
 
 {% block specific_css %}
@@ -19,7 +19,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">LibreERP</a>
+            <a class="navbar-brand page-scroll" href="#page-top">CIOC</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -32,9 +32,9 @@
                 <li>
                     <a class="page-scroll" href="#portfolio">Portfolio</a>
                 </li>
-                <li>
+                <!-- <li>
                     <a class="page-scroll" href="#about">About</a>
-                </li>
+                </li> -->
                 <li>
                     <a class="page-scroll" href="#team">Team</a>
                 </li>
@@ -53,11 +53,11 @@
 {% endblock %}
 <!-- Header -->
 {% block content %}
-<header  style="background-image: url({% static 'images/header-bg.jpg' %});">
+<header  style="background-image: url({% static 'images/banner-img2.jpg' %});height:100vh;">
     <div class="container">
-        <div class="intro-text">
-            <div class="intro-lead-in">An Open Source and Free ERP Platform</div>
-            <div class="intro-heading">Run Free</div>
+        <div class="intro-text" style="text-align:right;">
+            <div class="intro-lead-in" >We are your technology partner</div>
+            <!-- <div class="intro-heading" >Think Free</div> -->
             <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
         </div>
     </div>
@@ -69,33 +69,33 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2 class="section-heading">Services</h2>
-                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                <h3 class="section-subheading text-muted">As your technology partner we can help you more then you can imagine.</h3>
             </div>
         </div>
         <div class="row text-center">
             <div class="col-md-4">
                 <span class="fa-stack fa-4x">
                     <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                    <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
                 </span>
-                <h4 class="service-heading">E-Commerce</h4>
-                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                <h4 class="service-heading">IOT</h4>
+                <p class="text-muted">How about we take your data and services to all the devices you possibly think of be it for smart home to smart factory.</p>
             </div>
             <div class="col-md-4">
                 <span class="fa-stack fa-4x">
                     <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
+                    <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
                 </span>
-                <h4 class="service-heading">Responsive Design</h4>
-                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                <h4 class="service-heading">Web</h4>
+                <p class="text-muted">As the starting point for each business we take care of brining your business online. Got a food delivery or other ecommerce business idea ? we are here to help.</p>
             </div>
             <div class="col-md-4">
                 <span class="fa-stack fa-4x">
                     <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                    <i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
                 </span>
-                <h4 class="service-heading">Web Security</h4>
-                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                <h4 class="service-heading">Desktop/Mobile</h4>
+                <p class="text-muted">When we say mobility we mean serious productivity on the go. Dont let your employee stick to the web or a desktop machine to get the job done. Given them ability to work on the fly.</p>
             </div>
         </div>
     </div>
@@ -106,8 +106,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading">Portfolio</h2>
-                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                <h2 class="section-heading">Portfolio/Products</h2>
+                <h3 class="section-subheading text-muted">We already have a lot you can use right away.</h3>
             </div>
         </div>
         <div class="row">
@@ -118,11 +118,11 @@
                             <i class="fa fa-plus fa-3x"></i>
                         </div>
                     </div>
-                    <img src="{% static 'images/portfolio/roundicons.png' %}" class="img-responsive" alt="">
+                    <img src="{% static 'images/portfolio/erp.png' %}" class="img-responsive" alt="">
                 </a>
                 <div class="portfolio-caption">
-                    <h4>Round Icons</h4>
-                    <p class="text-muted">Graphic Design</p>
+                    <h4>LibreERP</h4>
+                    <p class="text-muted">Free and Open source ERP Platform</p>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6 portfolio-item">
@@ -132,11 +132,11 @@
                             <i class="fa fa-plus fa-3x"></i>
                         </div>
                     </div>
-                    <img src="{% static 'images/portfolio/startup-framework.png' %}" class="img-responsive" alt="">
+                    <img src="{% static 'images/portfolio/rpa.jpg' %}" class="img-responsive" alt="">
                 </a>
                 <div class="portfolio-caption">
-                    <h4>Startup Framework</h4>
-                    <p class="text-muted">Website Design</p>
+                    <h4>LibreRPA</h4>
+                    <p class="text-muted">A platform for business process automation</p>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6 portfolio-item">
@@ -146,14 +146,14 @@
                             <i class="fa fa-plus fa-3x"></i>
                         </div>
                     </div>
-                    <img src="{% static 'images/portfolio/treehouse.png' %}" class="img-responsive" alt="">
+                    <img src="{% static 'images/portfolio/assist.jpg' %}" class="img-responsive" alt="">
                 </a>
                 <div class="portfolio-caption">
-                    <h4>Treehouse</h4>
-                    <p class="text-muted">Website Design</p>
+                    <h4>LibreAssist</h4>
+                    <p class="text-muted">A chat bot like Siri</p>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 portfolio-item">
+            <!-- <div class="col-md-4 col-sm-6 portfolio-item">
                 <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
                     <div class="portfolio-hover">
                         <div class="portfolio-hover-content">
@@ -163,8 +163,8 @@
                     <img src="{% static 'images/portfolio/golden.png' %}" class="img-responsive" alt="">
                 </a>
                 <div class="portfolio-caption">
-                    <h4>Golden</h4>
-                    <p class="text-muted">Website Design</p>
+                    <h4>LibreDOC</h4>
+                    <p class="text-muted">Getting scanned invoices? use this to automatically process it</p>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6 portfolio-item">
@@ -180,8 +180,8 @@
                     <h4>Escape</h4>
                     <p class="text-muted">Website Design</p>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-6 portfolio-item">
+            </div> -->
+            <!-- <div class="col-md-4 col-sm-6 portfolio-item">
                 <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
                     <div class="portfolio-hover">
                         <div class="portfolio-hover-content">
@@ -194,18 +194,18 @@
                     <h4>Dreams</h4>
                     <p class="text-muted">Website Design</p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>
 
 <!-- About Section -->
-<section id="about">
+<!-- <section id="about">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2 class="section-heading">About</h2>
-                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                <h3 class="section-subheading text-muted">Here is our story.</h3>
             </div>
         </div>
         <div class="row">
@@ -278,7 +278,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- Team Section -->
 <section id="team" class="bg-light-gray">
@@ -292,13 +292,13 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="team-member">
-                    <img src="{% static 'images/team/1.jpg' %}" class="img-responsive img-circle" alt="">
-                    <h4>Kay Garland</h4>
-                    <p class="text-muted">Lead Designer</p>
+                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                    <h4>Pradeep</h4>
+                    <p class="text-muted">Technology</p>
                     <ul class="list-inline social-buttons">
-                        <li><a href="#"><i class="fa fa-twitter"></i></a>
+                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                         </li>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a>
+                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
                         </li>
                         <li><a href="#"><i class="fa fa-linkedin"></i></a>
                         </li>
@@ -307,13 +307,13 @@
             </div>
             <div class="col-sm-4">
                 <div class="team-member">
-                    <img src="{% static 'images/team/2.jpg' %}" class="img-responsive img-circle" alt="">
-                    <h4>Larry Parker</h4>
-                    <p class="text-muted">Lead Marketer</p>
+                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                    <h4>Raj</h4>
+                    <p class="text-muted">Technology</p>
                     <ul class="list-inline social-buttons">
-                        <li><a href="#"><i class="fa fa-twitter"></i></a>
+                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                         </li>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a>
+                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
                         </li>
                         <li><a href="#"><i class="fa fa-linkedin"></i></a>
                         </li>
@@ -322,13 +322,28 @@
             </div>
             <div class="col-sm-4">
                 <div class="team-member">
-                    <img src="{% static 'images/team/3.jpg' %}" class="img-responsive img-circle" alt="">
-                    <h4>Diana Pertersen</h4>
-                    <p class="text-muted">Lead Developer</p>
+                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                    <h4>Sowmya Narayan</h4>
+                    <p class="text-muted">Sales</p>
                     <ul class="list-inline social-buttons">
-                        <li><a href="#"><i class="fa fa-twitter"></i></a>
+                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                         </li>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a>
+                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                        </li>
+                        <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4 col-sm-offset-4">
+                <div class="team-member">
+                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                    <h4>Deepika</h4>
+                    <p class="text-muted">Finance</p>
+                    <ul class="list-inline social-buttons">
+                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                        </li>
+                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
                         </li>
                         <li><a href="#"><i class="fa fa-linkedin"></i></a>
                         </li>
@@ -338,14 +353,14 @@
         </div>
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center">
-                <p class="large text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut eaque, laboriosam veritatis, quos non quis ad perspiciatis, totam corporis ea, alias ut unde.</p>
+                <p class="large text-muted">We started turning our own ideas into reality of free and open source business platform in the form of LibreERP and LibreRPA then we thought why not help others too in their entrepreneurial journey</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Clients Aside -->
-<aside class="clients">
+<!-- <aside class="clients">
     <div class="container">
         <div class="row">
             <div class="col-md-3 col-sm-6">
@@ -370,7 +385,7 @@
             </div>
         </div>
     </div>
-</aside>
+</aside> -->
 
 <!-- Contact Section -->
 
@@ -379,27 +394,28 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2 class="section-heading">Contact Us</h2>
-                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                <h3 class="section-subheading text-muted">Get in touch to know how we can colaborate together.</h3>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <form name="sentMessage" id="contactForm">
+                <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post">
+                  {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Your Name *" id="name" required >
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Your Email *" id="email" required >
-                            </div>
-                            <div class="form-group">
-                                <input type="tel" class="form-control" placeholder="Your Phone *" id="phone" required >
-                            </div>
+                          <div class="form-group">
+                              <input type="text" class="form-control" placeholder="Your Name *" name="name" required >
+                          </div>
+                          <div class="form-group">
+                              <input type="email" class="form-control" placeholder="Your Email *" name="email" required >
+                          </div>
+                          <div class="form-group">
+                              <input type="tel" class="form-control" placeholder="Your Phone *" name="phone" required >
+                          </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <textarea class="form-control" placeholder="Your Message *" id="message" ></textarea>
+                                <textarea class="form-control" placeholder="Your Message *" id="message" name="comments" ></textarea>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -418,12 +434,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <span class="copyright">Copyright &copy; Your Website 2014</span>
+                <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
             </div>
             <div class="col-md-4">
                 <ul class="list-inline social-buttons">
-                    <li><a href="#"><i class="fa fa-twitter"></i></a>
-                    </li>
+                    <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li> -->
                     <li><a href="#"><i class="fa fa-facebook"></i></a>
                     </li>
                     <li><a href="#"><i class="fa fa-linkedin"></i></a>
@@ -459,17 +475,17 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <div class="modal-body">
                         <!-- Project Details Go Here -->
-                        <h2>Project Name</h2>
-                        <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                        <img class="img-responsive img-centered" src="{% static 'images/portfolio/roundicons-free.png' %}" alt="">
-                        <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                        <h2>ERP</h2>
+                        <p class="item-intro text-muted">An open source and free platform.</p>
+                        <img class="img-responsive img-centered" src="{% static 'images/portfolio/erp.png' %}" alt="">
+                        <p>Minimize your business expenditure by switching to LibreERP. Once deployed it gives you project management , HR, Business management and many more modules along with their mobile apps.</p>
                         <p>
-                            <strong>Want these icons in this portfolio item sample?</strong>You can download 60 of them for free, courtesy of <a href="https://getdpd.com/cart/hoplink/18076?referrer=bvbo4kax5k8ogc">RoundIcons.com</a>, or you can purchase the 1500 icon set <a href="https://getdpd.com/cart/hoplink/18076?referrer=bvbo4kax5k8ogc">here</a>.</p>
-                        <ul class="list-inline">
+                            <strong>Want to try it out?</strong>You can download the source at <a href="https://github.com/pkyad/libreERP-main">github.com</a>, or you can contact us by sending an email to info@cioc.co.in</p>
+                        <!-- <ul class="list-inline">
                             <li>Date: July 2014</li>
                             <li>Client: Round Icons</li>
                             <li>Category: Graphic Design</li>
-                        </ul>
+                        </ul> -->
                         <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
                     </div>
                 </div>
@@ -491,11 +507,10 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
                     <div class="modal-body">
-                        <h2>Project Heading</h2>
-                        <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                        <img class="img-responsive img-centered" src="{% static 'images/portfolio/startup-framework-preview.png' %}" alt="">
-                        <p><a href="http://designmodo.com/startup/?u=787">Startup Framework</a> is a website builder for professionals. Startup Framework contains components and complex blocks (PSD+HTML Bootstrap themes and templates) which can easily be integrated into almost any design. All of these components are made in the same style, and can easily be integrated into projects, allowing you to create hundreds of solutions for your future projects.</p>
-                        <p>You can preview Startup Framework <a href="http://designmodo.com/startup/?u=787">here</a>.</p>
+                        <h2>RPA</h2>
+                        <p class="item-intro text-muted">Automate web apps and citrix applications with this free RPA platform.</p>
+                        <img class="img-responsive img-centered" src="{% static 'images/portfolio/rpa.jpg' %}" alt="">
+                        <p>Contact us for a demo by sending an email to info@cioc.co.in</p>
                         <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
                     </div>
                 </div>
@@ -518,11 +533,9 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <div class="modal-body">
                         <!-- Project Details Go Here -->
-                        <h2>Project Name</h2>
-                        <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                        <img class="img-responsive img-centered" src="{% static 'images/portfolio/treehouse-preview.png' %}" alt="">
-                        <p>Treehouse is a free PSD web template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. This is bright and spacious design perfect for people or startup companies looking to showcase their apps or other projects.</p>
-                        <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/treehouse-free-psd-web-template/">FreebiesXpress.com</a>.</p>
+                        <h2>Assist</h2>
+                        <p class="item-intro text-muted">24X7 online information desk on your website powered by LibreAssist, an open source chatbot platform with advance NLP capabilities.</p>
+                        <img class="img-responsive img-centered" src="{% static 'images/portfolio/assist.jpg' %}" alt="">
                         <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
                     </div>
                 </div>
