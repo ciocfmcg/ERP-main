@@ -17,9 +17,18 @@ from API.permissions import *
 from ERP.models import application, permission , module
 from ERP.views import getApps, getModules
 from django.db.models import Q
+from django.http import JsonResponse
+import random, string
+from django.utils import timezone
+
+def generateOTPCode():
+    length = 4
+    chars = string.digits
+    rnd = random.SystemRandom()
+    return ''.join(rnd.choice(chars) for i in range(length))
 
 def tokenAuthentication(request):
-    ak = get_object_or_404(accountsKey, activation_key=request.GET['key'])
+    ak = get_object_or_404(accountsKey, activation_key=request.GET['key'] , keyType='hashed')
     #check if the activation key has expired, if it hase then render confirm_expired.html
     if ak.key_expires < timezone.now():
         raise SuspiciousOperation('Expired')
@@ -35,6 +44,19 @@ def tokenAuthentication(request):
     authStatus = {'status' : 'success' , 'message' : 'Account actived, please login.' }
     return render(request , 'login.html' , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
 
+
+def generateOTP(request):
+    print request.POST
+    key_expires = timezone.now() + datetime.timedelta(2)
+    otp = generateOTPCode()
+    user = get_object_or_404(User, username = request.POST['id'])
+    ak = accountsKey(user= user, activation_key= otp,
+        key_expires=key_expires , keyType = 'otp')
+    ak.save()
+    print ak.activation_key
+    # send a SMS with the OTP
+    return JsonResponse({} ,status =200 )
+
 def loginView(request):
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
@@ -46,8 +68,15 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
+
     	usernameOrEmail = request.POST['username']
-    	password = request.POST['password']
+        otpMode = False
+        if 'otp' in request.POST:
+            print "otp"
+            otp = request.POST['otp']
+            otpMode = True
+        else:
+            password = request.POST['password']
         if '@' in usernameOrEmail and '.' in usernameOrEmail:
             u = User.objects.get(email = usernameOrEmail)
             username = u.username
@@ -57,8 +86,29 @@ def loginView(request):
                 u = User.objects.get(username = username)
             except:
                 statusCode = 404
+        if not otpMode:
+            user = authenticate(username = username , password = password)
+        else:
+            print "OTP Mode"
+            ak = None
+            try:
+                aks = accountsKey.objects.filter(activation_key=otp , keyType='otp')
+                ak = aks[len(aks)-1]
+                print "Aks", aks,ak
+            except:
+                pass
+            print ak
+            if ak is not None:
+                #check if the activation key has expired, if it has then render confirm_expired.html
+                if ak.key_expires > timezone.now():
+                    user = ak.user
+                    user.backend = 'django.contrib.auth.backends.ModelBackend'
+                else:
+                    user = None
+            else:
+                authStatus = {'status' : 'danger' , 'message' : 'Incorrect OTP'}
+                statusCode = 401
 
-        user = authenticate(username = username , password = password)
     	if user is not None:
             login(request , user)
             if request.GET:
@@ -73,7 +123,7 @@ def loginView(request):
                 authStatus = {'status' : 'danger' , 'message' : 'Incorrect username or password.'}
                 statusCode = 401
 
-    return render(request , 'login.html' , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN}, status=statusCode)
+    return render(request , 'login.html' , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE}, status=statusCode)
 
 def registerView(request):
     if globalSettings.REGISTER_URL != 'register':

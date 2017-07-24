@@ -45,7 +45,7 @@ class notification(models.Model):
     onHold = models.BooleanField(default = False)
 
 def getChatMessageAttachment(instance , filename ):
-    return 'chat/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, instance.originator.username, filename)
+    return 'chat/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 class chatMessage(models.Model):
     message = models.CharField(max_length = 200 , null=True)

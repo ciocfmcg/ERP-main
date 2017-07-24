@@ -48,6 +48,9 @@ FIELD_TYPE_CHOCIE = (
     ('choice' , 'choice'),
 )
 
+def getEcommerceProductVisualUploadPath(instance , filename ):
+    return 'ecommerce/pictureUploads/%s_%s' % (str(time()).replace('.', '_'), filename)
+
 class field(models.Model): # this will be used to build the form to be used to post a listing
     fieldType = models.CharField(choices = FIELD_TYPE_CHOCIE , default = 'char' , max_length = 15)
     unit = models.CharField( null = True , max_length = 50)
@@ -66,7 +69,8 @@ class genericProduct(models.Model): # such as MI5, Nokia N8 etc
     name = models.CharField( null = False , max_length = 50)
     created = models.DateTimeField(auto_now_add = True)
     productType = models.ForeignKey(genericType , related_name='products' , null = False)
-
+    minCost = models.PositiveIntegerField(default=0)
+    visual = models.ImageField(upload_to=getEcommerceProductVisualUploadPath , null = True)
 
 
 AVAILABILITY_CHOICES = (
@@ -178,7 +182,7 @@ class order(models.Model):
     shipping = models.CharField(max_length = 20 , null = True)
     coupon = models.CharField(max_length = 20 , null = True)
     rate = models.CharField(max_length = 20 , null = True)
-    quantity = models.PositiveIntegerField(null=False , default = 0) # if the price model is wright then this is in grams and when its time in minutes
+    quantity = models.PositiveIntegerField(null=False , default = 0) # if the price model is right then this is in grams and when its time its in minutes
     start = models.DateTimeField(null = True)
     end = models.DateTimeField(null = True)
     status = models.CharField(choices = ORDER_STATUS_CHOICES , null = True , max_length = 20 , default = 'new')

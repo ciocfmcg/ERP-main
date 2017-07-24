@@ -24,10 +24,17 @@ def getTranscriptsPath(instance , filename ):
 def getOtherDocsPath(instance , filename ):
     return 'HR/doc/Others/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
+
+KEY_CHOICES = (
+    ('hashed', 'hashed'),
+    ('otp', 'otp')
+)
+
 class accountsKey(models.Model):
     user = models.ForeignKey(User , related_name='accountKey')
     activation_key = models.CharField(max_length=40, blank=True)
     key_expires = models.DateTimeField(default=timezone.now)
+    keyType = models.CharField(max_length = 6 , default = 'hashed' , choices = KEY_CHOICES)
 
 class profile(models.Model):
     user = models.OneToOneField(User)

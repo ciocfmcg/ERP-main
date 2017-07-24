@@ -52,10 +52,17 @@ class chatMessageViewSet(viewsets.ModelViewSet):
 class chatMessageBetweenViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, readOnly)
     serializer_class = chatMessageSerializer
+    filter_backends = [DjangoFilterBackend]
+
     def get_queryset(self):
         reciepient = User.objects.get(username = self.request.GET['other'])
-        qs1 = chatMessage.objects.filter(originator = self.request.user , user= reciepient)
-        qs2 = chatMessage.objects.filter(user = self.request.user , originator= reciepient)
+        if "pk" in self.request.GET:
+            pk = int(self.request.GET['pk'])
+            qs1 = chatMessage.objects.filter(originator = self.request.user , user= reciepient).filter(id__gt=pk)
+            qs2 = chatMessage.objects.filter(user = self.request.user , originator= reciepient).filter(id__gt=pk)
+        else:
+            qs1 = chatMessage.objects.filter(originator = self.request.user , user= reciepient)
+            qs2 = chatMessage.objects.filter(user = self.request.user , originator= reciepient)
         qs = qs1 | qs2
         for msg in qs:
             msg.read = True

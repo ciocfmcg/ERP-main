@@ -4,10 +4,14 @@ from django.db import models
 from projects.models import MEDIA_TYPE_CHOICES, project
 from gitweb.models import commitNotification
 # Create your models here.
-from django.db.models.signals import post_save , pre_delete
+from django.db.models.signals import post_save , pre_delete, post_init , pre_save
 from django.dispatch import receiver
+import requests
+from django.conf import settings as globalSettings
 import math
 from time import time
+from datetime import timedelta , datetime
+from django.utils import timezone
 
 def getTaskUploadsPath(instance , filename ):
     return 'tasks/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)

@@ -272,8 +272,11 @@ class earningsApi(APIView):
         return Response(content, status=status.HTTP_200_OK)
 
 def ecommerceHome(request):
+    if globalSettings.ECOMMERCE_APP['ui'] == 'rental':
+        return render(request , 'ngEcommerce.rental.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
+    elif globalSettings.ECOMMERCE_APP['ui'] == 'food':
+        return render(request , 'ngEcommerce.food.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
 
-    return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
 
 def genInvoice(c , o, ofr , it, se): # canvas , order , offer , item , service
     c.setFont("Times-Roman" , 20)
@@ -471,9 +474,17 @@ class genericTypeViewSet(viewsets.ModelViewSet):
     serializer_class = genericTypeSerializer
 
 class genericProductViewSet(viewsets.ModelViewSet):
-    permission_classes = (isAdmin , )
+    permission_classes = (isAdminOrReadOnly , )
     queryset = genericProduct.objects.all()
     serializer_class = genericProductSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
+
+
+class genericProductLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (readOnly , )
+    queryset = genericProduct.objects.all()
+    serializer_class = genericProductLiteSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
 

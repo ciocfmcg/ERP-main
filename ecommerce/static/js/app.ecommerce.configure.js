@@ -78,7 +78,7 @@ app.controller('businessManagement.ecommerce.configure' , function($scope , $htt
   $scope.genericProductConfig = {
     views : views,
     url : '/api/ecommerce/genericProduct/',
-    fields : ['pk', 'name' , 'productType' ],
+    fields : ['pk', 'name' , 'productType', 'minCost', 'visual' ],
     editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.modal.html',
     deletable : true,
     searchField: 'name',
@@ -184,11 +184,20 @@ app.controller('businessManagement.ecommerce.configure' , function($scope , $htt
         Flash.create('danger' , 'No fields selected')
         return;
       }
-      dataToSend = {
-        name : d.name,
-        productType : d.productType.pk,
-        fields : fs,
-      }
+
+      var fd = new FormData();
+      fd.append( 'name' , d.name);
+      fd.append( 'productType' , d.productType.pk);
+      fd.append( 'fields' , fs);
+      fd.append( 'minCost' , d.minCost);
+      fd.append( 'visual' , d.visual);
+
+      // dataToSend = {
+      //   name : d.name,
+      //   productType : d.productType.pk,
+      //   fields : fs,
+      // }
+
       url = '/api/ecommerce/genericProduct/';
     } else if ($scope.data.mode == 'choiceLabel') {
       dataToSend = {
@@ -205,6 +214,7 @@ app.controller('businessManagement.ecommerce.configure' , function($scope , $htt
       url = '/api/ecommerce/choiceOption/';
     }
 
+
     if ($scope.editing) {
       url += $scope.data.pk + '/';
       method = 'PATCH';
@@ -212,15 +222,33 @@ app.controller('businessManagement.ecommerce.configure' , function($scope , $htt
       method = 'POST';
     }
 
-    $http({method : method , url : url , data : dataToSend}).
-    then(function(response){
-      if (!$scope.editing) {
-        $scope.data = {mode : $scope.data.mode , fieldType : 'char', parentLabel : $scope.data.parentLabel}
-      }
-      Flash.create('success', response.status + ' : ' + response.statusText );
-    }, function(response){
-      Flash.create('danger', response.status + ' : ' + response.statusText );
-    })
+    if ($scope.data.mode != 'genericProduct') {
+      $http({method : method , url : url , data : dataToSend}).
+      then(function(response){
+        if (!$scope.editing) {
+          $scope.data = {mode : $scope.data.mode , fieldType : 'char', parentLabel : $scope.data.parentLabel}
+        }
+        Flash.create('success', response.status + ' : ' + response.statusText );
+      }, function(response){
+        Flash.create('danger', response.status + ' : ' + response.statusText );
+      })
+
+    }else {
+
+      // because we need to use formdata for the genericProduct
+      $http({method : method , url : url , data : fd , transformRequest: angular.identity, headers: {'Content-Type': undefined}}).
+      then(function(response){
+        if (!$scope.editing) {
+          $scope.data = {mode : $scope.data.mode , fieldType : 'char', parentLabel : $scope.data.parentLabel}
+        }
+        Flash.create('success', response.status + ' : ' + response.statusText);
+      }, function(response){
+        Flash.create('danger', response.status + ' : ' + response.statusText);
+      });
+    }
+
+
+
   }
 
 

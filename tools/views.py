@@ -92,10 +92,20 @@ class kpmgAuditApi(APIView):
         # print pdfFile, pdfFile.size
         # res = toolFn(imgFile)
         pth = os.path.join(globalSettings.BASE_DIR , 'tools', 'scripts', 'kpmgPDFExtract')
-        kpmg(pth)
-        copyfile(os.path.join(pth , 'destination.pdf') , os.path.join(globalSettings.BASE_DIR , 'media_root', 'kpmg', 'destination.pdf'))
-        content = {'fileLink': '/media/kpmg/destination.pdf'}
-        return Response(content, status=status.HTTP_200_OK)
+
+        pyFile = FileCache.objects.get(fileID = request.GET['py']).attachment
+        cyFile = FileCache.objects.get(fileID = request.GET['cy']).attachment
+        from scripts.KPMG_PY import kpmgGDC
+        from scripts.generateOutput import generatePDF
+
+        print request.GET['py']
+        print request.GET['cy']
+        # print dir(pyFile)
+        # print pyFile.path
+
+        kpmgGDC(pyFile.path , cyFile.path)
+        generatePDF(cyFile.path)
+        return Response({}, status=status.HTTP_200_OK)
 
 
 class KNNOcrApi(APIView):
@@ -152,7 +162,6 @@ class PDFEditorApi(APIView):
             drawRect(fc.path, pageNo, rect, color)
 
         return Response("ok", status=status.HTTP_200_OK)
-
 
 
 class PDFReaderApi(APIView):

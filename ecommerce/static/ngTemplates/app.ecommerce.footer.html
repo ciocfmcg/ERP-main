@@ -1,4 +1,4 @@
-<div class="container-fluid bg-blue" style="position:relative;width:100%;bottom:0px;min-height:200px;padding:20px;">
+<div class="container-fluid bg-blue" style="position:relative;width:100%;bottom:0px;height:20vh;padding:20px;">
   <div class="row">
     <div class="col-md-2 col-md-offset-1" ng-if="settings.playstoreLink.indexOf('http')!=-1 || settings.appstoreLink.indexOf('http')!=-1">
       <strong>Downloads the apps</strong><br>
@@ -11,7 +11,7 @@
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'cancellationAndRefund'})">Cancellationa and Returns</span> <br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'faq'})">FAQ</span>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 text-center">
       <strong style="font-size:15px;">ECOMMERCE</strong><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'contactUs'})"> Contact Us </span><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'about'})">About us</span> <br>

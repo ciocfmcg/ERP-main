@@ -1,4 +1,4 @@
-app.controller('controller.ecommerce.details' , function($scope , $state , $http , $timeout , $uibModal , Flash , $window , $anchorScroll, $location , $aside){
+app.controller('controller.ecommerce.food.details' , function($scope , $state , $http , $timeout , $uibModal , Flash , $window , $anchorScroll, $location , $aside){
 
   $scope.ratings = { meta : [5,4,3,2,1] , counts : [0,0,0,0,0] , averageRating : 0 };
   $scope.form = {rating : 0 , reviewText : '' , reviewEditor : false , ratable : true}

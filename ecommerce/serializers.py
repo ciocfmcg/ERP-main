@@ -30,32 +30,55 @@ class genericTypeSerializer(serializers.ModelSerializer):
         model = genericType
         fields = ('pk' , 'name' , 'icon')
 
+class genericProductLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = genericProduct
+        fields = ('pk' , 'name' , 'minCost' , 'visual')
+
 class genericProductSerializer(serializers.ModelSerializer):
     fields = fieldSerializer(many = True, read_only = True)
     productType = genericTypeSerializer(many = False , read_only = True)
     class Meta:
         model = genericProduct
-        fields = ('pk' , 'fields' , 'name' , 'productType')
+        fields = ('pk' , 'fields' , 'name' , 'productType', 'minCost' , 'visual')
+        read_only_fields = ('visual', )
     def create(self , validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
-        gp = genericProduct()
+        gp = genericProduct(**validated_data)
         gp.productType = genericType.objects.get(pk = self.context['request'].data['productType'])
-        gp.name = validated_data.pop('name')
+
+        try:
+            gp.visual = self.context['request'].FILES['visual']
+        except:
+            pass
+
         gp.save()
-        for f in self.context['request'].data['fields']:
+        flds = self.context['request'].data['fields']
+        if isinstance(flds , str) or isinstance(flds , unicode):
+            flds = flds.split(',')
+        for f in flds:
             gp.fields.add(field.objects.get(pk = f))
         gp.save()
         return gp
     def update(self , instance , validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
-
         instance.name = validated_data.pop('name')
+        instance.minCost = validated_data.pop('minCost')
         instance.productType = genericType.objects.get(pk = self.context['request'].data['productType'])
+        try:
+            instance.visual = self.context['request'].FILES['visual']
+        except:
+            pass
         instance.fields.clear()
         instance.save()
-        for f in self.context['request'].data['fields']:
+        flds = self.context['request'].data['fields']
+        print flds, type(flds)
+        if isinstance(flds , str) or isinstance(flds , unicode):
+            flds = flds.split(',')
+        print flds
+        for f in flds:
             instance.fields.add(field.objects.get(pk = f))
         instance.save()
         return instance

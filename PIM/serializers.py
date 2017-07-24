@@ -60,6 +60,10 @@ class chatMessageSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         im = chatMessage.objects.create(**validated_data)
         im.originator = self.context['request'].user
+        try:
+            im.attachment = self.context['request'].FILES['attachment']
+        except:
+            pass
         if im.originator == im.user:
             im.delete()
             raise ParseError(detail=None)
