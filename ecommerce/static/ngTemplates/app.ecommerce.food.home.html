@@ -16,7 +16,7 @@
         </div>
 
         <div class="pull-right">
-          <button type="button" class="btn btn-success" style="height:100px;width:100px;position:absolute;right:0px;top:0px;border-radius: 0px 10px 10px 0;" ng-click="refreshResults()">
+          <button type="button" class="btn btn-success" style="height:100px;width:100px;position:absolute;right:0px;top:0px;border-radius: 0px 10px 10px 0;" ng-click="$state.go('list' , {id : genericProducts[0].pk} )">
             <i class="fa fa-search fa-3x"></i> <br>Load menu
           </button>
         </div>
@@ -89,9 +89,6 @@
     </div>
   </div>
 </div>
-
-
-
 
 <div class="container-fluid" style="padding:60px;background-color:#eeecec;">
   <div ng-repeat="l in genericProducts" >

@@ -28,16 +28,9 @@ app.config(function($stateProvider ){
 
   $stateProvider
   .state('list', {
-    url: "/list",
+    url: "/list/:id",
     templateUrl: '/static/ngTemplates/app.ecommerce.food.list.html',
     controller: 'controller.ecommerce.list'
-  })
-
-  $stateProvider
-  .state('category', {
-    url: "/category/:id",
-    templateUrl: '/static/ngTemplates/app.ecommerce.food.details.html',
-    controller: 'controller.ecommerce.category'
   })
 
   $stateProvider
@@ -50,7 +43,7 @@ app.config(function($stateProvider ){
   $stateProvider
   .state('checkout', {
     url: "/checkout/:pk",
-    templateUrl: '/static/ngTemplates/app.ecommerce.checkout.html',
+    templateUrl: '/static/ngTemplates/app.ecommerce.food.checkout.html',
     controller: 'controller.ecommerce.checkout'
   })
 

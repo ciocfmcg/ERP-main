@@ -501,20 +501,44 @@ class listingSearchViewSet(viewsets.ModelViewSet):
     filter_fields = ['title']
     def list(self , request, *args, **kwargs):
         u = self.request.user
+
+
+
         if 'lat' in self.request.GET and 'lon' in self.request.GET:
-            da = [] # distance array
-            sa = service.objects.all() # service array
-            for s in sa:
-                p1 = {'lat' : s.address.lat , 'lon' : s.address.lon}
-                p2 = {'lat' : self.request.GET['lat'] , 'lon' : self.request.GET['lon'] }
-                d = geoDistance(p1 , p2)
-                if d is not None and d<100000:
-                    da.append(d)
-            la = list() # listings array
-            for k in sorted(range(len(da)), key=lambda k: da[k]):
-                for l in listing.objects.filter(providerOptions__in = offering.objects.filter(service = sa[k])):
-                    if l not in la:
-                        la.append(l)
+            if globalSettings.ECOMMERCE_APP['ui'] == 'food':
+                minDist = 10000000 # distance array
+                sa = service.objects.all() # service array
+                srvc = None
+                for s in sa:
+                    p1 = {'lat' : s.address.lat , 'lon' : s.address.lon}
+                    p2 = {'lat' : self.request.GET['lat'] , 'lon' : self.request.GET['lon'] }
+                    d = geoDistance(p1 , p2)
+                    if d is not None and d<100000 and d<minDist:
+                        minDist = d
+                        srvc = s
+                la = list() # listings array
+                if srvc is None:
+                    content = {'mode' : 'Sorry but we do not serve this locality yet'}
+                    raise NotAcceptable(detail=content )
+                else:
+                    for l in listing.objects.filter(providerOptions__in = offering.objects.filter(service =srvc) , parentType__id=int(request.GET['category'])):
+                        if l not in la:
+                            la.append(l)
+
+            else:
+                da = [] # distance array
+                sa = service.objects.all() # service array
+                for s in sa:
+                    p1 = {'lat' : s.address.lat , 'lon' : s.address.lon}
+                    p2 = {'lat' : self.request.GET['lat'] , 'lon' : self.request.GET['lon'] }
+                    d = geoDistance(p1 , p2)
+                    if d is not None and d<100000:
+                        da.append(d)
+                la = list() # listings array
+                for k in sorted(range(len(da)), key=lambda k: da[k]):
+                    for l in listing.objects.filter(providerOptions__in = offering.objects.filter(service = sa[k])):
+                        if l not in la:
+                            la.append(l)
             serializer = listingLiteSerializer(la , many = True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:

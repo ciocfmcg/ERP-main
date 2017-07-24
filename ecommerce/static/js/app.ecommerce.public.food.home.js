@@ -6,6 +6,8 @@ app.controller('controller.ecommerce.food.home' , function($scope , $state , $ht
     }
   });
 
+  $scope.$parent.showFeedback = false;
+
   $scope.openIntroVideo = function() {
     var modalInstance = $uibModal.open({
       template: '<iframe width="100%" style="margin:0px;padding:0px;" height="500" src="https://www.youtube.com/embed/2WdB9CPLibQ" frameborder="0" allowfullscreen></iframe>',

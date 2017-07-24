@@ -2,54 +2,6 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   $scope.me = $users.get('mySelf');
   $scope.data = {quantity : 1 , shipping :'express', stage : 'review' , address : { street : '' , pincode : '' , city : '' , state : '', mobile :'' , attachment : emptyFile}};
 
-  $scope.$watch(function(){
-    if (typeof $scope.$parent.data.pickUpTime == 'string') {
-      $scope.data.pickUpTime = new Date($scope.$parent.data.pickUpTime);
-    }else{
-      $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
-    }
-    if (typeof $scope.$parent.data.dropInTime == 'string') {
-      $scope.data.dropInTime = new Date($scope.$parent.data.dropInTime);
-    }else {
-      $scope.data.dropInTime = $scope.$parent.data.dropInTime;
-    }
-    $scope.data.location = $scope.$parent.data.location;
-  })
-
-  $scope.uploadAttachment = function() {
-    if ($scope.data.attachment == emptyFile || $scope.data.attachment == null || typeof $scope.data.attachment == 'undefined') {
-      Flash.create('danger' , 'No file selected')
-      return;
-    }
-
-    var fd = new FormData();
-    fd.append( 'mediaType' , 'doc');
-    fd.append( 'attachment' ,$scope.data.attachment);
-
-    url = '/api/ecommerce/media/';
-
-    $http({method : 'POST' , url : url , data : fd , transformRequest: angular.identity, headers: {'Content-Type': undefined}}).
-    then(function(response){
-      $scope.attachment = response.data;
-      url =  $scope.attachment.attachment;
-      $scope.attachment.name = url.split('/')[url.split('/').length -1]
-      dataToSend = {
-        attachment : response.data.pk
-      }
-      $http({method : 'PATCH' , url : '/api/ecommerce/profile/' + $scope.customerProfile.pk + '/', data : dataToSend }).
-      then(function(response) {
-        $scope.customerProfile = response.data;
-        $scope.data.address = response.data.address;
-        Flash.create('success', response.status + ' : ' + response.statusText);
-      } , function(response) {
-        Flash.create('danger', response.status + ' : ' + response.statusText);
-      })
-    }, function(response){
-      Flash.create('danger', response.status + ' : ' + response.statusText);
-    });
-
-  }
-
   $scope.retriveProfile = function() {
     $http({method : 'GET' , url : '/api/ecommerce/profile/'}).
     then(function(response){

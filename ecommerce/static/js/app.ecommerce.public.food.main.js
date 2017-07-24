@@ -1,10 +1,112 @@
 app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , $uibModal , $users , $interval , Flash){
   $scope.me = $users.get('mySelf')
+
   $scope.inCart = [];
   $scope.data = {location : null}
+  $scope.showFeedback = false;
+
+  var locationID = $.cookie("locationID");
   $scope.params = {location : null} // to be used to store different parameter by the users on which the search result will be filtered out
 
+  if (typeof $.cookie("cart") != 'undefined') {
+    var inCart = $.cookie("cart").split('||');
+    var inCartQuant = $.cookie("quant").split('||');
 
+    for (var i = 0; i < inCart.length; i++) {
+      if (inCart[i].length >0) {
+        $http({method : 'GET' , url : '/api/ecommerce/listingLite/' + inCart[i] + '/'}).
+        then((function(i) {
+          return function(response) {
+            l = response.data;
+            l.inCart = parseInt(inCartQuant[i]);
+            var index = 0
+            if (l.providerOptions.length == 0) {
+              return;
+            }
+            var min = l.providerOptions[index].rate;
+            for (var j = 1; j < l.providerOptions.length; j++) {
+              if (l.providerOptions[j].rate < min) {
+                min = l.providerOptions[j].rate;
+                index = j;
+              }
+            }
+            l.bestOffer = l.providerOptions[index];
+            $scope.inCart.push(l)
+          }
+        })(i))
+      }
+    }
+  }
+
+  if (typeof locationID != 'undefined') {
+    $http({method : 'GET' , url : '/api/ecommerce/locationDetails/?id=' + locationID}).
+    then(function(response){
+      console.log("Setting the location from cookie");
+      $scope.params.location = response.data.result;
+      $scope.data.location = {description : response.data.result.name , place_id : locationID}
+    });
+  }
+
+  $scope.decreaseInCart = function(index) {
+    $scope.inCart[index].inCart -= 1;
+    if ($scope.inCart[index].inCart == 0) {
+      $scope.inCart.splice(index , 1);
+    }
+  }
+
+  $scope.increaseInCart = function(index) {
+    $scope.inCart[index].inCart += 1;
+  }
+
+  $scope.fetchGenericProducts = function(){
+    url = '/api/ecommerce/genericProductLite'
+    $http({method : "GET" , url : url}).
+    then(function(response){
+      for (var i = 0; i < response.data.length; i++) {
+        $scope.genericProducts = response.data;
+      }
+
+    });
+  }
+
+  $scope.$watch('inCart', function (newVal, oldVal) {
+    var toStore = '';
+    var quanToStore = '';
+    for (var i = 0; i < $scope.inCart.length; i++) {
+      toStore += $scope.inCart[i].pk + '||';
+      quanToStore += $scope.inCart[i].inCart + '||';
+    }
+    if (toStore.length !=0) {
+      $.cookie("cart" , toStore );
+      $.cookie("quant" , quanToStore );
+    }
+
+  }, true);
+
+  $scope.genericProducts = [];
+
+  $scope.fetchGenericProducts()
+
+  $scope.checkout = function() {
+    if ($scope.me == null) {
+      window.location.href = '/login?next=/ecommerce/#/checkout/';
+    }
+
+    if ($scope.inCart.length ==0) {
+      return;
+    }else {
+      $state.go('checkout')
+    }
+  }
+
+
+  $scope.getCartAmmount = function() {
+    var toReturn = 0;
+    for (var i = 0; i < $scope.inCart.length; i++) {
+      toReturn += $scope.inCart[i].bestOffer.rate*$scope.inCart[i].inCart;
+    }
+    return toReturn;
+  }
 
   $scope.slide = {banners : [] , active : 0};
 
@@ -72,6 +174,8 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
 
   $scope.$watch('data.location' , function(newValue, oldValue){
     if (newValue != null && typeof newValue =='object') {
+      console.log("Adding location to cookie");
+      $.cookie("locationID" , newValue.place_id);
       $http({method : 'GET' , url : '/api/ecommerce/locationDetails/?id=' + newValue.place_id}).
       then(function(response){
         $scope.params.location = response.data.result;
@@ -88,17 +192,6 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
     })
   }
 
-  $scope.getDateTimePickerClass = function() {
-    if ($scope.data.pickUpTime && $scope.data.dropInTime && ($scope.data.dropInTime-$scope.data.pickUpTime)<0) {
-      return 'text-danger';
-    }
-  }
-
-  $scope.checkDateTime = function() {
-    if ($scope.data.pickUpTime && $scope.data.dropInTime && ($scope.data.dropInTime-$scope.data.pickUpTime)<0) {
-      Flash.create('danger', " Trip can not end before start please check the drop in time");
-    }
-  }
 
   $scope.refreshResults = function(){
     if ($state.is('ecommerce') && $scope.params.location == null) {
@@ -112,6 +205,9 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
     //   $scope.$$childTail.fetchListings()
     // }
   }
+
+
+
 
 });
 

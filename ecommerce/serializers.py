@@ -123,9 +123,10 @@ class offeringAdminSerializer(serializers.ModelSerializer):
 class listingLiteSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
     providerOptions = offeringLiteSerializer(many = True , read_only = True)
+    # parentType = genericProductSerializer(many = False , read_only = True)
     class Meta:
         model = listing
-        fields = ('pk' , 'title' , 'priceModel'  , 'approved' , 'category' , 'files' , 'parentType'  , 'providerOptions')
+        fields = ('pk' , 'title' , 'priceModel'  , 'approved' , 'category' , 'files' , 'parentType'  , 'providerOptions', 'specifications')
 
 class reviewLikeSerializer(serializers.ModelSerializer):
     class Meta:

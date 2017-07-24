@@ -1,24 +1,57 @@
-<div class="container-fluid" style="min-height:80vh;padding:0px;margin-top:20px;">
-  <div class="col-md-8 col-md-offset-2 ">
-    <div ng-repeat="l in listings" >
-      <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
-        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
-          <div class="row" >
-            <img style="width: 100%;" class="img" ng-src="{{l.files[0].attachment}}" >
-          </div>
-          <div class="row" >
-            <div class="container-fluid card bg-white" style="padding:10px;">
-              <h4>{{l.title}}</h4>
-              {{l.providerOptions.length}} {{l.providerOptions.length>1? 'Vendors' : 'Vendor'}}
-              <span class="pull-right">
-                Starts from  <span style="font-size:20px;margin-left:10px;">
-                  {{l.bestOffer.rate}} <i class="fa fa-inr"></i>
-                </span>
-              </span>
+<div class="container-fluid" style="min-height:80vh;padding:0px;margin-top:22vh;">
+
+  <div class="text-center" style="padding-left:290px;">
+    <h2 class="text-muted">-----  MENU  -----</h2>
+  </div>
+
+  <div class="col-md-10 col-md-offset-2">
+    <div class="container-fluid">
+      <div class="col-md-12">
+        <div ng-repeat="l in listings">
+          <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:25px;">
+            <div class="container-fluid">
+              <div class="row" style="height:420px;background: url({{l.files[0].attachment}});background-size: cover;background-color: white;" ></div>
+              <div class="row">
+                <div class="container-fluid card bg-white" style="padding:10px;">
+                  <div class="row">
+                    <div class="container-fluid">
+                      <span style="font-size:15px;">{{l.title}}</span>
+                      <span class="pull-right" style="font-size:20px;margin-left:10px;">
+                          {{l.bestOffer.rate}} <i class="fa fa-inr"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row" style="height:80px;padding-top:20px;">
+                    <div class="container-fluid">
+                      <div ng-if="l.inCart ==0" style="width:100px;background-color:#1b375c;border-radius:15px;border:solid 2px #1b375c;padding:2px;cursor:pointer;" class="pull-right text-center" ng-click="addToCart($index)">
+                        <span style="color:white;font-size:15px;">Add</span>
+                      </div>
+                      <div ng-if="l.inCart >0" class="pull-right" style="margin-top:-20px;">
+                        <button type="button" name="button" class="btn btn-danger cardCartBtn" ng-click="decreaseInCart($index)"><i class="fa fa-sm fa-minus"></i></button>
+                        <span style="margin:20px;font-size:25px;margin-top:10px;">{{l.inCart}}</span>
+                        <button type="button" name="button" class="btn btn-success cardCartBtn" ng-click="increaseInCart($index)"><i class="fa fa-sm fa-plus"></i></button>
+                      </div>
+                      <div ng-repeat="s in l.specifications" class="col-md-1">
+                        <span style="margin-right:5px;" class="fa-stack fa-lg text-{{s.value.name == 'Yes'?'success':'danger'}}" ng-if="s.name == 'Veg'">
+                            <i class="fa fa-square-o fa-stack-2x"></i>
+                            <i class="fa fa-circle fa-stack-1x"></i>
+                          </span>
+                        <span style="margin-left:15px;margin-right:5px;" ng-if="s.name == 'Spicy'">
+                            <i class="fa fa-2x fa-envira text-danger" ng-if="s.value.name == 'high'" style="margin-top:5px;"></i>
+                            <i class="fa fa-2x fa-envira text-warning" ng-if="s.value.name == 'Medium'" style="margin-top:5px;"></i>
+                            <i class="fa fa-2x fa-envira text-success" ng-if="s.value.name == 'Low'" style="margin-top:5px;"></i>
+                          </span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
