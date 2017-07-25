@@ -82,7 +82,7 @@ app.config(function($stateProvider ){
   })
   .state('account.settings', {
     url: "/settings",
-    templateUrl: '/static/ngTemplates/app.ecommerce.account.settings.html',
+    templateUrl: '/static/ngTemplates/app.ecommerce.food.account.settings.html',
     controller: 'controller.ecommerce.account.settings'
   })
   .state('account.support', {

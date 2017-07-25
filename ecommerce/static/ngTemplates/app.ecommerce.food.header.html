@@ -14,6 +14,11 @@
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
     <ul class="nav navbar-nav navbar-right">
+      <li ng-if="!$state.is('list')" style="margin-right:10px;">
+        <a ui-sref="checkout"><i class="fa fa-shopping-cart" ></i>
+          <div class="label label-primary" style="position:absolute;top:5px;right:-5px;">{{inCart.length==0? '':inCart.length}}</div>
+        </a>
+      </li>
       <li ng-if="me == null" style="margin-right:40px;">
         <a href="/login"><i class="fa fa-sign-in"></i></a>
       </li>

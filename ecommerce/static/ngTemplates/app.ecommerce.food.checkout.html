@@ -51,81 +51,33 @@
     <div class="col-md-10 col-md-offset-2">
       <div class="container-fluid" style="margin-top:30px;">
         <div ng-if="data.stage == 'review'">
-          <div class="row">
-            <div class="col-md-3">
-              <img style="width: 100%;" class="img" ng-src="{{item.files[0].attachment}}" >
-            </div>
-            <div class="col-md-3">
-              <div class="row">
-                <span style="font-size:25px;">{{item.title}}</span>
-              </div>
-              <div class="row">
-                <strong>Rate : </strong> {{offering.rate}}
-                <span ng-if="item.priceModel=='time'">/ per Hour</span>
-                <span ng-if="item.priceModel=='quantity'">/ per Piece</span>
-                <span ng-if="item.priceModel=='weight'">/ per Kg</span>
-              </div>
-              <div class="row">
-                <strong>Vendor : </strong> {{offering.service.name }} <br>
-                <!-- <uib-rating ng-model="rate" max="5" readonly="true" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
-                <br> Power Seller <i style="color:#db55e7;" class="fa fa-shield"></i> -->
-              </div>
-            </div>
-            <!-- <div class="col-md-3" style="padding-top:10px;">
-              <div class="input-group">
-                <span class="input-group-addon">#</span>
-                <input type="text" class="form-control" ng-model = "data.quantity">
-                <span class="input-group-addon" ng-if="item.priceModel=='time'">Bookings</span>
-                <span class="input-group-addon" ng-if="item.priceModel=='quantity'">Pieces</span>
-                <span class="input-group-addon" ng-if="item.priceModel=='weight'">Kgs</span>
-              </div>
-              <div class="input-group pull-left"  style="margin-top:40px;">
-                <span class="input-group-addon">Coupon code</span>
-                <input ng-model="data.coupon" type="text" class="form-control">
+          <div ng-repeat="l in inCart" class="row">
+            <div style="min-height:100px;padding-right:20px;padding-left:20px;" class="container-fluid">
+              <div class="row" >
+                <span style="font-size:20px;" class="text-muted">{{l.title}}</span>
               </div>
 
-            </div> -->
-            <div class="col-md-6">
-              <div ng-if="item.priceModel=='time'">
-                <span style="font-size:25px;">Trip details</span>
-                <p>
-                  <strong>Starts : </strong><br> {{data.pickUpTime | date : 'dd-MMM-yyyy: hh:mm a'}} {{data.pickUpTime ? '':'Not selected'}}
-                </p>
-                <p>
-                  <strong>Ends : </strong> <br> {{data.dropInTime | date : 'dd-MMM-yyyy: hh:mm a'}} {{data.dropInTime? '':'Not selected'}}
-                </p>
-              </div>
-              <div ng-if="item.priceModel=='quantity'">
-                <span class="text-muted" style="font-size:20px;">Shipping method</span>
-                <br>
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="optionsRadios" value="express" ng-model="data.shipping">
-                    One day express {{data.expressShipping}}
-                  </label>
-                  <p class="help-block">
-                    <i class="fa fa-inr"></i> 30 additional charge
-                  </p>
+              <div class="row">
+                <div class="col-md-4">
+                  <button type="button" name="button" class="btn btn-danger cardCartBtn" ng-click="decreaseInCart($index)"><i class="fa fa-sm fa-minus"></i></button>
+                  <span style="margin:20px;font-size:25px;margin-top:10px;">{{l.inCart}}</span>
+                  <button type="button" name="button" class="btn btn-success cardCartBtn" ng-click="increaseInCart($index)"><i class="fa fa-sm fa-plus"></i></button>
                 </div>
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="optionsRadios" value="normal" ng-model="data.shipping">
-                     7 Day
-                  </label>
-                  <p class="help-block">
-                    <i class="fa fa-inr"></i> No additional charge
-                  </p>
+                <div class="col-md-4 pull-right text-right">
+                  SubTotal : {{l.bestOffer.rate * l.inCart}}
                 </div>
               </div>
+
+
+              <hr>
             </div>
           </div>
-          <hr>
           <div class="row" style="margin-top:30px;padding:10px;">
             <div class="col-md-6">
               <div class="row">
-                <span class="text-muted" style="font-size:20px;">Subtotal</span>
+                <span class="text-muted" style="font-size:20px;">Total</span>
                 <br>
-                <i class="fa fa-2x fa-inr"></i> {{getBookingAmount()}}
+                <i class="fa fa-2x fa-inr"></i> {{getBookingAmount()}} (Inclusive of all taxes)
               </div>
             </div>
             <div class="col-md-6">
@@ -159,23 +111,6 @@
               <div class="form-group">
                 <label>Mobile no. : </label>
                 <input ng-model="customerProfile.mobile" type="text" class="form-control">
-              </div>
-              <div ng-if="attachment == null" style="padding:0px;">
-                <div class="col-md-8" style="padding:0px;">
-                  <div class="form-group">
-                    <label>Driving license</label>
-                    <input type="file" file-model="data.attachment" class="form-control" >
-                    <p class="help-block">Browse and upload a copy of your driving license.</p>
-                  </div>
-                </div>
-                <div class="col-md-4" style="padding:0px;">
-                  <button type="button" class="btn btn-primary pull-right" ng-click="uploadAttachment()">
-                    Upload
-                  </button>
-                </div>
-              </div>
-              <div ng-if="attachment != null">
-                Attached License : <a target="_blank" ng-href="{{attachment.attachment}}">{{attachment.name}}</a>
               </div>
             </div>
           </div>
