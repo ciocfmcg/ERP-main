@@ -6,6 +6,9 @@ import datetime
 from allauth.socialaccount.signals import social_account_added
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
+from django.contrib import admin
+
+
 
 def getSignaturesPath(instance , filename):
     return 'HR/images/Sign/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
@@ -24,6 +27,15 @@ def getTranscriptsPath(instance , filename ):
 def getOtherDocsPath(instance , filename ):
     return 'HR/doc/Others/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
+class Document(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    issuedBy = models.ForeignKey(User , related_name='certificatesIssued')
+    description = models.CharField(max_length=400, blank=False)
+    issuedTo = models.CharField(max_length=400, blank=False)
+    passKey = models.CharField(max_length = 4, blank = False)
+    email = models.CharField(max_length = 25, blank = False)
+
+admin.site.register(Document)
 
 KEY_CHOICES = (
     ('hashed', 'hashed'),

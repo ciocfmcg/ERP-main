@@ -440,6 +440,12 @@ class locationAutoCompleteApi(APIView): # suggest places for a query
         query = request.GET['query']
         r = requests.get('https://maps.googleapis.com/maps/api/place/autocomplete/json?types=geocode&language=in&key=AIzaSyDqZoDeSwSbtfkFawD-VoO7nx2WLD3mCgU&input=' + query)
         return Response(r.json(),status = status.HTTP_200_OK)
+    # def post(self , request , format = None):
+    #     print request.FILES
+    #     print "get : ", request.GET
+    #     print "data : ", request.data
+    #     print "post : ", request.POST
+    #     return Response( {}, status = status.HTTP_200_OK)
 
 class locationDetailsApi(APIView): # returns location details such as lattitude and longitude for a given location id
     renderer_classes = (JSONRenderer,)
