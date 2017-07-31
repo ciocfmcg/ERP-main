@@ -24,12 +24,23 @@ from rest_framework.views import APIView
 
 
 def documentView(request):
+    docID = None
     if request.method == 'POST':
         templt = 'documentVerify.external.showDetails.html'
         docID = request.POST['id']
         passKey = request.POST['passkey']
+
+    elif request.method == 'GET':
+        if 'id' in request.GET:
+            docID = request.GET['id']
+            passKey = request.GET['passkey']
+            templt = 'documentVerify.external.showDetails.html'
+        else:
+            templt = 'documentVerify.external.getPassKey.html'
+
+    if docID is not None:
         if len(docID)<5:
-            raise ObjectDoesNotExist("Document ID not correct") 
+            raise ObjectDoesNotExist("Document ID not correct")
         doc = get_object_or_404(Document , pk = int(docID[4:]), passKey = passKey)
         templt = 'documentVerify.external.showDetails.html'
         eml = doc.email
@@ -44,10 +55,9 @@ def documentView(request):
             "email": eml
         }
 
-    elif request.method == 'GET':
-        doc = Document.objects.get(pk = 1)
-        templt = 'documentVerify.external.getPassKey.html'
+    else:
         data = {}
+
     return render(request , templt, data)
 
 def generateOTPCode():
