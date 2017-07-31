@@ -20,6 +20,35 @@ from django.db.models import Q
 from django.http import JsonResponse
 import random, string
 from django.utils import timezone
+from rest_framework.views import APIView
+
+
+def documentView(request):
+    if request.method == 'POST':
+        templt = 'documentVerify.external.showDetails.html'
+        docID = request.POST['id']
+        passKey = request.POST['passkey']
+        if len(docID)<5:
+            raise ObjectDoesNotExist("Document ID not correct") 
+        doc = get_object_or_404(Document , pk = int(docID[4:]), passKey = passKey)
+        templt = 'documentVerify.external.showDetails.html'
+        eml = doc.email
+        prts = eml.split('@')
+        eml = prts[0][0:4]+ "*******@" + prts[1]
+        data = {
+            "id":doc.pk,
+            "issuedTo" : doc.issuedTo,
+            "issuedBy" : doc.issuedBy,
+            "created" : doc.created,
+            "description" : doc.description,
+            "email": eml
+        }
+
+    elif request.method == 'GET':
+        doc = Document.objects.get(pk = 1)
+        templt = 'documentVerify.external.getPassKey.html'
+        data = {}
+    return render(request , templt, data)
 
 def generateOTPCode():
     length = 4

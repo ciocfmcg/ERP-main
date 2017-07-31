@@ -33,7 +33,9 @@ class Document(models.Model):
     description = models.CharField(max_length=400, blank=False)
     issuedTo = models.CharField(max_length=400, blank=False)
     passKey = models.CharField(max_length = 4, blank = False)
-    email = models.CharField(max_length = 25, blank = False)
+    email = models.CharField(max_length = 35, blank = False)
+    def __str__(self):
+        return "%s : %s" %(self.issuedTo , self.description)
 
 admin.site.register(Document)
 

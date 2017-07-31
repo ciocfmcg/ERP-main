@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from events.views import eventHome
-from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP
+from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 urlpatterns = [
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^robots\.txt', include('robots.urls')),
     url(r'^generateOTP', generateOTP, name="generateOTP"),
+    url(r'^documents', documentView , name ='document'),
 ]
 
 if settings.DEBUG:
