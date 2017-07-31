@@ -13,8 +13,9 @@ def subscribe(request):
         name = request.POST["name"]
         email = request.POST["email"]
         phone = request.POST["phone"]
-        evnt = Event.objects.get(pk = int(request.POST["event"]))
-        subs = Subscription(name = name , email = email , phone = phone, event = evnt)
+        # evnt = Event.objects.get(pk = int(request.POST["event"]))
+        # subs = Subscription(name = name , email = email , phone = phone, event = evnt)
+        subs = Subscription(name = name , email = email , phone = phone)
         try:
             subs.comments = request.POST["comments"]
         except:

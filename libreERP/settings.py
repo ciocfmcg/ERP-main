@@ -27,7 +27,7 @@ ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user wi
 
 SITE_ADDRESS = 'http://127.0.0.1:8000' # the url prefix of the site
 
-ROOT_APP = 'ecommerce' # the default app
+ROOT_APP = 'index' # the default app
 ECOMMERCE_APP = {
     'ui': 'food', # the options can be food , rental, shop
     # food UI is like Fassos or Zomatto
@@ -37,6 +37,7 @@ ECOMMERCE_APP = {
 }
 
 LOGIN_PAGE_IMAGE = '/static/images/foodLogin.png'
+
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
@@ -55,6 +56,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.43.10', '192.168.2.86','192.168.1.9','yadav-sve14a37cgs', '192.168.0.103', '192.168.2.75', '192.168.0.105','10.0.1.108', 'localhost', '127.0.0.1','192.168.43.10', '192.168.1.4','192.168.1.8']
+
 
 LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
