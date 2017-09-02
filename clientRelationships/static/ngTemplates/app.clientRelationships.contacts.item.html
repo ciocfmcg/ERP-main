@@ -1,0 +1,51 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.clientRelationships.contacts.item">
+
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row" style="border-bottom: 1px solid #dedede;">
+      <div class="col-md-4" style="padding:0px;">
+        <img ng-if="data.dp == null" style="width: 120px;height:120px;" class="img" ng-src="/static/images/img_avatar_card{{data.male?'':'2'}}.png" >
+        <img ng-if="data.dp != null" style="width: 120px;height:120px;" class="img" ng-src="{{data.dp}}" >
+      </div>
+      <div class="col-md-8" style="position:relative;display:block;">
+        <div class="row" style="padding-left:10px;">
+          <h3>{{data.name}}</h3>
+          <!-- <span class="text-muted" style="position:absolute; top:10px;right:10px;">
+            <i class="fa fa-hashtag"></i> <span style="font-size:20px;">{{data.inStock}}</span>
+          </span> -->
+
+        </div>
+        <div class="row">
+          <span style="position:absolute;left:10px;bottom:-55px;" class="text-muted">
+            <span style="font-size:15px;">{{data.designation}}
+              <br>
+              {{data.company.name}}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row container-fluid" style="padding-top:20px;height:70px;">
+      <div class="col-md-8">
+        <span ng-if="data.mobile != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{data.mobile}}</span> <br>
+        <span ng-if="data.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{data.email}}</span>
+
+        <span ng-if="data.mobile == null && data.email == null" class="text-muted">No contact details</span>
+      </div>
+      <i style="position:absolute;bottom:20px;right:80px;color:#fafafa;" class="fa fa-handshake-o fa-5x"></i>
+      <div class = "col-md-4">
+        <div style="padding-right:20px;">
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click = "rowActionClicked('edit')">
+              <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+            </span>
+          </div>
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click = "rowActionClicked('details')">
+              <i class="fa fa-reorder fa-lg" style="margin-top:20px;"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

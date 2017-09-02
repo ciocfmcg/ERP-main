@@ -117,15 +117,16 @@ class address(models.Model):
 
 class service(models.Model): # contains other companies datails
     created = models.DateTimeField(auto_now_add = True)
-    name = models.CharField(max_length = 100 , null = False)
+    name = models.CharField(max_length = 100 , null = False, unique = True)
     user = models.ForeignKey(User , related_name = 'servicesCreated' , null = False) # the responsible person for this service
+    address = models.ForeignKey(address , null = True )
+    mobile = models.PositiveIntegerField( null = True)
+    telephone = models.CharField(max_length = 20 , null = True)
+    about = models.TextField(max_length = 2000 , null = True)
     cin = models.CharField(max_length = 100 , null = True) # company identification number
     tin = models.CharField(max_length = 100 , null = True) # tax identification number
-    address = models.ForeignKey(address , null = False )
-    mobile = models.PositiveIntegerField( null = False)
-    telephone = models.CharField(max_length = 20 , null = False)
     logo = models.CharField(max_length = 200 , null = True) # image/svg link to the logo
-    about = models.TextField(max_length = 2000 , null = False) # image/svg link to the logo
+    web = models.TextField(max_length = 100 , null = True) # image/svg link to the logo
     doc  = models.ForeignKey(media , related_name = 'services' , null = True)
 
     def __unicode__(self):

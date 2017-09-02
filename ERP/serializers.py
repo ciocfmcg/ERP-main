@@ -17,18 +17,39 @@ class addressSerializer(serializers.ModelSerializer):
 
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
-    address = addressSerializer(many = False, read_only = False)
+    address = addressSerializer(many = False, read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web')
+
+    def assignValues(self , instance , validated_data):
+        if 'cin' in validated_data:
+            instance.cin = validated_data['cin']
+        if 'tin' in validated_data:
+            instance.tin = validated_data['tin']
+        if 'mobile' in validated_data:
+            instance.mobile = validated_data['mobile']
+        if 'telephone' in validated_data:
+            instance.telephone = validated_data['telephone']
+        if 'logo' in validated_data:
+            instance.logo = validated_data['logo']
+        if 'about' in validated_data:
+            instance.about = validated_data['about']
+        if 'doc' in validated_data:
+            instance.doc = validated_data['doc']
+        if 'web' in validated_data:
+            instance.web = validated_data['web']
+        if 'address' in self.context['request'].data and self.context['request'].data['address'] is not None:
+            instance.address_id = int(self.context['request'].data['address'])
+        instance.save()
+
     def create(self , validated_data):
-        print 'came here'
-        ad = address(**validated_data['address'])
-        ad.save()
-        s = service(name = validated_data['name'] , user =validated_data['user'] , cin = validated_data['cin'] , tin = validated_data['tin'] , mobile = validated_data['mobile'] , telephone = validated_data['telephone'] , logo = validated_data['logo'] , about = validated_data['about'] , doc = validated_data['doc'] , address = ad)
-        print s
-        s.save()
+        s = service(name = validated_data['name'] , user =validated_data['user'])
+        self.assignValues(s, validated_data)
         return s
+    def update(self , instance , validated_data):
+        self.assignValues(instance , validated_data)
+        return instance
 
 class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
@@ -83,6 +104,7 @@ class applicationAdminSerializer(serializers.ModelSerializer):
         if len(parts)>=3:
             app.save()
             return app
+        app.save()
         if len(app.name.split('.'))==2:
             with lcd(globalSettings.BASE_DIR):
                 cmd = 'python manage.py startapp %s' %(appName)

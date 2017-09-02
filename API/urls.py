@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^finance/', include('finance.urls')),
     url(r'^tools/', include('tools.urls')),
     url(r'^events/', include('events.urls')),
+    url(r'^clientRelationships/', include('clientRelationships.urls')),
 ]

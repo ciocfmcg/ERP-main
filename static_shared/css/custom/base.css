@@ -2,6 +2,15 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.switch.checked.neutral {
+ background:#ffffff;
+ border-color:#eeeeee;
+}
+
+.switch.neutral small{
+  background: var(--themeMain);
+}
+
 .padded10px{
   padding: 10px;
 }

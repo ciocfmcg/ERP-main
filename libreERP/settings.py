@@ -27,7 +27,7 @@ ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user wi
 
 SITE_ADDRESS = 'http://127.0.0.1:8000' # the url prefix of the site
 
-ROOT_APP = 'index' # the default app
+ROOT_APP = 'ERP' # the default app
 ECOMMERCE_APP = {
     'ui': 'food', # the options can be food , rental, shop
     # food UI is like Fassos or Zomatto
@@ -105,6 +105,7 @@ INSTALLED_APPS = (
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
 	'events',# to manage events like test, hackathon or something like that
+	'clientRelationships',# CRM like sales force
 )
 
 SITE_ID = 1
