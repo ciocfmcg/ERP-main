@@ -16,7 +16,7 @@
             <label class="text-muted">Primary</label>
             <br>
             <span ng-if="contact.mobile != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{contact.mobile}}</span> <br>
-            <span ng-if="contact.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{contact.email}}</span> <br>
+            <span ng-if="contact.email != null"><strong><i style="width:30px;" class="fa fa-envelope-o"></i> </strong><a href="mailto:{{contact.email}}?Subject=Hello%20again&body=Hi," target="_top">{{contact.email}}</a></span>  <br>
             <span ng-if="contact.facebook != null"><strong><i style="width:30px;" class="fa fa-facebook"></i> </strong> <a href="{{contact.facebook}}" target = "_blank">{{contact.facebook.substring(0,25)}}</a></span> <br>
             <span ng-if="contact.linkedin != null"><strong><i style="width:30px;" class="fa fa-linkedin"></i> </strong><a href="{{contact.linkedin}}" target = "_blank">{{contact.linkedin.substring(0,25)}}</a></span> <br>
           </div>
@@ -26,7 +26,7 @@
           <div ng-if="contact.mobileSecondary != null || contact.emailSecondary != null" >
             <label class="text-muted">Secondary</label> <br>
             <span ng-if="contact.mobileSecondary != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{contact.mobileSecondary}}</span> <br>
-            <span ng-if="contact.emailSecondary != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{contact.emailSecondary}}</span>
+            <span ng-if="contact.emailSecondary != null"><strong><i style="width:30px;" class="fa fa-envelope-o"></i> </strong>{{contact.emailSecondary}}</span>
           </div>
 
         </div>
@@ -79,31 +79,41 @@
           <i class="fa fa-{{tab.icon}}" style="width:30px;"></i> {{tab.name}}
         </div>
       </div>
-      <div class="row" style="margin:5px;">
-        <div class="col-md-11">
-          <textarea class="form-control" rows="2" cols="80" placeholder="Write a note"></textarea>
-        </div>
-        <div class="col-md-1">
-          <div class="btn-group-vertical">
-            <button type="button" class="btn btn-primary" name="button"><i class="fa fa-floppy-o"></i>  Save</button>
-            <button type="button" class="btn btn-default" name="button"><i class="fa fa-eraser"></i>  Clear</button>
-          </div>
-        </div>
+      <div ng-if="activeTab == 0" class="row" style="margin:5px;">
+        <div class = "input-group">
+             <textarea class="form-control" rows="3" cols="80" placeholder="Write a note" ng-model="noteEditor.text" style="resize:none;"></textarea>
 
+             <span class="input-group-addon bg-blue" ng-if="noteEditor.doc.size != 0"> <i class="fa fa-2x  {{noteEditor.doc.name | fileTypeIcon}}"></i> <br> <br>{{noteEditor.doc.name}}</span>
+             <span class="input-group-addon btn btn-success" ng-click="browseForFile()"><i class="fa fa-{{noteEditor.doc.size == 0? 'file':'times'}}"></i> <br> <br>{{noteEditor.doc.size == 0 ? 'File': 'Clear'}}</span>
+             <span class="input-group-addon btn btn-primary" ng-click="saveNote()">Send</span>
+          </div><!-- /input-group -->
+        <input type="file" file-model="noteEditor.doc" style="display:None;" id="noteEditorFile">
+        <hr>
       </div>
-      <hr>
       <div class="row animated fadeIn">
         <div ng-if="activeTab == 0" class="container-fluid">
-          <h3 class="text-muted">Timeline</h3>
-          <ul class="timeline timeline-inverse">
-            <div ng-repeat="feed in sortedFeeds">
-              <crm-Note ng-if = "feed.type == 'note'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Note>
-              <crm-Call ng-if = "feed.type == 'call'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Call>
-              <crm-Meeting ng-if = "feed.type == 'meeting'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Meeting>
-              <crm-Mail ng-if = "feed.type == 'mail'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Mail>
-              <crm-Todo ng-if = "feed.type == 'todo'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Todo>
-            </div>
-          </ul>
+          <div class="col-md-10 col-md-offset-2" style="padding-top:40px;">
+            <ul class="timeline timeline-inverse">
+              <div ng-repeat="feed in timelineItems">
+                <div ng-if="feed.newMonth || $first" style="position:absolute; margin-left:-130px;">
+                  <span ng-if="!$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created | date:'MMM-yy'}}</span>
+                  <span ng-if="$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created |timeAgo}} Ago</span>
+                </div>
+                <crm-Note ng-if = "feed.typ == 'note'" data = "feed" ></crm-Note>
+                <crm-Call ng-if = "feed.typ == 'call'" data = "feed" ></crm-Call>
+                <crm-Meeting ng-if = "feed.typ == 'meeting'" data = "feed" ></crm-Meeting>
+                <crm-Mail ng-if = "feed.typ == 'mail'" data = "feed" ></crm-Mail>
+                <crm-Todo ng-if = "feed.typ == 'todo'" data = "feed" ></crm-Todo>
+              </div>
+            </ul>
+          </div>
+
+          <nav>
+            <ul class="pager">
+              <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+              <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+          </nav>
 
         </div>
 

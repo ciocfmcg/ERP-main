@@ -63,4 +63,10 @@ class ContractSerializer(serializers.ModelSerializer):
 class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
-        fields = ('pk'  ,'user' , 'created' , 'typ' , 'data', 'deal', 'contact', 'notes')
+        fields = ('pk'  ,'user' , 'created' , 'typ' , 'data', 'deal', 'contact', 'notes', 'doc')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        a = Activity(**validated_data)
+        a.user = self.context['request'].user
+        a.save()
+        return a

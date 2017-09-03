@@ -36,7 +36,7 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
         if (action == 'edit') {
           var title = 'Edit Contact :';
           var appType = 'contactEditor';
-        }else if (action == 'details') {
+        } else if (action == 'details') {
           var title = 'Details :';
           var appType = 'contactExplorer';
         }
@@ -80,12 +80,29 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
     }
   }
 
-  $scope.addTab({"title":"Details :with DP5","cancel":true,"app":"contactExplorer","data":{"pk":10,"index":9},"active":true})
+  $scope.addTab({
+    "title": "Details :with DP5",
+    "cancel": true,
+    "app": "contactExplorer",
+    "data": {
+      "pk": 10,
+      "index": 9
+    },
+    "active": true
+  })
 
   $scope.$on('exploreContact', function(event, input) {
     console.log("recieved");
     console.log(input);
-    $scope.addTab({"title":"Details :" + input.contact.name ,"cancel":true,"app":"contactExplorer","data":{"pk":input.contact.pk},"active":true})
+    $scope.addTab({
+      "title": "Details :" + input.contact.name,
+      "cancel": true,
+      "app": "contactExplorer",
+      "data": {
+        "pk": input.contact.pk
+      },
+      "active": true
+    })
   });
 
 })
@@ -249,14 +266,17 @@ app.directive('crmMail', function() {
   };
 });
 
-app.filter('getCRMDP' , function(){
-  return function(input){
+app.filter('getCRMDP', function() {
+  return function(input) {
+    if (input == undefined) {
+      return '/static/images/img_avatar_card.png';
+    }
     if (input.dp != null) {
       return input.dp;
-    }else{
+    } else {
       if (input.male) {
         return '/static/images/img_avatar_card.png';
-      }else {
+      } else {
         return '/static/images/img_avatar_card2.png';
       }
     }
@@ -308,22 +328,148 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   $scope.contact = $scope.data.tableData[$scope.tab.data.index]
   console.log($scope.contact);
   console.log($scope.tab.data.pk);
+  $scope.disableNext = false;
 
-  $scope.sortedFeeds = [
-    {type : 'note'},
-    {type : 'call'},
-    {type : 'meeting'},
-    {type : 'mail'},
-    {type : 'todo'},
+  $scope.pageNo = 0;
+
+  $scope.nextPage = function() {
+    if ($scope.disableNext) {
+      return;
+    }
+    $scope.pageNo +=1;
+    $scope.retriveTimeline();
+  }
+
+  $scope.prevPage = function() {
+    if ($scope.pageNo == 0) {
+      return;
+    }
+    $scope.pageNo -=1;
+    $scope.retriveTimeline();
+  }
+
+  $scope.noteEditor = {
+    text: '',
+    doc: emptyFile
+  };
+  $scope.timelineItems = [];
+
+  $scope.retriveTimeline = function() {
+    $http({
+      method: 'GET',
+      url: '/api/clientRelationships/activity/?contact=' + $scope.contact.pk+'&limit=5&offset=' + $scope.pageNo*5
+    }).
+    then(function(response) {
+      $scope.timelineItems = response.data.results;
+      if ($scope.timelineItems.length == 0 && $scope.pageNo != 0) {
+        $scope.prevPage();
+      }
+      $scope.disableNext = response.data.next == null;
+
+      $scope.analyzeTimeline();
+    })
+  }
+
+  $scope.analyzeTimeline = function() {
+    for (var i = 0; i < $scope.timelineItems.length; i++) {
+      $scope.timelineItems[i].created = new Date($scope.timelineItems[i].created);
+      if (i < $scope.timelineItems.length - 1 && $scope.timelineItems[i].created.getMonth() != new Date($scope.timelineItems[i + 1].created).getMonth()) {
+        $scope.timelineItems[i + 1].newMonth = true;
+      }
+    }
+  }
+
+  $scope.browseForFile = function() {
+    if ($scope.noteEditor.doc.size != 0) {
+      $scope.noteEditor.doc = emptyFile;
+      return;
+    }
+    $('#noteEditorFile').click();
+  }
+
+  $scope.$watch('noteEditor.doc', function(newValue, oldValue) {
+    console.log(newValue);
+  })
+
+
+
+
+  $scope.saveNote = function() {
+    console.log("will save");
+
+    var fd = new FormData();
+    fd.append('typ', 'note');
+    fd.append('data', $scope.noteEditor.text);
+    fd.append('contact', $scope.contact.pk);
+
+    if ($scope.noteEditor.doc != emptyFile) {
+      fd.append('doc', $scope.noteEditor.doc);
+    }
+
+    $http({
+      method: 'POST',
+      url: '/api/clientRelationships/activity/',
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      $scope.timelineItems.unshift(response.data);
+      Flash.create('success', 'Saved');
+      $scope.noteEditor.text = '';
+      $scope.noteEditor.doc = emptyFile;
+    })
+  }
+
+  $scope.sortedFeeds = [{
+      type: 'note'
+    },
+    {
+      type: 'call'
+    },
+    {
+      type: 'meeting'
+    },
+    {
+      type: 'mail'
+    },
+    {
+      type: 'todo'
+    },
   ]
 
-  $scope.tabs = [
-    {name : 'Timeline', active : true ,icon: 'th-large'},
-    {name : 'Activity', active : false ,icon: 'plus'},
-    {name : 'Email', active : false ,icon: 'envelope-o'},
-    {name : 'Call / SMS', active : false ,icon: 'phone'},
-    {name : 'Task', active : false ,icon: 'check-circle-o'},
-    {name : 'Schedule', active : false ,icon: 'clock-o'},
+  $scope.tabs = [{
+      name: 'Timeline',
+      active: true,
+      icon: 'th-large'
+    },
+    {
+      name: 'Activity',
+      active: false,
+      icon: 'plus'
+    },
+    {
+      name: 'Email',
+      active: false,
+      icon: 'envelope-o'
+    },
+    {
+      name: 'Call / SMS',
+      active: false,
+      icon: 'phone'
+    },
+    {
+      name: 'Task',
+      active: false,
+      icon: 'check-circle-o'
+    },
+    {
+      name: 'Schedule',
+      active: false,
+      icon: 'clock-o'
+    },
   ]
   $scope.activeTab = 0;
 
@@ -335,7 +481,10 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     $scope.activeTab = index;
   }
 
-  $http({method: 'GET' , url : '/api/clientRelationships/contact/' +$scope.tab.data.pk + '/' }).
+  $http({
+    method: 'GET',
+    url: '/api/clientRelationships/contact/' + $scope.tab.data.pk + '/'
+  }).
   then(function(response) {
     $scope.contact = response.data;
     $scope.fetchCoworkers();
@@ -343,7 +492,10 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
 
   $scope.fetchCoworkers = function() {
-    $http({method : 'GET' , url : '/api/clientRelationships/contactLite/?company=' + $scope.contact.company.pk}).
+    $http({
+      method: 'GET',
+      url: '/api/clientRelationships/contactLite/?company=' + $scope.contact.company.pk
+    }).
     then(function(response) {
       $scope.coworkers = response.data;
     })
@@ -353,9 +505,17 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
   $scope.exploreContact = function(c) {
     console.log("will exlore");
-    $scope.$emit('exploreContact', { contact : c});
+    $scope.$emit('exploreContact', {
+      contact: c
+    });
   }
 
+
+  $scope.$watch('contact', function(newValue, oldValue) {
+    if (newValue != undefined || newValue != null) {
+      $scope.retriveTimeline();
+    }
+  })
 });
 
 

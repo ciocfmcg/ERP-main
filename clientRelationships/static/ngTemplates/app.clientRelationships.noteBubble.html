@@ -1,15 +1,25 @@
 <li><i class="fa fa-commenting-o bg-blue"></i>
-  <div class="timeline-item" >
+  <div class="timeline-item" style="width:80%;">
     <span class="time" style="margin-right:10px;"><i class="fa fa-clock-o"></i> {{data.created | timeAgo}} ago</span>
     <h3 class="timeline-header" style="height:41px;">
       <img style="position:relative; float:left; top:-10px;left:-10px;" ng-src="{{data.user | getDP}}" height="40px" width="40px"/>
       {{data.user | getName}}
 
     </h3>
-    <div class="timeline-body">
-      {{data.text}}
+    <div ng-if="data.doc == null" class="timeline-body">
+      {{data.data}}
     </div>
-    <div class="timeline-footer" >
+    <div ng-if="data.doc != null" class="timeline-body container-fluid">
+      <div class="row">
+        <div class="col-md-8">
+          {{data.data}}
+        </div>
+        <div class="col-md-4" style="border-left:solid 2px #eeeeee;">
+          <i class="fa fa-5x {{data.doc | fileTypeIcon}}"></i> <a href="{{data.doc}}" target = "_blank">{{data.doc.split('_')[data.doc.split('_').length-1]}}</a>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="timeline-footer" >
       <a style="text-decoration: none;" href="" ng-click="openPost('right', true , {data: data , onDelete: onDelete})">
         {{data.likes.length==0? '':data.likes.length}} {{data.likes.length<=1? 'Like':'likes'}} <i class="fa fa-thumbs-o-up"></i>
       </a>
@@ -24,6 +34,6 @@
           {{user | getName:'short'}}
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </li>
