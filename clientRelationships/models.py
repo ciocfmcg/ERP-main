@@ -64,6 +64,12 @@ def getClientRelationshipContract(instance , filename ):
     return 'clientRelationships/contracts/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
 
+
+def getClientRelationshipActivity(instance , filename ):
+    return 'clientRelationships/activity/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+
+
+
 class Contract(models.Model):
     user = models.ForeignKey(User , related_name = 'contracts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
@@ -76,10 +82,9 @@ class Contract(models.Model):
 ACTIVITY_CHOICES = (
     ('call', 'call'),
     ('meeting', 'meeting'),
-    ('onlineConf', 'onlineConf'),
-    ('lunch', 'lunch'),
     ('mail', 'mail'),
     ('todo', 'todo'),
+    ('note', 'note'),
 )
 
 class Activity(models.Model):
@@ -90,3 +95,4 @@ class Activity(models.Model):
     deal = models.ForeignKey(Deal, related_name = 'activities' , null = True)
     contact = models.ForeignKey(Contact, related_name = 'activities' , null = True)
     notes = models.TextField(max_length= 1000 , null = True)
+    doc = models.FileField(upload_to= getClientRelationshipActivity , null = True)

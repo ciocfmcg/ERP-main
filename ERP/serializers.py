@@ -13,7 +13,7 @@ from django.conf import settings as globalSettings
 class addressSerializer(serializers.ModelSerializer):
     class Meta:
         model = address
-        fields = ('pk' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon')
+        fields = ('pk' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country')
 
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)

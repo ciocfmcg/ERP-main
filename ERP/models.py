@@ -111,6 +111,7 @@ class address(models.Model):
     pincode = models.PositiveIntegerField(null = True)
     lat = models.CharField(max_length=15 ,null = True)
     lon = models.CharField(max_length=15 ,null = True)
+    country = models.CharField(max_length = 50 , null = True)
 
     def __unicode__(self):
         return '< street :%s>,<city :%s>,<state :%s>' %(self.street ,self.city, self.state)

@@ -3,8 +3,7 @@
   <div class="container-fluid card" style="padding-bottom:10px;">
     <div class="row" style="border-bottom: 1px solid #dedede;">
       <div class="col-md-4" style="padding:0px;">
-        <img ng-if="data.dp == null" style="width: 120px;height:120px;" class="img" ng-src="/static/images/img_avatar_card{{data.male?'':'2'}}.png" >
-        <img ng-if="data.dp != null" style="width: 120px;height:120px;" class="img" ng-src="{{data.dp}}" >
+        <img style="width: 120px;height:120px;" class="img" ng-src="{{data | getCRMDP}}" >
       </div>
       <div class="col-md-8" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">

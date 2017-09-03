@@ -1,8 +1,8 @@
 # libreERP
 
-I started this project in August of 2015 when I wanted a web interface for one of my IOT project.
+I started this project in August of 2015.
 
-I dont know why but I once decided to build it further to a collaborative project management suit mainly focused on electronics and CAD projects.
+I dont know why but then I decided to build it further to a project management platform mainly focused on electronics and CAD projects. In the most matured state of this project there will be every single module of an ERP including full integration of kiCAD, FreeCAD, libreOffice and Blender.
 
 The current state of the project is as follows :
 
@@ -14,13 +14,17 @@ The current state of the project is as follows :
 6. An API backed IMAP-SMTP web email client is looking great, I am facing issue in authenticating the Dovecot IMAP server with the Django's user data. The workaround I am using is that for each user the system will use proxy login to retrieve the mails and return the JSON response.
 7. a github like portal that is focused on providing secure system to host git repos is working fine. The users can also browse the files and commits diffs from the web interface. Real time comments on code diff is awesome. You can discuss without leaving the window or refreshing it. This part of the project is using gitolite as authorization layer and gitPython for for python-git data fetching.
 8. A public blogging site which can help people share articles without being in the ERP network. Login is required to read the full article.
+9. A command line interface for the gitolite for authentication is available at http://github.com/pkyad/libreERP-cli
+10. Android APP for task management and Chat app is also available, please browse my profile for AndroidConnector project. Branch Wamp is for TaskBoard and chat is for Chat system.
+11. Desktop application based on pyQT for finance module to upload invoiced directly from HP scanners or PDF files is available at http://github.com/pkyad/libreERP-docScanner
+12. CRM module's contact management is complete , deals and other part is on it way.
 
 Ongoing work
 ------------
-Currently working on finance module which will take care of inbound and outbound expenses. The closest example can be Asana or Trello.
+Currently working on finance module which will take care of inbound and outbound expenses. The closest example can be Concur.
 
 
-> The best part of the project is that the architecture I designed for this project is absolutely state of the art. Its uses RESTful API interaction, Angular JS bases interactive and responsive frontend makes it fun to work on and more importantly enjoyable to the users.
+> The best part of the project is that the architecture I designed for this project is absolutely state of the art. Its uses RESTful API interaction, Angular JS based interactive and responsive frontend makes it fun to work on and more importantly enjoyable to the users.
 
 Feel free to contact me at pkyisky@gmail.com if you have any doubt or question.
 
@@ -102,7 +106,7 @@ Errors and solutions
 --------------------
 if getting error like jpeg is required during the installation of pillow:
 
-    $ sudo apt-get install libtiff4-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk python-dev libffi-dev
+    $ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk python-dev libffi-dev
 
 if getting error like git repositories directory not found means that www-data user which is for the apache is not able to access the `/home/git/repositories/`. You can give permission like this:
 
@@ -124,6 +128,8 @@ Setup mySQL DB
     $ apt-get install libmysqlclient-dev
     $ pip install MySQL-python
 
+
+  dont forget to apply all the migrations files after this.
 
 Donation
 ------------------

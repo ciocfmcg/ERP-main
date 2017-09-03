@@ -17,6 +17,14 @@ from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 # Create your views here.
 
+class ContactLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (isOwner , )
+    serializer_class = ContactLiteSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name', 'company' , 'mobile', 'email']
+    def get_queryset(self):
+        return Contact.objects.all()
+
 class ContactViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )
     serializer_class = ContactSerializer

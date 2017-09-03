@@ -1,0 +1,139 @@
+<div ng-controller="businessManagement.clientRelationships.contacts.explore" style="padding-top:20px;">
+  <div class="col-md-10">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:82vh;">
+      <div class="row text-center">
+        <img ng-src="{{contact | getCRMDP}}" class="img img-circle" style="width:100px;">
+      </div>
+      <div class="row text-center">
+        <h4>{{contact.name}}</h4>
+        <span>{{contact.designation}}</span> <br>
+        <span class="text-muted">{{contact.company.name}}</span>
+      </div>
+      <div ng-if="contact.mobile != null || contact.email != null || contact.facebook != null || contact.linkedin != null || contact.mobileSecondary != null || contact.emailSecondary != null" class="row" style="margin-top:50px;overflow:hidden;position:relative;min-height:100px;width:100%;">
+        <i class="fa fa-address-book-o" style="font-size:260px;color:#f7fbfc; transform: rotate(30deg)"></i>
+        <div class="container-fluid" style="position:absolute;top:0px;">
+          <div ng-if="contact.mobile != null || contact.email != null || contact.facebook != null || contact.linkedin != null">
+            <label class="text-muted">Primary</label>
+            <br>
+            <span ng-if="contact.mobile != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{contact.mobile}}</span> <br>
+            <span ng-if="contact.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{contact.email}}</span> <br>
+            <span ng-if="contact.facebook != null"><strong><i style="width:30px;" class="fa fa-facebook"></i> </strong> <a href="{{contact.facebook}}" target = "_blank">{{contact.facebook.substring(0,25)}}</a></span> <br>
+            <span ng-if="contact.linkedin != null"><strong><i style="width:30px;" class="fa fa-linkedin"></i> </strong><a href="{{contact.linkedin}}" target = "_blank">{{contact.linkedin.substring(0,25)}}</a></span> <br>
+          </div>
+
+          <br>
+          <br>
+          <div ng-if="contact.mobileSecondary != null || contact.emailSecondary != null" >
+            <label class="text-muted">Secondary</label> <br>
+            <span ng-if="contact.mobileSecondary != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{contact.mobileSecondary}}</span> <br>
+            <span ng-if="contact.emailSecondary != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{contact.emailSecondary}}</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div ng-if="!(contact.mobile != null || contact.email != null || contact.facebook != null || contact.linkedin != null || contact.mobileSecondary != null || contact.emailSecondary != null)" class="text-center" style="margin-top:40px;margin-bottom:40px;">
+        <h4 class="text-muted"> No contact details found</h4>
+      </div>
+
+
+      <div class="row" style="position:relative;min-height:250px;" ng-if="contact.company != null">
+        <i class="fa fa-building-o" style="font-size:260px;color:#fcf7f7;margin-left:80px;margin-top:140px;"></i>
+        <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
+          <label class="text-muted"> <i class="fa fa-building-o" style="width:20px;"></i> Organisation</label>
+          <br>
+          <h5 style="margin-left:22px;">{{contact.company.name}}</h5> <br>
+          <div class="row" style="margin-top:10px;" ng-if="contact.company.address != null">
+            <div class="col-md-2">
+              <i class="fa fa-map-marker fa-3x pull-right" style="color:#8faec2;"></i>
+            </div>
+            <div class="col-md-10">
+              <span>{{contact.company.address.street}}</span> <br>
+              <span>{{contact.company.address.city}}</span> <br>
+              <span>{{contact.company.address.state}}</span> <br>
+              <span>{{contact.company.address.pincode}}</span> <br>
+              <span>{{contact.company.address.country}}</span> <br>
+            </div>
+          </div>
+          <div class="row" style="margin-top:20px;" ng-if="coworkers.length>0">
+            <div class="container-fluid">
+              <label class="text-muted">In Network</label> <br>
+              <div ng-repeat="c in coworkers" class="row" style="margin-top:10px;cursor:pointer;" ng-if="c.pk != contact.pk" ng-click="exploreContact(c)">
+                <div class="col-md-3" >
+                  <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getCRMDP}}">
+                </div>
+                <div class="col-md-9" style="padding-top:3px;">
+                  <span>{{c.name}}</span>
+                  <br> <span class="text-muted">{{c.designation}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+
+      <div class="row" style="padding-bottom:10px;">
+        <div ng-repeat="tab in tabs" class="col-md-2 text-center text-muted" style="border-bottom:solid {{tab.active ? ' 4':'1'}}px #175569;padding:10px;background: {{tab.active ? '#eeeeee':''}}; cursor:pointer;" ng-click="changeTab($index)">
+          <i class="fa fa-{{tab.icon}}" style="width:30px;"></i> {{tab.name}}
+        </div>
+      </div>
+      <div class="row" style="margin:5px;">
+        <div class="col-md-11">
+          <textarea class="form-control" rows="2" cols="80" placeholder="Write a note"></textarea>
+        </div>
+        <div class="col-md-1">
+          <div class="btn-group-vertical">
+            <button type="button" class="btn btn-primary" name="button"><i class="fa fa-floppy-o"></i>  Save</button>
+            <button type="button" class="btn btn-default" name="button"><i class="fa fa-eraser"></i>  Clear</button>
+          </div>
+        </div>
+
+      </div>
+      <hr>
+      <div class="row animated fadeIn">
+        <div ng-if="activeTab == 0" class="container-fluid">
+          <h3 class="text-muted">Timeline</h3>
+          <ul class="timeline timeline-inverse">
+            <div ng-repeat="feed in sortedFeeds">
+              <crm-Note ng-if = "feed.type == 'note'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Note>
+              <crm-Call ng-if = "feed.type == 'call'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Call>
+              <crm-Meeting ng-if = "feed.type == 'meeting'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Meeting>
+              <crm-Mail ng-if = "feed.type == 'mail'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Mail>
+              <crm-Todo ng-if = "feed.type == 'todo'" data = "socialResource.albums[feed.index]" photo-Delete = "removePhoto(feed.index )" album-Delete = "removeAlbum(feed.index)"></crm-Todo>
+            </div>
+          </ul>
+
+        </div>
+
+        <div ng-if="activeTab == 1">
+          <h3 class="text-muted">Log an activity</h3>
+        </div>
+
+        <div ng-if="activeTab == 2">
+          <h3 class="text-muted">Send an email</h3>
+        </div>
+
+        <div ng-if="activeTab == 3">
+          <h3 class="text-muted">Call/sms</h3>
+        </div>
+
+        <div ng-if="activeTab == 4">
+          <h3 class="text-muted">Create a task</h3>
+        </div>
+
+        <div ng-if="activeTab == 5">
+          <h3 class="text-muted">Schedule an event</h3>
+        </div>
+
+      </div>
+
+
+
+    </div>
+  </div>
+  <div class="col-md-2">
+
+  </div>
+</div>

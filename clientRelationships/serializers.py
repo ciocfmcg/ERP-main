@@ -11,6 +11,14 @@ from fabric.api import *
 import os
 from django.conf import settings as globalSettings
 
+
+class ContactLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ('pk' , 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
+        read_only_fields = ( 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
+
+
 class ContactSerializer(serializers.ModelSerializer):
     company = serviceSerializer(many = False , read_only = True)
     class Meta:
