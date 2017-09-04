@@ -1,3 +1,65 @@
+
+app.directive('usersField', function () {
+  return {
+    templateUrl: '/static/ngTemplates/clientsInputField.html',
+    restrict: 'E',
+    replace: true,
+    scope: {
+      data :'=',
+      url : '@',
+      col : '@',
+      label : '@',
+      viewOnly : '@'
+    },
+    controller : function($scope , $state , $http , Flash){
+        $scope.d = {user : undefined};
+        if (typeof $scope.col != 'undefined') {
+            $scope.showResults = true;
+        }else{
+            $scope.showResults = false;
+        }
+
+        if (typeof $scope.viewOnly != 'undefined') {
+            $scope.viewOnly = false;
+        }
+        // $scope.user = undefined;
+        $scope.userSearch = function(query) {
+          return $http.get( $scope.url +'?username__contains=' + query).
+          then(function(response){
+              for (var i = 0; i < response.data.length; i++) {
+                  if ($scope.data.indexOf(response.data[i]) != -1){
+                      response.data.splice(i,1);
+                  }
+              }
+            return response.data;
+          })
+        };
+        $scope.getName = function(u) {
+          if (typeof u == 'undefined') {
+            return '';
+          }
+          return u.first_name + '  ' +u.last_name;
+        }
+
+        $scope.removeUser = function(index) {
+          $scope.data.splice(index,1);
+        }
+
+        $scope.addUser = function() {
+          for (var i = 0; i < $scope.data.length; i++) {
+            if ($scope.data[i] == $scope.d.user.pk){
+              Flash.create('danger' , 'User already a member of this group')
+              return;
+            }
+          }
+          $scope.data.push($scope.d.user.pk);
+          $scope.d.user = undefined;
+        }
+    },
+  };
+});
+
+
 app.controller("businessManagement.clientRelationships.contacts", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.data = {
@@ -125,29 +187,7 @@ app.directive('crmNote', function() {
       onDelete: '&',
     },
     controller: function($scope, $http, $timeout, $users, $aside, $interval, $window) {
-      $scope.openPost = function(position, backdrop, input) {
-        $scope.asideState = {
-          open: true,
-          position: position
-        };
 
-        function postClose() {
-          $scope.asideState.open = false;
-        }
-
-        $aside.open({
-          templateUrl: '/static/ngTemplates/app.social.aside.post.html',
-          placement: position,
-          size: 'md',
-          backdrop: backdrop,
-          controller: 'controller.social.aside.post',
-          resolve: {
-            input: function() {
-              return input;
-            }
-          }
-        }).result.then(postClose, postClose);
-      }
     },
   };
 });
@@ -162,30 +202,10 @@ app.directive('crmCall', function() {
       data: '=',
       onDelete: '&',
     },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window) {
-      $scope.openPost = function(position, backdrop, input) {
-        $scope.asideState = {
-          open: true,
-          position: position
-        };
-
-        function postClose() {
-          $scope.asideState.open = false;
-        }
-
-        $aside.open({
-          templateUrl: '/static/ngTemplates/app.social.aside.post.html',
-          placement: position,
-          size: 'md',
-          backdrop: backdrop,
-          controller: 'controller.social.aside.post',
-          resolve: {
-            input: function() {
-              return input;
-            }
-          }
-        }).result.then(postClose, postClose);
-      }
+    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window, $sce) {
+      $scope.data.notesHtml = $sce.trustAsHtml($scope.data.notes);
+      var parsedData = JSON.parse($scope.data.data);
+      $scope.data.duration = parsedData.duration;
     },
   };
 });
@@ -200,30 +220,11 @@ app.directive('crmMeeting', function() {
       data: '=',
       onDelete: '&',
     },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window) {
-      $scope.openPost = function(position, backdrop, input) {
-        $scope.asideState = {
-          open: true,
-          position: position
-        };
-
-        function postClose() {
-          $scope.asideState.open = false;
-        }
-
-        $aside.open({
-          templateUrl: '/static/ngTemplates/app.social.aside.post.html',
-          placement: position,
-          size: 'md',
-          backdrop: backdrop,
-          controller: 'controller.social.aside.post',
-          resolve: {
-            input: function() {
-              return input;
-            }
-          }
-        }).result.then(postClose, postClose);
-      }
+    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window, $sce) {
+      $scope.data.notesHtml = $sce.trustAsHtml($scope.data.notes);
+      var parsedData = JSON.parse($scope.data.data);
+      $scope.data.location = parsedData.location;
+      $scope.data.duration = parsedData.duration;
     },
   };
 });
@@ -238,30 +239,9 @@ app.directive('crmMail', function() {
       data: '=',
       onDelete: '&',
     },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window) {
-      $scope.openPost = function(position, backdrop, input) {
-        $scope.asideState = {
-          open: true,
-          position: position
-        };
-
-        function postClose() {
-          $scope.asideState.open = false;
-        }
-
-        $aside.open({
-          templateUrl: '/static/ngTemplates/app.social.aside.post.html',
-          placement: position,
-          size: 'md',
-          backdrop: backdrop,
-          controller: 'controller.social.aside.post',
-          resolve: {
-            input: function() {
-              return input;
-            }
-          }
-        }).result.then(postClose, postClose);
-      }
+    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window , $sce) {
+      $scope.data.subject = JSON.parse($scope.data.data).subject;
+      $scope.data.notesHtml = $sce.trustAsHtml($scope.data.notes);
     },
   };
 });
@@ -295,29 +275,7 @@ app.directive('crmTodo', function() {
       onDelete: '&',
     },
     controller: function($scope, $http, $timeout, $users, $aside, $interval, $window) {
-      $scope.openPost = function(position, backdrop, input) {
-        $scope.asideState = {
-          open: true,
-          position: position
-        };
 
-        function postClose() {
-          $scope.asideState.open = false;
-        }
-
-        $aside.open({
-          templateUrl: '/static/ngTemplates/app.social.aside.post.html',
-          placement: position,
-          size: 'md',
-          backdrop: backdrop,
-          controller: 'controller.social.aside.post',
-          resolve: {
-            input: function() {
-              return input;
-            }
-          }
-        }).result.then(postClose, postClose);
-      }
     },
   };
 });
@@ -331,6 +289,10 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   $scope.disableNext = false;
 
   $scope.pageNo = 0;
+
+  $scope.removeCRMUser = function(ind) {
+    $scope.logger.withinCRMUsers.splice(ind , 1);
+  }
 
   $scope.nextPage = function() {
     if ($scope.disableNext) {
@@ -365,7 +327,6 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
         $scope.prevPage();
       }
       $scope.disableNext = response.data.next == null;
-
       $scope.analyzeTimeline();
     })
   }
@@ -471,7 +432,26 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
       icon: 'clock-o'
     },
   ]
-  $scope.activeTab = 0;
+
+  $scope.tinymceOptions = {
+    selector: 'textarea',
+    content_css : '/static/css/bootstrap.min.css',
+    inline: false,
+    plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+    skin: 'lightgray',
+    theme : 'modern',
+    height : 440,
+    toolbar : 'undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+    setup: function (editor ) {
+      // editor.addButton();
+    },
+  };
+
+  $scope.resetLogger = function() {
+    $scope.logger = {when : new Date() , where : '' , subject : '' , duration : 10 , comment: '', internalUsers : [], withinCRMUsers : [] , location: '', withinCRM : '', activityType: 'Email'};
+  }
+
+  $scope.resetLogger();
 
   $scope.changeTab = function(index) {
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -480,6 +460,85 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     $scope.tabs[index].active = true;
     $scope.activeTab = index;
   }
+  $scope.changeTab(0);
+
+  $scope.contactSearch = function(query) {
+    return $http.get('/api/clientRelationships/contactLite/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
+  $scope.addWithinCRM = function() {
+    for (var i = 0; i < $scope.logger.withinCRMUsers.length; i++) {
+      if ($scope.logger.withinCRMUsers[i].pk == $scope.logger.withinCRM.pk) {
+        $scope.logger.withinCRM = '';
+        Flash.create('warning' , 'Already in the list');
+        return;
+      }
+    }
+
+    if (typeof $scope.logger.withinCRM == 'object' && $scope.logger.withinCRM != null && $scope.logger.withinCRM != '') {
+      $scope.logger.withinCRMUsers.push($scope.logger.withinCRM)
+      $scope.logger.withinCRM = '';
+    }
+  }
+
+  $scope.saveActivityLog = function() {
+    var dataToSend = {when : $scope.logger.when , contact: $scope.contact.pk};
+    var internals = []
+    for (var i = 0; i < $scope.logger.internalUsers.length; i++) {
+      $scope.logger.internalUsers[i]
+      internals.push($scope.logger.internalUsers[i]);
+    }
+
+    if (internals.length !=0) {
+      dataToSend.internalUsers = internals;
+    }
+
+
+
+    var externals = []
+    for (var i = 0; i < $scope.logger.withinCRMUsers.length; i++) {
+      externals.push($scope.logger.withinCRMUsers[i].pk);
+    }
+
+    if (externals.length !=0) {
+      dataToSend.contacts = externals;
+    }
+    var activityData;
+    console.log($scope.logger.activityType);
+    if ($scope.logger.activityType == 'Email') {
+      dataToSend.typ = 'mail';
+      if ($scope.logger.subject.length==0) {
+        Flash.create('warning' , 'Subject can not be left blank');
+        return;
+      }
+      activityData = {subject : $scope.logger.subject};
+    }else if ($scope.logger.activityType == 'Meeting') {
+      dataToSend.typ = 'meeting';
+      activityData = {duration : $scope.logger.duration , location : $scope.logger.location};
+    }else if ($scope.logger.activityType == 'Call') {
+      dataToSend.typ = 'call';
+      activityData = {duration : $scope.logger.duration }
+    }
+    dataToSend.data = JSON.stringify(activityData);
+
+    if ($scope.logger.comment != '') {
+      dataToSend.notes = $scope.logger.comment;
+    }
+
+    $http({method : 'POST' ,url: '/api/clientRelationships/activity/',data : dataToSend }).
+    then(function(response) {
+      $scope.timelineItems.unshift(response.data);
+      $scope.resetLogger();
+      Flash.create('success', 'Saved');
+    }, function(err) {
+      Flash.create('danger', 'Error');
+    })
+
+  }
+
 
   $http({
     method: 'GET',

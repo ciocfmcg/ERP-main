@@ -105,7 +105,6 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
     var fd = new FormData();
     fd.append('eventType' , 'Meeting' );
     fd.append('text' , $scope.data.text );
-    fd.append('user' , $scope.me.url );
     if ($scope.data.attachment !=emptyFile && $scope.data.attachment != null) {
       fd.append('attachment' , $scope.data.attachment);
     }
@@ -168,7 +167,7 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
     }
 
 
-    data = { eventType : 'Reminder', user : $scope.me.pk , text : $scope.data.text , when : $filter('date')($scope.data.when , "yyyy-MM-dd'T'HH:mm:ssZ")  };
+    data = { eventType : 'Reminder' , text : $scope.data.text , when : $filter('date')($scope.data.when , "yyyy-MM-dd'T'HH:mm:ssZ")  };
     $http({method : method , url : url , data : data}).
     then(function(response){
       $scope.resetForm();

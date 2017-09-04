@@ -58,7 +58,7 @@ class chatMessage(models.Model):
 def getCalendarAttachment(instance , filename ):
     return 'calendar/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, instance.originator.username, filename)
 
-
+from clientRelationships.models import Contact
 class calendar(models.Model):
     TYPE_CHOICE = (
         ('Meeting' , 'Meeting'),
@@ -102,6 +102,7 @@ class calendar(models.Model):
     attachment = models.FileField(upload_to = getCalendarAttachment , null = True)
     myNotes = models.CharField(max_length = 100 , blank = True)
     followers = models.ManyToManyField(User , related_name = 'calendarItemsFollowing' , blank = True)
+    clients = models.ManyToManyField(Contact , related_name='calendarEntries', blank = True)
 
 class blogCategory(models.Model):
     title = models.CharField(max_length = 50 , null = False , unique=True)

@@ -61,12 +61,19 @@ class ContractSerializer(serializers.ModelSerializer):
         fields = ('pk'  ,'user' , 'created' , 'updated' , 'doc', 'value', 'relationType', 'deal')
 
 class ActivitySerializer(serializers.ModelSerializer):
+    contacts = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Activity
-        fields = ('pk'  ,'user' , 'created' , 'typ' , 'data', 'deal', 'contact', 'notes', 'doc')
-        read_only_fields = ('user',)
+        fields = ('pk'  ,'user' , 'created' , 'typ' , 'data', 'deal', 'contact', 'notes', 'doc' , 'contacts' , 'internalUsers')
+        read_only_fields = ('user','contacts' , 'internalUsers')
     def create(self , validated_data):
         a = Activity(**validated_data)
         a.user = self.context['request'].user
         a.save()
+        if 'internalUsers' in self.context['request'].data:
+            for c in self.context['request'].data['internalUsers']:
+                a.internalUsers.add(User.objects.get(pk = c))
+        if 'contacts' in self.context['request'].data:
+            for c in self.context['request'].data['contacts']:
+                a.contacts.add(Contact.objects.get(pk = c))
         return a

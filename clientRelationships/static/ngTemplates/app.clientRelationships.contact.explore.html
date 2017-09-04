@@ -102,7 +102,7 @@
                 <crm-Note ng-if = "feed.typ == 'note'" data = "feed" ></crm-Note>
                 <crm-Call ng-if = "feed.typ == 'call'" data = "feed" ></crm-Call>
                 <crm-Meeting ng-if = "feed.typ == 'meeting'" data = "feed" ></crm-Meeting>
-                <crm-Mail ng-if = "feed.typ == 'mail'" data = "feed" ></crm-Mail>
+                <crm-Mail ng-if = "feed.typ == 'mail' && feed.data.length >0" data = "feed" ></crm-Mail>
                 <crm-Todo ng-if = "feed.typ == 'todo'" data = "feed" ></crm-Todo>
               </div>
             </ul>
@@ -118,7 +118,103 @@
         </div>
 
         <div ng-if="activeTab == 1">
-          <h3 class="text-muted">Log an activity</h3>
+          <div class="container-fluid">
+            <h3 class="text-muted">Log an activity</h3>
+          </div>
+          <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
+            <div class="col-md-3" style="padding-top:40px;">
+              <div class="form-group">
+                <label>Type</label>
+                <select class="form-control" ng-model="logger.activityType">
+                  <option value="Email">Email</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Call">Call</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-9" style="padding:20px;border-left:solid 1px #eeeeee;">
+              <div class= "form-group">
+                <label class="control-label col-sm-3" style="margin-top:35px;padding:0px;">When</label>
+                <div class="col-md-5">
+                  <div class="input-group" style="margin-top:35px;">
+                    <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="logger.when" is-open="status.opened"  />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row container-fluid">
+                    <uib-timepicker ng-model="logger.when" hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <users-Field data="logger.internalUsers" url="/api/HR/userSearch/" col="4" label="Internal People" ></users-Field>
+
+              <div class="form-group">
+                <label>Within CRM</label>
+                <div class="input-group" >
+                  <input uib-typeahead="cc as cc.name for cc in contactSearch($viewValue)" ng-model="logger.withinCRM" type="text" class="form-control" placeholder="Search using name">
+                  <span class = "input-group-btn">
+                     <button class = "btn btn-success" type = "button" ng-click="addWithinCRM()">
+                        Add <i class="fa fa-plus"></i>
+                     </button>
+                  </span>
+                </div>
+                <div class="row" style="padding-top:30px;">
+                    <div class="col-md-4" ng-repeat="cc in logger.withinCRMUsers">
+                      <div class="card container-fluid" style="padding-left:0px;position:relative;margin-bottom:10px;">
+                          <i class="fa fa-times pull-right" ng-click="removeCRMUser($index)"></i>
+                          <div class="col-md-4" style="padding-top:5px;">
+                            <img ng-src="{{cc | getCRMDP}}" class="img-circle" alt="DP" height="50" width="50" />
+                          </div>
+                          <div class="col-md-8">
+                            {{cc.name}} <br>
+                            ID : <strong>{{cc.pk}}</strong>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+
+              <div ng-if="logger.activityType == 'Email'">
+                <div class="form-group">
+                  <label>Subject</label>
+                  <input type="text" ng-model="logger.subject" class="form-control">
+                </div>
+              </div>
+
+              <div ng-if="logger.activityType == 'Call'">
+                <div class="form-group">
+                  <label>Duration</label>
+                  <input type="number" ng-model="logger.duration" class="form-control">
+                </div>
+
+
+              </div>
+
+              <div ng-if="logger.activityType == 'Meeting'">
+                <div class="form-group">
+                  <label>Duration</label>
+                  <input type="number" ng-model="logger.duration" class="form-control">
+                </div>
+
+                <div class="form-group">
+                  <label>Place</label>
+                  <input type="text" ng-model="logger.location" class="form-control">
+                </div>
+
+
+              </div>
+
+              <div class="form-group">
+                <label>Comment</label>
+                  <textarea ui-tinymce="tinymceOptions" ng-model="logger.comment"></textarea>
+              </div>
+              <button type="button" class="btn btn-primary" ng-click="saveActivityLog()">Save</button>
+          </div>
+
         </div>
 
         <div ng-if="activeTab == 2">

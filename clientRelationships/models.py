@@ -96,3 +96,5 @@ class Activity(models.Model):
     contact = models.ForeignKey(Contact, related_name = 'activities' , null = True)
     notes = models.TextField(max_length= 1000 , null = True)
     doc = models.FileField(upload_to= getClientRelationshipActivity , null = True)
+    contacts = models.ManyToManyField(Contact , related_name='activitiesMentioned', blank=True)
+    internalUsers = models.ManyToManyField(User , related_name='activitiesMentioned', blank=True)
