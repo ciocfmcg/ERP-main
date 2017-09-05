@@ -34,9 +34,17 @@ class calendarSerializer(serializers.ModelSerializer):
         cal.save()
         if 'with' in  self.context['request'].data:
             tagged = self.context['request'].data['with']
-            for tag in tagged.split(','):
-                cal.followers.add( User.objects.get(username = tag))
+            if ',' in tagged:
+                for tag in tagged.split(','):
+                    cal.followers.add( User.objects.get(username = tag))
+            else:
+                for tag in tagged:
+                    cal.followers.add( User.objects.get(pk = tag))
 
+        if 'clients' in  self.context['request'].data:
+            clients = self.context['request'].data['clients']
+            for c in clients:
+                cal.clients.add( Contact.objects.get(pk = c))
         cal.save()
         return cal
     def update(self, instance, validated_data): # like the comment

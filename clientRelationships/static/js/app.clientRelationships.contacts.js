@@ -1,5 +1,5 @@
 
-app.directive('usersField', function () {
+app.directive('clientsField', function () {
   return {
     templateUrl: '/static/ngTemplates/clientsInputField.html',
     restrict: 'E',
@@ -24,22 +24,11 @@ app.directive('usersField', function () {
         }
         // $scope.user = undefined;
         $scope.userSearch = function(query) {
-          return $http.get( $scope.url +'?username__contains=' + query).
+          return $http.get( $scope.url +'?name__contains=' + query).
           then(function(response){
-              for (var i = 0; i < response.data.length; i++) {
-                  if ($scope.data.indexOf(response.data[i]) != -1){
-                      response.data.splice(i,1);
-                  }
-              }
             return response.data;
           })
         };
-        $scope.getName = function(u) {
-          if (typeof u == 'undefined') {
-            return '';
-          }
-          return u.first_name + '  ' +u.last_name;
-        }
 
         $scope.removeUser = function(index) {
           $scope.data.splice(index,1);
@@ -47,12 +36,12 @@ app.directive('usersField', function () {
 
         $scope.addUser = function() {
           for (var i = 0; i < $scope.data.length; i++) {
-            if ($scope.data[i] == $scope.d.user.pk){
+            if ($scope.data[i].pk == $scope.d.user.pk){
               Flash.create('danger' , 'User already a member of this group')
               return;
             }
           }
-          $scope.data.push($scope.d.user.pk);
+          $scope.data.push($scope.d.user);
           $scope.d.user = undefined;
         }
     },
@@ -142,16 +131,16 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
     }
   }
 
-  $scope.addTab({
-    "title": "Details :with DP5",
-    "cancel": true,
-    "app": "contactExplorer",
-    "data": {
-      "pk": 10,
-      "index": 9
-    },
-    "active": true
-  })
+  // $scope.addTab({
+  //   "title": "Details :with DP5",
+  //   "cancel": true,
+  //   "app": "contactExplorer",
+  //   "data": {
+  //     "pk": 10,
+  //     "index": 9
+  //   },
+  //   "active": true
+  // })
 
   $scope.$on('exploreContact', function(event, input) {
     console.log("recieved");
@@ -284,11 +273,97 @@ app.directive('crmTodo', function() {
 app.controller("businessManagement.clientRelationships.contacts.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.contact = $scope.data.tableData[$scope.tab.data.index]
-  console.log($scope.contact);
-  console.log($scope.tab.data.pk);
   $scope.disableNext = false;
 
   $scope.pageNo = 0;
+
+  $scope.cleanCalendarEntry = function(data) {
+    var cleaned = []
+    for (var j = 0; j < data.clients.length; j++) {
+      if (data.clients[j].pk != $scope.contact.pk) {
+        cleaned.push(data.clients[j]);
+      }
+    }
+    data.clients = cleaned;
+    return data;
+  }
+
+  $scope.fetchCalendarEnteries = function() {
+    $http({method : 'GET' , url : '/api/PIM/calendar/?originator=CRM&clients__in=[' + $scope.contact.pk+ ']'}).
+    then(function(response) {
+      for (var i = 0; i < response.data.length; i++) {
+        response.data[i] = $scope.cleanCalendarEntry(response.data[i]);
+      }
+
+      $scope.calendar = response.data;
+
+
+      for (var i = 0; i < $scope.calendar.length; i++) {
+        $scope.calendar[i].when = new Date($scope.calendar[i].when);
+        $scope.calendar[i].newDate = false;
+        if (i < $scope.calendar.length-1) {
+          if ($scope.calendar[i].when.toDateString() != new Date($scope.calendar[i+1].when).toDateString() ) {
+            $scope.calendar[i].newDate = true;
+            if ($scope.calendar[i].when.toDateString() == new Date().toDateString()) {
+              $scope.calendar[i].today = true;
+            }
+          }
+        }
+      }
+    })
+  }
+
+
+
+
+  $scope.resetTaskEditor = function() {
+    var dummyDate = new Date()
+    $scope.taskEditor = { otherCRMUsers : [] , details : ''};
+    $scope.taskEditor.when = new Date(dummyDate.getFullYear()
+                           ,dummyDate.getMonth()
+                           ,dummyDate.getDate()
+                           ,23,59,59); // 2013-07-30 23:59:59
+  }
+
+  $scope.resetTaskEditor();
+
+  $scope.saveTask = function() {
+    if ($scope.taskEditor.details.length == 0) {
+      Flash.create('warning' , 'Details can not be empty')
+    }
+
+    var crmUsers = [$scope.contact.pk];
+    for (var i = 0; i < $scope.taskEditor.otherCRMUsers.length; i++) {
+      crmUsers.push($scope.taskEditor.otherCRMUsers[i].pk);
+    }
+
+    var dataToSend = {when : $scope.taskEditor.when , text : $scope.taskEditor.details , eventType : 'Reminder' , originator: 'CRM'}
+    if (crmUsers.length != 0) {
+      dataToSend.clients = crmUsers;
+    }
+
+    $http({method : 'POST' , url : '/api/PIM/calendar/' , data : dataToSend }).
+    then(function(response) {
+      Flash.create('success' , 'Saved');
+      // $scope.calendar.unshift($scope.cleanCalendarEntry(response.data));
+      $scope.fetchCalendarEnteries();
+      $scope.resetTaskEditor();
+    });
+  }
+
+  $scope.markComplete = function(pk) {
+    for (var i = 0; i < $scope.calendar.length; i++) {
+      if ($scope.calendar[i].pk == pk) {
+        $scope.calendar[i].completed = true;
+        $http({method : 'PATCH' , url : '/api/PIM/calendar/' + pk +'/' , data :{completed : true}}).
+        then(function(response) {
+          Flash.create('success' , 'Updated');
+        }, function(err) {
+          Flash.create('danger' , 'Error while updating');
+        })
+      }
+    }
+  }
 
   $scope.removeCRMUser = function(ind) {
     $scope.logger.withinCRMUsers.splice(ind , 1);
@@ -440,7 +515,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
     skin: 'lightgray',
     theme : 'modern',
-    height : 440,
+    height : 300,
     toolbar : 'undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
     setup: function (editor ) {
       // editor.addButton();
@@ -452,15 +527,58 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   }
 
   $scope.resetLogger();
-
+  $scope.local = {activeTab : 0};
   $scope.changeTab = function(index) {
     for (var i = 0; i < $scope.tabs.length; i++) {
       $scope.tabs[i].active = false;
     }
     $scope.tabs[index].active = true;
-    $scope.activeTab = index;
+    $scope.local.activeTab = index;
   }
   $scope.changeTab(0);
+
+  $scope.resetEventScheduler = function() {
+    $scope.eventScheduler = {internalUsers : [] , when : new Date()  , details : '' , otherCRMUsers : [] , venue : ''}
+  }
+
+  $scope.resetEventScheduler();
+
+  $scope.saveEvent = function() {
+
+    if ($scope.eventScheduler.details.length == 0) {
+      Flash.create('warning' , 'Details can not be empty')
+    }
+
+    var crmUsers = [$scope.contact.pk];
+    for (var i = 0; i < $scope.eventScheduler.otherCRMUsers.length; i++) {
+      crmUsers.push($scope.eventScheduler.otherCRMUsers[i].pk);
+    }
+
+    var internalUsers = [];
+    for (var i = 0; i < $scope.eventScheduler.internalUsers.length; i++) {
+      internalUsers.push($scope.eventScheduler.internalUsers[i]);
+    }
+
+    var dataToSend = {when : $scope.eventScheduler.when , text : $scope.eventScheduler.details , eventType : 'Meeting' , originator: 'CRM' , venue : $scope.eventScheduler.venue}
+
+    if (crmUsers.length != 0) {
+      dataToSend.clients = crmUsers;
+    }
+
+    if (internalUsers.length != 0) {
+      dataToSend.followers = internalUsers;
+    }
+
+    $http({method : 'POST' , url : '/api/PIM/calendar/' , data : dataToSend }).
+    then(function(response) {
+      Flash.create('success' , 'Saved');
+      // $scope.calendar.unshift($scope.cleanCalendarEntry(response.data));
+      $scope.fetchCalendarEnteries();
+      $scope.resetEventScheduler();
+    });
+  }
+
+
 
   $scope.contactSearch = function(query) {
     return $http.get('/api/clientRelationships/contactLite/?name__contains=' + query).
@@ -551,6 +669,9 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
 
   $scope.fetchCoworkers = function() {
+    if ($scope.contact.company == null) {
+      return;
+    }
     $http({
       method: 'GET',
       url: '/api/clientRelationships/contactLite/?company=' + $scope.contact.company.pk
@@ -563,7 +684,6 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   console.log($scope);
 
   $scope.exploreContact = function(c) {
-    console.log("will exlore");
     $scope.$emit('exploreContact', {
       contact: c
     });
@@ -573,6 +693,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   $scope.$watch('contact', function(newValue, oldValue) {
     if (newValue != undefined || newValue != null) {
       $scope.retriveTimeline();
+      $scope.fetchCalendarEnteries();
     }
   })
 });

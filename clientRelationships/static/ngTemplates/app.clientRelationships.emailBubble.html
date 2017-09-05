@@ -19,7 +19,7 @@
         <div class="row" ng-if="data.contacts.length>0">
           <label>External :</label> <br>
           <div style="padding-left:50px;">
-            <div ng-repeat="c in data.contacts" class="col-md-4">
+            <div ng-repeat="c in data.contacts" class="col-md-4" style="cursor:pointer;" ng-click="$emit('exploreContact', {contact: c});">
               <div class="container-fluid card" style="padding:0px;margin-bottom:10px;">
                 <div class="col-md-3" style="padding:0px;">
                   <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getCRMDP}}">

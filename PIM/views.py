@@ -4,6 +4,7 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from models import *
+import json
 
 class settingsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner, )
@@ -16,10 +17,18 @@ class themeViewSet(viewsets.ModelViewSet):
     serializer_class = themeSerializer
 
 class calendarViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner )
+    permission_classes = (permissions.IsAuthenticated, isOwner )
     serializer_class = calendarSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['text' , 'originator']
     def get_queryset(self):
-        return calendar.objects.filter(user =  self.request.user)
+        toReturn = calendar.objects.filter(user =  self.request.user).order_by('when')
+        if 'clients__in' in self.request.GET:
+            clients = json.loads(self.request.GET['clients__in'])
+            # print type(clients) , type(clients[0])
+            toReturn = toReturn.filter(clients__in = clients)
+
+        return toReturn
 
 class notificationViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner, )
