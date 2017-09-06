@@ -1,3 +1,42 @@
+app.directive('wizard', function () {
+  return {
+    templateUrl: '/static/ngTemplates/wizard.html',
+    restrict: 'E',
+    replace: true,
+    scope: {
+      active :'=',
+      editable : '=',
+      steps : '=',
+      error : '='
+    },
+    controller : function($scope , $state , $stateParams){
+      console.log($scope);
+      $scope.activeBackup = -2;
+      $scope.wizardClicked = function(indx) {
+        if ($scope.editable) {
+          $scope.active = indx;
+          $scope.activeBackup = -2;
+        }
+      }
+
+      $scope.resetHover = function(indx) {
+        if ($scope.editable && $scope.activeBackup != -2) {
+          $scope.active = $scope.activeBackup;
+          $scope.activeBackup = -2;
+        }
+      }
+
+      $scope.activateTemp = function(indx) {
+        if ($scope.editable) {
+          $scope.activeBackup = $scope.active;
+          $scope.active = indx;
+        }
+      }
+
+    },
+  };
+});
+
 app.directive('breadcrumb', function () {
   return {
     templateUrl: '/static/ngTemplates/breadcrumb.html',

@@ -2,6 +2,57 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.firstInWizard{
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+
+.lastInWizard{
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.haveDirection::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 6px;
+  right:-18px;
+  width: 38px;
+  height: 38px;
+  -moz-transform:rotate(-45deg);
+  -webkit-transform:rotate(-45deg);
+  border-right: solid 3px white;
+  border-bottom: solid 3px white;
+  border-radius: 2px;
+  z-index: 1;
+}
+
+.wizard .active , .wizard .active::after{
+  background: #2980b9;
+}
+
+.wizard .success, .wizard .success::after{
+  background: #5cb85c;
+}
+
+.wizard .default, .wizard .default::after{
+  background: #eeeeee;
+}
+
+.wizard .danger, .wizard .danger::after{
+  background: #d63f3f;
+}
+
+
+
+.wizardItem{
+  height:50px;
+  display:inline-block;
+  position: relative;
+  /*padding-top: 13px;*/
+}
+
 .switch.checked.neutral {
  background:#ffffff;
  border-color:#eeeeee;

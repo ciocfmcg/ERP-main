@@ -25,7 +25,6 @@
           <img ng-if="form.dp[0] != 'h'" style="width: 100%;" class="img img-circle" ng-src="/static/images/img_avatar_card{{form.male? '':'2'}}.png" >
           <img ng-if="form.dp[0] == 'h'" style="width: 100%;" class="img img-circle" ng-src="{{form.dp}}" >
         </div>
-
       </div>
 
       <div class="form-group">
@@ -87,8 +86,13 @@
         </div>
       </div>
 
+        <div class="btn-group pull-right">
+          <button type="button" class="btn btn-default" ng-click="resetForm()">
+            Reset
+          </button>
+          <button type="button" class="btn btn-primary pull-right" ng-click="createContact()" >Save</button>
+        </div>
 
-      <button type="button" class="btn btn-primary pull-right" ng-click="createContact()" >Save</button>
     </div>
     <div class="col-md-6" ng-if="showCompanyForm">
       <h4>Company Details (Optional)</h4>

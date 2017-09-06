@@ -1,0 +1,97 @@
+<div ng-controller="businessManagement.clientRelationships.opportunities.form">
+
+
+  <div class="container-fluid">
+    <div class="col-md-8 col-md-offset-2">
+      <h3 ng-if="mode == 'edit'">Edit opportunity : <strong>{{form.name}}</strong></h3>
+      <h3 ng-if="mode == 'new'">Create a new opportunity</h3>
+      <div class="row">
+        <div class="container-fluid">
+          <button type="button" ng-click="openContactForm()" class="btn btn-primary pull-right">
+            Create an contact entry
+          </button>
+        </div>
+      </div>
+      <div class="row" style="margin-top:20px;">
+        <div class="col-md-6">
+          <div class="form-group" >
+            <label>Name</label>
+            <input type="text" class="form-control" ng-model="dealEditor.name">
+            <p class="help-block">Enter a nice name for this deal.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <company-Field data="dealEditor.company"></company-Field>
+        </div>
+      </div>
+      <clients-Field data="dealEditor.otherCRMUsers" url="/api/clientRelationships/contactLite/" col="3" label="Stakeholders at customer side"></clients-Field>
+
+      <users-Field data="dealEditor.internalUsers" url="/api/HR/userSearch/" col="3" label="Internal stakeholders"></users-Field>
+
+      <div class="form-group">
+        <label>Initial State</label>
+          <wizard steps="data.steps" editable="true" active="dealEditor.state" error="false"></wizard>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Tentative closing date </label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dealEditor.closeDate" is-open="status.opened" />
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Suspected value</label>
+            <div class="input-group">
+              <div class="input-group-btn">
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                       <span data-bind="label" >{{dealEditor.currency}} {{dealEditor.currency!= null && dealEditor.currency!= '' ? '': 'Currency'}}</span> <span class="caret"></span>
+                   </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li ng-click="setCurrency('INR')"><a href="">INR</a></li>
+                    <li ng-click="setCurrency('USD')"><a href="">USD</a></li>
+                  </ul>
+                </div>
+              </div>
+              <input type="search" name="searchBy" ng-model="dealEditor.value" id="searchBy" class="form-control" />
+              <div class="input-group-btn">
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                       <span data-bind="label" >{{dealEditor.relation | humanize}} {{dealEditor.relation!= null && dealEditor.relation!= '' ? '': 'Relation'}}</span> <span class="caret"></span>
+                   </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li ng-repeat="r in data.relationTypes" ng-click="setRelation(r)"><a href="">{{r | humanize}}</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Confidence</label>
+        <rzslider rz-slider-model="dealEditor.probability" rz-slider-options="{floor: 0, ceil: 100}"></rzslider>
+      </div>
+      <div class="form-group">
+        <label>Client's requirements if identified</label>
+        <textarea ui-tinymce="tinymceOptions" ng-model="dealEditor.requirements"></textarea>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" ng-click="resetDealEditor()">
+          Reset
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="saveDeal()">
+          Save
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

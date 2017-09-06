@@ -1,54 +1,3 @@
-
-app.directive('clientsField', function () {
-  return {
-    templateUrl: '/static/ngTemplates/clientsInputField.html',
-    restrict: 'E',
-    replace: true,
-    scope: {
-      data :'=',
-      url : '@',
-      col : '@',
-      label : '@',
-      viewOnly : '@'
-    },
-    controller : function($scope , $state , $http , Flash){
-        $scope.d = {user : undefined};
-        if (typeof $scope.col != 'undefined') {
-            $scope.showResults = true;
-        }else{
-            $scope.showResults = false;
-        }
-
-        if (typeof $scope.viewOnly != 'undefined') {
-            $scope.viewOnly = false;
-        }
-        // $scope.user = undefined;
-        $scope.userSearch = function(query) {
-          return $http.get( $scope.url +'?name__contains=' + query).
-          then(function(response){
-            return response.data;
-          })
-        };
-
-        $scope.removeUser = function(index) {
-          $scope.data.splice(index,1);
-        }
-
-        $scope.addUser = function() {
-          for (var i = 0; i < $scope.data.length; i++) {
-            if ($scope.data[i].pk == $scope.d.user.pk){
-              Flash.create('danger' , 'User already a member of this group')
-              return;
-            }
-          }
-          $scope.data.push($scope.d.user);
-          $scope.d.user = undefined;
-        }
-    },
-  };
-});
-
-
 app.controller("businessManagement.clientRelationships.contacts", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.data = {
@@ -62,12 +11,6 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
     itemTemplate: '/static/ngTemplates/app.clientRelationships.contacts.item.html',
   }, ];
 
-  var options = {
-    main: {
-      icon: 'fa-pencil',
-      text: 'edit'
-    },
-  };
 
   $scope.config = {
     views: views,
@@ -164,111 +107,6 @@ app.controller("businessManagement.clientRelationships.contacts.item", function(
 
 
 });
-
-app.directive('crmNote', function() {
-  return {
-    templateUrl: '/static/ngTemplates/app.clientRelationships.noteBubble.html',
-    restrict: 'E',
-    transclude: true,
-    replace: true,
-    scope: {
-      data: '=',
-      onDelete: '&',
-    },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window) {
-
-    },
-  };
-});
-
-app.directive('crmCall', function() {
-  return {
-    templateUrl: '/static/ngTemplates/app.clientRelationships.callBubble.html',
-    restrict: 'E',
-    transclude: true,
-    replace: true,
-    scope: {
-      data: '=',
-      onDelete: '&',
-    },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window, $sce) {
-      $scope.data.notesHtml = $sce.trustAsHtml($scope.data.notes);
-      var parsedData = JSON.parse($scope.data.data);
-      $scope.data.duration = parsedData.duration;
-    },
-  };
-});
-
-app.directive('crmMeeting', function() {
-  return {
-    templateUrl: '/static/ngTemplates/app.clientRelationships.meetingBubble.html',
-    restrict: 'E',
-    transclude: true,
-    replace: true,
-    scope: {
-      data: '=',
-      onDelete: '&',
-    },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window, $sce) {
-      $scope.data.notesHtml = $sce.trustAsHtml($scope.data.notes);
-      var parsedData = JSON.parse($scope.data.data);
-      $scope.data.location = parsedData.location;
-      $scope.data.duration = parsedData.duration;
-    },
-  };
-});
-
-app.directive('crmMail', function() {
-  return {
-    templateUrl: '/static/ngTemplates/app.clientRelationships.emailBubble.html',
-    restrict: 'E',
-    transclude: true,
-    replace: true,
-    scope: {
-      data: '=',
-      onDelete: '&',
-    },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window , $sce) {
-      $scope.data.subject = JSON.parse($scope.data.data).subject;
-      $scope.data.notesHtml = $sce.trustAsHtml($scope.data.notes);
-    },
-  };
-});
-
-app.filter('getCRMDP', function() {
-  return function(input) {
-    if (input == undefined) {
-      return '/static/images/img_avatar_card.png';
-    }
-    if (input.dp != null) {
-      return input.dp;
-    } else {
-      if (input.male) {
-        return '/static/images/img_avatar_card.png';
-      } else {
-        return '/static/images/img_avatar_card2.png';
-      }
-    }
-  }
-})
-
-
-app.directive('crmTodo', function() {
-  return {
-    templateUrl: '/static/ngTemplates/app.clientRelationships.todoBubble.html',
-    restrict: 'E',
-    transclude: true,
-    replace: true,
-    scope: {
-      data: '=',
-      onDelete: '&',
-    },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window) {
-
-    },
-  };
-});
-
 
 app.controller("businessManagement.clientRelationships.contacts.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
 
@@ -702,10 +540,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
 app.controller("businessManagement.clientRelationships.contacts.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  if (typeof $scope.tab != 'undefined') {
-    $scope.form = $scope.data.tableData[$scope.tab.data.index]
-    $scope.mode = 'edit';
-  } else {
+  $scope.resetForm = function() {
     $scope.mode = 'new';
     $scope.form = {
       company: undefined,
@@ -721,6 +556,14 @@ app.controller("businessManagement.clientRelationships.contacts.form", function(
       dp: emptyFile,
       male: true
     }
+  }
+
+
+  if (typeof $scope.tab != 'undefined' && $scope.tab.data.pk != -1) {
+    $scope.form = $scope.data.tableData[$scope.tab.data.index]
+    $scope.mode = 'edit';
+  } else {
+    $scope.resetForm();
   }
 
 
@@ -842,6 +685,10 @@ app.controller("businessManagement.clientRelationships.contacts.form", function(
     var url = '/api/clientRelationships/contact/';
     var method = 'POST'
 
+    if ($scope.form.name == '') {
+      Flash.create('warning', 'Name can not be empty!');
+    }
+
     if ($scope.mode == 'edit') {
       url += $scope.form.pk + '/';
       method = 'PATCH'
@@ -902,6 +749,10 @@ app.controller("businessManagement.clientRelationships.contacts.form", function(
     }).
     then(function(response) {
       $scope.form = response.data;
+      if ($scope.mode == 'new') {
+        $scope.form.pk = response.data.pk;
+        $scope.mode = 'edit';
+      }
       Flash.create('success', 'Saved')
     })
 

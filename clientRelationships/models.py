@@ -38,18 +38,22 @@ DEAL_STATE_CHOICES = (
     ('proposal' , 'proposal'),
     ('negotiation' , 'negotiation'),
     ('won' , 'won'),
-    ('lost' , 'lost')
 )
 
 class Deal(models.Model):
-    user = models.ForeignKey(User , related_name = 'deals' , null = False) # the user created it
+    user = models.ForeignKey(User , related_name = 'dealsCreated' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(service , null = False , related_name='deals')
     value = models.PositiveIntegerField(null=True , default=0)
     currency = models.CharField(choices = CURRENCY_CHOICES , max_length = 4)
     state = models.CharField(choices = DEAL_STATE_CHOICES , max_length = 13)
-    contact = models.ManyToManyField(Contact)
+    contacts = models.ManyToManyField(Contact , related_name='deals')
+    internalUsers = models.ManyToManyField(User , related_name='deals')
+    requirements = models.TextField(max_length=1000 , null=True)
+    probability = models.SmallIntegerField(default=100)
+    closeDate = models.DateField(null = True)
+    active = models.BooleanField(default = True)
 
 RELATION_CHOICES = (
     ('onetime' , 'onetime'),
@@ -85,6 +89,7 @@ ACTIVITY_CHOICES = (
     ('mail', 'mail'),
     ('todo', 'todo'),
     ('note', 'note'),
+    ('stateChange', 'stateChange'),
 )
 
 class Activity(models.Model):
