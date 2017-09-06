@@ -40,21 +40,6 @@ DEAL_STATE_CHOICES = (
     ('won' , 'won'),
 )
 
-class Deal(models.Model):
-    user = models.ForeignKey(User , related_name = 'dealsCreated' , null = False) # the user created it
-    created = models.DateTimeField(auto_now_add = True)
-    updated = models.DateTimeField(auto_now=True)
-    company = models.ForeignKey(service , null = False , related_name='deals')
-    value = models.PositiveIntegerField(null=True , default=0)
-    currency = models.CharField(choices = CURRENCY_CHOICES , max_length = 4)
-    state = models.CharField(choices = DEAL_STATE_CHOICES , max_length = 13)
-    contacts = models.ManyToManyField(Contact , related_name='deals')
-    internalUsers = models.ManyToManyField(User , related_name='deals')
-    requirements = models.TextField(max_length=1000 , null=True)
-    probability = models.SmallIntegerField(default=100)
-    closeDate = models.DateField(null = True)
-    active = models.BooleanField(default = True)
-
 RELATION_CHOICES = (
     ('onetime' , 'onetime'),
     ('request' , 'request'),
@@ -63,6 +48,24 @@ RELATION_CHOICES = (
     ('monthly' , 'monthly'),
     ('yearly' , 'yearly')
 )
+
+
+class Deal(models.Model):
+    user = models.ForeignKey(User , related_name = 'dealsCreated' , null = False) # the user created it
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    company = models.ForeignKey(service , null = False , related_name='deals')
+    value = models.PositiveIntegerField(null=True , default=0)
+    currency = models.CharField(choices = CURRENCY_CHOICES , max_length = 4 , default = 'INR')
+    state = models.CharField(choices = DEAL_STATE_CHOICES , max_length = 13 , default = 'created')
+    contacts = models.ManyToManyField(Contact , related_name='deals' , blank = True)
+    internalUsers = models.ManyToManyField(User , related_name='deals' , blank = True)
+    requirements = models.TextField(max_length=1000 , null=True)
+    probability = models.SmallIntegerField(default=100)
+    closeDate = models.DateTimeField(null = True)
+    active = models.BooleanField(default = True)
+    relation = models.CharField(choices = RELATION_CHOICES , default = 'onetime' , max_length = 10)
+
 
 def getClientRelationshipContract(instance , filename ):
     return 'clientRelationships/contracts/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)

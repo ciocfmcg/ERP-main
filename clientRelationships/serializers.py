@@ -46,13 +46,43 @@ class ContactSerializer(serializers.ModelSerializer):
 
 class DealSerializer(serializers.ModelSerializer):
     company = serviceLiteSerializer(many = False , read_only = True)
+    contacts = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Deal
-        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contact')
-
+        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active')
+        read_only_fields = ('user', )
     def create(self , validated_data):
-        pass
+        d = Deal(**validated_data)
+        d.user = self.context['request'].user
+        if 'company' in self.context['request'].data:
+            d.company_id = int(self.context['request'].data['company'])
+        d.save()
+        if 'internalUsers' in self.context['request'].data:
+            for c in self.context['request'].data['internalUsers']:
+                d.internalUsers.add(User.objects.get(pk = c))
+        if 'contacts' in self.context['request'].data:
+            for c in self.context['request'].data['contacts']:
+                d.contacts.add(Contact.objects.get(pk = c))
+        return d
 
+    def update(self ,instance, validated_data):
+        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'company' in self.context['request'].data:
+            instance.company_id = int(self.context['request'].data['company'])
+        instance.save()
+        if 'internalUsers' in self.context['request'].data:
+            instance.internalUsers.clear()
+            for c in self.context['request'].data['internalUsers']:
+                instance.internalUsers.add(User.objects.get(pk = c))
+        if 'contacts' in self.context['request'].data:
+            instance.contacts.clear()
+            for c in self.context['request'].data['contacts']:
+                instance.contacts.add(Contact.objects.get(pk = c))
+        return instance
 
 
 class ContractSerializer(serializers.ModelSerializer):

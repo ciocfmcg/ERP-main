@@ -70,7 +70,7 @@ app.directive('clientsField', function () {
       url : '@',
       col : '@',
       label : '@',
-      viewOnly : '@'
+      company : '='
     },
     controller : function($scope , $state , $http , Flash){
         $scope.d = {user : undefined};
@@ -79,13 +79,17 @@ app.directive('clientsField', function () {
         }else{
             $scope.showResults = false;
         }
+        $scope.$watch('company' , function(newValue , oldValue) {
+          if (typeof $scope.company == 'undefined') {
+              $scope.companySearch = '';
+          }else {
+            $scope.companySearch = '&company='+$scope.company;
+          }
+        });
 
-        if (typeof $scope.viewOnly != 'undefined') {
-            $scope.viewOnly = false;
-        }
         // $scope.user = undefined;
         $scope.userSearch = function(query) {
-          return $http.get( $scope.url +'?name__contains=' + query).
+          return $http.get( $scope.url +'?name__contains=' + query + $scope.companySearch).
           then(function(response){
             return response.data;
           })

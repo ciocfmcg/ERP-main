@@ -10,7 +10,6 @@ app.directive('wizard', function () {
       error : '='
     },
     controller : function($scope , $state , $stateParams){
-      console.log($scope);
       $scope.activeBackup = -2;
       $scope.wizardClicked = function(indx) {
         if ($scope.editable) {
