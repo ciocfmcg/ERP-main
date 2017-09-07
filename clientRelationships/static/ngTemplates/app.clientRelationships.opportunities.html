@@ -13,7 +13,7 @@
               Browse
               <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
-          <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.clientRelationships.opportunities.list.html'">
+          <div ng-include="'/static/ngTemplates/app.clientRelationships.opportunities.list.html'">
           </div>
       </uib-tab>
 
@@ -25,8 +25,8 @@
           <div ng-if="tab.app == 'opportunityEditor'">
               <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.form.html'"></div>
           </div>
-          <div ng-if="tab.app == 'opportunityExplorer'">
-              <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.explore.html'"></div>
+          <div ng-if="tab.app == 'exploreDeal'">
+              <div ng-include="'/static/ngTemplates/app.clientRelationships.opportunities.explore.html'"></div>
           </div>
           <div ng-if="tab.app == 'contactForm'">
               <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.form.html'"></div>

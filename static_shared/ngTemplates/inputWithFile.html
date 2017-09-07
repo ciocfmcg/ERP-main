@@ -1,0 +1,7 @@
+<div class="input-group">
+  <textarea class="form-control" rows="3" cols="80" placeholder="Write a note" ng-model="text" style="resize:none;"></textarea>
+
+  <span class="input-group-addon bg-blue" ng-if="doc.size != 0"> <i class="fa fa-2x  {{doc.name | fileTypeIcon}}"></i> <br> <br>{{doc.name}}</span>
+  <span class="input-group-addon btn btn-success" ng-click="browseForFile()"><i class="fa fa-{{doc.size == 0? 'file':'times'}}"></i> <br> <br>{{doc.size == 0 ? 'File': 'Clear'}}</span>
+  <span class="input-group-addon btn btn-primary" ng-click="saveNote()">Send</span>
+</div>

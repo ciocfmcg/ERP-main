@@ -1,0 +1,294 @@
+<div ng-controller="businessManagement.clientRelationships.opportunities.explore" style="padding-top:20px;">
+
+  <div class="row">
+    <div class="container-fluid">
+      <div class="col-md-6">
+        <div class="col-md-2">
+          <div style="width:70px;height:70px;background:#FCB95B;display:bolck;padding-bottom:5px;border-radius:7px;" class="text-center">
+            <i class="fi-crown" style="font-size:55px;color:white;"></i>
+          </div>
+        </div>
+        <div class="col-md-10" style="paddint-top:0px;">
+          <span class="text-muted" style="font-size:15px;">{{deal.name | humanize}}</span> <br>
+          <span style="font-size:17px;">{{deal.company.name | humanize}}</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="col-md-2">
+          <span class="text-muted" style="font-size:15px;">VALUATION</span> <br>
+          <span style="font-size:17px;">{{deal.value}}</span>
+        </div>
+        <div class="col-md-3">
+          <span class="text-muted" style="font-size:15px;">CLOSING DATE</span> <br>
+          <span style="font-size:17px;">{{deal.closeDate | date:'dd-MMM-yyyy'}}</span>
+        </div>
+        <div class="col-md-4">
+          <span class="text-muted" style="font-size:15px;">OWNER</span> <br>
+          <img ng-src="{{deal.user | getDP}}" class="img img-rounded" style="height:40px;width:40px;"> <span style="font-size:17px;">{{deal.user | getName}}</span>
+        </div>
+        <div class="col-md-3">
+          <div class="btn-group pull-right">
+            <button type="button" class="btn btn-default">
+              <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button type="button" class="btn btn-default">
+              <i class="fa fa-copy"></i> Clone
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:20px;padding-bottom:20px;border-bottom:solid 2px #eeeeee;">
+    <div class="container-fluid">
+      <div class="col-md-10">
+        <wizard steps="data.steps" editable="false" active="deal.state" error="false"></wizard>
+      </div>
+      <div class="col-md-2 text-center" >
+        <div class="btn btn-block" style="height:48px;padding:10px;border-radius:25px;font-size:17px;background:#2980b9;color:white;">
+          <i class="fa fa-check"></i> Mark stage as complete
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2" style="padding-top:20px;">
+      <label class="text-muted">External Stakeholders</label>
+      <div ng-repeat="c in deal.contacts" class="row" style="padding-left:10px;">
+        <img ng-src="{{c | getCRMDP}}" class="img img-circle" style="height:30px;width:30px;"> {{c.name}}
+      </div> <br>
+      <div ng-if="deal.internalUsers.length > 0">
+        <label class="text-muted">Internal Stakeholders</label>
+        <div ng-repeat="c in deal.internalUsers" class="row" style="padding-left:10px;">
+          <img ng-src="{{c | getDP}}" class="img img-circle" style="height:30px;width:30px;"> {{c | getName}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7" style="min-height:70vh;border-right:solid 2px #eeeeee;border-left:solid 2px #eeeeee;">
+      <div class="row" style="padding-bottom:10px;">
+        <div ng-repeat="tab in tabs" class="col-md-2 text-center text-muted" style="border-bottom:solid {{tab.active ? ' 4':'1'}}px #175569;padding:10px;background: {{tab.active ? '#eeeeee':''}}; cursor:pointer;" ng-click="changeTab($index)">
+          <i class="fa fa-{{tab.icon}}" style="width:30px;"></i> {{tab.name}}
+        </div>
+      </div>
+      <div ng-if="local.activeTab == 0" class="row" style="margin:5px;">
+        <div class="input-group">
+          <textarea class="form-control" rows="3" cols="80" placeholder="Write a note" ng-model="noteEditor.text" style="resize:none;"></textarea>
+
+          <span class="input-group-addon bg-blue" ng-if="noteEditor.doc.size != 0"> <i class="fa fa-2x  {{noteEditor.doc.name | fileTypeIcon}}"></i> <br> <br>{{noteEditor.doc.name}}</span>
+          <span class="input-group-addon btn btn-success" ng-click="browseForFile()"><i class="fa fa-{{noteEditor.doc.size == 0? 'file':'times'}}"></i> <br> <br>{{noteEditor.doc.size == 0 ? 'File': 'Clear'}}</span>
+          <span class="input-group-addon btn btn-primary" ng-click="saveNote()">Send</span>
+        </div>
+        <!-- /input-group -->
+        <input type="file" file-model="noteEditor.doc" style="display:None;" id="noteEditorFile">
+      </div>
+      <div class="row animated fadeIn">
+        <div ng-if="local.activeTab == 0" class="container-fluid">
+          <div class="text-center text-muted" ng-if="timelineItems.length == 0" style="padding-top:50px;">
+            No activity log found!
+          </div>
+          <div class="col-md-10 col-md-offset-2" style="padding-top:40px;">
+            <ul class="timeline timeline-inverse">
+              <div ng-repeat="feed in timelineItems">
+                <div ng-if="feed.newMonth || $first" style="position:absolute; margin-left:-130px;">
+                  <span ng-if="!$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created | date:'MMM-yy'}}</span>
+                  <span ng-if="$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created |timeAgo}} Ago</span>
+                </div>
+                <crm-Note ng-if="feed.typ == 'note'" data="feed"></crm-Note>
+                <crm-Call ng-if="feed.typ == 'call'" data="feed"></crm-Call>
+                <crm-Meeting ng-if="feed.typ == 'meeting'" data="feed"></crm-Meeting>
+                <crm-Mail ng-if="feed.typ == 'mail' && feed.data.length >0" data="feed"></crm-Mail>
+                <crm-Todo ng-if="feed.typ == 'todo'" data="feed"></crm-Todo>
+              </div>
+            </ul>
+          </div>
+
+          <nav>
+            <ul class="pager">
+              <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+              <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+          </nav>
+
+        </div>
+
+        <div ng-if="local.activeTab == 1">
+          <div class="container-fluid">
+            <h3 class="text-muted">Log an activity</h3>
+          </div>
+          <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
+            <div class="col-md-3" style="padding-top:40px;">
+              <div class="form-group">
+                <label>Type</label>
+                <select class="form-control" ng-model="logger.activityType">
+                  <option value="Email">Email</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Call">Call</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-9" style="padding:20px;border-left:solid 1px #eeeeee;">
+              <div class="form-group">
+                <label class="control-label col-sm-3" style="margin-top:35px;padding:0px;">When</label>
+                <div class="col-md-5">
+                  <div class="input-group" style="margin-top:35px;">
+                    <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="logger.when" is-open="status.opened" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row container-fluid">
+                    <uib-timepicker ng-model="logger.when" hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <users-Field data="logger.internalUsers" url="/api/HR/userSearch/" col="4" label="Internal People"></users-Field>
+
+              <clients-Field data="logger.withinCRMUsers" url="/api/clientRelationships/contactLite/" col="4" label="Within CRM" ></clients-Field>
+
+
+
+              <div ng-if="logger.activityType == 'Email'">
+                <div class="form-group">
+                  <label>Subject</label>
+                  <input type="text" ng-model="logger.subject" class="form-control">
+                </div>
+              </div>
+
+              <div ng-if="logger.activityType == 'Call'">
+                <div class="form-group">
+                  <label>Duration</label>
+                  <input type="number" ng-model="logger.duration" class="form-control">
+                </div>
+
+
+              </div>
+
+              <div ng-if="logger.activityType == 'Meeting'">
+                <div class="form-group">
+                  <label>Duration</label>
+                  <input type="number" ng-model="logger.duration" class="form-control">
+                </div>
+
+                <div class="form-group">
+                  <label>Place</label>
+                  <input type="text" ng-model="logger.location" class="form-control">
+                </div>
+
+
+              </div>
+
+              <div class="form-group">
+                <label>Comment</label>
+                <textarea ui-tinymce="tinymceOptions" ng-model="logger.comment"></textarea>
+              </div>
+              <button type="button" class="btn btn-primary" ng-click="saveActivityLog()">Save</button>
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <div ng-if="local.activeTab == 2">
+          <div class="container-fluid">
+            <h3 class="text-muted">Send an email</h3>
+            <div class="text-center" style="padding-top:100px;">
+              <h2 class="text-muted">Not implimented</h2>
+            </div>
+          </div>
+        </div>
+
+        <div ng-if="local.activeTab == 3">
+          <div class="container-fluid">
+            <h3 class="text-muted">Call/sms</h3>
+            <div class="text-center" style="padding-top:100px;">
+              <h2 class="text-muted">Not implimented</h2>
+            </div>
+          </div>
+        </div>
+        <div ng-if="local.activeTab == 4">
+          <div class="container-fluid">
+            <h3 class="text-muted">Create a task</h3>
+            <div class="col-md-9 col-md-offset-2" style="padding-top:20px;">
+              <div class="form-group">
+                <label>By when </label>
+                <div class="input-group">
+                  <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="taskEditor.when" is-open="status.opened" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                </div>
+              </div>
+              <br>
+              <clients-Field data="taskEditor.otherCRMUsers" url="/api/clientRelationships/contactLite/" col="4" label="Other stakeholders"></clients-Field>
+              <div class="form-group">
+                <label>Task details</label>
+                <textarea class="form-control" rows="4" cols="80" ng-model="taskEditor.details"></textarea>
+              </div>
+
+              <button type="button" class="btn btn-default" ng-click="saveTask()">
+              Save
+            </button>
+
+            </div>
+          </div>
+        </div>
+
+        <div ng-if="local.activeTab == 5">
+          <div class="container-fluid">
+            <h3 class="text-muted">Schedule an event</h3>
+
+            <div class="col-md-9 col-md-offset-2" style="padding-top:20px;">
+              <div class="form-group">
+                <label class="control-label col-sm-3" style="margin-top:35px;padding:0px;">When</label>
+                <div class="col-md-5">
+                  <div class="input-group" style="margin-top:35px;">
+                    <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="eventScheduler.when" is-open="status.opened" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row container-fluid">
+                    <uib-timepicker ng-model="eventScheduler.when" hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <clients-Field data="eventScheduler.otherCRMUsers" url="/api/clientRelationships/contactLite/" col="4" label="Other stakeholders"></clients-Field>
+
+              <users-Field data="eventScheduler.internalUsers" url="/api/HR/userSearch/" col="4" label="Internal People"></users-Field>
+
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" class="form-control" ng-model="eventScheduler.venue">
+              </div>
+
+              <div class="form-group">
+                <label>Event details</label>
+                <textarea class="form-control" rows="4" cols="80" ng-model="eventScheduler.details"></textarea>
+              </div>
+
+              <button type="button" class="btn btn-default" ng-click="saveEvent()">
+              Save
+            </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-3">
+
+    </div>
+  </div>
+
+
+  <!-- {{deal}} -->
+
+</div>

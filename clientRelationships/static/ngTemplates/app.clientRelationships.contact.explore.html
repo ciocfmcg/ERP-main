@@ -74,19 +74,10 @@
     </div>
     <div class="col-md-9" style="border-right:solid 2px #eeeeee;min-height:82vh;">
 
-      <div class="row" style="padding-bottom:10px;">
-        <div ng-repeat="tab in tabs" class="col-md-2 text-center text-muted" style="border-bottom:solid {{tab.active ? ' 4':'1'}}px #175569;padding:10px;background: {{tab.active ? '#eeeeee':''}}; cursor:pointer;" ng-click="changeTab($index)">
-          <i class="fa fa-{{tab.icon}}" style="width:30px;"></i> {{tab.name}}
-        </div>
-      </div>
-      <div ng-if="local.activeTab == 0" class="row" style="margin:5px;">
-        <div class="input-group">
-          <textarea class="form-control" rows="3" cols="80" placeholder="Write a note" ng-model="noteEditor.text" style="resize:none;"></textarea>
+      <tabs-Strip tabs="tabs" active="local.activeTab"></tabs-Strip>
 
-          <span class="input-group-addon bg-blue" ng-if="noteEditor.doc.size != 0"> <i class="fa fa-2x  {{noteEditor.doc.name | fileTypeIcon}}"></i> <br> <br>{{noteEditor.doc.name}}</span>
-          <span class="input-group-addon btn btn-success" ng-click="browseForFile()"><i class="fa fa-{{noteEditor.doc.size == 0? 'file':'times'}}"></i> <br> <br>{{noteEditor.doc.size == 0 ? 'File': 'Clear'}}</span>
-          <span class="input-group-addon btn btn-primary" ng-click="saveNote()">Send</span>
-        </div>
+      <div ng-if="local.activeTab == 0" class="row" style="margin:5px;">
+        <comment-Input text="noteEditor.text" doc="noteEditor.doc" save-Note="saveNote"></comment-Input>
         <!-- /input-group -->
         <input type="file" file-model="noteEditor.doc" style="display:None;" id="noteEditorFile">
       </div>
@@ -155,30 +146,7 @@
 
               <users-Field data="logger.internalUsers" url="/api/HR/userSearch/" col="4" label="Internal People"></users-Field>
 
-              <div class="form-group">
-                <label>Within CRM</label>
-                <div class="input-group">
-                  <input uib-typeahead="cc as cc.name for cc in contactSearch($viewValue)" ng-model="logger.withinCRM" type="text" class="form-control" placeholder="Search using name">
-                  <span class="input-group-btn">
-                     <button class = "btn btn-success" type = "button" ng-click="addWithinCRM()">
-                        Add <i class="fa fa-plus"></i>
-                     </button>
-                  </span>
-                </div>
-                <div class="row" style="padding-top:30px;">
-                  <div class="col-md-4" ng-repeat="cc in logger.withinCRMUsers">
-                    <div class="card container-fluid" style="padding-left:0px;position:relative;margin-bottom:10px;">
-                      <i class="fa fa-times pull-right" ng-click="removeCRMUser($index)"></i>
-                      <div class="col-md-4" style="padding-top:5px;">
-                        <img ng-src="{{cc | getCRMDP}}" class="img-circle" alt="DP" height="50" width="50" />
-                      </div>
-                      <div class="col-md-8">
-                        {{cc.name}} <br> ID : <strong>{{cc.pk}}</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <clients-Field data="logger.withinCRMUsers" url="/api/clientRelationships/contactLite/" col="4" label="Within CRM" ></clients-Field>
 
               <div ng-if="logger.activityType == 'Email'">
                 <div class="form-group">
@@ -186,40 +154,29 @@
                   <input type="text" ng-model="logger.subject" class="form-control">
                 </div>
               </div>
-
               <div ng-if="logger.activityType == 'Call'">
                 <div class="form-group">
                   <label>Duration</label>
                   <input type="number" ng-model="logger.duration" class="form-control">
                 </div>
-
-
               </div>
-
               <div ng-if="logger.activityType == 'Meeting'">
                 <div class="form-group">
                   <label>Duration</label>
                   <input type="number" ng-model="logger.duration" class="form-control">
                 </div>
-
                 <div class="form-group">
                   <label>Place</label>
                   <input type="text" ng-model="logger.location" class="form-control">
                 </div>
-
-
               </div>
-
               <div class="form-group">
                 <label>Comment</label>
                 <textarea ui-tinymce="tinymceOptions" ng-model="logger.comment"></textarea>
               </div>
               <button type="button" class="btn btn-primary" ng-click="saveActivityLog()">Save</button>
             </div>
-
           </div>
-
-
         </div>
 
         <div ng-if="local.activeTab == 2">
@@ -309,6 +266,7 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>

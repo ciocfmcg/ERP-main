@@ -15,6 +15,7 @@ from django.db.models import Q
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
+from ERP.models import service
 # Create your views here.
 
 class ContactLiteViewSet(viewsets.ModelViewSet):
@@ -36,8 +37,14 @@ class ContactViewSet(viewsets.ModelViewSet):
 class DealViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )
     serializer_class = DealSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
     def get_queryset(self):
-        return Deal.objects.all()
+        toReturn = Deal.objects.all()
+        if 'company__contains' in self.request.GET:
+            comName = self.request.GET['company__contains']
+            toReturn = toReturn.filter(company__in = service.objects.filter(name__contains=comName))
+        return toReturn
 
 class ContractViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )

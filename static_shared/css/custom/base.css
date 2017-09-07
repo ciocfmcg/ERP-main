@@ -2,6 +2,28 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.dealCard{
+  height:150px;
+  padding-top:15px;
+  padding-bottom:15px;
+  padding-left:10px;
+  cursor:pointer;
+  border-radius:10px;
+  margin-bottom:5px;
+  /*background:#1780bb;*/
+  /*color: white;*/
+  background: white;
+}
+
+.boardHeader{
+  padding:20px;
+  color:#666666;
+  margin-bottom: 5px;
+  border-bottom: solid 2px #eeeeee;
+  /*border-top: solid 2px #eeeeee;*/
+  /*background: #eeeeee;*/
+}
+
 .firstInWizard{
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;

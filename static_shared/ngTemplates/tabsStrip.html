@@ -1,0 +1,5 @@
+<div class="row" style="padding-bottom:10px;">
+  <div ng-repeat="tab in tabs" class="col-md-2 text-center text-muted" style="border-bottom:solid {{tab.active ? ' 4':'1'}}px #175569;padding:10px;background: {{tab.active ? '#eeeeee':''}}; cursor:pointer;" ng-click="changeTab($index)">
+    <i class="fa fa-{{tab.icon}}" style="width:30px;"></i> {{tab.name}}
+  </div>
+</div>

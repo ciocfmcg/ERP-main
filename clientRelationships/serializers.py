@@ -49,7 +49,7 @@ class DealSerializer(serializers.ModelSerializer):
     contacts = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Deal
-        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active')
+        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name')
         read_only_fields = ('user', )
     def create(self , validated_data):
         d = Deal(**validated_data)
@@ -66,7 +66,7 @@ class DealSerializer(serializers.ModelSerializer):
         return d
 
     def update(self ,instance, validated_data):
-        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active']:
+        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active', 'name']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

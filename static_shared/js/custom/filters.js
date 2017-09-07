@@ -29,6 +29,9 @@ app.filter('rainbow' , function(){
 
 app.filter('fileTypeIcon' , function(){
   return function(input){
+    if (input == null || typeof input == 'undefined') {
+      return '';
+    }
     var ext = input.split('.')[input.split('.').length -1]
     if (['doc', 'docx', 'odt'].indexOf(ext) != -1) {
         return 'fa-file-word-o';

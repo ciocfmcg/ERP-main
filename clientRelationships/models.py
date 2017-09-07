@@ -53,6 +53,7 @@ RELATION_CHOICES = (
 class Deal(models.Model):
     user = models.ForeignKey(User , related_name = 'dealsCreated' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
+    name = models.CharField(max_length = 100 , null = False)
     updated = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(service , null = False , related_name='deals')
     value = models.PositiveIntegerField(null=True , default=0)

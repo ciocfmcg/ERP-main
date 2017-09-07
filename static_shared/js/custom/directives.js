@@ -1,3 +1,55 @@
+app.directive('tabsStrip', function () {
+  return {
+    templateUrl: '/static/ngTemplates/tabsStrip.html',
+    restrict: 'E',
+    replace: true,
+    scope: {
+      tabs :'=',
+      active : '='
+    },
+    controller : function($scope , $state , $stateParams){
+      $scope.changeTab = function(index) {
+        for (var i = 0; i < $scope.tabs.length; i++) {
+          $scope.tabs[i].active = false;
+        }
+        $scope.tabs[index].active = true;
+        $scope.active = index;
+      }
+
+      $scope.$watch('active' , function(newValue , oldValue) {
+        $scope.changeTab(newValue);
+      })
+    },
+  };
+});
+
+app.directive('commentInput', function () {
+  return {
+    templateUrl: '/static/ngTemplates/inputWithFile.html',
+    restrict: 'E',
+    replace: true,
+    scope: {
+      text :'=',
+      doc : '=',
+      saveNote : '='
+    },
+    controller : function($scope , $state , $stateParams){
+
+      $scope.browseForFile = function() {
+        if ($scope.doc.size != 0) {
+          $scope.doc = emptyFile;
+          return;
+        }
+        $('#noteEditorFile').click();
+      }
+
+      $scope.$watch('doc', function(newValue, oldValue) {
+        // console.log(newValue);
+      })
+    },
+  };
+});
+
 app.directive('wizard', function () {
   return {
     templateUrl: '/static/ngTemplates/wizard.html',

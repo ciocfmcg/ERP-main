@@ -112,7 +112,6 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
   $scope.contact = $scope.data.tableData[$scope.tab.data.index]
   $scope.disableNext = false;
-
   $scope.pageNo = 0;
 
   $scope.cleanCalendarEntry = function(data) {
@@ -127,20 +126,20 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   }
 
   $scope.fetchCalendarEnteries = function() {
-    $http({method : 'GET' , url : '/api/PIM/calendar/?originator=CRM&clients__in=[' + $scope.contact.pk+ ']'}).
+    $http({
+      method: 'GET',
+      url: '/api/PIM/calendar/?originator=CRM&clients__in=[' + $scope.contact.pk + ']'
+    }).
     then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
         response.data[i] = $scope.cleanCalendarEntry(response.data[i]);
       }
-
       $scope.calendar = response.data;
-
-
       for (var i = 0; i < $scope.calendar.length; i++) {
         $scope.calendar[i].when = new Date($scope.calendar[i].when);
         $scope.calendar[i].newDate = false;
-        if (i < $scope.calendar.length-1) {
-          if ($scope.calendar[i].when.toDateString() != new Date($scope.calendar[i+1].when).toDateString() ) {
+        if (i < $scope.calendar.length - 1) {
+          if ($scope.calendar[i].when.toDateString() != new Date($scope.calendar[i + 1].when).toDateString()) {
             $scope.calendar[i].newDate = true;
             if ($scope.calendar[i].when.toDateString() == new Date().toDateString()) {
               $scope.calendar[i].today = true;
@@ -151,23 +150,18 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     })
   }
 
-
-
-
   $scope.resetTaskEditor = function() {
     var dummyDate = new Date()
-    $scope.taskEditor = { otherCRMUsers : [] , details : ''};
-    $scope.taskEditor.when = new Date(dummyDate.getFullYear()
-                           ,dummyDate.getMonth()
-                           ,dummyDate.getDate()
-                           ,23,59,59); // 2013-07-30 23:59:59
+    $scope.taskEditor = {
+      otherCRMUsers: [],
+      details: ''
+    };
+    $scope.taskEditor.when = new Date(dummyDate.getFullYear(), dummyDate.getMonth(), dummyDate.getDate(), 23, 59, 59); // 2013-07-30 23:59:59
   }
-
   $scope.resetTaskEditor();
-
   $scope.saveTask = function() {
     if ($scope.taskEditor.details.length == 0) {
-      Flash.create('warning' , 'Details can not be empty')
+      Flash.create('warning', 'Details can not be empty')
     }
 
     var crmUsers = [$scope.contact.pk];
@@ -175,14 +169,23 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
       crmUsers.push($scope.taskEditor.otherCRMUsers[i].pk);
     }
 
-    var dataToSend = {when : $scope.taskEditor.when , text : $scope.taskEditor.details , eventType : 'Reminder' , originator: 'CRM'}
+    var dataToSend = {
+      when: $scope.taskEditor.when,
+      text: $scope.taskEditor.details,
+      eventType: 'Reminder',
+      originator: 'CRM'
+    }
     if (crmUsers.length != 0) {
       dataToSend.clients = crmUsers;
     }
 
-    $http({method : 'POST' , url : '/api/PIM/calendar/' , data : dataToSend }).
+    $http({
+      method: 'POST',
+      url: '/api/PIM/calendar/',
+      data: dataToSend
+    }).
     then(function(response) {
-      Flash.create('success' , 'Saved');
+      Flash.create('success', 'Saved');
       // $scope.calendar.unshift($scope.cleanCalendarEntry(response.data));
       $scope.fetchCalendarEnteries();
       $scope.resetTaskEditor();
@@ -193,25 +196,27 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     for (var i = 0; i < $scope.calendar.length; i++) {
       if ($scope.calendar[i].pk == pk) {
         $scope.calendar[i].completed = true;
-        $http({method : 'PATCH' , url : '/api/PIM/calendar/' + pk +'/' , data :{completed : true}}).
+        $http({
+          method: 'PATCH',
+          url: '/api/PIM/calendar/' + pk + '/',
+          data: {
+            completed: true
+          }
+        }).
         then(function(response) {
-          Flash.create('success' , 'Updated');
+          Flash.create('success', 'Updated');
         }, function(err) {
-          Flash.create('danger' , 'Error while updating');
+          Flash.create('danger', 'Error while updating');
         })
       }
     }
-  }
-
-  $scope.removeCRMUser = function(ind) {
-    $scope.logger.withinCRMUsers.splice(ind , 1);
   }
 
   $scope.nextPage = function() {
     if ($scope.disableNext) {
       return;
     }
-    $scope.pageNo +=1;
+    $scope.pageNo += 1;
     $scope.retriveTimeline();
   }
 
@@ -219,7 +224,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     if ($scope.pageNo == 0) {
       return;
     }
-    $scope.pageNo -=1;
+    $scope.pageNo -= 1;
     $scope.retriveTimeline();
   }
 
@@ -232,7 +237,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   $scope.retriveTimeline = function() {
     $http({
       method: 'GET',
-      url: '/api/clientRelationships/activity/?contact=' + $scope.contact.pk+'&limit=5&offset=' + $scope.pageNo*5
+      url: '/api/clientRelationships/activity/?contact=' + $scope.contact.pk + '&limit=5&offset=' + $scope.pageNo * 5
     }).
     then(function(response) {
       $scope.timelineItems = response.data.results;
@@ -252,21 +257,6 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
       }
     }
   }
-
-  $scope.browseForFile = function() {
-    if ($scope.noteEditor.doc.size != 0) {
-      $scope.noteEditor.doc = emptyFile;
-      return;
-    }
-    $('#noteEditorFile').click();
-  }
-
-  $scope.$watch('noteEditor.doc', function(newValue, oldValue) {
-    console.log(newValue);
-  })
-
-
-
 
   $scope.saveNote = function() {
     console.log("will save");
@@ -348,43 +338,53 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
   $scope.tinymceOptions = {
     selector: 'textarea',
-    content_css : '/static/css/bootstrap.min.css',
+    content_css: '/static/css/bootstrap.min.css',
     inline: false,
-    plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+    plugins: 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
     skin: 'lightgray',
-    theme : 'modern',
-    height : 300,
-    toolbar : 'undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
-    setup: function (editor ) {
+    theme: 'modern',
+    height: 300,
+    toolbar: 'undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+    setup: function(editor) {
       // editor.addButton();
     },
   };
 
   $scope.resetLogger = function() {
-    $scope.logger = {when : new Date() , where : '' , subject : '' , duration : 10 , comment: '', internalUsers : [], withinCRMUsers : [] , location: '', withinCRM : '', activityType: 'Email'};
+    $scope.logger = {
+      when: new Date(),
+      where: '',
+      subject: '',
+      duration: 10,
+      comment: '',
+      internalUsers: [],
+      withinCRMUsers: [],
+      location: '',
+      withinCRM: '',
+      activityType: 'Email'
+    };
   }
 
   $scope.resetLogger();
-  $scope.local = {activeTab : 0};
-  $scope.changeTab = function(index) {
-    for (var i = 0; i < $scope.tabs.length; i++) {
-      $scope.tabs[i].active = false;
-    }
-    $scope.tabs[index].active = true;
-    $scope.local.activeTab = index;
-  }
-  $scope.changeTab(0);
+  $scope.local = {
+    activeTab: 0
+  };
 
   $scope.resetEventScheduler = function() {
-    $scope.eventScheduler = {internalUsers : [] , when : new Date()  , details : '' , otherCRMUsers : [] , venue : ''}
+    $scope.eventScheduler = {
+      internalUsers: [],
+      when: new Date(),
+      details: '',
+      otherCRMUsers: [],
+      venue: ''
+    }
   }
 
   $scope.resetEventScheduler();
-
   $scope.saveEvent = function() {
 
     if ($scope.eventScheduler.details.length == 0) {
-      Flash.create('warning' , 'Details can not be empty')
+      Flash.create('warning', 'Details can not be empty')
     }
 
     var crmUsers = [$scope.contact.pk];
@@ -397,7 +397,13 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
       internalUsers.push($scope.eventScheduler.internalUsers[i]);
     }
 
-    var dataToSend = {when : $scope.eventScheduler.when , text : $scope.eventScheduler.details , eventType : 'Meeting' , originator: 'CRM' , venue : $scope.eventScheduler.venue}
+    var dataToSend = {
+      when: $scope.eventScheduler.when,
+      text: $scope.eventScheduler.details,
+      eventType: 'Meeting',
+      originator: 'CRM',
+      venue: $scope.eventScheduler.venue
+    }
 
     if (crmUsers.length != 0) {
       dataToSend.clients = crmUsers;
@@ -407,9 +413,13 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
       dataToSend.followers = internalUsers;
     }
 
-    $http({method : 'POST' , url : '/api/PIM/calendar/' , data : dataToSend }).
+    $http({
+      method: 'POST',
+      url: '/api/PIM/calendar/',
+      data: dataToSend
+    }).
     then(function(response) {
-      Flash.create('success' , 'Saved');
+      Flash.create('success', 'Saved');
       // $scope.calendar.unshift($scope.cleanCalendarEntry(response.data));
       $scope.fetchCalendarEnteries();
       $scope.resetEventScheduler();
@@ -417,38 +427,18 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   }
 
 
-
-  $scope.contactSearch = function(query) {
-    return $http.get('/api/clientRelationships/contactLite/?name__contains=' + query).
-    then(function(response) {
-      return response.data;
-    })
-  };
-
-  $scope.addWithinCRM = function() {
-    for (var i = 0; i < $scope.logger.withinCRMUsers.length; i++) {
-      if ($scope.logger.withinCRMUsers[i].pk == $scope.logger.withinCRM.pk) {
-        $scope.logger.withinCRM = '';
-        Flash.create('warning' , 'Already in the list');
-        return;
-      }
-    }
-
-    if (typeof $scope.logger.withinCRM == 'object' && $scope.logger.withinCRM != null && $scope.logger.withinCRM != '') {
-      $scope.logger.withinCRMUsers.push($scope.logger.withinCRM)
-      $scope.logger.withinCRM = '';
-    }
-  }
-
   $scope.saveActivityLog = function() {
-    var dataToSend = {when : $scope.logger.when , contact: $scope.contact.pk};
+    var dataToSend = {
+      when: $scope.logger.when,
+      contact: $scope.contact.pk
+    };
     var internals = []
     for (var i = 0; i < $scope.logger.internalUsers.length; i++) {
       $scope.logger.internalUsers[i]
       internals.push($scope.logger.internalUsers[i]);
     }
 
-    if (internals.length !=0) {
+    if (internals.length != 0) {
       dataToSend.internalUsers = internals;
     }
 
@@ -459,24 +449,30 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
       externals.push($scope.logger.withinCRMUsers[i].pk);
     }
 
-    if (externals.length !=0) {
+    if (externals.length != 0) {
       dataToSend.contacts = externals;
     }
     var activityData;
-    console.log($scope.logger.activityType);
     if ($scope.logger.activityType == 'Email') {
       dataToSend.typ = 'mail';
-      if ($scope.logger.subject.length==0) {
-        Flash.create('warning' , 'Subject can not be left blank');
+      if ($scope.logger.subject.length == 0) {
+        Flash.create('warning', 'Subject can not be left blank');
         return;
       }
-      activityData = {subject : $scope.logger.subject};
-    }else if ($scope.logger.activityType == 'Meeting') {
+      activityData = {
+        subject: $scope.logger.subject
+      };
+    } else if ($scope.logger.activityType == 'Meeting') {
       dataToSend.typ = 'meeting';
-      activityData = {duration : $scope.logger.duration , location : $scope.logger.location};
-    }else if ($scope.logger.activityType == 'Call') {
+      activityData = {
+        duration: $scope.logger.duration,
+        location: $scope.logger.location
+      };
+    } else if ($scope.logger.activityType == 'Call') {
       dataToSend.typ = 'call';
-      activityData = {duration : $scope.logger.duration }
+      activityData = {
+        duration: $scope.logger.duration
+      }
     }
     dataToSend.data = JSON.stringify(activityData);
 
@@ -484,7 +480,11 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
       dataToSend.notes = $scope.logger.comment;
     }
 
-    $http({method : 'POST' ,url: '/api/clientRelationships/activity/',data : dataToSend }).
+    $http({
+      method: 'POST',
+      url: '/api/clientRelationships/activity/',
+      data: dataToSend
+    }).
     then(function(response) {
       $scope.timelineItems.unshift(response.data);
       $scope.resetLogger();
@@ -519,8 +519,6 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     })
   }
 
-  console.log($scope);
-
   $scope.exploreContact = function(c) {
     $scope.$emit('exploreContact', {
       contact: c
@@ -535,8 +533,6 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     }
   })
 });
-
-
 
 app.controller("businessManagement.clientRelationships.contacts.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
