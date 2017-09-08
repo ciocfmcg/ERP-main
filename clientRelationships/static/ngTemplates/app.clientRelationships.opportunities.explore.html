@@ -59,7 +59,8 @@
       </div>
       <div class="col-md-2 text-center" >
         <div ng-if="deal.state<5 && deal.result == 'na'" class="btn btn-block" ng-click="moveToNextStage()"  style="height:48px;padding:10px;border-radius:25px;font-size:17px;background:#2980b9;color:white;">
-          <i class="fa fa-check"></i> Mark stage as complete
+          <span ng-if="deal.state != -1"><i class="fa fa-check"></i> Mark stage as complete</span>
+          <span ng-if="deal.state == -1"><i class="fa fa-phone"></i> Ready Set Go! </span>
         </div>
         <div class="row" ng-if="deal.state==5 && deal.result == 'na'">
           <div class="col-md-6" style="padding:0px;padding-right:5px;">

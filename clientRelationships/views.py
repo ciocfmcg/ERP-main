@@ -38,12 +38,29 @@ class DealViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )
     serializer_class = DealSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_fields = ['name', 'state']
     def get_queryset(self):
-        toReturn = Deal.objects.exclude(state = 'created').filter(active = True)
+
+        if 'created' in self.request.GET and 'won' in self.request.GET and 'lost' in self.request.GET:
+            qs1 , qs2 , qs3 = Deal.objects.none(), Deal.objects.none(), Deal.objects.none()
+            if self.request.GET['created'] == '1':
+                qs1 = Deal.objects.filter(state = 'created')
+            if self.request.GET['won'] == '1':
+                qs2 = Deal.objects.filter(result = 'won')
+            if self.request.GET['lost'] == '1':
+                qs2 = Deal.objects.filter(result = 'lost')
+
+            toReturn = qs1 | qs2 | qs3
+        else:
+            toReturn = Deal.objects.all()
+
+        toReturn = toReturn.filter(active = True)
         if 'company__contains' in self.request.GET:
             comName = self.request.GET['company__contains']
             toReturn = toReturn.filter(company__in = service.objects.filter(name__contains=comName))
+
+        if 'created' in self.request.GET and self.request.GET['created'] == 'false':
+            toReturn = toReturn.exclude(state = 'created')
         return toReturn
 
 class ContractViewSet(viewsets.ModelViewSet):

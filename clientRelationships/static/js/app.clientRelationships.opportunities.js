@@ -1,5 +1,5 @@
 var crmSteps = [
-  {indx: 1 , text : 'contacted', display : 'Contacted'},
+  {indx: 1 , text : 'contacted', display : 'Contacting'},
   {indx: 2 , text : 'demo', display : 'Demo / POC'},
   {indx: 3 , text : 'requirements', display : 'Requirements Hunt'},
   {indx: 4 , text : 'proposal', display : 'Proposal'},
@@ -8,6 +8,55 @@ var crmSteps = [
 ];
 
 var crmRelationTypes  = ['onetime' , 'request' , 'days' , 'hours' , 'monthly' , 'yearly']
+
+
+app.controller("businessManagement.clientRelationships.opportunities.created", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+  $scope.data = {
+    tableData: []
+  };
+
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.clientRelationships.deal.item.html',
+  }, ];
+
+
+  $scope.config = {
+    views: views,
+    url: '/api/clientRelationships/deal/',
+    searchField: 'name',
+    deletable: true,
+    itemsNumPerView: [16, 32, 48],
+    drills : [
+      {icon : 'fa fa-bars' , name : 'Limit search' , btnClass : 'default' , options : [
+        {key : 'created', value : true},
+        {key : 'won', value : false},
+        {key : 'lost', value : false},
+      ]}
+    ]
+  }
+
+
+  $scope.tableAction = function(target, action, mode) {
+
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      if ($scope.data.tableData[i].pk == parseInt(target)) {
+        if (action == 'exploreDeal') {
+          $scope.$emit('exploreDeal', {
+            deal: $scope.data.tableData[i]
+          });
+        }
+      }
+    }
+
+  }
+
+
+});
+
 
 app.controller("businessManagement.clientRelationships.opportunities.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
 
@@ -376,6 +425,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
 
   $scope.processDealResponse = function(data) {
     $scope.deal = data;
+    // console.log(data);
     for (var i = 0; i < $scope.data.steps.length; i++) {
       if ($scope.data.steps[i].text == data.state) {
         $scope.deal.state = i;
@@ -383,9 +433,13 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
       }
     }
     if (typeof $scope.deal.state == 'string') {
-      $scope.deal.state = 0;
+      if ($scope.deal.state == 'created') {
+        $scope.deal.state = -1;
+      }else {
+        $scope.deal.state = 0;
+      }
     }
-    if ($scope.deal.result == 'won') {
+    if ($scope.deal.result == 'won' && $scope.deal.state == 5) {
       $scope.deal.state += 1;
     }
 
@@ -439,7 +493,7 @@ app.controller("businessManagement.clientRelationships.opportunities.list", func
 
   $scope.columns = [
     // {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
-    {icon : 'fa-phone' , text : 'Contacted' ,cat : 'contacted'},
+    {icon : 'fa-phone' , text : 'Contacting' ,cat : 'contacted'},
     {icon : 'fa-desktop' , text : 'Demo' , cat : 'demo'},
     {icon : 'fa-bars' , text : 'Requirements' , cat : 'requirements'},
     {icon : 'fa-file-pdf-o' , text : 'Proposal' , cat : 'proposal'},
@@ -455,12 +509,13 @@ app.controller("businessManagement.clientRelationships.opportunities.list", func
   }
 
   $scope.fetchDeals = function() {
-    var url = '/api/clientRelationships/deal/';
+    var url = '/api/clientRelationships/deal/?';
     if ($scope.companySearch && $scope.searchText!= '') {
-      url += '?company__contains=' +$scope.searchText
+      url += 'company__contains=' +$scope.searchText
     }else if (!$scope.companySearch && $scope.searchText!= '') {
-      url += '?name__contains=' +$scope.searchText
+      url += 'name__contains=' +$scope.searchText
     }
+    url += 'created=false';
 
     $http({method : 'GET' , url : url}).
     then(function(response) {

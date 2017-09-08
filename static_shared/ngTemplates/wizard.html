@@ -1,4 +1,4 @@
-<div class="wizard">
+<div class="wizard animated fadeIn">
   <div ng-repeat="step in steps" style="width:{{100/steps.length}}%;padding-top:13px;cursor:{{editable?'pointer':'';}}" class="wizardItem {{$first ? 'firstInWizard':''}} {{$last ? 'lastInWizard':'haveDirection'}} {{$index < active?'success':''}} {{$index == active && !error ?'active':''}} {{$index == active  && error?'danger':''}} {{$index > active?'default':''}} text-center"
     ng-click="wizardClicked($index)" ng-mouseenter="activateTemp($index)" ng-mouseleave="resetHover()">
     <span ng-if="$index<active" style="color:white;font-size:16px;"><i class="fa fa-check fa-lg" ></i></span>

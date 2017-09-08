@@ -12,14 +12,14 @@
         </div>
       </div>
       <div class="col-md-2">
-        <span style="margin-right:10px;">Deal name</span>
+        <span style="margin-right:10px;">Opportunity name</span>
         <switch ng-model="companySearch" class="neutral"></switch><span style="margin-left:10px;">Company name</span>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="text-center col-md-2 boardHeader {{$index | rainbow}}" ng-repeat="c in columns">
-      <i class="fa {{c.icon}} fa-lg" style="margin-right:15px;"></i> {{c.text}}
+      <span style="font-size:17px;"><i class="fa {{c.icon}} fa-lg" style="margin-right:15px;"></i> {{c.text}}</span>
     </div>
   </div>
   <div class="row">

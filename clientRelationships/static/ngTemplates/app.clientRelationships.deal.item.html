@@ -1,0 +1,7 @@
+<div class="col-md-3">
+  <div ng-click="rowActionClicked('exploreDeal')" class="card dealCard " >
+    <h4>{{data.name | humanize}}</h4>
+    <span><i class="fa fa-building-o"></i> {{data.company.name}}</span> <br> <br>
+    <img ng-src="{{d.contacts[0] | getCRMDP}}" class="img img-circle" style="width:30px;height:30px;"> {{data.contacts[0].name}}
+  </div>
+</div>
