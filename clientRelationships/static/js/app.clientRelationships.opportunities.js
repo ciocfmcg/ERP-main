@@ -1,10 +1,10 @@
 var crmSteps = [
-  {indx: 1 , text : 'contacted'},
-  {indx: 2 , text : 'demo'},
-  {indx: 3 , text : 'requirements'},
-  {indx: 4 , text : 'proposal'},
-  {indx: 5 , text : 'negotiation'},
-  {indx: 6 , text : 'won'},
+  {indx: 1 , text : 'contacted', display : 'Contacted'},
+  {indx: 2 , text : 'demo', display : 'Demo / POC'},
+  {indx: 3 , text : 'requirements', display : 'Requirements Hunt'},
+  {indx: 4 , text : 'proposal', display : 'Proposal'},
+  {indx: 5 , text : 'negotiation', display : 'Negotiation'},
+  {indx: 6 , text : 'conclusion', display : 'Won / Lost'},
 ];
 
 var crmRelationTypes  = ['onetime' , 'request' , 'days' , 'hours' , 'monthly' , 'yearly']
@@ -31,6 +31,84 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     },
   ]
 
+  $scope.noteEditor = {
+    text: '',
+    doc: emptyFile
+  };
+
+  $scope.concludeDeal = function(state) {
+    $http({method : 'PATCH' , url : '/api/clientRelationships/deal/' + $scope.deal.pk + '/' , data : {result : state}}).
+    then(function(response) {
+      $scope.processDealResponse(response.data);
+    })
+  }
+
+
+  $scope.saveActivityLog = function() {
+    var dataToSend = {
+      when: $scope.logger.when,
+      deal: $scope.deal.pk
+    };
+    var internals = []
+    for (var i = 0; i < $scope.logger.internalUsers.length; i++) {
+      $scope.logger.internalUsers[i]
+      internals.push($scope.logger.internalUsers[i]);
+    }
+
+    if (internals.length != 0) {
+      dataToSend.internalUsers = internals;
+    }
+
+    var externals = []
+    for (var i = 0; i < $scope.logger.withinCRMUsers.length; i++) {
+      externals.push($scope.logger.withinCRMUsers[i].pk);
+    }
+
+    if (externals.length != 0) {
+      dataToSend.contacts = externals;
+    }
+    var activityData;
+    if ($scope.logger.activityType == 'Email') {
+      dataToSend.typ = 'mail';
+      if ($scope.logger.subject.length == 0) {
+        Flash.create('warning', 'Subject can not be left blank');
+        return;
+      }
+      activityData = {
+        subject: $scope.logger.subject
+      };
+    } else if ($scope.logger.activityType == 'Meeting') {
+      dataToSend.typ = 'meeting';
+      activityData = {
+        duration: $scope.logger.duration,
+        location: $scope.logger.location
+      };
+    } else if ($scope.logger.activityType == 'Call') {
+      dataToSend.typ = 'call';
+      activityData = {
+        duration: $scope.logger.duration
+      }
+    }
+    dataToSend.data = JSON.stringify(activityData);
+
+    if ($scope.logger.comment != '') {
+      dataToSend.notes = $scope.logger.comment;
+    }
+
+    $http({
+      method: 'POST',
+      url: '/api/clientRelationships/activity/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      $scope.timelineItems.unshift(response.data);
+      $scope.resetLogger();
+      Flash.create('success', 'Saved');
+    }, function(err) {
+      Flash.create('danger', 'Error');
+    })
+
+  }
 
   $scope.tinymceOptions = {
     selector: 'textarea',
@@ -95,40 +173,95 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
 
   $scope.resetLogger();
 
-  $scope.local = {activeTab : 0};
-  $scope.changeTab = function(index) {
-    for (var i = 0; i < $scope.tabs.length; i++) {
-      $scope.tabs[i].active = false;
-    }
-    $scope.tabs[index].active = true;
-    $scope.local.activeTab = index;
+  $scope.local = {activeTab : 0 , minInfo :false};
+
+  if ($.cookie("minInfo") == undefined) {
+    $scope.local.minInfo = false;
+  }else {
+    $scope.local.minInfo = $.cookie("minInfo");
   }
-  $scope.changeTab(0);
 
   $scope.resetEventScheduler = function() {
     $scope.eventScheduler = {internalUsers : [] , when : new Date()  , details : '' , otherCRMUsers : [] , venue : ''}
   }
 
-  $scope.resetEventScheduler();
+  $scope.saveEvent = function() {
+
+    if ($scope.eventScheduler.details.length == 0) {
+      Flash.create('warning', 'Details can not be empty')
+    }
+
+    var crmUsers = [];
+    for (var i = 0; i < $scope.eventScheduler.otherCRMUsers.length; i++) {
+      crmUsers.push($scope.eventScheduler.otherCRMUsers[i].pk);
+    }
+
+    var internalUsers = [];
+    for (var i = 0; i < $scope.eventScheduler.internalUsers.length; i++) {
+      internalUsers.push($scope.eventScheduler.internalUsers[i]);
+    }
+
+    var dataToSend = {
+      when: $scope.eventScheduler.when,
+      text: $scope.eventScheduler.details,
+      eventType: 'Meeting',
+      originator: 'CRM',
+      venue: $scope.eventScheduler.venue,
+      data : JSON.stringify({deal : $scope.deal.pk})
+    }
+
+    if (crmUsers.length != 0) {
+      dataToSend.clients = crmUsers;
+    }
+
+    if (internalUsers.length != 0) {
+      dataToSend.followers = internalUsers;
+    }
+
+    $http({
+      method: 'POST',
+      url: '/api/PIM/calendar/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      // $scope.calendar.unshift($scope.cleanCalendarEntry(response.data));
+      $scope.fetchCalendarEnteries();
+      $scope.resetEventScheduler();
+    });
+  }
 
 
-  $scope.cleanCalendarEntry = function(data) {
-    var cleaned = []
-    for (var j = 0; j < data.clients.length; j++) {
-      if (data.clients[j].pk != $scope.contact.pk) {
-        cleaned.push(data.clients[j]);
+  $scope.markComplete = function(pk) {
+    for (var i = 0; i < $scope.calendar.length; i++) {
+      if ($scope.calendar[i].pk == pk) {
+        $scope.calendar[i].completed = true;
+        $http({
+          method: 'PATCH',
+          url: '/api/PIM/calendar/' + pk + '/',
+          data: {
+            completed: true
+          }
+        }).
+        then(function(response) {
+          Flash.create('success', 'Updated');
+        }, function(err) {
+          Flash.create('danger', 'Error while updating');
+        })
       }
     }
-    data.clients = cleaned;
-    return data;
+  }
+
+  $scope.resetEventScheduler();
+
+  $scope.toggleInfoLevel = function() {
+    $scope.local.minInfo = !$scope.local.minInfo;
+    $.cookie("minInfo" , $scope.local.minInfo);
   }
 
   $scope.fetchCalendarEnteries = function() {
-    $http({method : 'GET' , url : '/api/PIM/calendar/?originator=CRM&clients__in=[' + $scope.contact.pk+ ']'}).
+    $http({method : 'GET' , url : '/api/PIM/calendar/?originator=CRM&data__contains=' + JSON.stringify({deal : $scope.deal.pk}) }).
     then(function(response) {
-      for (var i = 0; i < response.data.length; i++) {
-        response.data[i] = $scope.cleanCalendarEntry(response.data[i]);
-      }
 
       $scope.calendar = response.data;
 
@@ -148,6 +281,20 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     })
   }
 
+  $scope.moveToNextStage = function() {
+    var state = crmSteps[$scope.deal.state+1].text;
+    $http({method : 'PATCH' , url : '/api/clientRelationships/deal/' + $scope.deal.pk +'/' , data : {state : state} }).
+    then(function(response) {
+      $scope.deal.state += 1;
+    })
+  }
+
+  $scope.exploreContact = function(c) {
+    $scope.$emit('exploreContact', {
+      contact: c
+    });
+  }
+
   $scope.nextPage = function() {
     if ($scope.disableNext) {
       return;
@@ -165,6 +312,41 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
   }
 
   $scope.timelineItems = [];
+
+  $scope.saveTask = function() {
+    if ($scope.taskEditor.details.length == 0) {
+      Flash.create('warning', 'Details can not be empty')
+    }
+
+    var crmUsers = [];
+    for (var i = 0; i < $scope.taskEditor.otherCRMUsers.length; i++) {
+      crmUsers.push($scope.taskEditor.otherCRMUsers[i].pk);
+    }
+
+    var dataToSend = {
+      when: $scope.taskEditor.when,
+      text: $scope.taskEditor.details,
+      eventType: 'Reminder',
+      originator: 'CRM',
+      data : JSON.stringify({deal : $scope.deal.pk})
+    }
+    if (crmUsers.length != 0) {
+      dataToSend.clients = crmUsers;
+    }
+
+    $http({
+      method: 'POST',
+      url: '/api/PIM/calendar/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      // $scope.calendar.unshift($scope.cleanCalendarEntry(response.data));
+      $scope.fetchCalendarEnteries();
+      $scope.resetTaskEditor();
+    });
+  }
+
 
   $scope.retriveTimeline = function() {
     $http({
@@ -192,23 +374,63 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
 
   $scope.data = {steps : crmSteps ,relationTypes: crmRelationTypes}
 
+  $scope.processDealResponse = function(data) {
+    $scope.deal = data;
+    for (var i = 0; i < $scope.data.steps.length; i++) {
+      if ($scope.data.steps[i].text == data.state) {
+        $scope.deal.state = i;
+        break;
+      }
+    }
+    if (typeof $scope.deal.state == 'string') {
+      $scope.deal.state = 0;
+    }
+    if ($scope.deal.result == 'won') {
+      $scope.deal.state += 1;
+    }
+
+    $scope.retriveTimeline();
+    $scope.fetchCalendarEnteries();
+  }
+
   $scope.fetchDeal = function() {
 
     $http({method : 'GET' , url : '/api/clientRelationships/deal/' + $scope.tab.data.pk + '/'}).
     then(function(response) {
-      $scope.deal = response.data;
-      for (var i = 0; i < $scope.data.steps.length; i++) {
-        if ($scope.data.steps[i].text == response.data.state) {
-          $scope.deal.state = i;
-          break;
-        }
-      }
+      $scope.processDealResponse(response.data);
     });
 
   }
 
   $scope.fetchDeal();
 
+  $scope.saveNote = function() {
+
+    var fd = new FormData();
+    fd.append('typ', 'note');
+    fd.append('data', $scope.noteEditor.text);
+    fd.append('deal', $scope.deal.pk);
+
+    if ($scope.noteEditor.doc != emptyFile) {
+      fd.append('doc', $scope.noteEditor.doc);
+    }
+
+    $http({
+      method: 'POST',
+      url: '/api/clientRelationships/activity/',
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      $scope.timelineItems.unshift(response.data);
+      Flash.create('success', 'Saved');
+      $scope.noteEditor.text = '';
+      $scope.noteEditor.doc = emptyFile;
+    })
+  }
 
 
 });
@@ -216,12 +438,13 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
 app.controller("businessManagement.clientRelationships.opportunities.list", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.columns = [
-    {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
+    // {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
     {icon : 'fa-phone' , text : 'Contacted' ,cat : 'contacted'},
     {icon : 'fa-desktop' , text : 'Demo' , cat : 'demo'},
     {icon : 'fa-bars' , text : 'Requirements' , cat : 'requirements'},
     {icon : 'fa-file-pdf-o' , text : 'Proposal' , cat : 'proposal'},
     {icon : 'fa-money' , text : 'Negotiation' , cat : 'negotiation'},
+    {icon : 'fa-check' , text : 'Conclusion' , cat : 'conclusion'},
   ]
 
   $scope.searchText = '';
@@ -242,7 +465,8 @@ app.controller("businessManagement.clientRelationships.opportunities.list", func
     $http({method : 'GET' , url : url}).
     then(function(response) {
       $scope.deals = response.data;
-      $scope.data = {created : [] , contacted : [] , demo : [] , requirements : [] , proposal : [] , negotiation : []}
+      $scope.data = { contacted : [] , demo : [] , requirements : [] , proposal : [] , negotiation : [] , conclusion : []}
+      console.log(response.data);
       for (var i = 0; i < response.data.length; i++) {
         $scope.data[response.data[i].state].push(response.data[i])
       }
@@ -349,6 +573,20 @@ app.controller("businessManagement.clientRelationships.opportunities", function(
     })
   });
 
+  $scope.$on('exploreContact', function(event, input) {
+    console.log("recieved");
+    console.log(input);
+    $scope.addTab({
+      "title": "Details :" + input.contact.name,
+      "cancel": true,
+      "app": "contactExplorer",
+      "data": {
+        "pk": input.contact.pk
+      },
+      "active": true
+    })
+  });
+
   $scope.tinymceOptions = {
     selector: 'textarea',
     content_css : '/static/css/bootstrap.min.css',
@@ -364,7 +602,7 @@ app.controller("businessManagement.clientRelationships.opportunities", function(
   };
 
 
-  $scope.addTab({"title":"Details :old name 3","cancel":true,"app":"exploreDeal","data":{"pk":3},"active":true})
+  // $scope.addTab({"title":"Details :old name 3","cancel":true,"app":"exploreDeal","data":{"pk":3},"active":true})
 
 });
 

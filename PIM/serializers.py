@@ -26,7 +26,7 @@ class calendarSerializer(serializers.ModelSerializer):
     clients = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = calendar
-        fields = ('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'clients')
+        fields = ('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'clients', 'data')
         read_only_fields = ('followers', 'user' , 'clients')
     def create(self , validated_data):
         cal = calendar(**validated_data)
@@ -48,7 +48,7 @@ class calendarSerializer(serializers.ModelSerializer):
         cal.save()
         return cal
     def update(self, instance, validated_data): # like the comment
-        for key in ['eventType', 'duration' , 'text' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes']:
+        for key in ['eventType', 'duration' , 'text' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'data']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

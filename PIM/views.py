@@ -20,7 +20,7 @@ class calendarViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isOwner )
     serializer_class = calendarSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['text' , 'originator']
+    filter_fields = ['text' , 'originator' , 'data']
     def get_queryset(self):
         toReturn = calendar.objects.filter(user =  self.request.user).order_by('when')
         if 'clients__in' in self.request.GET:

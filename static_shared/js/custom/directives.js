@@ -35,12 +35,20 @@ app.directive('commentInput', function () {
     },
     controller : function($scope , $state , $stateParams){
 
+      $scope.randomKey = ''+ new Date().getTime();
+
+      if ($scope.doc == null || $scope.doc == undefined) {
+        $scope.doc = emptyFile;
+      }
+      if ($scope.text == null || $scope.doc == undefined) {
+        $scope.text = '';
+      }
       $scope.browseForFile = function() {
         if ($scope.doc.size != 0) {
           $scope.doc = emptyFile;
           return;
         }
-        $('#noteEditorFile').click();
+        $('#noteEditorFile' + $scope.randomKey ).click();
       }
 
       $scope.$watch('doc', function(newValue, oldValue) {
@@ -62,6 +70,7 @@ app.directive('wizard', function () {
       error : '='
     },
     controller : function($scope , $state , $stateParams){
+
       $scope.activeBackup = -2;
       $scope.wizardClicked = function(indx) {
         if ($scope.editable) {

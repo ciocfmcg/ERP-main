@@ -37,7 +37,7 @@ DEAL_STATE_CHOICES = (
     ('requirements' , 'requirements'),
     ('proposal' , 'proposal'),
     ('negotiation' , 'negotiation'),
-    ('won' , 'won'),
+    ('conclusion' , 'conclusion'),
 )
 
 RELATION_CHOICES = (
@@ -49,6 +49,11 @@ RELATION_CHOICES = (
     ('yearly' , 'yearly')
 )
 
+RESULT_CHOICES = (
+    ('na' , 'na'),
+    ('won' , 'won'),
+    ('lost' , 'lost'),
+)
 
 class Deal(models.Model):
     user = models.ForeignKey(User , related_name = 'dealsCreated' , null = False) # the user created it
@@ -65,6 +70,7 @@ class Deal(models.Model):
     probability = models.SmallIntegerField(default=100)
     closeDate = models.DateTimeField(null = True)
     active = models.BooleanField(default = True)
+    result = models.CharField(choices = RESULT_CHOICES , max_length = 4 , default = 'na')
     relation = models.CharField(choices = RELATION_CHOICES , default = 'onetime' , max_length = 10)
 
 

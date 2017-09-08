@@ -109,8 +109,9 @@ app.controller("businessManagement.clientRelationships.contacts.item", function(
 });
 
 app.controller("businessManagement.clientRelationships.contacts.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
-
-  $scope.contact = $scope.data.tableData[$scope.tab.data.index]
+  if ($scope.data != undefined) {
+    $scope.contact = $scope.data.tableData[$scope.tab.data.index]
+  }
   $scope.disableNext = false;
   $scope.pageNo = 0;
 

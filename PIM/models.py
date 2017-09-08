@@ -103,6 +103,7 @@ class calendar(models.Model):
     myNotes = models.CharField(max_length = 100 , blank = True)
     followers = models.ManyToManyField(User , related_name = 'calendarItemsFollowing' , blank = True)
     clients = models.ManyToManyField(Contact , related_name='calendarEntries', blank = True)
+    data = models.CharField(max_length = 200 , null = True)
 
 class blogCategory(models.Model):
     title = models.CharField(max_length = 50 , null = False , unique=True)

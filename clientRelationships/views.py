@@ -40,7 +40,7 @@ class DealViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
     def get_queryset(self):
-        toReturn = Deal.objects.all()
+        toReturn = Deal.objects.exclude(state = 'created').filter(active = True)
         if 'company__contains' in self.request.GET:
             comName = self.request.GET['company__contains']
             toReturn = toReturn.filter(company__in = service.objects.filter(name__contains=comName))
@@ -56,6 +56,6 @@ class ActivityViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )
     serializer_class = ActivitySerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['contact']
+    filter_fields = ['contact' , 'deal', 'notes' , 'data']
     def get_queryset(self):
         return Activity.objects.order_by('-created')

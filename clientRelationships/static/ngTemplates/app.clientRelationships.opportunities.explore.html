@@ -1,30 +1,37 @@
 <div ng-controller="businessManagement.clientRelationships.opportunities.explore" style="padding-top:20px;">
 
-  <div class="row">
+  <div class="row animated fadeIn">
     <div class="container-fluid">
       <div class="col-md-6">
-        <div class="col-md-2">
-          <div style="width:70px;height:70px;background:#FCB95B;display:bolck;padding-bottom:5px;border-radius:7px;" class="text-center">
-            <i class="fi-crown" style="font-size:55px;color:white;"></i>
+        <div class="col-md-{{local.minInfo ? '1':'2'}}">
+          <div style="{{ !local.minInfo? 'width:70px;height:70px;font-size:55px':'width:30px;height:30px;font-size:22px'}}; background:#FCB95B;display:bolck;padding-bottom:5px;border-radius:7px;" class="text-center">
+            <i class="fi-crown" style="color:white;"></i>
           </div>
         </div>
-        <div class="col-md-10" style="paddint-top:0px;">
-          <span class="text-muted" style="font-size:15px;">{{deal.name | humanize}}</span> <br>
-          <span style="font-size:17px;">{{deal.company.name | humanize}}</span>
+        <div class="col-md-{{local.minInfo ? '11':'10'}}" style="paddint-top:0px;">
+          <div ng-if="!local.minInfo">
+            <span class="text-muted" style="font-size:15px;">{{deal.name | humanize}}</span> <br>
+            <span style="font-size:17px;">{{deal.company.name | humanize}}</span>
+          </div>
+          <div ng-if="local.minInfo">
+
+            <span style="font-size:17px;">{{deal.company.name | humanize}} | </span><span class="text-muted" style="font-size:15px;">{{deal.name | humanize}}</span>
+          </div>
+
         </div>
       </div>
       <div class="col-md-6">
         <div class="col-md-2">
-          <span class="text-muted" style="font-size:15px;">VALUATION</span> <br>
-          <span style="font-size:17px;">{{deal.value}}</span>
+          <span ng-if="!local.minInfo" class="text-muted" style="font-size:15px;">VALUATION <br></span>
+          <span style="font-size:17px;"> <i class="fa fa-{{deal.currency | lowercase}} fa-lg text-muted"></i> {{deal.value}}</span>
         </div>
         <div class="col-md-3">
-          <span class="text-muted" style="font-size:15px;">CLOSING DATE</span> <br>
-          <span style="font-size:17px;">{{deal.closeDate | date:'dd-MMM-yyyy'}}</span>
+          <span ng-if="!local.minInfo" class="text-muted" style="font-size:15px;">CLOSING DATE <br></span>
+          <span style="font-size:17px;"> <i ng-if="local.minInfo" class="fa fa-calendar fa-lg text-muted" style="margin-right:20px;"></i> {{deal.closeDate | date:'dd-MMM-yyyy'}}</span>
         </div>
         <div class="col-md-4">
-          <span class="text-muted" style="font-size:15px;">OWNER</span> <br>
-          <img ng-src="{{deal.user | getDP}}" class="img img-rounded" style="height:40px;width:40px;"> <span style="font-size:17px;">{{deal.user | getName}}</span>
+          <span ng-if="!local.minInfo" class="text-muted" style="font-size:15px;">OWNER <br></span>
+          <img ng-src="{{deal.user | getDP}}" class="img img-rounded" style="{{ !local.minInfo? 'height:40px;width:40px':'height:30px;width:30px'}};"> <span style="font-size:17px;">{{deal.user | getName}}</span>
         </div>
         <div class="col-md-3">
           <div class="btn-group pull-right">
@@ -42,45 +49,65 @@
 
   <div class="row" style="margin-top:20px;padding-bottom:20px;border-bottom:solid 2px #eeeeee;">
     <div class="container-fluid">
-      <div class="col-md-10">
-        <wizard steps="data.steps" editable="false" active="deal.state" error="false"></wizard>
+      <div class="col-md-1 text-center" >
+        <div ng-click="toggleInfoLevel()" class="btn" style="height:48px;width:48px;padding:10px;border-radius:25px;font-size:17px;background:#eeeeee;color:#347b95;">
+          <i class="fa fa-chevron-{{ local.minInfo? 'down':'up'}}"></i>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <wizard steps="data.steps" editable="false" active="deal.state" error="deal.result == 'lost'"></wizard>
       </div>
       <div class="col-md-2 text-center" >
-        <div class="btn btn-block" style="height:48px;padding:10px;border-radius:25px;font-size:17px;background:#2980b9;color:white;">
+        <div ng-if="deal.state<5 && deal.result == 'na'" class="btn btn-block" ng-click="moveToNextStage()"  style="height:48px;padding:10px;border-radius:25px;font-size:17px;background:#2980b9;color:white;">
           <i class="fa fa-check"></i> Mark stage as complete
         </div>
+        <div class="row" ng-if="deal.state==5 && deal.result == 'na'">
+          <div class="col-md-6" style="padding:0px;padding-right:5px;">
+            <div  class ="btn btn-block" ng-click="concludeDeal('won')"  style="height:48px;padding:10px;border-radius:25px;font-size:17px;color:white;background:#2980b9;">
+              <i class="fa fa-check"></i> Won
+            </div>
+          </div>
+          <div class="col-md-6" style="padding:0px;padding-right:5px;">
+            <div class="btn btn-block bg-red" ng-click="concludeDeal('lost')"  style="height:48px;padding:10px;border-radius:25px;font-size:17px;background:#2980b9;color:white;">
+              <i class="fa fa-check"></i> Lost
+            </div>
+          </div>
+
+        </div>
+
+        <div ng-if="deal.result != 'na'" class="bg-{{deal.result == 'won' ? 'green': 'red'}}" style="height:48px;padding:10px;border-radius:25px;font-size:17px;background;color:white;">
+          <i class="fa fa-{{deal.result == 'won' ? 'check': 'times'}}"></i> {{ deal.result | humanize}}
+        </div>
+
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-2" style="padding-top:20px;">
       <label class="text-muted">External Stakeholders</label>
-      <div ng-repeat="c in deal.contacts" class="row" style="padding-left:10px;">
-        <img ng-src="{{c | getCRMDP}}" class="img img-circle" style="height:30px;width:30px;"> {{c.name}}
+      <div ng-repeat="c in deal.contacts" class="row" style="margin-top:10px;cursor:pointer;" ng-if="c.pk != contact.pk" ng-click="exploreContact(c)">
+        <div class="col-md-3">
+          <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getCRMDP}}">
+        </div>
+        <div class="col-md-9" style="padding-top:3px;">
+          <span>{{c.name}}</span>
+          <br> <span class="text-muted">{{c.designation}}</span>
+        </div>
       </div> <br>
       <div ng-if="deal.internalUsers.length > 0">
         <label class="text-muted">Internal Stakeholders</label>
-        <div ng-repeat="c in deal.internalUsers" class="row" style="padding-left:10px;">
-          <img ng-src="{{c | getDP}}" class="img img-circle" style="height:30px;width:30px;"> {{c | getName}}
+        <div ng-repeat="c in deal.internalUsers" class="row" style="padding-left:10px;padding-bottom:10px;">
+          <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getDP}}"> {{c | getName}}
         </div>
       </div>
     </div>
     <div class="col-md-7" style="min-height:70vh;border-right:solid 2px #eeeeee;border-left:solid 2px #eeeeee;">
-      <div class="row" style="padding-bottom:10px;">
-        <div ng-repeat="tab in tabs" class="col-md-2 text-center text-muted" style="border-bottom:solid {{tab.active ? ' 4':'1'}}px #175569;padding:10px;background: {{tab.active ? '#eeeeee':''}}; cursor:pointer;" ng-click="changeTab($index)">
-          <i class="fa fa-{{tab.icon}}" style="width:30px;"></i> {{tab.name}}
-        </div>
-      </div>
-      <div ng-if="local.activeTab == 0" class="row" style="margin:5px;">
-        <div class="input-group">
-          <textarea class="form-control" rows="3" cols="80" placeholder="Write a note" ng-model="noteEditor.text" style="resize:none;"></textarea>
+      <tabs-Strip tabs="tabs" active="local.activeTab"></tabs-Strip>
 
-          <span class="input-group-addon bg-blue" ng-if="noteEditor.doc.size != 0"> <i class="fa fa-2x  {{noteEditor.doc.name | fileTypeIcon}}"></i> <br> <br>{{noteEditor.doc.name}}</span>
-          <span class="input-group-addon btn btn-success" ng-click="browseForFile()"><i class="fa fa-{{noteEditor.doc.size == 0? 'file':'times'}}"></i> <br> <br>{{noteEditor.doc.size == 0 ? 'File': 'Clear'}}</span>
-          <span class="input-group-addon btn btn-primary" ng-click="saveNote()">Send</span>
-        </div>
+      <div ng-if="local.activeTab == 0" class="row" style="margin:5px;">
+        <comment-Input text="noteEditor.text" doc="noteEditor.doc" save-Note="saveNote"></comment-Input>
         <!-- /input-group -->
-        <input type="file" file-model="noteEditor.doc" style="display:None;" id="noteEditorFile">
+
       </div>
       <div class="row animated fadeIn">
         <div ng-if="local.activeTab == 0" class="container-fluid">
@@ -149,48 +176,35 @@
 
               <clients-Field data="logger.withinCRMUsers" url="/api/clientRelationships/contactLite/" col="4" label="Within CRM" ></clients-Field>
 
-
-
               <div ng-if="logger.activityType == 'Email'">
                 <div class="form-group">
                   <label>Subject</label>
                   <input type="text" ng-model="logger.subject" class="form-control">
                 </div>
               </div>
-
               <div ng-if="logger.activityType == 'Call'">
                 <div class="form-group">
                   <label>Duration</label>
                   <input type="number" ng-model="logger.duration" class="form-control">
                 </div>
-
-
               </div>
-
               <div ng-if="logger.activityType == 'Meeting'">
                 <div class="form-group">
                   <label>Duration</label>
                   <input type="number" ng-model="logger.duration" class="form-control">
                 </div>
-
                 <div class="form-group">
                   <label>Place</label>
                   <input type="text" ng-model="logger.location" class="form-control">
                 </div>
-
-
               </div>
-
               <div class="form-group">
                 <label>Comment</label>
                 <textarea ui-tinymce="tinymceOptions" ng-model="logger.comment"></textarea>
               </div>
               <button type="button" class="btn btn-primary" ng-click="saveActivityLog()">Save</button>
             </div>
-
           </div>
-
-
         </div>
 
         <div ng-if="local.activeTab == 2">
@@ -284,7 +298,60 @@
       </div>
     </div>
     <div class="col-md-3">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="container-fluid text-center">
+            <h4 class="text-muted">
+              <i class="fa fa-calendar fa-lg"></i> <span style="padding-bottom:20px;">Upcoming</span>
+            </h4>
+          </div>
+        </div>
+        <div class="row" style="overflow:hidden;">
+          <!-- <i style="position:absolute; font-size:260px;color:#f7fbfc;left:120px;top:180px;" class="fa fa-calendar"></i> -->
+          <div class="text-center text-muted" ng-if="calendar.length == 0" style="padding-top:50px;">
+            No entry in calendar!
+          </div>
+          <div ng-repeat="c in calendar" >
+            <div class="row text-center" ng-if="c.newDate" style="margin-top:30px;">
+              <span class="badge bg-blue" ng-if="c.today">Today</span>
+              <span class="badge bg-blue" ng-if="!c.today">{{c.when.toDateString()}}</span>
+            </div>
+            <div class="row" style="margin-top:20px;">
+              <div class="col-md-2" >
 
+                <input ng-if="c.eventType == 'Reminder'" type="checkbox" ng-model="c.completed" ng-change="markComplete(c.pk)">
+                <i class="fa fa-users" ng-if="c.eventType == 'Meeting'"></i>
+              </div>
+              <div class="col-md-10" >
+                <div class="row">
+                  <span style="{{c.completed ? 'text-decoration:line-through green;':''}}">{{c.text}}</span>
+                </div>
+                <div class="row" ng-if="c.clients.length>0">
+                  <label class="text-muted" style="margin-top:10px;color:#c1c1c1;">Stakeholders</label> <br>
+                  <div class="row" ng-repeat="p in c.clients" style="cursor:pointer;" ng-click="exploreContact(p)">
+                    <img ng-src="{{p | getCRMDP}}" class="img img-rounded" style="width:20px;height:20px;margin-left:15px;" alt="">
+                    {{p.name}}
+                  </div>
+                </div>
+
+                <div class="row" ng-if="c.followers.length>0">
+                  <label class="text-muted" style="margin-top:10px;color:#c1c1c1;">Internal Users</label> <br>
+                  <div class="row" ng-repeat="p in c.followers">
+                    <img ng-src="{{p | getDP}}" class="img img-rounded" style="width:20px;height:20px;margin-left:15px;" alt="">
+                    {{p | getName}}
+                  </div>
+                </div>
+
+                <div class="row" ng-if="c.venue != null && c.venue.length>0">
+                  <label class="text-muted" style="margin-top:10px;color:#c1c1c1;">Venue</label> <br>
+                  {{c.venue}}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
