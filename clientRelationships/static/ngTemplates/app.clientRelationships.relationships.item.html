@@ -1,0 +1,83 @@
+<div class="container-fluid card animated fadeIn" style="padding-top:15px;border-left:4px solid #4192cd;" ng-controller="businessManagement.clientRelationships.relationships.item">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="col-md-1">
+        <i class="fa fa-building-o fa-3x text-muted"></i>
+      </div>
+      <div class="col-md-11" style="paddint-top:0px;">
+        <span class="text-muted" style="font-size:15px;">Account</span> <br>
+        <span style="font-size:17px;">{{data.name | humanize}}</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="col-md-2">
+        <span class="text-muted" style="font-size:15px;">Active deals</span> <br>
+        <span style="font-size:17px;"> <i class="fa fa-{{data.currency | lowercase}} fa-lg text-muted"></i> {{data.deals.length}}</span>
+      </div>
+      <div class="col-md-3">
+        <span class="text-muted" style="font-size:15px;"><i class="fa fa-globe"></i> </span><br>
+        <span style="font-size:17px;"> <a href="{{data.web}}">{{data.web}}</a></span>
+      </div>
+
+      <div class="col-md-3 col-md-offset-4">
+        <button type="button" class="btn btn-default pull-right" ng-click="toggleExpand()">
+        <i class="fa fa-chevron-{{ !expanded ? 'down':'up'}}"></i>
+      </button>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="expanded" style="height:{{expanded ? 'auto':'0'}};">
+    <hr>
+    <label style="margin-left:30px;">Active Deals</label> <br>
+    <div class="row">
+      <div class="container-fluid " style="padding-left:30px;padding-right:30px;">
+        <div class="col-md-3" ng-repeat="d in data.deals"  style="padding:15px;" ng-click="$emit('exploreRelation' , d);">
+          <div class="container-fluid relationDealCard" >
+            <div class="row">
+              <div class="text-right col-md-3">
+                <strong>Name : </strong>
+              </div>
+              <div class="text-left col-md-9">
+                <span>{{d.name}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="text-right col-md-3">
+                <strong>ID : </strong>
+              </div>
+              <div class="text-left col-md-9">
+                <span>{{d.pk}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="text-right col-md-3">
+                <strong>Owner : </strong>
+              </div>
+              <div class="text-left col-md-9">
+                <img ng-src="{{d.user | getDP}}" class="img img-rounded" style="width:30px;height:30px;"> <span>{{d.user | getName}}</span>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="text-right col-md-3">
+                <strong>Contact : </strong>
+              </div>
+              <div class="text-left col-md-9">
+                <img ng-src="{{d.contacts[0] | getCRMDP}}" class="img img-rounded" style="width:30px;height:30px;"> <span>{{d.contacts[0].name}}</span>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="text-right col-md-3">
+                <strong>Value : </strong>
+              </div>
+              <div class="text-left col-md-9">
+                <i class="fa fa-{{d.currency | lowercase}}" style="margin-right:20px;"></i>{{d.value}} <span style="margin-left:15px;">({{d.relation | humanize}})</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

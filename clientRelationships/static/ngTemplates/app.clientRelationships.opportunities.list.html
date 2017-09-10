@@ -2,17 +2,22 @@
   <div class="row" style="padding:20px;">
     <div class="container-fluid">
       <div class="col-md-10">
-        <div class="{{ searchText!=''? 'input-group':''}}">
+        <div class="input-group">
           <input type="text" class="form-control" ng-model="searchText" ng-enter=fetchDeals()>
           <span class="input-group-btn" ng-if="searchText!= ''">
-              <button class = "btn btn-default" type = "button" ng-click="resetSearch()">
-                 <i class="fa fa-caret-left"></i>
+              <button class = "btn btn-primary" style="width:50px;" type = "button" ng-click="resetSearch()">
+                 <i class="fa fa-times"></i>
               </button>
            </span>
+           <span class="input-group-btn" >
+               <button class = "btn btn-default" type = "button" ng-click="fetchDeals()">
+                  <i class="fa fa-refresh"></i>
+               </button>
+            </span>
         </div>
       </div>
-      <div class="col-md-2">
-        <span style="margin-right:10px;">Opportunity name</span>
+      <div class="col-md-2 text-center">
+        <span style="margin-right:10px;">Name</span>
         <switch ng-model="companySearch" class="neutral"></switch><span style="margin-left:10px;">Company name</span>
       </div>
     </div>

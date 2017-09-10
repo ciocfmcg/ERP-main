@@ -7,7 +7,7 @@ var crmSteps = [
   {indx: 6 , text : 'conclusion', display : 'Won / Lost'},
 ];
 
-var crmRelationTypes  = ['onetime' , 'request' , 'days' , 'hours' , 'monthly' , 'yearly']
+var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'yearly']
 
 
 app.controller("businessManagement.clientRelationships.opportunities.created", function($scope, $state, $users, $stateParams, $http, Flash) {
@@ -58,10 +58,72 @@ app.controller("businessManagement.clientRelationships.opportunities.created", f
 });
 
 
-app.controller("businessManagement.clientRelationships.opportunities.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.clientRelationships.opportunities.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $timeout, $rootScope) {
 
   $scope.disableNext = false;
   $scope.pageNo = 0;
+
+  $scope.editDeal = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.clientRelationships.editDeal.form.html',
+      size: 'lg',
+      resolve : {
+        deal : function() {
+          return $scope.deal;
+        }
+      },
+      controller: function($scope , deal){
+        $scope.deal = deal;
+        $scope.data = {relationTypes: crmRelationTypes};
+        $scope.setRelation = function(rl) {
+          $scope.deal.relation = rl;
+        }
+        $timeout(function () {
+            $scope.deal.probability += 0.1;
+        }, 1000);
+        $scope.setCurrency = function(curr) {
+          $scope.deal.currency = curr;
+        }
+
+      },
+    }).result.then(function () {
+
+    }, function () {
+      var deal = $scope.deal;
+      var dataToSend = {name : deal.name , probability : deal.probability , requirements : deal.requirements , closeDate : deal.closeDate , currency : deal.currency , relation : deal.relation , value : deal.value}
+
+      var crmUsers = []
+      for (var i = 0; i < deal.contacts.length; i++) {
+        crmUsers.push(deal.contacts[i].pk)
+      }
+
+      if (crmUsers.length!= 0) {
+        dataToSend.contacts = crmUsers;
+      }else {
+        Flash.create('warning' , 'At least one contact is required');
+        return;
+      }
+
+      if (deal.internalUsers.length != 0) {
+        dataToSend.internalUsers = deal.internalUsers;
+      }
+
+      $http({method : 'PATCH' , url : '/api/clientRelationships/deal/'+ $scope.deal.pk + '/' , data : dataToSend}).
+      then(function(response) {
+        $rootScope.$broadcast('dealUpdated', {
+          deal: response.data
+        });
+      });
+
+    });
+  }
+
+  $scope.cloneDeal = function() {
+    $rootScope.$broadcast('cloneDeal', {
+      deal: $scope.deal
+    });
+  }
+
 
   $scope.sortedFeeds = [{
       type: 'note'
@@ -89,6 +151,10 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     $http({method : 'PATCH' , url : '/api/clientRelationships/deal/' + $scope.deal.pk + '/' , data : {result : state}}).
     then(function(response) {
       $scope.processDealResponse(response.data);
+      $rootScope.$broadcast('dealUpdated', {
+        deal: response.data
+      });
+
     })
   }
 
@@ -335,6 +401,9 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     $http({method : 'PATCH' , url : '/api/clientRelationships/deal/' + $scope.deal.pk +'/' , data : {state : state} }).
     then(function(response) {
       $scope.deal.state += 1;
+      $rootScope.$broadcast('dealUpdated', {
+        deal: response.data
+      });
     })
   }
 
@@ -494,7 +563,7 @@ app.controller("businessManagement.clientRelationships.opportunities.list", func
   $scope.columns = [
     // {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
     {icon : 'fa-phone' , text : 'Contacting' ,cat : 'contacted'},
-    {icon : 'fa-desktop' , text : 'Demo' , cat : 'demo'},
+    {icon : 'fa-desktop' , text : 'Demo / POC' , cat : 'demo'},
     {icon : 'fa-bars' , text : 'Requirements' , cat : 'requirements'},
     {icon : 'fa-file-pdf-o' , text : 'Proposal' , cat : 'proposal'},
     {icon : 'fa-money' , text : 'Negotiation' , cat : 'negotiation'},
@@ -515,7 +584,7 @@ app.controller("businessManagement.clientRelationships.opportunities.list", func
     }else if (!$scope.companySearch && $scope.searchText!= '') {
       url += 'name__contains=' +$scope.searchText
     }
-    url += 'created=false';
+    url += '&created=false&board';
 
     $http({method : 'GET' , url : url}).
     then(function(response) {
@@ -557,6 +626,12 @@ app.controller("businessManagement.clientRelationships.opportunities.list", func
     $scope.isDragging=true;
   });
 
+  $scope.$on('dealUpdated', function (evt, data) {
+    console.log(data);
+    $scope.removeFromData(data.deal.pk);
+    $scope.data[data.deal.state].push(data.deal);
+  });
+
   $scope.onDropComplete = function(data , evt , newState) {
     if (data == null) {
       return;
@@ -582,6 +657,11 @@ app.controller("businessManagement.clientRelationships.opportunities", function(
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
+  $scope.createTabActive = false;
+
+  $scope.$on('cloneDeal', function(event, input) {
+    $scope.createTabActive = true;
+  });
 
   $scope.closeTab = function(index) {
     $scope.tabs.splice(index, 1)
@@ -661,9 +741,24 @@ app.controller("businessManagement.clientRelationships.opportunities", function(
 
 });
 
-app.controller("businessManagement.clientRelationships.opportunities.form", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.clientRelationships.opportunities.form", function($scope, $state, $users, $stateParams, $http, Flash , $timeout , $rootScope) {
 
   $scope.mode = 'new';
+
+  $scope.$on('cloneDeal', function(event, input) {
+    $scope.resetDealEditor();
+    console.log("will clone");
+    $http({method : 'GET' , url : '/api/clientRelationships/deal/' + input.deal.pk}).
+    then(function(response) {
+      $scope.dealEditor = response.data;
+      $scope.dealEditor.otherCRMUsers = response.data.contacts;
+      $scope.dealEditor.state= -1;
+      $scope.dealEditor.name += ' (Cloned)'
+    })
+
+
+
+  });
 
   $scope.wizardClicked = function(indx) {
     console.log(indx);
@@ -751,6 +846,12 @@ app.controller("businessManagement.clientRelationships.opportunities.form", func
       $scope.mode = 'edit';
       $scope.deal = response.data;
       Flash.create('success' , 'Saved');
+      if (response.data.state == 'created') {
+        return;
+      }
+      $rootScope.$broadcast('dealUpdated', {
+        deal: response.data
+      });
     })
   }
 

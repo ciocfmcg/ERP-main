@@ -5,7 +5,7 @@ from rest_framework.exceptions import *
 from .models import *
 from PIM.serializers import *
 from HR.serializers import userSearchSerializer
-from ERP.serializers import serviceLiteSerializer , serviceSerializer
+from ERP.serializers import serviceLiteSerializer , serviceSerializer , addressSerializer
 from rest_framework.response import Response
 from fabric.api import *
 import os
@@ -44,12 +44,18 @@ class ContactSerializer(serializers.ModelSerializer):
         return instance
 
 
+class DealLiteSerializer(serializers.ModelSerializer):
+    contacts = ContactLiteSerializer(many = True , read_only = True)
+    class Meta:
+        model = Deal
+        fields = ('pk' , 'user' , 'company','value', 'currency', 'contacts' , 'internalUsers' ,'closeDate' , 'active', 'name', 'relation')
+
 class DealSerializer(serializers.ModelSerializer):
     company = serviceLiteSerializer(many = False , read_only = True)
     contacts = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Deal
-        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result')
+        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'relation')
         read_only_fields = ('user', )
     def create(self , validated_data):
         d = Deal(**validated_data)
@@ -66,10 +72,11 @@ class DealSerializer(serializers.ModelSerializer):
         return d
 
     def update(self ,instance, validated_data):
-        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result']:
+        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'relation', 'value']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
+                print "Error while saving " , key
                 pass
         if 'company' in self.context['request'].data:
             instance.company_id = int(self.context['request'].data['company'])
@@ -83,6 +90,14 @@ class DealSerializer(serializers.ModelSerializer):
             for c in self.context['request'].data['contacts']:
                 instance.contacts.add(Contact.objects.get(pk = c))
         return instance
+
+
+
+class RelationshipSerializer(serializers.ModelSerializer):
+    address = addressSerializer(many = False, read_only = True)
+    class Meta:
+        model = service
+        fields = ('pk'  ,'name' , 'address' , 'mobile', 'logo' , 'web' )
 
 
 class ContractSerializer(serializers.ModelSerializer):

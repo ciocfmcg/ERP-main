@@ -1,14 +1,14 @@
 <breadcrumb></breadcrumb>
 <div class="container-fluid">
   <uib-tabset>
-    <uib-tab>
+    <uib-tab active="createTabActive"> 
       <uib-tab-heading>
         New <i class="fa fa-plus"></i>
       </uib-tab-heading>
       <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.clientRelationships.opportunities.form.html'">
       </div>
     </uib-tab>
-    <uib-tab active="true">
+    <uib-tab active="searchTabActive">
       <uib-tab-heading>
         Board
         <i class="fa fa-th-large"></i>

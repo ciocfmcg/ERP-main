@@ -1,0 +1,195 @@
+<div class="container-fluid" ng-controller="businessManagement.clientRelationships.relationships.manage" style="padding-top:10px;">
+  <div class="col-md-3" style="min-height:70vh;border-right:solid 2px #eeeeee;padding-top:20px;">
+    <div class="row">
+      <div class="container-fluid">
+        <span style="font-size:20px;" class="text-muted"><i class="fa fa-building-o text-muted"></i> {{deal.company.name}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+            <label class="text-muted pull-right">Address :</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <i class="pull-right fa fa-map-marker fa-3x" style="color:#eeeeee;"></i>
+        </div>
+        <div class="col-md-9">
+          <span>{{deal.company.address.street}}</span><br>
+          <span>{{deal.company.address.city}}</span><br>
+          <span>{{deal.company.address.pincode}}</span><br>
+          <span>{{deal.company.address.state}}</span><br>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row" style="margin-top:20px;">
+      <div class="text-right col-md-3">
+        <strong>Web : </strong>
+      </div>
+      <div class="text-left col-md-9">
+        <a href="{{deal.company.web}}">{{deal.company.web}}</a>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="text-right col-md-3">
+        <strong>CIN : </strong>
+      </div>
+      <div class="text-left col-md-9">
+        <span>{{deal.company.cin}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="text-right col-md-3">
+        <strong>TIN : </strong>
+      </div>
+      <div class="text-left col-md-9">
+        <span>{{deal.company.tin}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="text-right col-md-3">
+        <strong>Mobile : </strong>
+      </div>
+      <div class="text-left col-md-9">
+        <span>{{deal.company.mobile}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="text-right col-md-3">
+        <strong>Telephone : </strong>
+      </div>
+      <div class="text-left col-md-9">
+        <span>{{deal.company.telephone}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="text-right col-md-3">
+        <strong>About : </strong>
+      </div>
+      <div class="text-left col-md-9">
+        <span>{{deal.company.about}}</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <label class="text-muted">External Stakeholders</label>
+      <div ng-repeat="c in deal.contacts" class="row" style="margin-top:10px;cursor:pointer;" ng-if="c.pk != contact.pk" ng-click="exploreContact(c)">
+        <div class="col-md-2">
+          <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getCRMDP}}">
+        </div>
+        <div class="col-md-10" style="padding-top:3px;">
+          <span>{{c.name}}</span>
+          <br> <span class="text-muted">{{c.designation}}</span>
+        </div>
+      </div> <br>
+      <div ng-if="deal.internalUsers.length > 0">
+        <label class="text-muted">Internal Stakeholders</label>
+        <div ng-repeat="c in deal.internalUsers" class="row" style="margin-top:10px;cursor:pointer;">
+          <div class="col-md-2">
+            <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getDP}}">
+          </div>
+          <div class="col-md-10" style="padding-top:3px;">
+            <span> {{c | getName}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-md-9">
+    <div class="row" style="padding:10px;padding-bottom:0px;">
+      <div class="container-fluid">
+        <div class="col-md-5">
+          <div class="col-md-{{minInfo ? '1':'2'}}">
+            <div style="{{ !minInfo? 'width:70px;height:70px;font-size:55px':'width:30px;height:30px;font-size:22px'}}; background:#FCB95B;display:bolck;padding-bottom:5px;border-radius:7px;" class="text-center">
+              <i class="fi-crown" style="color:white;"></i>
+            </div>
+          </div>
+          <div class="col-md-{{minInfo ? '11':'10'}}" style="paddint-top:0px;">
+            <div ng-if="!minInfo">
+              <br><span class="text-muted" style="font-size:18px;">{{deal.name | humanize}}</span>
+            </div>
+            <div ng-if="minInfo">
+
+              <span style="font-size:17px;">{{deal.company.name | humanize}} | </span><span class="text-muted" style="font-size:15px;">{{deal.name | humanize}}</span>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="col-md-5">
+            <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">VALUATION </span><br>
+            <span style="font-size:17px;"> <i class="fa fa-{{deal.currency | lowercase}} fa-lg text-muted"></i> {{deal.value}}</span> <span style="margin-right:20px;">({{deal.relation}})</span>
+            <button type="button" class="btn btn-default btn-sm">
+              <i class="fa fa-plus"></i> Quote
+            </button>
+          </div>
+          <div class="col-md-3">
+            <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">CLOSING DATE </span><br>
+            <span style="font-size:17px;"> <i ng-if="minInfo" class="fa fa-calendar fa-lg text-muted" style="margin-right:20px;"></i> {{deal.closeDate | date:'dd-MMM-yyyy'}}</span>
+          </div>
+          <div class="col-md-4">
+            <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">OWNER </span><br>
+            <img ng-src="{{deal.user | getDP}}" class="img img-rounded" style="{{ !minInfo? 'height:40px;width:40px':'height:30px;width:30px'}};"> <span style="font-size:17px;">{{deal.user | getName}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="container-fluid">
+        <label class="text-muted">Requirements</label><br>
+        <span ng-bind-html="deal.requirements"></span>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="container-fluid">
+        <label class="text-muted">Finances</label><br>
+        <div class="container-fluid" style="margin-top:20px;">
+          <div class="row">
+
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Firstname</th>
+                  <th>Lastname</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>John</td>
+                  <td>Doe</td>
+                  <td>john@example.com</td>
+                </tr>
+                <tr>
+                  <td>Mary</td>
+                  <td>Moe</td>
+                  <td>mary@example.com</td>
+                </tr>
+                <tr>
+                  <td>July</td>
+                  <td>Dooley</td>
+                  <td>july@example.com</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+          <div class="row">
+            <nav>
+              <ul class="pager">
+                <li class="{{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+                <li class="{{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

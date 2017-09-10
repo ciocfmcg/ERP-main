@@ -34,11 +34,19 @@ class ContactViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Contact.objects.all()
 
+class DealLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , readOnly, )
+    serializer_class = DealLiteSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name', 'result', 'company']
+    def get_queryset(self):
+        return Deal.objects.filter(active = True)
+
 class DealViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )
     serializer_class = DealSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name', 'state']
+    filter_fields = ['name', 'state', 'result', 'company']
     def get_queryset(self):
 
         if 'created' in self.request.GET and 'won' in self.request.GET and 'lost' in self.request.GET:
@@ -54,6 +62,9 @@ class DealViewSet(viewsets.ModelViewSet):
         else:
             toReturn = Deal.objects.all()
 
+        # print self.request.GET
+        # print toReturn
+
         toReturn = toReturn.filter(active = True)
         if 'company__contains' in self.request.GET:
             comName = self.request.GET['company__contains']
@@ -61,7 +72,17 @@ class DealViewSet(viewsets.ModelViewSet):
 
         if 'created' in self.request.GET and self.request.GET['created'] == 'false':
             toReturn = toReturn.exclude(state = 'created')
+
+        if 'board' in self.request.GET:
+            toReturn = toReturn.filter(result = 'na')
+
         return toReturn
+
+class RelationshipViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , readOnly , )
+    serializer_class = RelationshipSerializer
+    def get_queryset(self):
+        return service.objects.filter(deals__in = Deal.objects.filter(active = True).filter(result='won')).distinct()
 
 class ContractViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )

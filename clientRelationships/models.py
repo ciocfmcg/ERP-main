@@ -43,8 +43,8 @@ DEAL_STATE_CHOICES = (
 RELATION_CHOICES = (
     ('onetime' , 'onetime'),
     ('request' , 'request'),
-    ('days' , 'days'),
-    ('hours' , 'hours'),
+    ('day' , 'day'),
+    ('hour' , 'hour'),
     ('monthly' , 'monthly'),
     ('yearly' , 'yearly')
 )
@@ -66,7 +66,7 @@ class Deal(models.Model):
     state = models.CharField(choices = DEAL_STATE_CHOICES , max_length = 13 , default = 'created')
     contacts = models.ManyToManyField(Contact , related_name='deals' , blank = True)
     internalUsers = models.ManyToManyField(User , related_name='deals' , blank = True)
-    requirements = models.TextField(max_length=1000 , null=True)
+    requirements = models.TextField(max_length=10000 , null=True)
     probability = models.SmallIntegerField(default=100)
     closeDate = models.DateTimeField(null = True)
     active = models.BooleanField(default = True)
@@ -82,7 +82,12 @@ def getClientRelationshipContract(instance , filename ):
 def getClientRelationshipActivity(instance , filename ):
     return 'clientRelationships/activity/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
-
+CONTRACT_STATE_CHOICES = (
+    ('quoted' , 'quoted'),
+    ('approved' , 'approved'),
+    ('billed' , 'billed'),
+    ('received' , 'received'),
+)
 
 class Contract(models.Model):
     user = models.ForeignKey(User , related_name = 'contracts' , null = False) # the user created it
@@ -90,8 +95,9 @@ class Contract(models.Model):
     updated = models.DateTimeField(auto_now=True)
     doc = models.FileField(upload_to= getClientRelationshipContract , null = False)
     value = models.PositiveIntegerField(default=0)
-    relationType = models.CharField(choices = RELATION_CHOICES , max_length = 10)
     deal = models.ForeignKey(Deal , null = False)
+    status = models.CharField(choices = CONTRACT_STATE_CHOICES , max_length=10 , default = 'quoted')
+    details = models.TextField(max_length=10000 , null=False)
 
 ACTIVITY_CHOICES = (
     ('call', 'call'),

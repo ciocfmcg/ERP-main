@@ -1,0 +1,26 @@
+<breadcrumb></breadcrumb>
+<div class="container-fluid">
+  <uib-tabset>
+    <uib-tab active="searchTabActive">
+      <uib-tab-heading>
+        Search
+        <i class="fa fa-th-large"></i>
+      </uib-tab-heading>
+      <div ng-include="'/static/ngTemplates/app.clientRelationships.relationships.list.html'">
+      </div>
+    </uib-tab>
+
+    <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+      <uib-tab-heading>
+        {{tab.title}}
+        <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+      </uib-tab-heading>
+      <div ng-if="tab.app == 'manageRelation'">
+        <div ng-include="'/static/ngTemplates/app.clientRelationships.relationships.manage.html'"></div>
+      </div>
+      <div ng-if="tab.app == 'contactExplorer'">
+        <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.explore.html'"></div>
+      </div>
+    </uib-tab>
+  </uib-tabset>
+</div>
