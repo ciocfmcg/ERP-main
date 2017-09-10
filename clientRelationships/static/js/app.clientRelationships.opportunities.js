@@ -7,7 +7,7 @@ var crmSteps = [
   {indx: 6 , text : 'conclusion', display : 'Won / Lost'},
 ];
 
-var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'yearly']
+var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'yearly', 'user']
 
 
 app.controller("businessManagement.clientRelationships.opportunities.created", function($scope, $state, $users, $stateParams, $http, Flash) {
@@ -74,10 +74,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
       },
       controller: function($scope , deal){
         $scope.deal = deal;
-        $scope.data = {relationTypes: crmRelationTypes};
-        $scope.setRelation = function(rl) {
-          $scope.deal.relation = rl;
-        }
+
         $timeout(function () {
             $scope.deal.probability += 0.1;
         }, 1000);
@@ -90,7 +87,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
 
     }, function () {
       var deal = $scope.deal;
-      var dataToSend = {name : deal.name , probability : deal.probability , requirements : deal.requirements , closeDate : deal.closeDate , currency : deal.currency , relation : deal.relation , value : deal.value}
+      var dataToSend = {name : deal.name , probability : deal.probability , requirements : deal.requirements , closeDate : deal.closeDate , currency : deal.currency , value : deal.value}
 
       var crmUsers = []
       for (var i = 0; i < deal.contacts.length; i++) {
@@ -490,7 +487,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     }
   }
 
-  $scope.data = {steps : crmSteps ,relationTypes: crmRelationTypes}
+  $scope.data = {steps : crmSteps}
 
   $scope.processDealResponse = function(data) {
     $scope.deal = data;
@@ -766,7 +763,7 @@ app.controller("businessManagement.clientRelationships.opportunities.form", func
 
   $scope.activeWizardTab = 3;
 
-  $scope.data = {steps : crmSteps ,relationTypes: crmRelationTypes}
+  $scope.data = {steps : crmSteps }
 
   $scope.resetDealEditor = function() {
     var dummyDate = new Date();

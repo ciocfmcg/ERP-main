@@ -71,7 +71,6 @@ class Deal(models.Model):
     closeDate = models.DateTimeField(null = True)
     active = models.BooleanField(default = True)
     result = models.CharField(choices = RESULT_CHOICES , max_length = 4 , default = 'na')
-    relation = models.CharField(choices = RELATION_CHOICES , default = 'onetime' , max_length = 10)
 
 
 def getClientRelationshipContract(instance , filename ):
@@ -93,11 +92,13 @@ class Contract(models.Model):
     user = models.ForeignKey(User , related_name = 'contracts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
-    doc = models.FileField(upload_to= getClientRelationshipContract , null = False)
+    doc = models.FileField(upload_to= getClientRelationshipContract , null = True)
     value = models.PositiveIntegerField(default=0)
-    deal = models.ForeignKey(Deal , null = False)
+    deal = models.ForeignKey(Deal , null = False , related_name='contracts')
     status = models.CharField(choices = CONTRACT_STATE_CHOICES , max_length=10 , default = 'quoted')
-    details = models.TextField(max_length=10000 , null=False)
+    details = models.TextField(max_length=10000 , null=True)
+    # relation = models.CharField(choices = RELATION_CHOICES , default = 'onetime' , max_length = 10)
+    data = models.CharField(null = True , max_length = 10000)
 
 ACTIVITY_CHOICES = (
     ('call', 'call'),

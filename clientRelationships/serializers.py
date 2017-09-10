@@ -48,14 +48,14 @@ class DealLiteSerializer(serializers.ModelSerializer):
     contacts = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Deal
-        fields = ('pk' , 'user' , 'company','value', 'currency', 'contacts' , 'internalUsers' ,'closeDate' , 'active', 'name', 'relation')
+        fields = ('pk' , 'user' , 'company','value', 'currency', 'contacts' , 'internalUsers' ,'closeDate' , 'active', 'name')
 
 class DealSerializer(serializers.ModelSerializer):
     company = serviceLiteSerializer(many = False , read_only = True)
     contacts = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Deal
-        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'relation')
+        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'contracts')
         read_only_fields = ('user', )
     def create(self , validated_data):
         d = Deal(**validated_data)
@@ -72,7 +72,7 @@ class DealSerializer(serializers.ModelSerializer):
         return d
 
     def update(self ,instance, validated_data):
-        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'relation', 'value']:
+        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'value']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -103,7 +103,14 @@ class RelationshipSerializer(serializers.ModelSerializer):
 class ContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
-        fields = ('pk'  ,'user' , 'created' , 'updated' , 'doc', 'value', 'relationType', 'deal')
+        fields = ('pk'  ,'user' , 'created' , 'updated' , 'doc', 'value', 'status', 'details' , 'data')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        c = Contract(**validated_data)
+        c.user = self.context['request'].user
+        c.deal_id = int(self.context['request'].data['deal'])
+        c.save()
+        return c
 
 class ActivitySerializer(serializers.ModelSerializer):
     contacts = ContactLiteSerializer(many = True , read_only = True)

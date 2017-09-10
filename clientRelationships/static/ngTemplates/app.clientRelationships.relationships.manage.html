@@ -121,8 +121,8 @@
         <div class="col-md-7">
           <div class="col-md-5">
             <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">VALUATION </span><br>
-            <span style="font-size:17px;"> <i class="fa fa-{{deal.currency | lowercase}} fa-lg text-muted"></i> {{deal.value}}</span> <span style="margin-right:20px;">({{deal.relation}})</span>
-            <button type="button" class="btn btn-default btn-sm">
+            <span style="font-size:17px;"> <i class="fa fa-{{deal.currency | lowercase}} fa-lg text-muted"></i> {{deal.value}}</span>
+            <button type="button" class="btn btn-default btn-sm" ng-click="editQuote()">
               <i class="fa fa-plus"></i> Quote
             </button>
           </div>
@@ -139,7 +139,7 @@
     </div>
     <hr>
     <div class="row">
-      <div class="container-fluid">
+      <div class="container-fluid" style="min-height:100px;">
         <label class="text-muted">Requirements</label><br>
         <span ng-bind-html="deal.requirements"></span>
       </div>
@@ -154,39 +154,56 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Firstname</th>
-                  <th>Lastname</th>
-                  <th>Email</th>
+                  <th>ID</th>
+                  <th>Value</th>
+                  <th>Items</th>
+                  <th>Created</th>
+                  <th>Updated</th>
+                  <th>Status</th>
+                  <th style="width:20%;"></th>
                 </tr>
               </thead>
+
               <tbody>
-                <tr>
-                  <td>John</td>
-                  <td>Doe</td>
-                  <td>john@example.com</td>
-                </tr>
-                <tr>
-                  <td>Mary</td>
-                  <td>Moe</td>
-                  <td>mary@example.com</td>
-                </tr>
-                <tr>
-                  <td>July</td>
-                  <td>Dooley</td>
-                  <td>july@example.com</td>
+                <tr ng-repeat="c in deal.contracts">
+                  <td>{{c.pk}}</td>
+                  <td><i class="fa fa-{{deal.currency | lowercase}}" style="margin-right:20px;"></i>{{c.value}}</td>
+                  <td>{{c.data.length}}</td>
+                  <td>{{c.created | timeAgo}}</td>
+                  <td>{{c.updated | timeAgo}}</td>
+                  <td>{{c.status | humanize}}</td>
+                  <td>
+                    <div class="btn-group btn-group-sm pull-right">
+                      <a href="/api/clientRelationships/downloadInvoice/?contract={{c.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                      <button type="button" class="btn btn-default" ng-click="editQuote($index)">
+                      <i class="fa fa-pencil"></i>
+                    </button>
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        Change status <span class="caret"></span></button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="" ng-click="changeStatus('quoted', $index)">quoted</a></li>
+                        <li><a href="" ng-click="changeStatus('approved', $index)">approved</a></li>
+                        <li><a href="" ng-click="changeStatus('billed', $index)">billed</a></li>
+                        <li><a href="" ng-click="changeStatus('received', $index)">received</a></li>
+                      </ul>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
-            </table>
 
-          </div>
-          <div class="row">
+            </table>
+            <div class="text-center" ng-if="deal.contracts.length == 0" style="margin-top:50px;">
+              <span>No data!</span>
+            </div>
+          </  div>
+          <!-- <div class="row">
             <nav>
               <ul class="pager">
                 <li class="{{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
                 <li class="{{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
               </ul>
             </nav>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

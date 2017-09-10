@@ -1,6 +1,5 @@
 <div ng-controller="businessManagement.clientRelationships.opportunities.form">
 
-
   <div class="container-fluid">
     <div class="col-md-8 col-md-offset-2">
       <h3 ng-if="mode == 'edit'">Edit opportunity : <strong>{{deal.name}}</strong></h3>
@@ -59,17 +58,7 @@
                   </ul>
                 </div>
               </div>
-              <input type="search" name="searchBy" ng-model="dealEditor.value" id="searchBy" class="form-control" />
-              <div class="input-group-btn">
-                <div class="btn-group">
-                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                       <span data-bind="label" >{{dealEditor.relation | humanize}} {{dealEditor.relation!= null && dealEditor.relation!= '' ? '': 'Relation'}}</span> <span class="caret"></span>
-                   </button>
-                  <ul class="dropdown-menu" role="menu">
-                    <li ng-repeat="r in data.relationTypes" ng-click="setRelation(r)"><a href="">{{r | humanize}}</a></li>
-                  </ul>
-                </div>
-              </div>
+              <input type="search" ng-model="dealEditor.value" class="form-control" />
             </div>
           </div>
         </div>
