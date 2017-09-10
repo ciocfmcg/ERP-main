@@ -14,5 +14,5 @@ router.register(r'relationships' , RelationshipViewSet , base_name = 'relationsh
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    # url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
+    url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),
 ]
