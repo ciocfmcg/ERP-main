@@ -23,7 +23,7 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval)
   console.log("main loded");
   $scope.text = 'hey';
 
-  $scope.mainBannerImages = ['/static/images/banner-img2.jpg' ,'/static/images/ecommerce.wallpaper2.jpg' ,'/static/images/background2.jpg']
+  $scope.mainBannerImages = ['/static/images/banner-img2.jpg' ]
   $scope.bannerID = 0;
 
   $interval(function() {

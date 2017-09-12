@@ -55,13 +55,13 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.43.10', '192.168.2.86','192.168.1.9','yadav-sve14a37cgs', '192.168.0.103', '192.168.2.75', '192.168.0.105','10.0.1.108', 'localhost', '127.0.0.1','192.168.43.10', '192.168.1.4','192.168.1.8']
+ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1']
 
 
-LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
+LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
 
-LOGOUT_REDIRECT = 'ecommerce' # similarly the url to which the user will be directed one logged out
+LOGOUT_REDIRECT = 'index' # similarly the url to which the user will be directed one logged out
 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
@@ -193,23 +193,23 @@ AUTHENTICATION_BACKENDS = (
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'django',
-#         'USER': 'root',
-#         'PASSWORD': '123',
-#         'HOST': '10.146.31.175',   # Or an IP Address that your DB is hosted on
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    }
+}
 
 
 # AUTH_PROFILE_MODULE = 'HR.userProfile'
@@ -227,7 +227,7 @@ USE_L10N = True
 USE_TZ = True
 
 EMAIL_HOST = '127.0.0.1'
-EMAIL_HOST_SUFFIX = 'goryd.in'
+EMAIL_HOST_SUFFIX = 'cioc.co.in'
 
 EMAIL_HOST_USER = 'ciocpky@gmail.com'
 EMAIL_HOST_PASSWORD = 'pradeepyadav'

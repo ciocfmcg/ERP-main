@@ -260,7 +260,7 @@ def genInvoice(response , contract, request):
         # print i['totalTax']
         # print i['subtotal']
 
-        pDescSrc = '%s <br/> charged at the rate of <strong>%s INR / %s </strong> ' %(i['desc'], i['rate'], i['type'])
+        pDescSrc = i['desc']
 
         totalQuant += i['quantity']
         totalTax += i['totalTax']
