@@ -42,6 +42,9 @@ styleH = styles['Heading1']
 
 now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
 
+settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+
+
 class FullPageImage(Flowable):
     def __init__(self , img):
         Flowable.__init__(self)
@@ -176,16 +179,16 @@ class PageNumCanvas(canvas.Canvas):
         compNameStyle = styleN.clone('footerCompanyName')
         compNameStyle.textColor = colors.white;
 
-        p = Paragraph("<font size='13'>CIOC FMCG Pvt Ltd</font>" , compNameStyle)
+        p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
         p.wrapOn(self , 50*mm , 10*mm)
         p.drawOn(self , 85*mm  , 18*mm)
 
-        p1 = Paragraph("<font size='10'><strong>Registered Address : </strong>Dudhaila Gachhi, Sonpur, Saran, Bihar 841101</font>" , compNameStyle)
+        p1 = Paragraph(settingsFields.get(name = 'companyAddress').value , compNameStyle)
         p1.wrapOn(self , 150*mm , 10*mm)
         p1.drawOn(self , 55*mm  , 10*mm)
 
 
-        p2 = Paragraph("<font size='10'>http://cioc.co.in &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp info@cioc.co.in &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  +91-9702438730</font>" , compNameStyle)
+        p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)
         p2.wrapOn(self , 200*mm , 10*mm)
         p2.drawOn(self , 40*mm  , 4*mm)
 
@@ -230,7 +233,7 @@ def genInvoice(response , contract, request):
     pHeadProd = Paragraph('<strong>Product</strong>' , tableHeaderStyle)
     pHeadDetails = Paragraph('<strong>Details</strong>' , tableHeaderStyle)
     pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
-    pHeadPrice = Paragraph('<strong>Price</strong>' , tableHeaderStyle)
+    pHeadPrice = Paragraph('<strong>Rate</strong>' , tableHeaderStyle)
     pHeadTax = Paragraph('<strong>Tax</strong>' , tableHeaderStyle)
     pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
 
@@ -257,7 +260,7 @@ def genInvoice(response , contract, request):
         # print i['totalTax']
         # print i['subtotal']
 
-        pDescSrc = '%s <strong>(in %s units)</strong>' %(i['desc'], i['type'])
+        pDescSrc = '%s <br/> charged at the rate of <strong>%s INR / %s </strong> ' %(i['desc'], i['rate'], i['type'])
 
         totalQuant += i['quantity']
         totalTax += i['totalTax']
@@ -266,7 +269,7 @@ def genInvoice(response , contract, request):
         pBodyProd = Paragraph('Service' , styles['Normal'])
         pBodyTitle = Paragraph( pDescSrc , styles['Normal'])
         pBodyQty = Paragraph(str(i['quantity']) , styles['Normal'])
-        pBodyPrice = Paragraph(str(i['total']) , styles['Normal'])
+        pBodyPrice = Paragraph(str(i['rate']) , styles['Normal'])
         pBodyTax = Paragraph(str(i['totalTax']) , styles['Normal'])
         pBodyTotal = Paragraph(str(i['subtotal']) , styles['Normal'])
 
@@ -274,7 +277,7 @@ def genInvoice(response , contract, request):
 
 
     data += [['', '', '', '', str(totalTax) , str(grandTotal)],
-            ['', '', '',  Paragraph('Grand Total' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableHeaderStyle)]]
+            ['', '', '',  Paragraph('Grand Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableHeaderStyle)]]
     t=Table(data)
     ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
                 ('VALIGN',(0,1),(-1,-3),'TOP'),
@@ -328,38 +331,18 @@ def genInvoice(response , contract, request):
     story.append(Spacer(2.5,0.5*cm))
 
     if contract.status in ['billed' , 'approved' , 'recieved']:
-        summryParaSrc = """
-        <font size='9'><strong>REGULATORY DETAILS:</strong></font> <br/>
-        <font size='9'>
-        <strong>CIN :</strong> CIN 123<br/>
-        <strong>GSTIN :</strong> GST 123<br/>
-        <strong>PAN :</strong> PAN 123<br/>
-        </font>
-        """
+        summryParaSrc = settingsFields.get(name = 'regulatoryDetails').value
         story.append(Paragraph(summryParaSrc , styleN))
 
-        summryParaSrc = """
-        <font size='9'><strong>BANK DETAILS:</strong></font> <br/>
-        <font size='9'>
-        <strong>Name :</strong> CIOC FMCG Pvt Ltd<br/>
-        <strong>Bank :</strong> Indusind Bank<br/>
-        <strong>IFSC :</strong> INDS1234<br/>
-        <strong>Branch :</strong> HSR, Bangalore<br/>
-        <strong>Account :</strong> 9856985653235<br/>
-        </font>
-        """
+        summryParaSrc = settingsFields.get(name = 'bankDetails').value
         story.append(Paragraph(summryParaSrc , styleN))
 
-    summryParaSrc = """
-    <font size='9'><strong>Terms and Conditions:</strong></font> <br/><br/>
-    <font size='9'>
-    <strong>1.</strong> The customer will be presented the tax invoice after delivery of services mentioned above.<br/>
-    <strong>2.</strong> The grace period to make full payment will be 5 working days from the invoice date.<br/>
-    <strong>3.</strong> Please email to present your acceptance of this quotation.<br/>
+        tncPara = settingsFields.get(name = 'tncInvoice').value
 
-    </font>
-    """
-    story.append(Paragraph(summryParaSrc , styleN))
+    else:
+        tncPara = settingsFields.get(name = 'tncQuotation').value
+
+    story.append(Paragraph(tncPara , styleN))
 
     # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
     # for s in scans:
@@ -409,7 +392,7 @@ class DealLiteViewSet(viewsets.ModelViewSet):
         return Deal.objects.filter(active = True)
 
 class DealViewSet(viewsets.ModelViewSet):
-    permission_classes = (isOwner , )
+    permission_classes = (permissions.IsAuthenticated , )
     serializer_class = DealSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name', 'state', 'result', 'company']
@@ -451,7 +434,7 @@ class RelationshipViewSet(viewsets.ModelViewSet):
         return service.objects.filter(deals__in = Deal.objects.filter(active = True).filter(result='won')).distinct()
 
 class ContractViewSet(viewsets.ModelViewSet):
-    permission_classes = (isOwner , )
+    permission_classes = (permissions.IsAuthenticated  , )
     serializer_class = ContractSerializer
     def get_queryset(self):
         return Contract.objects.all()

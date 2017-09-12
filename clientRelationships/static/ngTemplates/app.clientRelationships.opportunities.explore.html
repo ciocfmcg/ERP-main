@@ -29,17 +29,20 @@
           <span ng-if="!local.minInfo" class="text-muted" style="font-size:15px;">CLOSING DATE <br></span>
           <span style="font-size:17px;"> <i ng-if="local.minInfo" class="fa fa-calendar fa-lg text-muted" style="margin-right:20px;"></i> {{deal.closeDate | date:'dd-MMM-yyyy'}}</span>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <span ng-if="!local.minInfo" class="text-muted" style="font-size:15px;">OWNER <br></span>
           <img ng-src="{{deal.user | getDP}}" class="img img-rounded" style="{{ !local.minInfo? 'height:40px;width:40px':'height:30px;width:30px'}};"> <span style="font-size:17px;">{{deal.user | getName}}</span>
         </div>
-        <div class="col-md-3">
-          <div class="btn-group pull-right">
+        <div class="col-md-4">
+          <div class="btn-group btn-group-sm pull-right">
             <button type="button" class="btn btn-default" ng-click="editDeal()">
               <i class="fa fa-pencil"></i> Edit
             </button>
             <button type="button" class="btn btn-default" ng-click="cloneDeal()">
               <i class="fa fa-copy"></i> Clone
+            </button>
+            <button type="button" class="btn btn-default" ng-click="quote()">
+              <i class="fa fa-money"></i> Quote
             </button>
           </div>
         </div>

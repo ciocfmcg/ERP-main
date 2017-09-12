@@ -1,7 +1,7 @@
 app.controller("businessManagement.clientRelationships.relationships.quote", function($scope, $state, $users, $stateParams, $http, Flash,  $uibModalInstance , quoteData, currency) {
 
   $scope.quote = quoteData;
-
+  $scope.firstQuote = false;
   $scope.types  = crmRelationTypes;
   $scope.currency = ['inr' , 'usd']
 
@@ -22,6 +22,10 @@ app.controller("businessManagement.clientRelationships.relationships.quote", fun
   $scope.cancel = function(e) {
     $uibModalInstance.dismiss();
   };
+
+  $scope.remove = function(idx) {
+    $scope.data.splice(idx , 1);
+  }
 
   $scope.edit = function(idx) {
     var d = $scope.data[idx];

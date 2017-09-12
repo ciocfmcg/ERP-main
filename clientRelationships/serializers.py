@@ -56,7 +56,7 @@ class DealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Deal
         fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'contracts')
-        read_only_fields = ('user', )
+        read_only_fields = ('user','contracts', 'internalUsers',)
     def create(self , validated_data):
         d = Deal(**validated_data)
         d.user = self.context['request'].user

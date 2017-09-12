@@ -34,6 +34,9 @@ class Document(models.Model):
     issuedTo = models.CharField(max_length=400, blank=False)
     passKey = models.CharField(max_length = 4, blank = False)
     email = models.CharField(max_length = 35, blank = False)
+    docID = models.CharField(max_length = 10 , blank = True)
+    app = models.CharField(max_length = 20 , blank = True)
+    
     def __str__(self):
         return "%s : %s" %(self.issuedTo , self.description)
 

@@ -127,13 +127,12 @@ class addressViewSet(viewsets.ModelViewSet):
         return address.objects.all()
 
 class serviceViewSet(viewsets.ModelViewSet):
-    permission_classes = (isAdmin , )
+    permission_classes = (permissions.IsAuthenticated , )
     serializer_class = serviceSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
     def get_queryset(self):
         u = self.request.user
-        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.partners'])
         return service.objects.all()
 
 class registerDeviceApi(APIView):

@@ -1,6 +1,12 @@
 <div class="modal-header bg-blue">
   <div class="container-fluid">
-    <h4><span class="pull-right"><i class="fa fa-money"></i> {{ quote.pk == null ? 'Create': 'Edit'}} quote</span> <i class="fa fa-arrow-circle-o-left pull-left fa-lg" ng-click="cancel()" style="cursor:pointer;"></i></h4>
+    <h4>
+      <span class="pull-right">
+        <span ng-if="firstQuote" style="margin-right:30px;"><a href="/api/clientRelationships/downloadInvoice/?contract={{deal.contracts[0]}}" target="_blank" class="btn btn-primary"><i class="fa fa-download fa-2x"></i></a></span>
+        <i class="fa fa-money"></i> {{ quote.pk == null ? 'Create': 'Edit'}} quote
+      </span>
+      <i class="fa fa-arrow-circle-o-left pull-left fa-lg" ng-click="cancel()" style="cursor:pointer;"></i>
+    </h4>
   </div>
 </div>
 <div class="row" style="padding:10px;display:block;box-sizing:border-box;">
@@ -46,9 +52,16 @@
           <td style="width:8.33%">{{d.quantity}}</td>
           <td style="width:16.66%">{{d.totalTax}}</td>
           <td style="width:8.33%">{{d.subtotal}}</td>
-          <td><button type="button" ng-click="edit($index)" class="btn btn-default">
-            <i class="fa fa-pencil"></i> Edit
-          </button></td>
+          <td>
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-danger" ng-click="remove($index)">
+                Delete <i class="fa fa-trash-o"></i>
+              </button>
+              <button type="button" ng-click="edit($index)" class="btn btn-default">
+                <i class="fa fa-pencil"></i> Edit
+              </button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -56,13 +69,10 @@
   <div class="container-fluid" style="padding:40px;">
     <div class="row">
       <div class="container-fluid">
-        Total : {{total}} <br>
-        tax : {{totalTax}} <br>
-        Grand total : {{grandTotal}} <br>
+        Total : {{total}} <br> tax : {{totalTax}} <br> Grand total : {{grandTotal}} <br>
       </div>
     </div>
     <hr>
-
     <div class="col-md-6 col-md-offset-3">
       <div class="row">
         <div class="col-md-6">
@@ -78,7 +88,6 @@
           </div>
         </div>
       </div>
-
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
@@ -109,17 +118,13 @@
           </div>
         </div>
       </div>
-
       <div class="form-group">
         <label>Description</label>
         <textarea rows="4" cols="80" class="form-control" ng-model="form.desc"></textarea>
       </div>
-
       <button type="button" ng-click="add()" class="btn btn-default">
         Add <i class="fa fa-plus"></i>
       </button>
     </div>
-
   </div>
-
 </div>

@@ -7,6 +7,7 @@
 
 {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
 {% endblock %}
 {% block header %}
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -53,381 +54,385 @@
 {% endblock %}
 <!-- Header -->
 {% block content %}
-<header  style="background-image: url({% static 'images/banner-img2.jpg' %});height:100vh;">
-    <div class="container">
-        <div class="intro-text" style="text-align:right;">
-            <div class="intro-lead-in" >We are your technology partner</div>
-            <!-- <div class="intro-heading" >Think Free</div> -->
-            <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
-        </div>
-    </div>
-</header>
+<div ng-app="app" ng-controller="main">
+  {% verbatim %}
+  <header  style="background-image: url({{mainBannerImages[bannerID]}});height:100vh;">
+      <div class="container">
+          <div class="intro-text" style="text-align:right;">
+              <div class="intro-lead-in" >We are your technology partner</div>
+              <!-- <div class="intro-heading" >Think Free</div> -->
+              <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
+          </div>
+      </div>
+  </header>
+  {% endverbatim %}
+  <!-- Services Section -->
+  <section id="services">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12 text-center">
+                  <h2 class="section-heading">Services</h2>
+                  <h3 class="section-subheading text-muted">As your technology partner we can help you more then you can imagine.</h3>
+              </div>
+          </div>
+          <div class="row text-center">
+              <div class="col-md-4">
+                  <span class="fa-stack fa-4x">
+                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                      <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
+                  </span>
+                  <h4 class="service-heading">IOT</h4>
+                  <p class="text-muted">How about we take your data and services to all the devices you possibly think of be it for smart home to smart factory.</p>
+              </div>
+              <div class="col-md-4">
+                  <span class="fa-stack fa-4x">
+                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                      <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                  </span>
+                  <h4 class="service-heading">Web</h4>
+                  <p class="text-muted">As the starting point for each business we take care of brining your business online. Got a food delivery or other ecommerce business idea ? we are here to help.</p>
+              </div>
+              <div class="col-md-4">
+                  <span class="fa-stack fa-4x">
+                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                      <i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
+                  </span>
+                  <h4 class="service-heading">Desktop/Mobile</h4>
+                  <p class="text-muted">When we say mobility we mean serious productivity on the go. Dont let your employee stick to the web or a desktop machine to get the job done. Given them ability to work on the fly.</p>
+              </div>
+          </div>
+      </div>
+  </section>
 
-<!-- Services Section -->
-<section id="services">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">Services</h2>
-                <h3 class="section-subheading text-muted">As your technology partner we can help you more then you can imagine.</h3>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-md-4">
-                <span class="fa-stack fa-4x">
-                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
-                </span>
-                <h4 class="service-heading">IOT</h4>
-                <p class="text-muted">How about we take your data and services to all the devices you possibly think of be it for smart home to smart factory.</p>
-            </div>
-            <div class="col-md-4">
-                <span class="fa-stack fa-4x">
-                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
-                </span>
-                <h4 class="service-heading">Web</h4>
-                <p class="text-muted">As the starting point for each business we take care of brining your business online. Got a food delivery or other ecommerce business idea ? we are here to help.</p>
-            </div>
-            <div class="col-md-4">
-                <span class="fa-stack fa-4x">
-                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
-                </span>
-                <h4 class="service-heading">Desktop/Mobile</h4>
-                <p class="text-muted">When we say mobility we mean serious productivity on the go. Dont let your employee stick to the web or a desktop machine to get the job done. Given them ability to work on the fly.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Portfolio Grid Section -->
-<section id="portfolio" class="bg-light-gray">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">Portfolio/Products</h2>
-                <h3 class="section-subheading text-muted">We already have a lot you can use right away.</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
-                    <div class="portfolio-hover">
-                        <div class="portfolio-hover-content">
-                            <i class="fa fa-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img src="{% static 'images/portfolio/erp.png' %}" class="img-responsive" alt="">
-                </a>
-                <div class="portfolio-caption">
-                    <h4>LibreERP</h4>
-                    <p class="text-muted">Free and Open source ERP Platform</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
-                    <div class="portfolio-hover">
-                        <div class="portfolio-hover-content">
-                            <i class="fa fa-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img src="{% static 'images/portfolio/rpa.jpg' %}" class="img-responsive" alt="">
-                </a>
-                <div class="portfolio-caption">
-                    <h4>LibreRPA</h4>
-                    <p class="text-muted">A platform for business process automation</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
-                    <div class="portfolio-hover">
-                        <div class="portfolio-hover-content">
-                            <i class="fa fa-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img src="{% static 'images/portfolio/assist.jpg' %}" class="img-responsive" alt="">
-                </a>
-                <div class="portfolio-caption">
-                    <h4>LibreAssist</h4>
-                    <p class="text-muted">A chat bot like Siri</p>
-                </div>
-            </div>
-            <!-- <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
-                    <div class="portfolio-hover">
-                        <div class="portfolio-hover-content">
-                            <i class="fa fa-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img src="{% static 'images/portfolio/golden.png' %}" class="img-responsive" alt="">
-                </a>
-                <div class="portfolio-caption">
-                    <h4>LibreDOC</h4>
-                    <p class="text-muted">Getting scanned invoices? use this to automatically process it</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
-                    <div class="portfolio-hover">
-                        <div class="portfolio-hover-content">
-                            <i class="fa fa-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img src="{% static 'images/portfolio/escape.png' %}" class="img-responsive" alt="">
-                </a>
-                <div class="portfolio-caption">
-                    <h4>Escape</h4>
-                    <p class="text-muted">Website Design</p>
-                </div>
-            </div> -->
-            <!-- <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
-                    <div class="portfolio-hover">
-                        <div class="portfolio-hover-content">
-                            <i class="fa fa-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img src="{% static 'images/portfolio/dreams.png' %}" class="img-responsive" alt="">
-                </a>
-                <div class="portfolio-caption">
-                    <h4>Dreams</h4>
-                    <p class="text-muted">Website Design</p>
-                </div>
-            </div> -->
-        </div>
-    </div>
-</section>
-
-<!-- About Section -->
-<!-- <section id="about">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">About</h2>
-                <h3 class="section-subheading text-muted">Here is our story.</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <ul class="timeline">
-                    <li>
-                        <div class="timeline-image">
-                            <img class="img-circle img-responsive" src="{% static 'images/about/1.jpg' %}" alt="">
-                        </div>
-                        <div class="timeline-panel">
-                            <div class="timeline-heading">
-                                <h4>2009-2011</h4>
-                                <h4 class="subheading">Our Humble Beginnings</h4>
-                            </div>
-                            <div class="timeline-body">
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="timeline-inverted">
-                        <div class="timeline-image">
-                            <img class="img-circle img-responsive" src="{% static 'images/about/2.jpg' %}" alt="">
-                        </div>
-                        <div class="timeline-panel">
-                            <div class="timeline-heading">
-                                <h4>March 2011</h4>
-                                <h4 class="subheading">An Agency is Born</h4>
-                            </div>
-                            <div class="timeline-body">
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="timeline-image">
-                            <img class="img-circle img-responsive" src="{% static 'images/about/3.jpg' %}" alt="">
-                        </div>
-                        <div class="timeline-panel">
-                            <div class="timeline-heading">
-                                <h4>December 2012</h4>
-                                <h4 class="subheading">Transition to Full Service</h4>
-                            </div>
-                            <div class="timeline-body">
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="timeline-inverted">
-                        <div class="timeline-image">
-                            <img class="img-circle img-responsive" src="{% static 'images/about/4.jpg' %}" alt="">
-                        </div>
-                        <div class="timeline-panel">
-                            <div class="timeline-heading">
-                                <h4>July 2014</h4>
-                                <h4 class="subheading">Phase Two Expansion</h4>
-                            </div>
-                            <div class="timeline-body">
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="timeline-inverted">
-                        <div class="timeline-image">
-                            <h4>Be Part
-                                <br>Of Our
-                                <br>Story!</h4>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section> -->
-
-<!-- Team Section -->
-<section id="team" class="bg-light-gray">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">Our Amazing Team</h2>
-                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="team-member">
-                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                    <h4>Pradeep</h4>
-                    <p class="text-muted">Technology</p>
-                    <ul class="list-inline social-buttons">
-                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-                        </li>
-                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-                        </li>
-                        <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="team-member">
-                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                    <h4>Raj</h4>
-                    <p class="text-muted">Technology</p>
-                    <ul class="list-inline social-buttons">
-                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-                        </li>
-                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-                        </li>
-                        <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="team-member">
-                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                    <h4>Sowmya</h4>
-                    <p class="text-muted">Sales</p>
-                    <ul class="list-inline social-buttons">
-                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-                        </li>
-                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-                        </li>
-                        <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm-4 col-sm-offset-4">
-                <div class="team-member">
-                    <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                    <h4>Deepika</h4>
-                    <p class="text-muted">Finance</p>
-                    <ul class="list-inline social-buttons">
-                        <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-                        </li>
-                        <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-                        </li>
-                        <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
-                <p class="large text-muted">We started turning our own ideas into reality of free and open source business platform in the form of LibreERP and LibreRPA then we thought why not help others too in their entrepreneurial journey</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Clients Aside -->
-<!-- <aside class="clients">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 col-sm-6">
-                <a href="#">
-                    <img src="{% static 'images/logos/envato.jpg' %}" class="img-responsive img-centered" alt="">
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <a href="#">
-                    <img src="{% static 'images/logos/designmodo.jpg' %}" class="img-responsive img-centered" alt="">
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <a href="#">
-                    <img src="{% static 'images/logos/themeforest.jpg' %}" class="img-responsive img-centered" alt="">
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <a href="#">
-                    <img src="{% static 'images/logos/creative-market.jpg' %}" class="img-responsive img-centered" alt="">
-                </a>
-            </div>
-        </div>
-    </div>
-</aside> -->
-
-<!-- Contact Section -->
-
-<section id="contact" style="background-image: url({% static 'images/map-image.png' %});">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">Contact Us</h2>
-                <h3 class="section-subheading text-muted">Get in touch to know how we can colaborate together.</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post">
-                  {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                              <input type="text" class="form-control" placeholder="Your Name *" name="name" required >
+  <!-- Portfolio Grid Section -->
+  <section id="portfolio" class="bg-light-gray">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12 text-center">
+                  <h2 class="section-heading">Portfolio/Products</h2>
+                  <h3 class="section-subheading text-muted">We already have a lot you can use right away.</h3>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-4 col-sm-6 portfolio-item">
+                  <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                      <div class="portfolio-hover">
+                          <div class="portfolio-hover-content">
+                              <i class="fa fa-plus fa-3x"></i>
                           </div>
-                          <div class="form-group">
-                              <input type="email" class="form-control" placeholder="Your Email *" name="email" required >
+                      </div>
+                      <img src="{% static 'images/portfolio/erp.png' %}" class="img-responsive" alt="">
+                  </a>
+                  <div class="portfolio-caption">
+                      <h4>LibreERP</h4>
+                      <p class="text-muted">Free and Open source ERP Platform</p>
+                  </div>
+              </div>
+              <div class="col-md-4 col-sm-6 portfolio-item">
+                  <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
+                      <div class="portfolio-hover">
+                          <div class="portfolio-hover-content">
+                              <i class="fa fa-plus fa-3x"></i>
                           </div>
-                          <div class="form-group">
-                              <input type="tel" class="form-control" placeholder="Your Phone *" name="phone" required >
+                      </div>
+                      <img src="{% static 'images/portfolio/rpa.jpg' %}" class="img-responsive" alt="">
+                  </a>
+                  <div class="portfolio-caption">
+                      <h4>LibreRPA</h4>
+                      <p class="text-muted">A platform for business process automation</p>
+                  </div>
+              </div>
+              <div class="col-md-4 col-sm-6 portfolio-item">
+                  <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
+                      <div class="portfolio-hover">
+                          <div class="portfolio-hover-content">
+                              <i class="fa fa-plus fa-3x"></i>
                           </div>
-                        </div>
-                        <div class="col-md-6">
+                      </div>
+                      <img src="{% static 'images/portfolio/assist.jpg' %}" class="img-responsive" alt="">
+                  </a>
+                  <div class="portfolio-caption">
+                      <h4>LibreAssist</h4>
+                      <p class="text-muted">A chat bot like Siri</p>
+                  </div>
+              </div>
+              <!-- <div class="col-md-4 col-sm-6 portfolio-item">
+                  <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
+                      <div class="portfolio-hover">
+                          <div class="portfolio-hover-content">
+                              <i class="fa fa-plus fa-3x"></i>
+                          </div>
+                      </div>
+                      <img src="{% static 'images/portfolio/golden.png' %}" class="img-responsive" alt="">
+                  </a>
+                  <div class="portfolio-caption">
+                      <h4>LibreDOC</h4>
+                      <p class="text-muted">Getting scanned invoices? use this to automatically process it</p>
+                  </div>
+              </div>
+              <div class="col-md-4 col-sm-6 portfolio-item">
+                  <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
+                      <div class="portfolio-hover">
+                          <div class="portfolio-hover-content">
+                              <i class="fa fa-plus fa-3x"></i>
+                          </div>
+                      </div>
+                      <img src="{% static 'images/portfolio/escape.png' %}" class="img-responsive" alt="">
+                  </a>
+                  <div class="portfolio-caption">
+                      <h4>Escape</h4>
+                      <p class="text-muted">Website Design</p>
+                  </div>
+              </div> -->
+              <!-- <div class="col-md-4 col-sm-6 portfolio-item">
+                  <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
+                      <div class="portfolio-hover">
+                          <div class="portfolio-hover-content">
+                              <i class="fa fa-plus fa-3x"></i>
+                          </div>
+                      </div>
+                      <img src="{% static 'images/portfolio/dreams.png' %}" class="img-responsive" alt="">
+                  </a>
+                  <div class="portfolio-caption">
+                      <h4>Dreams</h4>
+                      <p class="text-muted">Website Design</p>
+                  </div>
+              </div> -->
+          </div>
+      </div>
+  </section>
+
+  <!-- About Section -->
+  <!-- <section id="about">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12 text-center">
+                  <h2 class="section-heading">About</h2>
+                  <h3 class="section-subheading text-muted">Here is our story.</h3>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-12">
+                  <ul class="timeline">
+                      <li>
+                          <div class="timeline-image">
+                              <img class="img-circle img-responsive" src="{% static 'images/about/1.jpg' %}" alt="">
+                          </div>
+                          <div class="timeline-panel">
+                              <div class="timeline-heading">
+                                  <h4>2009-2011</h4>
+                                  <h4 class="subheading">Our Humble Beginnings</h4>
+                              </div>
+                              <div class="timeline-body">
+                                  <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
+                              </div>
+                          </div>
+                      </li>
+                      <li class="timeline-inverted">
+                          <div class="timeline-image">
+                              <img class="img-circle img-responsive" src="{% static 'images/about/2.jpg' %}" alt="">
+                          </div>
+                          <div class="timeline-panel">
+                              <div class="timeline-heading">
+                                  <h4>March 2011</h4>
+                                  <h4 class="subheading">An Agency is Born</h4>
+                              </div>
+                              <div class="timeline-body">
+                                  <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
+                              </div>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="timeline-image">
+                              <img class="img-circle img-responsive" src="{% static 'images/about/3.jpg' %}" alt="">
+                          </div>
+                          <div class="timeline-panel">
+                              <div class="timeline-heading">
+                                  <h4>December 2012</h4>
+                                  <h4 class="subheading">Transition to Full Service</h4>
+                              </div>
+                              <div class="timeline-body">
+                                  <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
+                              </div>
+                          </div>
+                      </li>
+                      <li class="timeline-inverted">
+                          <div class="timeline-image">
+                              <img class="img-circle img-responsive" src="{% static 'images/about/4.jpg' %}" alt="">
+                          </div>
+                          <div class="timeline-panel">
+                              <div class="timeline-heading">
+                                  <h4>July 2014</h4>
+                                  <h4 class="subheading">Phase Two Expansion</h4>
+                              </div>
+                              <div class="timeline-body">
+                                  <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p>
+                              </div>
+                          </div>
+                      </li>
+                      <li class="timeline-inverted">
+                          <div class="timeline-image">
+                              <h4>Be Part
+                                  <br>Of Our
+                                  <br>Story!</h4>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </section> -->
+
+  <!-- Team Section -->
+  <section id="team" class="bg-light-gray">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12 text-center">
+                  <h2 class="section-heading">Our Amazing Team</h2>
+                  <!-- <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3> -->
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-sm-4">
+                  <div class="team-member">
+                      <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                      <h4>Pradeep</h4>
+                      <p class="text-muted">Technology</p>
+                      <ul class="list-inline social-buttons">
+                          <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                          </li>
+                          <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                          </li>
+                          <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="team-member">
+                      <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                      <h4>Raj</h4>
+                      <p class="text-muted">Technology</p>
+                      <ul class="list-inline social-buttons">
+                          <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                          </li>
+                          <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                          </li>
+                          <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="team-member">
+                      <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                      <h4>Sowmya</h4>
+                      <p class="text-muted">Sales</p>
+                      <ul class="list-inline social-buttons">
+                          <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                          </li>
+                          <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                          </li>
+                          <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="col-sm-4 col-sm-offset-4">
+                  <div class="team-member">
+                      <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                      <h4>Deepika</h4>
+                      <p class="text-muted">Finance</p>
+                      <ul class="list-inline social-buttons">
+                          <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                          </li>
+                          <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                          </li>
+                          <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-8 col-lg-offset-2 text-center">
+                  <p class="large text-muted">We started turning our own ideas into reality of free and open source business platform in the form of LibreERP and LibreRPA then we thought why not help others too in their entrepreneurial journey</p>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <!-- Clients Aside -->
+  <!-- <aside class="clients">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-3 col-sm-6">
+                  <a href="#">
+                      <img src="{% static 'images/logos/envato.jpg' %}" class="img-responsive img-centered" alt="">
+                  </a>
+              </div>
+              <div class="col-md-3 col-sm-6">
+                  <a href="#">
+                      <img src="{% static 'images/logos/designmodo.jpg' %}" class="img-responsive img-centered" alt="">
+                  </a>
+              </div>
+              <div class="col-md-3 col-sm-6">
+                  <a href="#">
+                      <img src="{% static 'images/logos/themeforest.jpg' %}" class="img-responsive img-centered" alt="">
+                  </a>
+              </div>
+              <div class="col-md-3 col-sm-6">
+                  <a href="#">
+                      <img src="{% static 'images/logos/creative-market.jpg' %}" class="img-responsive img-centered" alt="">
+                  </a>
+              </div>
+          </div>
+      </div>
+  </aside> -->
+
+  <!-- Contact Section -->
+
+  <section id="contact" style="background-image: url({% static 'images/map-image.png' %});">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12 text-center">
+                  <h2 class="section-heading">Contact Us</h2>
+                  <h3 class="section-subheading text-muted">Get in touch to know how we can colaborate together.</h3>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-12">
+                  <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post">
+                    {% csrf_token %}
+                      <div class="row">
+                          <div class="col-md-6">
                             <div class="form-group">
-                                <textarea class="form-control" placeholder="Your Message *" id="message" name="comments" ></textarea>
+                                <input type="text" class="form-control" placeholder="Your Name *" name="name" required >
                             </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div class="col-lg-12 text-center">
-                            <button type="submit" class="btn btn-xl">Send Message</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Your Email *" name="email" required >
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" class="form-control" placeholder="Your Phone *" name="phone" required >
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <textarea class="form-control" placeholder="Your Message *" id="message" name="comments" ></textarea>
+                              </div>
+                          </div>
+                          <div class="clearfix"></div>
+                          <div class="col-lg-12 text-center">
+                              <button type="submit" class="btn btn-xl">Send Message</button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </section>
+
+</div>
 {% endblock %}
 {% block footer %}
 <footer>
@@ -631,4 +636,9 @@
 <script src="{% static 'js/classie.js' %}"></script>
 <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
 <script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+
 {% endblock %}

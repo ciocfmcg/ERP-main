@@ -50,7 +50,7 @@ class appSettingsField(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     name = models.CharField(max_length = 50 , null = False )
     flag = models.BooleanField(default = False)
-    value = models.CharField(max_length = 200 , null = True)
+    value = models.CharField(max_length = 5000 , null = True)
     description = models.CharField(max_length = 500 , null = False)
     app = models.ForeignKey(application , related_name='settings' , null = True)
     fieldType = models.CharField(choices = FIELD_TYPE_CHOICES , default = 'flag' , null = False , max_length = 5)

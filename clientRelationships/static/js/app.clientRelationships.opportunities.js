@@ -9,6 +9,108 @@ var crmSteps = [
 
 var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'yearly', 'user']
 
+app.controller("businessManagement.clientRelationships.opportunities.quote", function($scope, $state, $users, $stateParams, $http, Flash,  $uibModalInstance , deal) {
+
+  $scope.firstQuote = true;
+
+  $scope.deal = deal;
+  $scope.data = [];
+
+  console.log($scope.deal);
+
+  if ($scope.deal.contracts.length >0) {
+    $http({method : 'GET' , url : '/api/clientRelationships/contract/' + $scope.deal.contracts[0] +'/'}).
+    then(function(response) {
+      $scope.data = JSON.parse(response.data.data);
+    });
+  }
+
+  $scope.types  = crmRelationTypes;
+  $scope.currency = ['inr' , 'usd']
+
+  $scope.resetForm = function() {
+    $scope.form = { currency : $scope.deal.currency , type : 'onetime' , quantity : 0 , tax : 0 , rate : 0 , desc : ''};
+  }
+
+  $scope.setCurrency = function(cur) {
+    $scope.form.currency = cur;
+  }
+
+  $scope.setType = function(typ) {
+    $scope.form.type = typ;
+  }
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+
+  $scope.remove = function(idx) {
+    $scope.data.splice(idx , 1);
+  }
+
+  $scope.edit = function(idx) {
+    var d = $scope.data[idx];
+    $scope.form = { currency : d.currency , type : d.type , quantity : d.quantity , tax : d.tax , rate : d.rate , desc : d.desc};
+    $scope.data.splice(idx , 1);
+  }
+
+  $scope.calculateTotal = function() {
+    var total = 0;
+    var totalTax = 0;
+    var grandTotal = 0;
+    for (var i = 0; i < $scope.data.length; i++) {
+      $scope.data[i].total = parseInt($scope.data[i].quantity) * parseInt($scope.data[i].rate);
+      $scope.data[i].totalTax = $scope.data[i].total * parseInt($scope.data[i].tax)/100;
+      $scope.data[i].subtotal = $scope.data[i].totalTax + $scope.data[i].total;
+      total += $scope.data[i].total;
+      totalTax += $scope.data[i].totalTax;
+      grandTotal += $scope.data[i].subtotal;
+    }
+
+    $scope.totalTax = totalTax;
+    $scope.total = total;
+    $scope.grandTotal = grandTotal;
+
+    $scope.deal.calculated = {value : total , tax : totalTax , grand : grandTotal}
+
+  }
+
+  $scope.add = function() {
+    if ($scope.form.tax>70) {
+      Flash.create('warning' , 'The tax rate is unrealistic');
+      return;
+    }
+    $scope.data.push({currency : $scope.form.currency , type : $scope.form.type , tax: $scope.form.tax , desc : $scope.form.desc , rate : $scope.form.rate , quantity : $scope.form.quantity})
+    $scope.resetForm();
+  }
+
+  $scope.resetForm();
+
+  $scope.$watch('data' , function(newValue , oldValue) {
+    $scope.calculateTotal();
+
+    var url = '/api/clientRelationships/contract/'
+    var method = 'POST';
+    if ($scope.deal.contracts.length >0) {
+      method = 'PATCH';
+      url += $scope.deal.contracts[0] +'/'
+    }
+
+    var dataToSend = {data : JSON.stringify($scope.data) , value : parseInt($scope.grandTotal) };
+    if (method == 'POST') {
+      dataToSend.deal = $scope.deal.pk;
+    }
+
+    $http({method : method , url : url , data : dataToSend }).
+    then(function(response) {
+      if ($scope.deal.contracts.length >0) {
+        $scope.deal.contracts.push(response.data.pk);
+      }
+      // $scope.deal.contracts[0].data =   JSON.parse($scope.deal.contracts[0].data);
+    })
+
+  }, true)
+
+});
 
 app.controller("businessManagement.clientRelationships.opportunities.created", function($scope, $state, $users, $stateParams, $http, Flash) {
 
@@ -58,7 +160,7 @@ app.controller("businessManagement.clientRelationships.opportunities.created", f
 });
 
 
-app.controller("businessManagement.clientRelationships.opportunities.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $timeout, $rootScope) {
+app.controller("businessManagement.clientRelationships.opportunities.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $timeout, $rootScope, $aside) {
 
   $scope.disableNext = false;
   $scope.pageNo = 0;
@@ -67,6 +169,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.clientRelationships.editDeal.form.html',
       size: 'lg',
+      backdrop : false,
       resolve : {
         deal : function() {
           return $scope.deal;
@@ -235,6 +338,21 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
       // editor.addButton();
     },
   };
+
+  $scope.quote = function() {
+    console.log("will create a quote");
+    $aside.open({
+      templateUrl : '/static/ngTemplates/app.clientRelationships.quote.form.html',
+      placement: 'right',
+      size: 'xl',
+      resolve: {
+        deal : function() {
+          return $scope.deal;
+        },
+      },
+      controller : 'businessManagement.clientRelationships.opportunities.quote'
+    })
+  }
 
   $scope.tabs = [{
       name: 'Timeline',
