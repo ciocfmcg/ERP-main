@@ -21,7 +21,7 @@ app.run([ '$rootScope', '$state', '$stateParams', function ($rootScope,   $state
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('main' , function($scope , $state , $http , $timeout , $interval){
   console.log("main loded");
-  $scope.text = 'hey';
+  $scope.crmBannerID = 1;
 
   $scope.mainBannerImages = ['/static/images/banner-img2.jpg' ]
   $scope.bannerID = 0;
@@ -32,6 +32,13 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval)
       $scope.bannerID = 0;
     }
   } , 2000)
+
+  $interval(function() {
+    $scope.crmBannerID += 1;
+    if ($scope.crmBannerID==12) {
+      $scope.crmBannerID = 1;
+    }
+  } , 1000)
 
 
 });

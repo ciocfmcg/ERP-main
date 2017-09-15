@@ -1,59 +1,100 @@
 // you need to first configure the states for this app
 
-app.config(function($stateProvider){
+app.config(function($stateProvider) {
 
   $stateProvider
-  .state('businessManagement.clientRelationships', {
-    url: "/clientRelationships",
-    views: {
-       "": {
+    .state('businessManagement.clientRelationships', {
+      url: "/clientRelationships",
+      views: {
+        "": {
           templateUrl: '/static/ngTemplates/genericAppBase.html',
-       },
-       "menu@businessManagement.clientRelationships": {
+        },
+        "menu@businessManagement.clientRelationships": {
           templateUrl: '/static/ngTemplates/genericMenu.html',
-          controller : 'controller.generic.menu',
+          controller: 'controller.generic.menu',
         },
         "@businessManagement.clientRelationships": {
           templateUrl: '/static/ngTemplates/app.clientRelationships.default.html',
-          controller : 'businessManagement.clientRelationships.default',
+          controller: 'businessManagement.clientRelationships.default',
         }
-    }
-  })
-  .state('businessManagement.clientRelationships.contacts', {
-    url: "/contacts",
-    templateUrl: '/static/ngTemplates/app.clientRelationships.contacts.html',
-    controller: 'businessManagement.clientRelationships.contacts'
-  })
-  .state('businessManagement.clientRelationships.opportunities', {
-    url: "/opportunities",
-    templateUrl: '/static/ngTemplates/app.clientRelationships.opportunities.html',
-    controller: 'businessManagement.clientRelationships.opportunities'
-  })
-  .state('businessManagement.clientRelationships.relationships', {
-    url: "/relationships",
-    templateUrl: '/static/ngTemplates/app.clientRelationships.relationships.html',
-    controller: 'businessManagement.clientRelationships.relationships'
-  })
+      }
+    })
+    .state('businessManagement.clientRelationships.contacts', {
+      url: "/contacts",
+      templateUrl: '/static/ngTemplates/app.clientRelationships.contacts.html',
+      controller: 'businessManagement.clientRelationships.contacts'
+    })
+    .state('businessManagement.clientRelationships.opportunities', {
+      url: "/opportunities",
+      templateUrl: '/static/ngTemplates/app.clientRelationships.opportunities.html',
+      controller: 'businessManagement.clientRelationships.opportunities'
+    })
+    .state('businessManagement.clientRelationships.relationships', {
+      url: "/relationships",
+      templateUrl: '/static/ngTemplates/app.clientRelationships.relationships.html',
+      controller: 'businessManagement.clientRelationships.relationships'
+    })
 
 });
 
 
 
 
-app.controller("businessManagement.clientRelationships.default", function($scope , $state , $users ,  $stateParams , $http , Flash) {
+app.controller("businessManagement.clientRelationships.default", function($scope, $state, $users, $stateParams, $http, Flash) {
 
+  //   category
+  // employment
+  // purpose
+  // location
+  // income
+  // int_rate
+  // tenure
+  // monthly_income
+  // funded
+  // credit_score
+  // days_left
+  // page	2
+  // item	1
+
+
+  var fd = new FormData();
+  fd.append('item', 1)
+  fd.append('page', 2)
+  fd.append('category', '')
+  fd.append('employment', '')
+  fd.append('purpose', '')
+  fd.append('income', '')
+  fd.append('int_rate', '')
+  fd.append('tenure', '')
+  fd.append('monthly_income', '')
+  fd.append('funded', '')
+  fd.append('credit_score', '')
+  fd.append('days_left', '')
+
+  $http({
+    method: 'POST',
+    url: 'https://www.i2ifunding.com/borrower/listing/act/filter/',
+    // data: fd,
+    // transformRequest: angular.identity,
+    // headers: {
+    //   'Content-Type': undefined
+    // }
+  }).
+  then(function(response) {
+    console.log(response);
+  })
 
 })
 
-app.directive('companyField', function () {
+app.directive('companyField', function() {
   return {
     templateUrl: '/static/ngTemplates/companyInputField.html',
     restrict: 'E',
     replace: true,
     scope: {
-      data :'=',
+      data: '=',
     },
-    controller : function($scope , $state , $http , Flash){
+    controller: function($scope, $state, $http, Flash) {
       $scope.companySearch = function(query) {
         return $http.get('/api/ERP/service/?name__contains=' + query).
         then(function(response) {
@@ -65,55 +106,57 @@ app.directive('companyField', function () {
 });
 
 
-app.directive('clientsField', function () {
+app.directive('clientsField', function() {
   return {
     templateUrl: '/static/ngTemplates/clientsInputField.html',
     restrict: 'E',
     replace: true,
     scope: {
-      data :'=',
-      url : '@',
-      col : '@',
-      label : '@',
-      company : '='
+      data: '=',
+      url: '@',
+      col: '@',
+      label: '@',
+      company: '='
     },
-    controller : function($scope , $state , $http , Flash){
-        $scope.d = {user : undefined};
-        if (typeof $scope.col != 'undefined') {
-            $scope.showResults = true;
-        }else{
-            $scope.showResults = false;
+    controller: function($scope, $state, $http, Flash) {
+      $scope.d = {
+        user: undefined
+      };
+      if (typeof $scope.col != 'undefined') {
+        $scope.showResults = true;
+      } else {
+        $scope.showResults = false;
+      }
+      $scope.$watch('company', function(newValue, oldValue) {
+        if (typeof $scope.company == 'undefined') {
+          $scope.companySearch = '';
+        } else {
+          $scope.companySearch = '&company=' + $scope.company;
         }
-        $scope.$watch('company' , function(newValue , oldValue) {
-          if (typeof $scope.company == 'undefined') {
-              $scope.companySearch = '';
-          }else {
-            $scope.companySearch = '&company='+$scope.company;
+      });
+
+      // $scope.user = undefined;
+      $scope.userSearch = function(query) {
+        return $http.get($scope.url + '?name__contains=' + query + $scope.companySearch).
+        then(function(response) {
+          return response.data;
+        })
+      };
+
+      $scope.removeUser = function(index) {
+        $scope.data.splice(index, 1);
+      }
+
+      $scope.addUser = function() {
+        for (var i = 0; i < $scope.data.length; i++) {
+          if ($scope.data[i].pk == $scope.d.user.pk) {
+            Flash.create('danger', 'User already a member of this group')
+            return;
           }
-        });
-
-        // $scope.user = undefined;
-        $scope.userSearch = function(query) {
-          return $http.get( $scope.url +'?name__contains=' + query + $scope.companySearch).
-          then(function(response){
-            return response.data;
-          })
-        };
-
-        $scope.removeUser = function(index) {
-          $scope.data.splice(index,1);
         }
-
-        $scope.addUser = function() {
-          for (var i = 0; i < $scope.data.length; i++) {
-            if ($scope.data[i].pk == $scope.d.user.pk){
-              Flash.create('danger' , 'User already a member of this group')
-              return;
-            }
-          }
-          $scope.data.push($scope.d.user);
-          $scope.d.user = undefined;
-        }
+        $scope.data.push($scope.d.user);
+        $scope.d.user = undefined;
+      }
     },
   };
 });
@@ -182,7 +225,7 @@ app.directive('crmMail', function() {
       data: '=',
       onDelete: '&',
     },
-    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window , $sce) {
+    controller: function($scope, $http, $timeout, $users, $aside, $interval, $window, $sce) {
       $scope.data.subject = JSON.parse($scope.data.data).subject;
       $scope.data.notesHtml = $sce.trustAsHtml($scope.data.notes);
     },

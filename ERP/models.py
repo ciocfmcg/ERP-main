@@ -121,7 +121,7 @@ class service(models.Model): # contains other companies datails
     name = models.CharField(max_length = 100 , null = False, unique = True)
     user = models.ForeignKey(User , related_name = 'servicesCreated' , null = False) # the responsible person for this service
     address = models.ForeignKey(address , null = True )
-    mobile = models.PositiveIntegerField( null = True)
+    mobile = models.CharField(max_length = 20 , null = True)
     telephone = models.CharField(max_length = 20 , null = True)
     about = models.TextField(max_length = 2000 , null = True)
     cin = models.CharField(max_length = 100 , null = True) # company identification number

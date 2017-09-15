@@ -11,6 +11,7 @@ var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'y
 
 app.controller("businessManagement.clientRelationships.opportunities.quote", function($scope, $state, $users, $stateParams, $http, Flash,  $uibModalInstance , deal) {
 
+
   $scope.firstQuote = true;
 
   $scope.deal = deal;
@@ -102,7 +103,7 @@ app.controller("businessManagement.clientRelationships.opportunities.quote", fun
 
     $http({method : method , url : url , data : dataToSend }).
     then(function(response) {
-      if ($scope.deal.contracts.length >0) {
+      if ($scope.deal.contracts.length ==0) {
         $scope.deal.contracts.push(response.data.pk);
       }
       // $scope.deal.contracts[0].data =   JSON.parse($scope.deal.contracts[0].data);
@@ -169,7 +170,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.clientRelationships.editDeal.form.html',
       size: 'lg',
-      backdrop : false,
+      backdrop : true,
       resolve : {
         deal : function() {
           return $scope.deal;
