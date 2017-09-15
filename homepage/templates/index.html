@@ -57,11 +57,27 @@
 <div ng-app="app" ng-controller="main">
   {% verbatim %}
   <header  style="background-image: url({{mainBannerImages[bannerID]}});height:100vh;">
-      <div class="container">
+  <!-- <header  style="background:rgb(29, 98, 180);height:100vh;"> -->
+      <div class="container" style="overflow:hidden;">
           <div class="intro-text" style="text-align:right;">
               <div class="intro-lead-in" >We are your technology partner</div>
               <!-- <div class="intro-heading" >Think Free</div> -->
               <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
+          </div>
+      </div>
+  </header>
+  <header  style="background:rgb(29, 98, 180);height:100vh;">
+      <div class="container" style="overflow:hidden;position:relative;height:100%;width:100%;">
+        <img ng-src="/static/images/crm/{{crmBannerID}}" style="height:700px;position:absolute;top:30vh;left:200px;">
+          <div class="container-fluid" style="padding-right:100px;">
+            <div class="intro-text" style="text-align:right;">
+                <div class="intro-lead-in" >CRM for tomorrow</div>
+                <ul style="font-size:20px;">
+                  <li>Fast</li>
+                  <li>Fluid</li>
+                  <li>Intiutive</li>
+                </ul>
+            </div>
           </div>
       </div>
   </header>

@@ -11,6 +11,7 @@ var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'y
 
 app.controller("businessManagement.clientRelationships.opportunities.quote", function($scope, $state, $users, $stateParams, $http, Flash,  $uibModalInstance , deal) {
 
+
   $scope.firstQuote = true;
 
   $scope.deal = deal;
