@@ -27,7 +27,7 @@ ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user wi
 
 SITE_ADDRESS = 'http://127.0.0.1:8000' # the url prefix of the site
 
-ROOT_APP = 'ERP' # the default app
+ROOT_APP = 'index' # the default app
 ECOMMERCE_APP = {
     'ui': 'food', # the options can be food , rental, shop
     # food UI is like Fassos or Zomatto
@@ -63,7 +63,7 @@ LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once succe
 
 LOGOUT_REDIRECT = 'index' # similarly the url to which the user will be directed one logged out
 
-USE_CDN = False # when turned on the application will use the cndjs.com and other similar
+USE_CDN = True # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
 BRAND_NAME = 'India'
@@ -205,7 +205,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django',
         'USER': 'root',
-        'PASSWORD': 'password',
+        'PASSWORD': 'janhvi@1',
         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }

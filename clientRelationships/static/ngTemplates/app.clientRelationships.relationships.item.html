@@ -16,7 +16,7 @@
       </div>
       <div class="col-md-3">
         <span class="text-muted" style="font-size:15px;"><i class="fa fa-globe"></i> </span><br>
-        <span style="font-size:17px;"> <a href="{{data.web}}">{{data.web}}</a></span>
+        <span style="font-size:17px;"> <a href="{{data.web[0]!='h' ? 'http://':''}}{{data.web}}" target="_blank">{{data.web}}</a></span>
       </div>
 
       <div class="col-md-3 col-md-offset-4">
