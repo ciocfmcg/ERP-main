@@ -70,7 +70,7 @@ BRAND_NAME = 'India'
 
 BRAND_LOGO = '/static/images/cioc_icon.svg'
 
-SMS_API_PREFIX = ""
+SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
 INSTALLED_APPS = (
     'django.contrib.admin',

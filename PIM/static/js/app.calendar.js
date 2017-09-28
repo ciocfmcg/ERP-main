@@ -41,7 +41,7 @@ app.controller("controller.home.calendar", function($scope , $http ,$aside, $sta
     $scope.openForm($scope.data.items.indexOf($scope.itemInView));
   }
   $scope.delete = function(){
-    $http({method : 'DELETE' , url : $scope.itemInView.data.url}).
+    $http({method : 'DELETE' , url : '/api/PIM/calendar/' + $scope.itemInView.data.pk + '/'}).
     then(function(response){
       $scope.data.items.splice($scope.data.items.indexOf($scope.itemInView) , 1);
     })
@@ -240,7 +240,7 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
       } else if (key == 'followers') {
         $scope.data.with = [];
         for (var i = 0; i < calObj[key].length; i++) {
-          $scope.data.with.push({username : $users.get(calObj.followers[i]).username })
+          $scope.data.with.push($users.get(calObj.followers[i]))
         }
       } else if (key == 'duration') {
         $scope.data[key] = calObj[key]/60;

@@ -4,7 +4,7 @@
   <div class="col-md-9">
     <generic-Calendar date="date" day-Items="data.items" item-Templates="{{templates}}" day-Clicked="showDay" item-Clicked="showPerticular"></generic-Calendar>
   </div>
-  <div class="col-md-3 bg-aqua" style="position:absolute; height:100%;top:0px;right:0px;">
+  <div class="col-md-3" style="position:absolute; height:100%;top:0px;right:0px;background-color:var(--themeMain);color:white;">
     <div class="row" style="background-color:var(--themeMain);color:white;">
 
       <div class="dayDetails">
@@ -66,7 +66,7 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-2">
-            <i class="fa fa-clock-o fa-lg pull-right"></i>
+            <i class="fa fa-clock-o fa-lg"></i>
           </div>
           <div class="col-md-9">
             {{itemInView.data.when | date:'hh mm a'}}
@@ -75,34 +75,43 @@
         <div ng-if="itemInView.type == 'Meeting'">
           <div class="row" style="padding-top:10px">
             <div class="col-md-2">
-              <i class="fa fa-compass fa-lg pull-right"></i>
+              <i class="fa fa-compass fa-lg"></i>
             </div>
             <div class="col-md-9">
               {{itemInView.data.venue}}
             </div>
           </div>
           <div class="row" style="padding-top:10px" ng-if="itemInView.data.followers.length !=0">
-            <div class="col-md-2">
-              <i class="fa fa-user fa-lg pull-right"></i>
-            </div>
-            <div class="col-md-9">
-              <span ng-repeat="f in itemInView.data.followers">
-                <div ng-if="f != me.pk">
+            <span ng-repeat="f in itemInView.data.followers">
+              <div class="col-md-6" style="margin-bottom:10px;">
+                <div class="col-md-3">
+                  <img ng-src="{{f | getDP}}" class="img img-circle" style="width:40px;height:40px;">
+                </div>
+                <div class="col-md-9" style="padding-top:10px;">
                   {{f | getName}}
                 </div>
-                <div ng-if="f == me.pk">
-                  {{itemInView.data.user | getName}}
-                </div>
-                <span ng-if="$index != itemInView.data.followers.length-1">  , </span>
-              </span>
-            </div>
+              </div>
+            </span>
           </div>
-          <div class="row" style="padding-top:10px" ng-if="itemInView.data.followers.length !=0">
-            <div class="col-md-2">
-              <i class="fa fa-users fa-lg pull-right"></i>
+          <div class="row" style="padding-top:20px" ng-if="itemInView.data.clients.length !=0">
+            <div class="col-md-2 text-center">
+              <div class="row">
+                <span><i class="fa fa-users fa-lg"></i></span>
+              </div>
+              <div class="row">
+                {{itemInView.data.originator}}
+              </div>
             </div>
-            <div class="col-md-9">
-              <span ng-repeat="c in itemInView.data.clients">{{c.name}}<span ng-if="$index != itemInView.data.clients.length-1">  , </span></span>
+            <div class="col-md-10">
+              <div class="col-md-12 row" style="margin-bottom:10px;" ng-repeat="c in itemInView.data.clients">
+                <div class="col-md-2" style="padding:0px;margin:0px;">
+                  <img style="width: 40px;height:40px;" class="img img-circle" ng-src="{{c | getCRMDP}}">
+                </div>
+                <div class="col-md-10" style="padding-top:3px;">
+                  <span>{{c.name}}</span>
+                  <br> <span>{{c.designation}}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -34,6 +34,20 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
           var title = 'Details :';
           var appType = 'contactExplorer';
         }
+
+
+        console.log({
+          title: title + $scope.data.tableData[i].name,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i
+          },
+          active: true
+        });
+
+
         $scope.addTab({
           title: title + $scope.data.tableData[i].name,
           cancel: true,
@@ -99,6 +113,23 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
     })
   });
 
+
+  $scope.$on('editContact', function(event, input) {
+    console.log("recieved");
+    console.log(input);
+    $scope.addTab({
+      "title": "Edit :" + input.contact.name,
+      "cancel": true,
+      "app": "contactEditor",
+      "data": {
+        "pk": input.contact.pk,
+        contact : input.contact
+      },
+      "active": true
+    })
+  });
+
+
 })
 
 app.controller("businessManagement.clientRelationships.contacts.item", function($scope, $state, $users, $stateParams, $http, Flash) {
@@ -109,6 +140,11 @@ app.controller("businessManagement.clientRelationships.contacts.item", function(
 });
 
 app.controller("businessManagement.clientRelationships.contacts.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+  $scope.editContact = function() {
+    $scope.$emit('editContact' , {contact : $scope.contact})
+  }
+
   if ($scope.data != undefined) {
     $scope.contact = $scope.data.tableData[$scope.tab.data.index]
   }
@@ -557,7 +593,14 @@ app.controller("businessManagement.clientRelationships.contacts.form", function(
 
 
   if (typeof $scope.tab != 'undefined' && $scope.tab.data.pk != -1) {
-    $scope.form = $scope.data.tableData[$scope.tab.data.index]
+    if ($scope.tab.data.index == undefined) {
+      $scope.form = $scope.tab.data.contact;
+    }else {
+      $scope.form = $scope.data.tableData[$scope.tab.data.index];
+    }
+
+
+
     $scope.mode = 'edit';
   } else {
     $scope.resetForm();

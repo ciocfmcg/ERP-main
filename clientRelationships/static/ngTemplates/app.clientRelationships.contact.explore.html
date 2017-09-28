@@ -1,6 +1,11 @@
 <div ng-controller="businessManagement.clientRelationships.contacts.explore" style="padding-top:20px;">
   <div class="col-md-10">
-    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:82vh;">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+
+      <div style="position:absolute; top:10px;left:10px;cursor:pointer;" class="text-muted" ng-click="editContact()">
+        <i class="fa fa-pencil fa-2x"></i>
+      </div>
+
       <div class="row text-center">
         <img ng-src="{{contact | getCRMDP}}" class="img img-circle" style="width:100px;">
       </div>

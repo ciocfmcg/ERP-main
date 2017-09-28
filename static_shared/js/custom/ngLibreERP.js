@@ -61,7 +61,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
     }
   }, function(response) {});
 
-  $scope.sound = ngAudio.load("static/audio/notification.ogg");
+  $scope.sound = ngAudio.load("/static/audio/notification.ogg");
 
   $scope.theme = ":root { --themeMain: " + $scope.themeObj.main + ";--headerNavbarHighlight:" + $scope.themeObj.highlight + "; }";
   $scope.$watchGroup(['themeObj.main', 'themeObj.highlight'], function(newValue, oldValue) {
@@ -532,7 +532,6 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
-
 
   $scope.user = $users.get('mySelf');
 

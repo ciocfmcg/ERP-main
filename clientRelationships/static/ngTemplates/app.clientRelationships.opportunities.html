@@ -1,7 +1,7 @@
 <breadcrumb></breadcrumb>
 <div class="container-fluid">
   <uib-tabset>
-    <uib-tab active="createTabActive"> 
+    <uib-tab active="createTabActive">
       <uib-tab-heading>
         New <i class="fa fa-plus"></i>
       </uib-tab-heading>
@@ -35,6 +35,9 @@
       </div>
       <div ng-if="tab.app == 'exploreDeal'">
         <div ng-include="'/static/ngTemplates/app.clientRelationships.opportunities.explore.html'"></div>
+      </div>
+      <div ng-if="tab.app == 'contactEditor'">
+          <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.form.html'"></div>
       </div>
       <div ng-if="tab.app == 'contactForm'">
         <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.form.html'"></div>

@@ -232,22 +232,7 @@ app.directive('crmMail', function() {
   };
 });
 
-app.filter('getCRMDP', function() {
-  return function(input) {
-    if (input == undefined) {
-      return '/static/images/img_avatar_card.png';
-    }
-    if (input.dp != null) {
-      return input.dp;
-    } else {
-      if (input.male) {
-        return '/static/images/img_avatar_card.png';
-      } else {
-        return '/static/images/img_avatar_card2.png';
-      }
-    }
-  }
-})
+
 
 
 app.directive('crmTodo', function() {

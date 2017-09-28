@@ -10,16 +10,22 @@
     </div>
     <div class="col-md-4 col-sm-12 col-xs-12">
       <div class="col-md-7 col-sm-6 col-xs-6">
-        <select class="form-control" ng-options="obj.disp for obj in listOfMonths track by obj.val"
-          ng-model="dropMonth"
-          ng-change="gotoPerticular()">
-        </select>
+        <div class="dropdown">
+         <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown"> {{listOfMonths[dropMonth.val].disp}}
+         <span class="caret" style="margin-left:30px;"></span></button>
+         <ul class="dropdown-menu">
+           <li ng-repeat="m in listOfMonths" ng-click="setMonth(m)"><a href="">{{m.disp}}</a></li>
+         </ul>
+        </div>
       </div>
       <div class="col-md-5 col-sm-6 col-xs-6 pull-right">
-        <select class="form-control" ng-options="obj.disp for obj in listOfYears track by obj.val"
-          ng-model="dropYear"
-          ng-change="gotoPerticular()">
-        </select>
+        <div class="dropdown">
+         <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown"> {{dropYear.val}}
+         <span class="caret" style="margin-left:30px;"></span></button>
+         <ul class="dropdown-menu">
+           <li ng-repeat="m in listOfYears" ng-click="setYear(m)"><a href="">{{m.disp}}</a></li>
+         </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -44,8 +50,8 @@
           </span>
           <div class="dayItems " style="position:absolute;width:102%;left:-2px;">
             <div ng-if="itemsGroup[w*7 + d].length != 0 && $index<2" ng-repeat="i in itemsGroup[w*7 + d] track by $index" ng-include="itemTemplates"
-            style="height:23px;position:absolute;z-index:99;bottom:{{-2 + 23*$index}}px;width:100%;padding:2px;" class="card {{i | rainbow}}" ng-click="itemClicked(i); $event.stopPropagation();"></div>
-            <div ng-if="itemsGroup[w*7 + d].length>2" style="height:23px;position:absolute;z-index:999;bottom:{{-2 + 23*2}}px;width:100%;padding:2px;" class="card {{i | rainbow}}" ng-click="showDay(w*7 + d)">
+            style="height:23px;position:absolute;z-index:99;bottom:{{-2 + 23*$index}}px;width:99%;padding:2px;" class="{{i | rainbow}}" ng-click="itemClicked(i); $event.stopPropagation();"></div>
+            <div ng-if="itemsGroup[w*7 + d].length>2" style="height:23px;position:absolute;z-index:999;bottom:{{-2 + 23*2}}px;width:99%;padding:2px;" class="card {{i | rainbow}}" ng-click="showDay(w*7 + d)">
               ... More
             </div>
           </div>

@@ -857,6 +857,21 @@ app.controller("businessManagement.clientRelationships.opportunities", function(
     }
   }
 
+  $scope.$on('editContact', function(event, input) {
+    console.log("recieved");
+    console.log(input);
+    $scope.addTab({
+      "title": "Edit :" + input.contact.name,
+      "cancel": true,
+      "app": "contactEditor",
+      "data": {
+        "pk": input.contact.pk,
+        contact : input.contact
+      },
+      "active": true
+    })
+  });
+
   $scope.$on('showContactsForm', function(event, input) {
     $scope.addTab({
       title: 'Create contact / company entry',
@@ -910,7 +925,7 @@ app.controller("businessManagement.clientRelationships.opportunities", function(
   };
 
 
-  $scope.addTab({"title":"Details :Blandit insolens pri ad","cancel":true,"app":"exploreDeal","data":{"pk":5},"active":true})
+  // $scope.addTab({"title":"Details :Blandit insolens pri ad","cancel":true,"app":"exploreDeal","data":{"pk":5},"active":true})
 
 });
 
