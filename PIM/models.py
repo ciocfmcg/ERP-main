@@ -97,7 +97,7 @@ class calendar(models.Model):
     deleted = models.BooleanField(default = False)
     completed = models.BooleanField(default = False)
     canceled = models.BooleanField(default = False)
-    level = models.CharField(choices = LEVEL_CHOICE , default = 'Normal' , max_length = 3)
+    level = models.CharField(choices = LEVEL_CHOICE , default = 'Normal' , max_length = 10)
     venue = models.CharField(max_length = 50 , null = True)
     attachment = models.FileField(upload_to = getCalendarAttachment , null = True)
     myNotes = models.CharField(max_length = 100 , blank = True)
