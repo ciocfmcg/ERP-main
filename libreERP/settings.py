@@ -63,7 +63,7 @@ LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once succe
 
 LOGOUT_REDIRECT = 'index' # similarly the url to which the user will be directed one logged out
 
-USE_CDN = True # when turned on the application will use the cndjs.com and other similar
+USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
 BRAND_NAME = 'India'

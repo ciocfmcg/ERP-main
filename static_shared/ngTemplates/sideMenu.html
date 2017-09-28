@@ -1,0 +1,33 @@
+<div class="" ng-controller="sideMenu">
+  <div class="row" style="margin:0px;">
+    <div class="container-fluid" style="background-image: url('/static/images/nav-menu-header-bg2.jpg');padding:20px;padding-bottom:30px;padding-left:40px;">
+      <div class="row">
+        <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:100px;">
+      </div>
+      <div class="row" style="margin-top:30px;">
+        <span style="font-size:18px;color:white;">{{user.pk | getName}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="border-bottom:solid 2px #eeeeee;">
+    <div class="container-fluid" >
+      <div class="col-md-3 basicAppLink text-center" ng-repeat="a in fixedApps" ng-class="{active: $state.is(a.state)}" ng-click="$state.go(a.state)">
+        <span>
+          <i class="fa fa-{{a.icon}} fa-2x"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="container-fluid">
+      <ul class="nav nav-sidebar padded" style="width:100%;">
+        <li ng-class="{active: $state.is(a.state)}" ng-repeat="a in apps" >
+          <a ui-sref="{{a.state}}" style="padding-right:30px;padding-left:30px;">
+            <div align="center"><i class="fa {{a.icon}} fa-2x pull-left"></i> {{a.dispName | humanize}}</div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

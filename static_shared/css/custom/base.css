@@ -2,6 +2,30 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.basicAppLink :hover , .basicAppLink.active{
+  background: var(--themeMain);
+  color: white;
+  cursor:pointer;
+}
+.basicAppLink{
+  padding: 0px;
+  margin: 0px;
+  color: var(--themeMain);
+}
+.basicAppLink span{
+  height: 70px;
+  display: block;
+  padding-top: 15px;
+}
+
+.navbar{
+  height:5vh;
+}
+
+.navbar a{
+  height:100%;
+}
+
 .relationDealCard {
   min-height:150px;
   border-radius:7px;
@@ -222,7 +246,6 @@
 
 body {
   background-color: #eee;
-  padding-top:65px;
 }
 
 .hoverableDiv :hover{

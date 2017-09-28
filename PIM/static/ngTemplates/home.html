@@ -1,10 +1,8 @@
-<div class="container-fluid "  >
+
+<div class="container-fluid " >
   <div class="row">
-    <div class="col-md-1" style="height:100%;position:fixed;">
-      <div ui-view="menu" ng-if="homeMenuAccess"></div>
-    </div>
-    <div class="col-md-11 col-md-offset-1">
-        <div ui-view ng-if="dashboardAccess"></div>
+    <div class="col-md-12 " style="padding-left:0px;padding-right:0px;">
+      <div ui-view></div>
     </div>
   </div>
 </div>

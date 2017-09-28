@@ -8,10 +8,6 @@ app.config(function($stateProvider ){
         templateUrl: '/static/ngTemplates/home.html',
         controller:'controller.home.main'
       },
-      "menu@home": {
-        templateUrl: '/static/ngTemplates/home.menu.html',
-        controller: 'controller.home.menu',
-      },
       "@home": {
         templateUrl: '/static/ngTemplates/app.home.dashboard.html',
         controller : 'controller.home'

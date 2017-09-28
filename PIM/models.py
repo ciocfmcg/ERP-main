@@ -84,7 +84,7 @@ class calendar(models.Model):
     )
 
     visibility = models.CharField(choices = VISIBILITY_CHOICES , default = 'personal' , max_length = 20)
-    eventType = models.CharField(choices = TYPE_CHOICE , default = 'Other' , max_length = 4)
+    eventType = models.CharField(choices = TYPE_CHOICE , default = 'Other' , max_length = 11)
     originator = models.CharField(null = True , max_length = 20)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
