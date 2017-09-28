@@ -1,4 +1,4 @@
-app.controller("controller.home.calendar", function($scope , $http ,$aside, $state , $timeout) {
+app.controller("controller.home.calendar", function($scope , $http ,$aside, $state , $timeout , $users) {
 
   $scope.data = {items : []};
   $http({url : '/api/PIM/calendar/' , method : 'GET'}).
@@ -9,7 +9,7 @@ app.controller("controller.home.calendar", function($scope , $http ,$aside, $sta
     }
   })
 
-
+  $scope.me = $users.get("mySelf");
 
   $scope.showDay = function(input){
     $scope.itemsToShow = [];
@@ -109,14 +109,13 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
       fd.append('attachment' , $scope.data.attachment);
     }
     if ( typeof $scope.data.with !='undefined' && $scope.data.with.length != 0 ) {
-      withStr = '';
+      var withStr = [];
       for (var i = 0; i < $scope.data.with.length; i++) {
-        withStr += $scope.data.with[i].username;
-        if (i != $scope.data.with.length-1) {
-          withStr += ','
-        }
+        withStr.push($scope.data.with[i].pk);
       }
-      fd.append('with' , withStr)
+      if (withStr.length > 0) {
+        fd.append('followers' , withStr)
+      }
     }
     if ($scope.data.when != '' ) {
       fd.append('when' , $filter('date')($scope.data.when , "yyyy-MM-dd'T'HH:mm:ssZ") );

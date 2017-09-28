@@ -17,7 +17,7 @@ class themeViewSet(viewsets.ModelViewSet):
     serializer_class = themeSerializer
 
 class calendarViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, isOwner )
+    permission_classes = (permissions.IsAuthenticated, )
     serializer_class = calendarSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['text' , 'originator' , 'data']
