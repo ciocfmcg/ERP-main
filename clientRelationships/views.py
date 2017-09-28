@@ -33,8 +33,8 @@ import datetime
 import json
 import pytz
 
-themeColor = colors.HexColor('#227daa')
 
+themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']

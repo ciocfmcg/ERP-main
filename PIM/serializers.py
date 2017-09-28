@@ -32,8 +32,8 @@ class calendarSerializer(serializers.ModelSerializer):
         cal = calendar(**validated_data)
         cal.user = self.context['request'].user
         cal.save()
-        if 'with' in  self.context['request'].data:
-            tagged = self.context['request'].data['with']
+        if 'followers' in  self.context['request'].data:
+            tagged = self.context['request'].data['followers']
             if ',' in tagged:
                 for tag in tagged.split(','):
                     cal.followers.add( User.objects.get(username = tag))
@@ -54,10 +54,14 @@ class calendarSerializer(serializers.ModelSerializer):
             except:
                 pass
         instance.followers.clear()
-        if 'with' in  self.context['request'].data:
-            tagged = self.context['request'].data['with']
-            for tag in tagged.split(','):
-                instance.followers.add( User.objects.get(username = tag))
+        if 'followers' in  self.context['request'].data:
+            tagged = self.context['request'].data['followers']
+            if ',' in tagged:
+                for tag in tagged.split(','):
+                    instance.followers.add( User.objects.get(username = tag))
+            else:
+                for tag in tagged:
+                    instance.followers.add( User.objects.get(pk = tag))
         instance.save()
         return instance
 

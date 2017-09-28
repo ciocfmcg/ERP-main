@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'registerDevice/$' , registerDeviceApi.as_view()),
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
+    url(r'sendSMS/$' , SendSMSApi.as_view()),
 ]

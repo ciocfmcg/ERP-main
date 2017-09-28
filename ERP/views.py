@@ -16,6 +16,23 @@ from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from gitweb.views import generateGitoliteConf
+import requests
+
+class SendSMSApi(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        print "came"
+        if 'number' not in request.data or 'text' not in request.data:
+            return Response(status = status.HTTP_400_BAD_REQUEST)
+        else:
+            url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(request.data['number'] , request.data['text'])
+            # print url
+            requests.get(url)
+            return Response(status = status.HTTP_200_OK)
+
+
+
 def serviceRegistration(request): # the landing page for the vendors registration page
     return render(request , 'app.ecommerce.register.partner.html')
 

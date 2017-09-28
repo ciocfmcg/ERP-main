@@ -157,7 +157,6 @@ app.controller("businessManagement.clientRelationships.opportunities.created", f
 
   }
 
-
 });
 
 
@@ -165,6 +164,58 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
 
   $scope.disableNext = false;
   $scope.pageNo = 0;
+  $scope.sms = {text : '' , include : [] , selectAll : false , preventUnselect : false}
+
+  $scope.$watch('sms.selectAll' , function(newValue , oldValue) {
+    if ($scope.sms.preventUnselect && !newValue) {
+      $scope.sms.preventUnselect = false;
+      return;
+    }
+    for (var i = 0; i < $scope.sms.include.length; i++) {
+      $scope.sms.include[i] = newValue;
+    }
+    if (newValue) {
+      $scope.sms.preventUnselect = false;
+    }
+  })
+
+  $scope.$watch('sms.include' , function(newValue , oldValue) {
+    for (var i = 0; i < $scope.sms.include.length; i++) {
+      if ($scope.sms.include[i] == false) {
+        $scope.sms.selectAll = false;
+        $scope.sms.preventUnselect = true;
+        return;
+      }
+    }
+    $scope.sms.selectAll = true;
+  }, true)
+
+  $scope.sendSMS = function() {
+    if ($scope.sms.text == '') {
+      Flash.create('danger' , 'No text to send');
+      return;
+    }
+    for (var i = 0; i < $scope.deal.contacts.length; i++) {
+      if ($scope.deal.contacts[i].mobile != null && $scope.deal.contacts[i].mobile != undefined && $scope.sms.include[i]) {
+        var cleanedNumber = $scope.deal.contacts[i].mobile;
+
+        var numb = cleanedNumber.match(/\d/g);
+        cleanedNumber = numb = numb.join("");
+
+        if (cleanedNumber.length == 11 && cleanedNumber[0] == '0') {
+          clientRelationships = clientRelationships.substring(1,11)
+        }else if (cleanedNumber.substring(0, 2) == '91') {
+          clientRelationships = clientRelationships.substring(2)
+        }
+
+        $http({method : 'POST' , url : '/api/ERP/sendSMS/' , data : {text : $scope.sms.text , number : cleanedNumber }}).
+        then(function(response) {
+          $scope.sms.text = '';
+          Flash.create('success' , 'Sent');
+        });
+      }
+    }
+  }
 
   $scope.editDeal = function() {
     $uibModal.open({
@@ -630,6 +681,12 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
 
     $scope.retriveTimeline();
     $scope.fetchCalendarEnteries();
+
+    for (var i = 0; i < $scope.deal.contacts.length; i++) {
+      $scope.sms.include.push(false)
+    }
+
+
   }
 
   $scope.fetchDeal = function() {
@@ -853,7 +910,7 @@ app.controller("businessManagement.clientRelationships.opportunities", function(
   };
 
 
-  // $scope.addTab({"title":"Details :old name 3","cancel":true,"app":"exploreDeal","data":{"pk":3},"active":true})
+  $scope.addTab({"title":"Details :Blandit insolens pri ad","cancel":true,"app":"exploreDeal","data":{"pk":5},"active":true})
 
 });
 

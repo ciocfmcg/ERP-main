@@ -99,9 +99,14 @@
         </div>
       </div> <br>
       <div ng-if="deal.internalUsers.length > 0">
-        <label class="text-muted">Internal Stakeholders</label>
-        <div ng-repeat="c in deal.internalUsers" class="row" style="padding-left:10px;padding-bottom:10px;">
-          <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getDP}}"> {{c | getName}}
+        <label class="text-muted" style="margin-bottom:15px;">Internal Stakeholders</label>
+        <div ng-repeat="c in deal.internalUsers" class="row" style="padding-bottom:10px;">
+          <div class="col-md-3">
+            <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getDP}}">
+          </div>
+          <div class="col-md-9">
+            {{c | getName}}
+          </div>
         </div>
       </div>
     </div>
@@ -110,8 +115,6 @@
 
       <div ng-if="local.activeTab == 0" class="row" style="margin:5px;">
         <comment-Input text="noteEditor.text" doc="noteEditor.doc" save-Note="saveNote"></comment-Input>
-        <!-- /input-group -->
-
       </div>
       <div class="row animated fadeIn">
         <div ng-if="local.activeTab == 0" class="container-fluid">
@@ -222,9 +225,44 @@
 
         <div ng-if="local.activeTab == 3">
           <div class="container-fluid">
-            <h3 class="text-muted">Call/sms</h3>
-            <div class="text-center" style="padding-top:100px;">
-              <h2 class="text-muted">Not implimented</h2>
+            <h3 class="text-muted" style="margin-left:20px;">SMS</h3>
+            <div class="" style="padding-top:20px;">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label></label>
+                  <textarea class="form-control" ng-model="sms.text" rows="8" cols="80"></textarea>
+                </div>
+                <button type="button" class="btn btn-default" ng-click="sendSMS()">
+                  <i class="fa fa-paper-plane-o"></i> Send
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <div class="container-fluid">
+                  <div class="row">
+                    <span style="margin-right:20px;"><input type="checkbox" ng-model="sms.selectAll"> </span> <span>Select All</span>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div ng-repeat="c in deal.contacts" class="row" style="margin-top:10px;" >
+                      <div style="cursor:pointer;">
+                        <div class="col-md-1">
+                          <input ng-model="sms.include[$index]" type="checkbox" name="" value="">
+                        </div>
+                        <div ng-click="exploreContact(c)">
+                          <div class="col-md-2">
+                            <img style="width: 50px;height:50px;" class="img img-circle" ng-src="{{c | getCRMDP}}">
+                          </div>
+                          <div class="col-md-8" style="padding-top:3px;">
+                            <span>{{c.name}}</span>
+                            <br> <span class="text-muted">{{c.designation}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div> <br>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

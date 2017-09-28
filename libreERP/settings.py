@@ -70,6 +70,8 @@ BRAND_NAME = 'India'
 
 BRAND_LOGO = '/static/images/cioc_icon.svg'
 
+SMS_API_PREFIX = ""
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',

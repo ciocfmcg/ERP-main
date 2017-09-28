@@ -22,7 +22,12 @@ class calendarViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['text' , 'originator' , 'data']
     def get_queryset(self):
-        toReturn = calendar.objects.filter(user =  self.request.user).order_by('when')
+        qs1 = calendar.objects.filter(user =  self.request.user).order_by('when')
+        qs2 = self.request.user.calendarItemsFollowing.all().order_by('when')
+
+        toReturn = qs1 | qs2
+        toReturn = toReturn.distinct()
+
         if 'clients__in' in self.request.GET:
             clients = json.loads(self.request.GET['clients__in'])
             # print type(clients) , type(clients[0])
