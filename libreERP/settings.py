@@ -70,7 +70,6 @@ BRAND_NAME = 'India'
 
 BRAND_LOGO = '/static/images/cioc_icon.svg'
 
-SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -231,11 +230,7 @@ USE_TZ = True
 
 EMAIL_HOST_SUFFIX = 'cioc.co.in'
 
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_HOST_USER = 'pradeep@cioc.co.in'
-EMAIL_HOST_PASSWORD = 'janhvi@1'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DEFAULT_FROM_EMAIL = 'ciocpky@gmail.com'
