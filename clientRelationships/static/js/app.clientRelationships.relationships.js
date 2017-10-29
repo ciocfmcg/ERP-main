@@ -177,7 +177,9 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
           $scope.contract = contract;
           var dueDate = new Date();
           dueDate.setDate(dueDate.getDate() + deal.duePeriod);
-          $scope.contract.dueDate = dueDate;
+          if ($scope.contract.dueDate == null) {
+            $scope.contract.dueDate = dueDate;
+          }
           $scope.deal = deal;
         },
       }).result.then(function () {
@@ -193,7 +195,7 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
             then(function(response) {
               Flash.create('success' , 'Saved')
             }, function(err) {
-              Flash.create('error' , 'Error occured')
+              Flash.create('danger' , 'Error occured')
             })
           })
 
@@ -255,7 +257,7 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
 
   $scope.sendNotification = function(indx){
 
-    $scope.quote = $scope.deal.contracts[0];
+    $scope.quote = $scope.deal.contracts[indx];
 
     $aside.open({
       templateUrl : '/static/ngTemplates/app.clientRelationships.quote.notification.html',
@@ -449,9 +451,9 @@ app.controller("businessManagement.clientRelationships.relationships", function(
 
   }
 
-  $timeout(function() {
-    $scope.addTab({"title":"Manage : DWR project","cancel":true,"app":"manageRelation","data":{"pk":9},"active":true})
-  }, 1000)
+  // $timeout(function() {
+  //   $scope.addTab({"title":"Manage : DWR project","cancel":true,"app":"manageRelation","data":{"pk":9},"active":true})
+  // }, 1000)
 
 
   $scope.tabs = [];

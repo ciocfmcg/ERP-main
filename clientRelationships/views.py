@@ -332,6 +332,11 @@ def genInvoice(response , contract, request):
 
     adrs = contract.deal.company.address
 
+    if contract.deal.company.tin is None:
+        tin = 'NA'
+    else:
+        tin = contract.deal.company.tin
+
     summryParaSrc = """
     <font size='11'><strong>Customer details:</strong></font> <br/><br/>
     <font size='9'>
@@ -341,8 +346,9 @@ def genInvoice(response , contract, request):
     %s<br/>
     %s , %s<br/>
     %s<br/>
+    <strong>GSTIN:</strong>%s<br/>
     </font>
-    """ %(contract.deal.contacts.all()[0].name , contract.deal.company.name, adrs.street , adrs.city , adrs.state , adrs.pincode , adrs.country)
+    """ %(contract.deal.contacts.all()[0].name , contract.deal.company.name, adrs.street , adrs.city , adrs.state , adrs.pincode , adrs.country, tin)
     story.append(Paragraph(summryParaSrc , styleN))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
@@ -527,7 +533,7 @@ class SendNotificationAPIView(APIView):
         elif typ == 'dueDateReminder':
             email_subject = 'Payment reminder for invoice %s'%(docID)
             heading = 'Payment reminder'
-            msgBody = ['We are sorry but invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> is still unpaid.' %(docID , value) , 'The due date to make payment is <strong>%s</strong>. Please make payment at the earliest to avoid late payment fee.' %(c.dueDate) , 'In case you have any query please contact us.']
+            msgBody = ['We are sorry but invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> is still unpaid.' %(docID , value) , 'The due date to make the payment is <strong>%s</strong>. Please make payment at the earliest to avoid late payment fee.' %(c.dueDate) , 'In case you have any query please contact us.']
             smsBody = 'REMINDER : Invoice no. %s is sill unpaid. Due date is %s. Please ignore if paid.'%(docID , c.dueDate)
         elif typ == 'dueDateElapsed':
             email_subject = 'Payment overdue for invoice number %s'%(docID)
@@ -543,7 +549,7 @@ class SendNotificationAPIView(APIView):
             'linkText' : 'View Online',
             'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
             'sendersPhone' : '841101',
-            'linkedinUrl' : 'linkedin.com',
+            'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
             'fbUrl' : 'facebook.com',
             'twitterUrl' : 'twitter.com',
         }
