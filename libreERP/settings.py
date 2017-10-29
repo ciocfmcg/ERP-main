@@ -169,6 +169,7 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'HR', 'templates'),
             os.path.join(BASE_DIR, 'libreERP', 'templates'),
             os.path.join(BASE_DIR, 'ecommerce', 'templates'),
+            os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -228,14 +229,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-EMAIL_HOST = '127.0.0.1'
 EMAIL_HOST_SUFFIX = 'cioc.co.in'
 
-EMAIL_HOST_USER = 'ciocpky@gmail.com'
-EMAIL_HOST_PASSWORD = 'pradeepyadav'
+EMAIL_HOST = 'smtp.office365.com'
+EMAIL_HOST_USER = 'pradeep@cioc.co.in'
+EMAIL_HOST_PASSWORD = 'janhvi@1'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DEFAULT_FROM_EMAIL = 'ciocpky@gmail.com'
 # Static files (CSS, JavaScript, Images)
@@ -273,4 +274,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = '52.35.168.83'
+WAMP_SERVER = 'cioc.co.in'

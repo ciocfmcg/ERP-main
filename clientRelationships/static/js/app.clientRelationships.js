@@ -42,47 +42,7 @@ app.config(function($stateProvider) {
 
 app.controller("businessManagement.clientRelationships.default", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  //   category
-  // employment
-  // purpose
-  // location
-  // income
-  // int_rate
-  // tenure
-  // monthly_income
-  // funded
-  // credit_score
-  // days_left
-  // page	2
-  // item	1
-
-
-  var fd = new FormData();
-  fd.append('item', 1)
-  fd.append('page', 2)
-  fd.append('category', '')
-  fd.append('employment', '')
-  fd.append('purpose', '')
-  fd.append('income', '')
-  fd.append('int_rate', '')
-  fd.append('tenure', '')
-  fd.append('monthly_income', '')
-  fd.append('funded', '')
-  fd.append('credit_score', '')
-  fd.append('days_left', '')
-
-  $http({
-    method: 'POST',
-    url: 'https://www.i2ifunding.com/borrower/listing/act/filter/',
-    // data: fd,
-    // transformRequest: angular.identity,
-    // headers: {
-    //   'Content-Type': undefined
-    // }
-  }).
-  then(function(response) {
-    console.log(response);
-  })
+  
 
 })
 

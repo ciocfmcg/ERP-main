@@ -11,8 +11,10 @@ router.register(r'dealLite' , DealLiteViewSet , base_name = 'dealLite')
 router.register(r'contract' , ContractViewSet , base_name = 'contract')
 router.register(r'activity' , ActivityViewSet , base_name = 'activity')
 router.register(r'relationships' , RelationshipViewSet , base_name = 'relationships')
+router.register(r'productMeta' , ProductMetaViewSet , base_name = 'productMeta')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),
+    url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
 ]

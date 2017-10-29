@@ -55,7 +55,7 @@ class DealSerializer(serializers.ModelSerializer):
     contacts = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Deal
-        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'contracts')
+        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'contracts' , 'doc', 'duePeriod' , 'duePenalty')
         read_only_fields = ('user','contracts', 'internalUsers',)
     def create(self , validated_data):
         d = Deal(**validated_data)
@@ -99,11 +99,15 @@ class RelationshipSerializer(serializers.ModelSerializer):
         model = service
         fields = ('pk'  ,'name' , 'address' , 'mobile', 'logo' , 'web' )
 
+class ProductMetaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMeta
+        fields = ('pk'  ,'description' , 'typ' , 'code' , 'taxRate')
 
 class ContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
-        fields = ('pk'  ,'user' , 'created' , 'updated' , 'doc', 'value', 'status', 'details' , 'data')
+        fields = ('pk'  ,'user' , 'created' , 'updated', 'value', 'status', 'details' , 'data', 'dueDate')
         read_only_fields = ('user',)
     def create(self , validated_data):
         c = Contract(**validated_data)

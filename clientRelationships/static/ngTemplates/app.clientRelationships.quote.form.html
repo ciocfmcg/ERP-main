@@ -12,7 +12,7 @@
 <div class="row" style="padding:10px;display:block;box-sizing:border-box;">
   <div class="row">
     <div class="container-fluid" style="padding:20px;padding-left:30px;padding-right:30px;">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <strong>Description</strong>
       </div>
       <div class="col-md-1">
@@ -25,13 +25,13 @@
         <strong>Tax Rate</strong>
       </div>
       <div class="col-md-1">
+        <strong>HSN/SAC code</strong>
+      </div>
+      <div class="col-md-1">
         <strong>Quantity</strong>
       </div>
       <div class="col-md-2">
         <strong>Total tax</strong>
-      </div>
-      <div class="col-md-1">
-        <strong>Sub Total</strong>
       </div>
       <div class="col-md-1">
         <strong>Sub Total</strong>
@@ -45,20 +45,21 @@
     <table class="table table-striped">
       <tbody>
         <tr ng-repeat="d in data">
-          <td style="width:34%">{{d.desc}}</td>
+          <td style="width:26.3%">{{d.desc}}</td>
           <td style="width:8.33%">{{d.type}}</td>
           <td style="width:8.33%">{{d.rate}}</td>
           <td style="width:8.33%">{{d.tax}}</td>
+          <td style="width:8.33%">{{d.taxCode}}</td>
           <td style="width:8.33%">{{d.quantity}}</td>
           <td style="width:16.66%">{{d.totalTax}}</td>
-          <td style="width:8.33%">{{d.subtotal}}</td>
+          <td style="width:10%">{{d.subtotal}}</td>
           <td>
             <div class="btn-group btn-group-sm">
               <button type="button" class="btn btn-danger" ng-click="remove($index)">
-                Delete <i class="fa fa-trash-o"></i>
+                <i class="fa fa-trash-o"></i>
               </button>
               <button type="button" ng-click="edit($index)" class="btn btn-default">
-                <i class="fa fa-pencil"></i> Edit
+                <i class="fa fa-pencil"></i>
               </button>
             </div>
           </td>
@@ -83,13 +84,17 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label>Tax rate (0-100)</label>
-            <input type="number" step="0.01" class="form-control" ng-model="form.tax">
+            <label>Product/Service class</label>
+            <input type="text" class="form-control" ng-model="form.productMeta" uib-typeahead="meta as meta.description for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
+
+            <span ng-if="showTaxCodeDetails"> <button type="button" class="btn btn-default btn-sm" ng-click="form.productMeta = ''">
+              Edit <i class="fa fa-pencil"></i>
+            </button> <br> {{form.productMeta.description}} <br><strong>Code Type : </strong> {{form.productMeta.typ}} <br> <strong>Code : </strong> {{form.productMeta.code}} <br> <strong>Tax Rate :</strong>{{form.productMeta.taxRate}}</span>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-3">
           <div class="form-group">
             <label>Quantity</label>
             <input type="number" step="0.5" class="form-control" ng-model="form.quantity">

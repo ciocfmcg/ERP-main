@@ -171,20 +171,27 @@
                   <td>{{c.data.length}}</td>
                   <td>{{c.created | timeAgo}}</td>
                   <td>{{c.updated | timeAgo}}</td>
-                  <td>{{c.status | humanize}}</td>
+                  <td>{{c.status | humanize}} <br>
+                    <span ng-if="c.status == 'billed'"> <strong>Due Date:</strong> {{c.dueDate | date : 'dd-MMM-yyyy'}}</span>
+                  </td>
                   <td>
                     <div class="btn-group btn-group-sm pull-right">
-                      <a href="/api/clientRelationships/downloadInvoice/?contract={{c.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
-                      <button type="button" class="btn btn-default" ng-click="editQuote($index)">
-                      <i class="fa fa-pencil"></i>
-                    </button>
+                      <a ng-if="c.status != 'cancelled'" href="/api/clientRelationships/downloadInvoice/?contract={{c.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                      <button ng-if="c.status != 'cancelled'" type="button" class="btn btn-default" ng-click="editQuote($index)">
+                        <i class="fa fa-pencil"></i>
+                      </button>
+                      <button type="button" class="btn btn-danger" ng-click="sendNotification($index)" ng-if="['billed' , 'recieved', 'dueElapsed'].indexOf(c.status) != -1">
+                        <i class="fa fa-envelope-o"></i>
+                      </button>
                       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                         Change status <span class="caret"></span></button>
                       <ul class="dropdown-menu" role="menu">
-                        <li><a href="" ng-click="changeStatus('quoted', $index)">quoted</a></li>
-                        <li><a href="" ng-click="changeStatus('approved', $index)">approved</a></li>
-                        <li><a href="" ng-click="changeStatus('billed', $index)">billed</a></li>
-                        <li><a href="" ng-click="changeStatus('received', $index)">received</a></li>
+                        <li><a href="" ng-click="changeStatus('quoted', $index)">Quoted</a></li>
+                        <li><a href="" ng-click="changeStatus('approved', $index)">Approved</a></li>
+                        <li><a href="" ng-click="changeStatus('billed', $index)">Billed</a></li>
+                        <li><a href="" ng-click="changeStatus('received', $index)">Received</a></li>
+                        <li><a href="" ng-click="changeStatus('cancelled', $index)">Cancelled</a></li>
+                        <li><a href="" ng-click="changeStatus('dueElapsed', $index)">Due Elapsed</a></li>
                       </ul>
                     </div>
                   </td>

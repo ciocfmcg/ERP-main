@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.db import models
 from ERP.models import service
 from time import time
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from datetime import datetime
+import pytz
 # Create your models here.
 def getClientRelationshipContactDP(instance , filename ):
     return 'clientRelationships/dp/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
@@ -55,6 +59,10 @@ RESULT_CHOICES = (
     ('lost' , 'lost'),
 )
 
+def getClientRelationshipContract(instance , filename ):
+    return 'clientRelationships/contracts/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+
+
 class Deal(models.Model):
     user = models.ForeignKey(User , related_name = 'dealsCreated' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
@@ -71,34 +79,49 @@ class Deal(models.Model):
     closeDate = models.DateTimeField(null = True)
     active = models.BooleanField(default = True)
     result = models.CharField(choices = RESULT_CHOICES , max_length = 4 , default = 'na')
-
-
-def getClientRelationshipContract(instance , filename ):
-    return 'clientRelationships/contracts/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
-
-
+    doc = models.FileField(upload_to= getClientRelationshipContract , null = True)
+    rate = models.PositiveIntegerField(null=True , default=0)
+    duePenalty = models.PositiveIntegerField(null=True , default=0)
+    duePeriod = models.PositiveIntegerField(null = False , default=7) #  7 days by default
 
 def getClientRelationshipActivity(instance , filename ):
     return 'clientRelationships/activity/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
 CONTRACT_STATE_CHOICES = (
+    ('cancelled' , 'cancelled'),
     ('quoted' , 'quoted'),
     ('approved' , 'approved'),
     ('billed' , 'billed'),
     ('received' , 'received'),
+    ('dueElapsed' , 'dueElapsed'),
 )
 
-class Contract(models.Model):
+PRODUCT_META_TYPE_CHOICES = (
+    ('HSN' , 'HSN'),
+    ('SAC' , 'SAC')
+)
+
+class ProductMeta(models.Model):
+    description = models.CharField(max_length = 500 , null = False)
+    typ = models.CharField(max_length = 5 , default = 'HSN' , choices = PRODUCT_META_TYPE_CHOICES)
+    code = models.PositiveIntegerField(null=False)
+    taxRate = models.PositiveIntegerField(null = False)
+
+class Contract(models.Model): # invoices actually
     user = models.ForeignKey(User , related_name = 'contracts' , null = False) # the user created it
-    created = models.DateTimeField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add = True) # quoted date
     updated = models.DateTimeField(auto_now=True)
-    doc = models.FileField(upload_to= getClientRelationshipContract , null = True)
     value = models.PositiveIntegerField(default=0)
     deal = models.ForeignKey(Deal , null = False , related_name='contracts')
     status = models.CharField(choices = CONTRACT_STATE_CHOICES , max_length=10 , default = 'quoted')
+    dueDate = models.DateField(null = True)
     details = models.TextField(max_length=10000 , null=True)
     # relation = models.CharField(choices = RELATION_CHOICES , default = 'onetime' , max_length = 10)
     data = models.CharField(null = True , max_length = 10000)
+    billedDate = models.DateTimeField(null = True)
+    recievedDate = models.DateTimeField(null = True)
+    archivedDate = models.DateTimeField(null = True)
+    grandTotal = models.PositiveIntegerField(default=0)
 
 ACTIVITY_CHOICES = (
     ('call', 'call'),
@@ -120,3 +143,13 @@ class Activity(models.Model):
     doc = models.FileField(upload_to= getClientRelationshipActivity , null = True)
     contacts = models.ManyToManyField(Contact , related_name='activitiesMentioned', blank=True)
     internalUsers = models.ManyToManyField(User , related_name='activitiesMentioned', blank=True)
+
+@receiver(pre_save, sender=Contract, dispatch_uid="update_contract_details")
+def update_contract_details(sender, instance, **kwargs):
+    print "setting the dates"
+    if instance.status == 'billed':
+        instance.billedDate = datetime.now(pytz.timezone('Asia/Kolkata'))
+    elif instance.status == 'received':
+        instance.recievedDate = datetime.now(pytz.timezone('Asia/Kolkata'))
+    elif instance.status == 'cancelled':
+        instance.archivedDate = datetime.now(pytz.timezone('Asia/Kolkata'))

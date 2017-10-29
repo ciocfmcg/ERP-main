@@ -9,8 +9,16 @@ app.controller("businessManagement.clientRelationships.relationships.quote", fun
   $scope.data = $scope.quote.data;
 
   $scope.resetForm = function() {
-    $scope.form = { currency : currency , type : 'onetime' , quantity : 0 , tax : 0 , rate : 0 , desc : ''};
+    $scope.form = { currency : currency , type : 'onetime' , quantity : 0 , tax : 0 , rate : 0 , desc : '' , productMeta : ''};
   }
+
+  $scope.$watch('form.productMeta' , function(newValue , oldValue) {
+    if (typeof newValue == 'object') {
+      $scope.showTaxCodeDetails = true;
+    }else {
+      $scope.showTaxCodeDetails = false;
+    }
+  })
 
   $scope.setCurrency = function(cur) {
     $scope.form.currency = cur;
@@ -27,9 +35,23 @@ app.controller("businessManagement.clientRelationships.relationships.quote", fun
     $scope.data.splice(idx , 1);
   }
 
+  $scope.searchTaxCode = function(c) {
+    return $http.get('/api/clientRelationships/productMeta/?description__contains='+c).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
   $scope.edit = function(idx) {
     var d = $scope.data[idx];
     $scope.form = { currency : d.currency , type : d.type , quantity : d.quantity , tax : d.tax , rate : d.rate , desc : d.desc};
+
+    $http({method : 'GET' , url : '/api/clientRelationships/productMeta/?code='+d.taxCode}).
+    then(function(response) {
+      $scope.form.productMeta = response.data[0];
+    })
+
+
     $scope.data.splice(idx , 1);
   }
 
@@ -59,7 +81,7 @@ app.controller("businessManagement.clientRelationships.relationships.quote", fun
       Flash.create('warning' , 'The tax rate is unrealistic');
       return;
     }
-    $scope.data.push({currency : $scope.form.currency , type : $scope.form.type , tax: $scope.form.tax , desc : $scope.form.desc , rate : $scope.form.rate , quantity : $scope.form.quantity})
+    $scope.data.push({currency : $scope.form.currency , type : $scope.form.type , tax: $scope.form.productMeta.taxRate , desc : $scope.form.desc , rate : $scope.form.rate , quantity : $scope.form.quantity, taxCode : $scope.form.productMeta.code})
     $scope.resetForm();
   }
 
@@ -70,15 +92,185 @@ app.controller("businessManagement.clientRelationships.relationships.quote", fun
   }, true)
 
 });
+app.controller("businessManagement.clientRelationships.relationships.quote.notification", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside , quote , deal , $uibModalInstance) {
+  $scope.quote = quote;
+  $scope.deal = deal;
+  $scope.send = function() {
+    var contacts = []
+    for (var i = 0; i < $scope.deal.contacts.length; i++) {
+      if ($scope.deal.contacts[i].checked) {
+        contacts.push($scope.deal.contacts[i].pk);
+      }
+    }
 
-app.controller("businessManagement.clientRelationships.relationships.manage", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside) {
+    var internal = []
+    for (var i = 0; i < $scope.internalUsers.length; i++) {
+      internal.push($scope.internalUsers[i]);
+    }
+
+    var toSend = {
+      sendEmail : $scope.sendEmail,
+      sendSMS : $scope.sendSMS,
+      internal : internal,
+      contacts : contacts,
+      type : $scope.notificationType,
+      contract : $scope.quote.pk
+    }
+    $http({method : 'POST' , url : '/api/clientRelationships/sendNotification/' , data : toSend}).
+    then(function() {
+
+    }, function() {
+      $scope.reset();
+    })
+  }
+
+
+
+
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+
+  $scope.reset = function() {
+    for (var i = 0; i < $scope.deal.contacts.length; i++) {
+      $scope.deal.contacts[i].checked = false;
+    }
+    $scope.notificationType = 'Please select';
+    $scope.sendEmail = false;
+    $scope.sendSMS = false;
+    $scope.internalUsers = [];
+  }
+
+  $scope.reset();
+
+
+});
+
+
+app.controller("businessManagement.clientRelationships.relationships.manage", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
 
 
   $scope.changeStatus = function(status , indx) {
     $scope.deal.contracts[indx].status = status;
-    $http({method : 'PATCH' , url : '/api/clientRelationships/contract/' + $scope.deal.contracts[indx].pk + '/' , data : {status : status}}).
-    then(function(response) {
 
+    if (status == 'billed') {
+      $uibModal.open({
+        template: '<div style="padding:30px;"><div class="form-group"><label>Due Date</label>'+
+            '<div class="input-group" >'+
+                '<input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="contract.dueDate" is-open="status.opened" />' +
+                '<span class="input-group-btn">'+
+                  '<button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>'+
+                '</span>'+
+              '</div><p class="help-block">Auto set based on Deal due period.</p>'+
+          '</div></div>',
+        size: 'sm',
+        backdrop : true,
+        resolve : {
+          contract : function() {
+            return $scope.deal.contracts[indx];
+          },
+          deal : function() {
+            return $scope.deal;
+          }
+        },
+        controller: function($scope , contract, deal){
+          $scope.contract = contract;
+          var dueDate = new Date();
+          dueDate.setDate(dueDate.getDate() + deal.duePeriod);
+          $scope.contract.dueDate = dueDate;
+          $scope.deal = deal;
+        },
+      }).result.then(function () {
+
+      }, (function(indx, status) {
+        return function () {
+          console.log(indx);
+          console.log($scope.deal.contracts[indx].dueDate);
+
+          $http({method : 'PATCH' , url : '/api/clientRelationships/contract/' + $scope.deal.contracts[indx].pk + '/' , data : {status : status , dueDate : $scope.deal.contracts[indx].dueDate.toISOString().substring(0, 10) }}).
+          then(function(response) {
+            $http({method : 'GET' , url : '/api/clientRelationships/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            then(function(response) {
+              Flash.create('success' , 'Saved')
+            }, function(err) {
+              Flash.create('error' , 'Error occured')
+            })
+          })
+
+
+
+        }
+      })(indx, status));
+
+
+
+    }else if (status == 'dueElapsed') {
+
+      var sacCode = 998311;
+      var c = $scope.deal.contracts[indx];
+      for (var i = 0; i < c.data.length; i++) {
+        if (c.data[i].taxCode == sacCode) {
+          return;
+        }
+      }
+
+      var fineAmount = $scope.deal.contracts[indx].value * $scope.deal.duePenalty*(1/100)
+
+      $http({method : 'GET' , url : '/api/clientRelationships/productMeta/?code='+ sacCode}).
+      then((function(indx) {
+        return function(response) {
+          var quoteInEditor = $scope.deal.contracts[indx]
+          var productMeta = response.data[0];
+          var subTotal = fineAmount*(1+productMeta.taxRate/100)
+          quoteInEditor.data.push({currency : $scope.deal.currency , type : 'onetime' , tax: productMeta.taxRate, desc : 'Late payment processing charges' , rate : fineAmount , quantity : 1, taxCode : productMeta.code , totalTax : fineAmount*(productMeta.taxRate/100), subtotal : subTotal })
+
+          quoteInEditor.value += subTotal
+          var url = '/api/clientRelationships/contract/' + quoteInEditor.pk + '/'
+          var method = 'PATCH'
+          var dataToSend = {deal : $scope.deal.pk , data : JSON.stringify(quoteInEditor.data) , value : quoteInEditor.value};
+          $http({method : method , url : url , data : dataToSend}).
+          then(function(response) {
+            $http({method : 'GET' , url : '/api/clientRelationships/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            then(function(response) {
+              Flash.create('success' , 'Saved')
+            }, function(err) {
+              Flash.create('error' , 'Error occured')
+            })
+          })
+        }
+      })(indx))
+
+
+    }else {
+
+      $http({method : 'PATCH' , url : '/api/clientRelationships/contract/' + $scope.deal.contracts[indx].pk + '/' , data : {status : status}}).
+      then(function(response) {
+
+      })
+
+    }
+
+
+  }
+
+  $scope.sendNotification = function(indx){
+
+    $scope.quote = $scope.deal.contracts[0];
+
+    $aside.open({
+      templateUrl : '/static/ngTemplates/app.clientRelationships.quote.notification.html',
+      placement: 'right',
+      size: 'lg',
+      backdrop : false,
+      resolve: {
+        quote : function() {
+          return $scope.quote;
+        },
+        deal : function() {
+          return $scope.deal;
+        },
+      },
+      controller : 'businessManagement.clientRelationships.relationships.quote.notification'
     })
   }
 
@@ -153,6 +345,10 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
             break
           }
         }
+
+        $timeout(function() {
+          // $scope.sendNotification()
+        }, 1000)
         // $scope.editQuote();
       })
     }
@@ -202,7 +398,7 @@ app.controller("businessManagement.clientRelationships.relationships.item", func
 
 });
 
-app.controller("businessManagement.clientRelationships.relationships", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.clientRelationships.relationships", function($scope, $state, $users, $stateParams, $http, Flash, $timeout) {
 
   $scope.data = {
     tableData: []
@@ -252,6 +448,10 @@ app.controller("businessManagement.clientRelationships.relationships", function(
     }
 
   }
+
+  $timeout(function() {
+    $scope.addTab({"title":"Manage : DWR project","cancel":true,"app":"manageRelation","data":{"pk":9},"active":true})
+  }, 1000)
 
 
   $scope.tabs = [];

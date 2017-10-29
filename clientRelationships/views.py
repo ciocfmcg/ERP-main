@@ -17,6 +17,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from ERP.models import service
+from HR.models import profile
 # Create your views here.
 from reportlab import *
 from reportlab.pdfgen import canvas
@@ -32,6 +33,10 @@ from reportlab.graphics.barcode.qr import QrCodeWidget
 import datetime
 import json
 import pytz
+import requests
+from django.template.loader import render_to_string, get_template
+from django.core.mail import send_mail, EmailMessage
+
 
 
 themeColor = colors.HexColor('#227daa')
@@ -40,7 +45,6 @@ styles=getSampleStyleSheet()
 styleN = styles['Normal']
 styleH = styles['Heading1']
 
-now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
 
 settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
 
@@ -71,9 +75,11 @@ class expanseReportHead(Flowable):
         draw the floable
         """
         print self.contract.status
+        now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+        print self.contract.status
         if self.contract.status in ['quoted']:
             docTitle = 'SALES QUOTATION'
-        elif self.contract.status in ['approved', 'billed' , 'recieved']:
+        else:
             docTitle = 'TAX INVOICE'
 
         passKey = '%s%s'%(str(self.req.user.date_joined.year) , self.req.user.pk) # also the user ID
@@ -105,6 +111,7 @@ def addPageNumber(canvas, doc):
     Add the page number
     """
     print doc.contract
+    now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
     passKey = '%s%s'%(str(doc.request.user.date_joined.year) , doc.request.user.pk) # also the user ID
     docID = '%s%s%s' %(doc.contract.deal.pk, now.year , doc.contract.pk)
 
@@ -213,8 +220,6 @@ def genInvoice(response , contract, request):
     MARGIN_SIZE = 8 * mm
     PAGE_SIZE = A4
 
-
-
     # c = canvas.Canvas("hello.pdf")
     # c.drawString(9*cm, 19*cm, "Hello World!")
 
@@ -229,55 +234,65 @@ def genInvoice(response , contract, request):
 
     tableHeaderStyle = styles['Normal'].clone('tableHeaderStyle')
     tableHeaderStyle.textColor = colors.white;
+    tableHeaderStyle.fontSize = 7
 
-    pHeadProd = Paragraph('<strong>Product</strong>' , tableHeaderStyle)
+    pHeadProd = Paragraph('<strong>Product/<br/>Service</strong>' , tableHeaderStyle)
     pHeadDetails = Paragraph('<strong>Details</strong>' , tableHeaderStyle)
+    pHeadTaxCode = Paragraph('<strong>HSN/<br/>SAC</strong>' , tableHeaderStyle)
     pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
     pHeadPrice = Paragraph('<strong>Rate</strong>' , tableHeaderStyle)
-    pHeadTax = Paragraph('<strong>Tax</strong>' , tableHeaderStyle)
     pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
+    pHeadTax = Paragraph('<strong>IGST <br/> Tax</strong>' , tableHeaderStyle)
+    pHeadSubTotal = Paragraph('<strong>Sub Total</strong>' , tableHeaderStyle)
 
-    # bookingTotal , bookingHrs = getBookingAmount(o)
+    # # bookingTotal , bookingHrs = getBookingAmount(o)
+    #
+    # pFooterQty = Paragraph('%s' % ('o.quantity') , styles['Normal'])
+    # pFooterTax = Paragraph('%s' %('tax') , styles['Normal'])
+    # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
+    # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
 
-    pFooterQty = Paragraph('%s' % ('o.quantity') , styles['Normal'])
-    pFooterTax = Paragraph('%s' %('tax') , styles['Normal'])
-    pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
-    pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
-
-    data = [[ pHeadProd, pHeadDetails, pHeadPrice , pHeadQty, pHeadTax , pHeadTotal]]
+    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty, pHeadTotal, pHeadTax ,pHeadSubTotal ]]
 
     totalQuant = 0
     totalTax = 0
     grandTotal = 0
+    tableBodyStyle = styles['Normal'].clone('tableBodyStyle')
+    tableBodyStyle.fontSize = 7
 
     for i in json.loads(contract.data):
-        # print i['desc']
-        # print i['quantity']
-        # print i['type']
-        # print i['tax']
-        # print i['rate']
-        # print i['total']
-        # print i['totalTax']
-        # print i['subtotal']
-
+        print i
         pDescSrc = i['desc']
 
         totalQuant += i['quantity']
         totalTax += i['totalTax']
         grandTotal += i['subtotal']
 
-        pBodyProd = Paragraph('Service' , styles['Normal'])
-        pBodyTitle = Paragraph( pDescSrc , styles['Normal'])
-        pBodyQty = Paragraph(str(i['quantity']) , styles['Normal'])
-        pBodyPrice = Paragraph(str(i['rate']) , styles['Normal'])
-        pBodyTax = Paragraph(str(i['totalTax']) , styles['Normal'])
-        pBodyTotal = Paragraph(str(i['subtotal']) , styles['Normal'])
+        pBodyProd = Paragraph('Service' , tableBodyStyle)
+        pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
+        pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
+        pBodyPrice = Paragraph(str(i['rate']) , tableBodyStyle)
+        if 'taxCode' in i:
+            taxCode = '%s(%s %%)' %(i['taxCode'] , i['tax'])
+        else:
+            taxCode = ''
 
-        data.append([pBodyProd, pBodyTitle, pBodyPrice, pBodyQty, pBodyTax , pBodyTotal])
+        pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
+        pBodyTax = Paragraph(str(i['totalTax']) , tableBodyStyle)
+        pBodyTotal = Paragraph(str(i['quantity']*i['rate']) , tableBodyStyle)
+        pBodySubTotal = Paragraph(str(i['subtotal']) , tableBodyStyle)
+
+        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodyTotal, pBodyTax , pBodySubTotal])
+
+    contract.grandTotal = grandTotal
+    contract.save()
+
+    tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
+    tableGrandStyle.fontSize = 10
 
 
-    data += [['', '', '', '', str(totalTax) , str(grandTotal)],
-            ['', '', '',  Paragraph('Grand Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableHeaderStyle)]]
+    data += [['', '','','', '', '',Paragraph(str(totalTax) , tableBodyStyle)  , Paragraph(str(grandTotal) , tableBodyStyle) ],
+            ['', '', '', '', '',  Paragraph('Grand Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
     t=Table(data)
     ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
                 ('VALIGN',(0,1),(-1,-3),'TOP'),
@@ -295,12 +310,14 @@ def genInvoice(response , contract, request):
                 # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
             ])
     t.setStyle(ts)
-    t._argW[0] = 3*cm
-    t._argW[1] = 8*cm
-    t._argW[2] = 2*cm
+    t._argW[0] = 1.5*cm
+    t._argW[1] = 6*cm
+    t._argW[2] = 2.4*cm
     t._argW[3] = 2*cm
     t._argW[4] = 2*cm
     t._argW[5] = 2*cm
+    t._argW[6] = 1.6*cm
+    t._argW[7] = 2*cm
 
     #add some flowables
 
@@ -361,11 +378,25 @@ class DownloadInvoice(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
         o = Contract.objects.get(id = request.GET['contract'])
+        response['Content-Disposition'] = 'attachment; filename="invoice%s%s%s.pdf"' %(o.deal.pk, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
         genInvoice(response , o , request)
-
+        f = open('./media_root/clientRelationships/doc%s%s_%s.pdf'%(o.deal.pk, o.pk, o.status) , 'wb')
+        f.write(response.content)
+        f.close()
+        if 'saveOnly' in request.GET:
+            return Response(status=status.HTTP_200_OK)
         return response
+
+
+class ProductMetaViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    serializer_class = ProductMetaSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['description', 'code']
+    def get_queryset(self):
+        return ProductMeta.objects.all()
+
 
 class ContactLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )
@@ -446,3 +477,92 @@ class ActivityViewSet(viewsets.ModelViewSet):
     filter_fields = ['contact' , 'deal', 'notes' , 'data']
     def get_queryset(self):
         return Activity.objects.order_by('-created')
+
+from email.mime.application import MIMEApplication
+
+class SendNotificationAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        print request.data
+        toEmail = []
+        cc = []
+
+        if request.data['sendEmail']:
+            for c in request.data['contacts']:
+                em = Contact.objects.get(pk=c).email
+                if em is not None:
+                    toEmail.append(em)
+            print toEmail
+
+            for c in request.data['internal']:
+                p = profile.objects.get(user_id = c)
+                u = User.objects.get(pk = c)
+                cc.append(u.email)
+            print cc
+
+        toSMS = []
+        if request.data['sendSMS']:
+            for c in request.data['contacts']:
+                mob = Contact.objects.get(pk=c).mobile
+                if mob is not None:
+                    toSMS.append(mob)
+            print toSMS
+
+        c = Contract.objects.get(pk = request.data['contract'])
+
+        # print dir(att)
+        # return Response(status=status.HTTP_200_OK)
+
+        docID = '%s%s%s' %(c.deal.pk, c.billedDate.year , c.pk)
+        value = c.grandTotal
+
+        typ = request.data['type']
+        print "will send invoice generated mail to " , toEmail , cc , toSMS
+        print docID , value
+        if typ == 'invoiceGenerated':
+            email_subject = 'Invoice %s generated'%(docID)
+            heading = 'Invoice Generated'
+            msgBody = ['We are pleased to share invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong>.' %(docID , value) , 'The due date to make payment is <strong>%s</strong>.' %(c.dueDate) , 'In case you have any query please contact us.']
+            smsBody = 'Invoice %s generated for the amount of INR %s. Due date is %s. Please check youe email for more information.'%(docID , value, c.dueDate)
+        elif typ == 'dueDateReminder':
+            email_subject = 'Payment reminder for invoice %s'%(docID)
+            heading = 'Payment reminder'
+            msgBody = ['We are sorry but invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> is still unpaid.' %(docID , value) , 'The due date to make payment is <strong>%s</strong>. Please make payment at the earliest to avoid late payment fee.' %(c.dueDate) , 'In case you have any query please contact us.']
+            smsBody = 'REMINDER : Invoice no. %s is sill unpaid. Due date is %s. Please ignore if paid.'%(docID , c.dueDate)
+        elif typ == 'dueDateElapsed':
+            email_subject = 'Payment overdue for invoice number %s'%(docID)
+            heading = 'Due date missed'
+            msgBody = ['We are pleased to share the updated copy of invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> including the late payment fees.' %(docID , value) , 'The payment is now due <strong>Immediately</strong>.' , 'In case you have any query please contact us.']
+            smsBody = 'ALERT : Invoice no. %s updated to include late payment fee. Please pay immediately. Check your email for more info.'%(docID)
+
+        ctx = {
+            'heading' : heading,
+            'recieverName' : Contact.objects.get(pk=request.data['contacts'][0]).name,
+            'message': msgBody,
+            'linkUrl': 'cioc.co.in',
+            'linkText' : 'View Online',
+            'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+            'sendersPhone' : '841101',
+            'linkedinUrl' : 'linkedin.com',
+            'fbUrl' : 'facebook.com',
+            'twitterUrl' : 'twitter.com',
+        }
+
+        email_body = get_template('app.clientRelationships.email.html').render(ctx)
+        msg = EmailMessage(email_subject, email_body, to= toEmail, cc= cc, from_email= 'do_not_reply@cioc.co.in' )
+        msg.content_subtype = 'html'
+
+        if typ != 'dueDateReminder':
+            fp = open('./media_root/clientRelationships/doc%s%s_%s.pdf'%(c.deal.pk, c.pk, c.status) , 'rb')
+            att = MIMEApplication(fp.read(),_subtype="pdf")
+            fp.close()
+            att.add_header('Content-Disposition','attachment',filename=fp.name.split('/')[-1])
+            msg.attach(att)
+
+        msg.send()
+
+        for n in toSMS:
+            url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(n , smsBody)
+            requests.get(url)
+
+        return Response(status=status.HTTP_200_OK)
