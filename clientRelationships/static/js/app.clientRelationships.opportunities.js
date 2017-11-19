@@ -138,6 +138,9 @@ app.controller("businessManagement.clientRelationships.opportunities.created", f
         {key : 'created', value : true},
         {key : 'won', value : false},
         {key : 'lost', value : false},
+      ]},
+      {icon : 'fa fa-home' , name : 'another search' , btnClass : 'default' , options : [
+        {key : 'adarsh', value : true},
       ]}
     ]
   }

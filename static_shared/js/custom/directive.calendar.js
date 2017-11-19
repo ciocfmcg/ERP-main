@@ -114,6 +114,8 @@ app.directive('genericCalendar' , function(){
             }
           }
         }
+        console.log($scope.itemsGroup);
+        console.log($scope.dayItems);
       };
 
       $scope.gotoToday = function(){

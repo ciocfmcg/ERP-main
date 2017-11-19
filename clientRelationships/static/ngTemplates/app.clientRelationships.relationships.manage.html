@@ -180,7 +180,7 @@
                       <button ng-if="c.status != 'cancelled'" type="button" class="btn btn-default" ng-click="editQuote($index)">
                         <i class="fa fa-pencil"></i>
                       </button>
-                      <button type="button" class="btn btn-danger" ng-click="sendNotification($index)" ng-if="['billed' , 'recieved', 'dueElapsed'].indexOf(c.status) != -1">
+                      <button type="button" class="btn btn-info" ng-click="sendNotification($index)" ng-if="['billed' , 'recieved', 'dueElapsed'].indexOf(c.status) != -1">
                         <i class="fa fa-envelope-o"></i>
                       </button>
                       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
