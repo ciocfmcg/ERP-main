@@ -108,6 +108,7 @@ INSTALLED_APPS = (
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
 	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
+	'LMS',# LMS
 )
 
 SITE_ID = 1

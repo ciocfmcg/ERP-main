@@ -57,6 +57,11 @@
     <!-- contains very common ng templates used in the directives -->
     <!-- Stock JS libraries -->
 
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+      });
+    </script>
 
     {% if useCDN %}
       <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
@@ -76,6 +81,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-audio/1.7.2/angular.audio.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.js"></script>
     {% else %}
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
       <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
       <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
       <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -90,6 +96,7 @@
       <script src="{% static 'js/angular-highlightjs.min.js' %}"></script>
       <script src="{% static 'js/angular.audio.min.js' %}"></script>
       <script src="{% static 'js/rzslider.min.js' %}"></script>
+      <!-- <script src="{% static 'js/MathJax.js' %}"></script> -->
     {% endif %}
 
     <script src="{% static 'js/autobahn.min.js' %}"></script>
@@ -124,6 +131,8 @@
     {% for m in modules %}
       <script src="{% static '' %}js/module.{{m.name}}.js"></script>
     {% endfor %}
+
+
 
   </body>
 </html>
