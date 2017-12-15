@@ -93,6 +93,7 @@ INSTALLED_APPS = (
     'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
+    'travel',
 )
 
 SITE_ID = 1

@@ -1,0 +1,115 @@
+<breadcrumb></breadcrumb>
+
+<div class="container" ng-controller="finance.travel">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab"><i class="fa fa-plane">Flights</i></a></li>
+    <li><a data-toggle="tab"><i class="fa fa-bed">Accomodation</i></a></li>
+  </ul>
+
+
+  <div class=" container-fluid tab-content" style="margin-top:20px;">
+    <div id="home" class="tab-pane fade in active">
+      <button class="btn btn-default">Round-Trip</button>
+      <button class="btn btn-default">One Way</button>
+      <button class="btn btn-default">Multicity</button>
+    </div>
+    <br>
+
+    <input class="form" placeholder="From" ng-model="test" />
+    <input class="form" placeholder="To" ng-model="test" />
+
+
+    <div class="container form-group ">
+      <label>Departure Date</label>
+      <div class="input-group col-md-4">
+        <input type="text" class="form-control " uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.form.start" is-open="status.start" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="status.start = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </div>
+    </div>
+    <div class="container form-group">
+      <label>Return Date</label>
+      <div class="input-group col-md-4">
+        <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.form.end" is-open="status.start1" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="status.start1 = true;"><i class="glyphicon glyphicon-calendar"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="container col-md-4">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Passengers
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <div class="container col-md-4">
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Adult (>12)<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">6</a></li>
+                <li><a href="#">7</a></li>
+                <li><a href="#">Group Booking</li>
+              </ul>
+            </div>
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+Child (2 to 12 years)<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">6</a></li>
+                <li><a href="#">7</a></li>
+                <li><a href="#">Group Booking</li>
+              </ul>
+            </div>
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                Infants (7 days to 2 years)<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">6</a></li>
+                <li><a href="#">7</a></li>
+                <li><a href="#">Group Booking</li>
+              </ul>
+            </div>
+          </div>
+
+        </ul>
+      </div>
+    </div>
+    <div class="container col-md-4">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-money">
+          Currency </i><span class="caret"></span>
+        </button>
+          <ul ng-repeat="currency in currencies" class="dropdown-menu">
+            <li><a>{{currency.money}}</a></li>
+          </ul>
+        </div>
+    </div>
+    <br><br><br>
+
+    <div class="container">
+      <button class="btn btn-primary btn-lg">Search Flight</button>
+    </div>
+    <hr>
+
+  </div>
+</div>
