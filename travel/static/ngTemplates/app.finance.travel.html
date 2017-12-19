@@ -1,3 +1,4 @@
+
 <breadcrumb></breadcrumb>
 
 <div class="container" ng-controller="finance.travel">
@@ -8,21 +9,21 @@
 
 
   <div class=" container-fluid tab-content" style="margin-top:20px;">
-    <div id="home" class="tab-pane fade in active">
-      <button class="btn btn-default">Round-Trip</button>
-      <button class="btn btn-default">One Way</button>
-      <button class="btn btn-default">Multicity</button>
+    <div ng-model="home" class="tab-pane fade in active">
+      <input type="checkbox">Round-Trip</input>
+      <input type="checkbox" ng-model="oneway">One Way</input>
+      <input type="checkbox">Multicity</input>
     </div>
     <br>
 
-    <input class="form" placeholder="From" ng-model="test" />
-    <input class="form" placeholder="To" ng-model="test" />
+    <input class="form" placeholder="From" ng-model="travel.from" />
+    <input class="form" placeholder="To" ng-model="travel.to" />
 
 
     <div class="container form-group ">
       <label>Departure Date</label>
       <div class="input-group col-md-4">
-        <input type="text" class="form-control " uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.form.start" is-open="status.start" />
+        <input type="text" class="form-control " uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dep.date" is-open="status.start" />
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="status.start = true;"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
@@ -31,85 +32,79 @@
     <div class="container form-group">
       <label>Return Date</label>
       <div class="input-group col-md-4">
-        <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.form.end" is-open="status.start1" />
+        <input type="text" class="form-control" ng-disabled="oneway" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="ret.date" is-open="status.start1" />
         <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="status.start1 = true;"><i class="glyphicon glyphicon-calendar"></i>
+          <button type="button" class="btn btn-default" ng-disabled="oneway" ng-click="status.start1 = true;"><i class="glyphicon glyphicon-calendar"></i>
           </button>
         </span>
       </div>
     </div>
     <div class="container col-md-4">
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Passengers
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <div class="container col-md-4">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Adult (>12)<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">6</a></li>
-                <li><a href="#">7</a></li>
-                <li><a href="#">Group Booking</li>
-              </ul>
-            </div>
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-Child (2 to 12 years)<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">6</a></li>
-                <li><a href="#">7</a></li>
-                <li><a href="#">Group Booking</li>
-              </ul>
-            </div>
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                Infants (7 days to 2 years)<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">6</a></li>
-                <li><a href="#">7</a></li>
-                <li><a href="#">Group Booking</li>
-              </ul>
+      <div class="container">
+        <!-- Trigger the modal with a button -->
+        <button type="button" class="btn  btn-lg" data-toggle="modal" data-target="#myModal"ng-model="passengers">Passengers</button>
+
+        <!-- Modal -->
+        <div class="modal" id="myModal" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content" style="border:2px">
+              <div class="form-group">
+                <label> Adults(>12)</label>
+                <select class="form-control" ng-model="data.mode">
+                          <option value= "1">1</option>
+                          <option value = "2">2</option>
+                          <option value = "3">3</option>
+                          <option value = "4">4</option>
+                          <option value = "5">5</option>
+                          <!-- actual form building as seen bythe vendor is in generic product-->
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Child (2 to 12 years)</label>
+                <select class="form-control" ng-model="data.mode1">
+                        <option value = "1">1</option>
+                        <option value = "2">2</option>
+                        <option value = "3">3</option>
+                        <option value = "4">4</option>
+                        <option value = "5">5</option>
+                        <!-- actual form building as seen by thevendor is in generic product-->
+                </select>
+              </div>
+              <div class="form-group">
+                <label> Infants (7 days to 2 years)</label>
+                <select class="form-control" ng-model="data.mode2">
+                        <option value = "1">1</option>
+                        <option value = "2">2</option>
+                        <option value = "3">3</option>
+                        <option value = "4">4</option>
+                        <option value = "5">5</option>
+                        <!-- actual form building as seen by the vendor is in generic product-->
+                </select>
+              </div>
+              <hr>
+              <button class="btn btn-info btn-lg" ng-click="done()">Done</button>
             </div>
           </div>
-
-        </ul>
+        </div>
       </div>
     </div>
+
     <div class="container col-md-4">
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-money">
-          Currency </i><span class="caret"></span>
-        </button>
-          <ul ng-repeat="currency in currencies" class="dropdown-menu">
-            <li><a>{{currency.money}}</a></li>
-          </ul>
-        </div>
+      <select name="currency" class="nav nav-pills nav stacked" class="pull-center" ng-model="currency">
+        <option value="" disabled selected>Currency</option>
+        <option multiple="multiple" ng-repeat="currency in currencies" class="text-center">
+          <a>
+            {{currency.money}}
+          </a>
+        </option>
+      </select>
     </div>
     <br><br><br>
-
+    <hr>
     <div class="container">
       <button class="btn btn-primary btn-lg">Search Flight</button>
     </div>
-    <hr>
+
 
   </div>
 </div>

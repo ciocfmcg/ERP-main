@@ -29,7 +29,7 @@ app.controller('finance.travel' , function($scope , $users , Flash){
                         { money: 'Singapore Dollar' },
                         { money: 'Euro' },
                         { money: 'British Pound' },
-                        { money: 'Qatari Riyal' },
+                        { money: 'Qatari Riyal' }
 
                       ];
   $scope.cities = [ { city:'Agartala(IXA)'},
@@ -40,6 +40,14 @@ app.controller('finance.travel' , function($scope , $users , Flash){
                     { city:'Bangalore (BLR)'}
 
                   ]
+
+
+  //
+  // $scope.done=function() {
+  //   if ( data.model! == '' $$ data.model1! == '' && data.model2 ! == '') {
+  //     console.log("loaded");
+  //   };
+  // };
 
 
 

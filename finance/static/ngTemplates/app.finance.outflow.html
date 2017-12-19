@@ -1,0 +1,26 @@
+<breadcrumb></breadcrumb>
+<div class="form-group col-md-6">
+      <label>Select :</label>
+      <select class="form-control" id="sel1" ng-model="data.outflow">
+        <option>Indirect</option>
+        <option>Direct</option>
+        <option>Others</option>
+      </select> <br>
+      <label>Amount</label>
+      <input class="form-control" type="text" ng-model="outflow.amount" /> <br>
+      <div class="form-group">
+        <label for="">Date</label>
+        <div class="input-group">
+          <input type="text" class="form-control " uib-datepicker-popup="dd-MMMM-yyyy" ng-model="loans.enddate" is-open="status.start" />
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.start = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </div>
+      </div>
+      <button class="btn btn-info" ng-click="save()">Save</button><br><br>
+
+
+
+
+
+</div>

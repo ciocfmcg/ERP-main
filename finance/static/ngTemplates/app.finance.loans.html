@@ -1,0 +1,54 @@
+<breadcrumb></breadcrumb>
+<div class="container-fluid">
+  <uib-tabset>
+    <uib-tab>
+      <uib-tab-heading>
+        New <i class="fa fa-plus"></i>
+      </uib-tab-heading>
+
+      <h3 class="text-muted">Create a new loan account</h3>
+
+      <label for="">Lender</label>
+      <div class="input-group col-md-6">
+        <input type="text" class="form-control" ng-model="loans.lender" />
+      </div>
+      <label for="">Interest</label>
+      <div class="input-group col-md-6">
+        <input type="text" class="form-control" ng-model="loans.interest" />
+      </div>
+      <label for="">Amount</label>
+      <div class="input-group col-md-6">
+        <input type="text" class="form-control" ng-model="loans.amount" />
+      </div>
+      <div class="form-group">
+        <label for="">End Date</label>
+        <div class="input-group col-md-6">
+          <input type="text" class="form-control " uib-datepicker-popup="dd-MMMM-yyyy" ng-model="loans.enddate" is-open="status.start" />
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.start = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </div>
+      </div>
+      <button class="btn btn-info" ng-click="save()">Save</button>
+
+    </uib-tab>
+    <uib-tab active="searchTabActive">
+      <uib-tab-heading>
+        Browse <i class="fa fa-list-ul"></i>
+      </uib-tab-heading>
+      <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+      <div class="container-fluid" style="cursor:pointer;" ng-click="view()">
+
+        <div class="row">
+          <div class=" card bg-white col-md-4" style="padding:10px;">
+            Lender : {{loans.lender}} <br> Interest : {{loans.interest}} <br> Amount : {{loans.amount}} <br> End Date : {{loans.enddate}} <br>
+
+
+          </div>
+        </div>
+      </div>
+    </uib-tab>
+
+  </uib-tabset>
+
+</div>
