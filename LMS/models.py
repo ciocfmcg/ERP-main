@@ -22,16 +22,6 @@ PART_TYPE_CHOICES = (
     ('image' , 'image'),
 )
 
-QUESTION_TYPE_CHOICES = (
-    ("mcq", "Single Correct Choice"),
-    ("mcc", "Multiple Correct Choices"),
-    ("code", "Code"),
-    ("upload", "Assignment Upload"),
-    ("integer", "Answer in Integer"),
-    ("string", "Answer in String"),
-    ("float", "Answer in Float"),
-)
-
 LANGUAGE_CHOICES = (
     ("python", "Python"),
     ("bash", "Bash"),
@@ -54,15 +44,41 @@ class Subject(models.Model):
 class Topic(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
-    subject = models.ForeignKey(Subject , null = False)
+    subject = models.ForeignKey(Subject , null = False , related_name='topics')
     title = models.CharField(max_length = 30 , null = False)
     description = models.TextField(max_length=2000 , null = False)
+
+
+
+QUESTION_LEVEL_CHOICES = (
+    ("easy", "easy"),
+    ("moderate", "moderate"),
+    ("difficult", "difficult"),
+)
+
+QUESTION_STATUS_CHOICES = (
+    ('submitted' , 'submitted'),
+    ('reviewed' , 'reviewed'),
+    ('approved' , 'approved'),
+)
+
+
+QUESTION_TYPE_CHOICES = (
+    ("mcq", "Single Correct Choice"),
+    ("mcc", "Multiple Correct Choices"),
+    ("code", "Code"),
+    ("upload", "Assignment Upload"),
+    ("integer", "Answer in Integer"),
+    ("string", "Answer in String"),
+    ("float", "Answer in Float"),
+)
 
 
 class QPart(models.Model):
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
     txt = models.CharField(max_length = 2000 , null = True)
     image = models.FileField(upload_to = getQAttachmentPath , null = True)
+
 
 class Question(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -71,16 +87,15 @@ class Question(models.Model):
     quesParts = models.ManyToManyField(QPart , related_name='questions' , blank = True)
     optionsParts = models.ManyToManyField(QPart , related_name='questionsOptions' , blank = True)
     solutionParts = models.ManyToManyField(QPart , related_name='questionsSolutions' , blank = True)
-    forReview = models.BooleanField(default = False)
-    reviewed = models.BooleanField(default = False)
-    approved = models.BooleanField(default = False)
+    status = models.CharField(choices = QUESTION_STATUS_CHOICES , default = 'submitted' , max_length = 20)
     archived = models.BooleanField(default = False)
     topic = models.ForeignKey(Topic , null = True , related_name='questions')
-    level = models.PositiveIntegerField(null=True)
+    level = models.CharField(null=True , choices= QUESTION_LEVEL_CHOICES , max_length = 15)
     marks = models.PositiveIntegerField(null=True)
     qtype = models.CharField(choices = QUESTION_TYPE_CHOICES , default = 'mcq' , null = False, max_length = 10)
     codeLang = models.CharField(choices = LANGUAGE_CHOICES , default = 'any' , null = False, max_length = 10)
     user = models.ForeignKey(User , null = False , related_name='questionsAuthored')
+
 
 class Paper(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -110,13 +125,12 @@ class Answer(models.Model):
     txt = models.TextField(max_length=10000 , null = True)
 
 STUDY_MATERIAL_TYPE = (
-    ('pdf' , 'pdf'),
+    ('file' , 'file'),
     ('presentation' , 'presentation'),
-    ('word' , 'word'),
     ('video' , 'video'),
-    ('image' , 'image'),
-    ('code' , 'code'),
-    ('zip' , 'zip'),
+    ('quiz' , 'quiz'),
+    ('notes' , 'notes'),
+    ('announcement' , 'announcement'),
 )
 
 ENROLLMENT_STATUS_CHOICES = (
@@ -130,6 +144,7 @@ ENROLLMENT_STATUS_CHOICES = (
 class Course(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
+    title = models.CharField(max_length = 100 , null = False)
     topic = models.ForeignKey(Topic , null = False)
     enrollmentStatus = models.CharField(choices = ENROLLMENT_STATUS_CHOICES , max_length = 20 , default = 'pdf')
     instructor = models.ForeignKey(User , related_name='lmsCoursesInstructing' , null = True)
@@ -141,7 +156,7 @@ class Course(models.Model):
 class Enrollment(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
-    couse = models.ForeignKey(Course , null = False , related_name='enrollments')
+    course = models.ForeignKey(Course , null = False , related_name='enrollments')
     addedBy = models.ForeignKey(User , related_name='lmsUsersAdded')
     accepted = models.BooleanField(default = True)
     user = models.ForeignKey(User , null = False)
@@ -154,9 +169,10 @@ class StudyMaterial(models.Model):
     typ = models.CharField(choices = STUDY_MATERIAL_TYPE , max_length = 20 , default = 'pdf')
     attachment = models.FileField(upload_to = getStudyMaterialAttachmentPath , null = True)
     archived = models.BooleanField(default = False)
-    course = models.ForeignKey(Course , null = False)
+    course = models.ForeignKey(Course , null = False , related_name='studyMaterials')
     pinned = models.BooleanField(default = False)
     user = models.ForeignKey(User , null = False)
+    data = models.CharField(max_length = 100 , null = True)
 
 
 class Comment(models.Model):

@@ -23,11 +23,11 @@
               {{tab.title}}
               <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
-          <div ng-if="tab.app == 'contactEditor'">
-              <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.form.html'"></div>
+          <div ng-if="tab.app == 'questionEditor'">
+              <div ng-include="'/static/ngTemplates/app.LMS.knowledgeBank.form.html'"></div>
           </div>
-          <div ng-if="tab.app == 'contactExplorer'">
-              <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.explore.html'"></div>
+          <div ng-if="tab.app == 'questionExplorer'">
+              <div ng-include="'/static/ngTemplates/app.LMS.knowledgeBank.explore.html'"></div>
           </div>
       </uib-tab>
   </uib-tabset>

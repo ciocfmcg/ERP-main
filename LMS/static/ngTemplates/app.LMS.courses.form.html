@@ -1,14 +1,46 @@
 <div class="container-fluid" ng-controller="projectManagement.LMS.courses.form">
 
 
-  <div class="row">
-    <div class="col-md-6">
-      <div class="form-group">
-        <label>Type</label>
-        <input type="text" class="form-control">
+  <div class="col-md-6">
+
+    <h2>Create a course</h2>
+
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" class="form-control" ng-model="form.title">
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Topic</label>
+          <input type="text" class="form-control" uib-typeahead="topic as getName(topic) for topic in topicSearch($viewValue)" ng-model="form.topic">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group" >
+          <label>Enrollment Type</label>
+          <select ng-model="form.enrollmentStatus" class="form-control" >
+            <option value="open">Open</option>
+            <option value="onInvitation">On Invitation</option>
+            <option value="admin">Admin</option>
+            <option value="onRequest">On request</option>
+          </select>
+        </div>
       </div>
     </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="name" class="form-control" rows="8" cols="80" ng-model="form.description"></textarea>
+    </div>
+    <div class="form-group">
+      <label>DP</label>
+      <input file-model="form.dp" type="file" >
+    </div>
+    <users-Field data="form.TAs" url="/api/HR/userSearch/" col="4" label="Teaching assistants"></users-Field>
+    <user-field url="/api/HR/userSearch/" label = "Instructor" user="form.instructor"></user-field>
+
+    <button type="button" class="btn btn-primary" ng-click="save()">
+      Save
+    </button>
   </div>
-
-
 </div>
