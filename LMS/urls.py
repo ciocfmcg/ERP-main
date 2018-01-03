@@ -17,6 +17,8 @@ router.register(r'comment' , CommentViewSet , base_name ='comment')
 router.register(r'like' , LikeViewSet , base_name ='like')
 router.register(r'studyMaterial' , StudyMaterialViewSet , base_name ='studyMaterial')
 
+
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'generateQuesPaper/$' , DownloadQuesPaper.as_view() ),
 ]

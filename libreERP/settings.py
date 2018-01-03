@@ -171,6 +171,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'libreERP', 'templates'),
             os.path.join(BASE_DIR, 'ecommerce', 'templates'),
             os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
+            os.path.join(BASE_DIR, 'LMS', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

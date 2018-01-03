@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="{% static 'css/custom/navbarControls.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/custom/calendar.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/app.HR.css' %}" charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/jquery.orgchart.min.css' %}" charset="utf-8">
 
     {% for a in appsWithCss %}
       <link rel="stylesheet" href="{% static '' %}css/{{a.name}}.css" charset="utf-8">
@@ -59,7 +60,7 @@
 
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
-        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+        tex2jax: {inlineMath: [['$','$']]}
       });
     </script>
 
@@ -81,7 +82,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-audio/1.7.2/angular.audio.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.js"></script>
     {% else %}
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script> -->
       <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
       <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
       <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -109,6 +110,7 @@
     <script src="{% static 'js/angular-aside.min.js' %}"></script>
     <script src="{% static 'js/markdown.min.js' %}"></script>
     <script src="{% static 'js/angular-ui-switch.min.js' %}"></script>
+    <script src="{% static 'js/jquery.orgchart.min.js' %}"></script>
     <!-- Custom JS files -->
     <script type="text/javascript">
       var wampServer = '{{wampServer}}';
