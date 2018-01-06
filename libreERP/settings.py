@@ -55,7 +55,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1' , '192.168.0.45']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -107,7 +107,8 @@ INSTALLED_APPS = (
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
 	'events',# to manage events like test, hackathon or something like that
-	'clientRelationships',# CRM like sales force
+	'clientRelationships',# CRM like sales force,
+    'products'
 )
 
 SITE_ID = 1
@@ -273,4 +274,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = '52.35.168.83'
+WAMP_SERVER = 'cioc.co.in'

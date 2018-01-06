@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <table>
+      <thead>
+      <tr style="border-top:solid 1px black;border-bottom:solid 1px black;padding:2px;">
+        <th>Product ID</th>
+        <th>Description</th>
+        <th>Rate</th>
+        <th>Qty</th>
+        <th>Sub total</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for p in products %}
+      <tr style="text-align: center;padding:5px;">
+        <td>{{ p.serial }}</td>
+        <td>
+          {{ p.name }} <br>
+          <img src="{{p.dp}}" style="height:100px;width:100px;" alt="">
+        </td>
+        <td>{{ p.rate }}</td>
+        <td>{{ p.qty}}</td>
+        <td> {{p.subTotal}} </td>
+      </tr>
+      {% endfor %}
+
+      <tr style="text-align: center;border-top:solid 1px black;padding:10px;">
+        <td></td>
+        <td></td>
+        <td>Total</td>
+        <td>{{qTot}}</td>
+        <td><h3>{{total}}</h3></td>
+      </tr>
+    </tbody>
+    </table>
+
+
+
+  </body>
+</html>
