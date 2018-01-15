@@ -1,0 +1,21 @@
+
+.change-icon > .fa + .fa,
+.change-icon:hover > .fa {
+  display: none;
+}
+.change-icon:hover > .fa + .fa {
+  display: inherit;
+}
+.not-selected .fa-play-circle  {
+  color: #7FFFD4
+}
+.not-selected .fa-video-camera {
+  color: #708090
+}
+.ul:hover{
+  background-color:#ddd;
+}
+video {
+    width: 100%;
+    height: auto;
+}

@@ -1,0 +1,84 @@
+<breadcrumb></breadcrumb>
+
+<div ng-controller="projectManagement.LMS.tutor">
+<div class="container-fluid">
+<div class="row">
+  <div class="col-md-2" style="padding-right: 0px;" >
+     <ul class="list-group" style="margin-bottom: 0px;height:780px">
+       <li class="list-group-item text-center">
+         <button type="button" class="btn btn-default" ng-click="pencil()"> <i class="fa fa-2x fa-{{editor.pencil?'pencil-square-o':'adn'}}"></i>  </button>
+       </li>
+       <li class="list-group-item text-center">
+         <button type="button" class="btn btn-default"  ng-click="save()">
+           <i class="fa fa-floppy-o fa-2x"></i>
+         </button>
+       </li>
+       <li class="list-group-item text-center text-center">  <button type="button" class="btn btn-default"  ng-click="clearAll()" >
+           <i class="fa fa-trash fa-2x"></i>
+         </button>
+       </li>
+       <li class="list-group-item text-center" >
+         <label>
+           <input  type="file" id="file" style="width:0%" class="file"/><i class="fa fa-file-image-o fa-2x"></i>
+         </label>
+       </li>
+       <li class="list-group-item text-center" ng-if="showTextOptions">
+         <div class="btn-group">
+           <button type="button" class="btn btn-default" ng-click="bold()"> <i class="fa fa-bold"></i></button>
+           <button type="button" class="btn btn-default" ng-click="italic()"> <i class="fa fa-italic"></i></button>
+           <button type="button" class="btn btn-default" ng-click="underline()"> <i class="fa fa-underline"></i></button>
+           <button type="button" class="btn btn-default" ng-click="rightalign()"> <i class="fa fa-align-right"></i></button>
+           <button type="button" class="btn btn-default" ng-click="leftalign()"> <i class="fa fa-align-left"></i></button>
+           <button type="button" class="btn btn-default" ng-click="centeralign()"> <i class="fa fa-align-justify"></i></button>
+           <button type="button" class="btn btn-default" ng-click="fontincrease()" id="fontincrease1"> <i class="fa fa-font"></i>++</button>
+           <button type="button" class="btn btn-default" ng-click="fontdecrease()"> <i class="fa fa-font"></i>--</button>
+       </div>
+     </li>
+     <li class="list-group-item text-center" >
+       <input type="color" ng-model="editor.color" id="color">
+     </li>
+      <li class="list-group-item" >
+        <select class="form-control text-center" ng-model="fontName">
+          <option value="Arial Black">Arial Black</option>
+          <option value = "Times New Roman" >Times New Roman</option>
+          <option value="Arial">Arial</option>
+          <option value="Comic Sans">Comic Sans</option>
+          <option value="Sans-serif">Sans-serif</option>
+          <option value="Monospace">Monospace</option>
+        </select>
+      </li>
+      <li class="list-group-item text-center" >
+        <button type="button" class="btn {{editor.rect? 'btn-primary' : 'btn-default'}}" ng-click="editor.rect = !editor.rect;">
+          <i class="fa fa-square-o fa-2x"></i>
+         </button>
+      </li>
+      <li class="list-group-item text-center" >
+       <button type="button"  class="btn {{editor.eraser? 'btn-primary' : 'btn-default'}}" ng-click="editor.eraser = !editor.eraser;eraserSmall();" >
+         <i class="fa fa-eraser fa-2x"></i>
+       </button>
+      </li>
+      <li class="list-group-item" ng-if="editor.eraser" ng-model="eraser">
+       <div class="container-fluid">
+         <div class="col-md-4" style="{{editor.eraserSize == 1? 'background:#eeeeee;':''}}" ng-click="editor.eraserSize = 1;eraserSmall();">
+           <i class="fa fa-square"></i>
+         </div>
+         <div class="col-md-4" style="{{editor.eraserSize == 2? 'background:#eeeeee;':''}}" ng-click="editor.eraserSize = 2;eraserMedium();">
+           <i class="fa fa-square fa-2x"></i>
+         </div>
+         <div class="col-md-4" style="{{editor.eraserSize == 3? 'background:#eeeeee;':''}}" ng-click="editor.eraserSize = 3;eraserLarge();">
+           <i class="fa fa-square fa-3x"></i>
+         </div>
+       </div>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-10" style="padding-left: 0px;padding-right: 0px;">
+     <div class="row">
+       <div class="col-md-12"  style="padding-right">
+         <canvas id="canvas" class="canvas"></canvas>
+       </div>
+      </div>
+   </div>
+ </div>
+</div>
+</div>

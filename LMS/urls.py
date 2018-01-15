@@ -16,6 +16,7 @@ router.register(r'enrollment' , EnrollmentViewSet , base_name ='enrollment')
 router.register(r'comment' , CommentViewSet , base_name ='comment')
 router.register(r'like' , LikeViewSet , base_name ='like')
 router.register(r'studyMaterial' , StudyMaterialViewSet , base_name ='studyMaterial')
+router.register(r'quesPaper' , PaperQuesViewSet , base_name ='quesPaper')
 
 
 urlpatterns = [

@@ -36,15 +36,31 @@ class QuestionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['topic' , 'ques']
+
+class PaperQuesViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = PaperSerializer
+    queryset = PaperQues.objects.all()
 
 class DownloadQuesPaper(APIView):
     permission_classes = (permissions.AllowAny, )
+    renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        ids = request.GET.get('questions',None)
-        ques=Question.objects.filter(id__in = ids.split(',')) if ids is not None else Question.objects.all()
+        p = Paper.objects.get(pk = request.GET.get('paper',None))
+        print p.pk,'***************'
+        ques=Question.objects.filter(id__in = [i.ques.pk for i in p.questions.all()])
         tex_body = get_template('my_latex_template.tex').render({"ques" : ques})
-        print str(tex_body)
-        return Response(status=status.HTTP_200_OK)
+        content= str(tex_body)
+        print content
+        response = HttpResponse(content,content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename="questionPaper%s_%s.txt"' %(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year)
+        f = open('./media_root/questionPaper%s_%s.txt'%(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year) , 'wb')
+        f.write(response.content)
+        f.close()
+        return response
+
 
         # with tempfile.TemporaryDirectory() as tempdir:
         #     # Create subprocess, supress output with PIPE and
@@ -70,7 +86,6 @@ class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title']
-
 
 class PaperViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

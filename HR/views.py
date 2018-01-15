@@ -196,6 +196,15 @@ def logoutView(request):
 def root(request):
     return redirect(globalSettings.ROOT_APP)
 
+def blog(request):
+    return render(request,"blog.html")
+
+def news(request):
+    return render(request,"newssection.html")
+
+def team(request):
+    return render(request,"team.html")
+
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):
     u = request.user
