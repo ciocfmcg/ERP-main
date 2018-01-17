@@ -109,6 +109,7 @@ INSTALLED_APPS = (
 	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
 	'LMS',# LMS
+	'POS',# POS terminal like tally
 )
 
 SITE_ID = 1
