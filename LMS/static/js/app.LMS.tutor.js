@@ -1,13 +1,13 @@
 app.config(function($stateProvider){
-  $stateProvider.state('projectManagement.LMS.tutor', {
+  $stateProvider.state('projectManagement.tutor', {
     url: "/tutor",
-    templateUrl: '/static/ngTemplates/app.LMS.tutor.html',
-    controller: 'projectManagement.LMS.tutor'
+    templateUrl: '/static/ngTemplates/app.tutor.html',
+    controller: 'projectMan    <!-- </div> -->agement.tutor'
   });
 });
 
 
-app.controller("projectManagement.LMS.tutor", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
+app.controller("projectManagement.tutor", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
 
   $scope.me = $users.get('mySelf');
   $scope.editor = {pencil : false , eraser:false , eraserSize: 1, rect : false , dragging : false , rectStartX : undefined, rectStartY : undefined,rectEndX : undefined, rectEndY : undefined , eraserStartX : undefined, eraserStartY : undefined , eraserEndX : undefined, eraserEndY : undefined , color:'#000000'}
