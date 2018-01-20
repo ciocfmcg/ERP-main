@@ -133,6 +133,129 @@ app.controller("controller.POS.invoicesinfo.form" , function($scope , invoice){
 
 app.controller("businessManagement.POS.default", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal) {
 
+
+  $scope.data = {
+    tableData: [], invoiceTableDate : [] , customerDataTable : []
+  };
+
+  var views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.POS.product.item.html',
+  }, ];
+
+
+    var multiselectOptions = [{icon : 'fa fa-plus' , text : 'new' },
+    ];
+
+  $scope.config = {
+    views: views,
+    url: '/api/POS/product/',
+    searchField: 'name',
+    itemsNumPerView: [6, 12, 24],
+    multiselectOptions : multiselectOptions,
+  }
+
+  var views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.POS.customer.item.html',
+  }, ];
+
+  $scope.configCustomer = {
+    views: views,
+    url: '/api/POS/customer/',
+    searchField: 'name',
+    itemsNumPerView: [6, 12, 24],
+    multiselectOptions : multiselectOptions,
+  }
+  //
+  //
+  var views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.POS.invoice.item.html',
+  }, ];
+
+  $scope.configInvoice = {
+    views: views,
+    url: '/api/POS/invoice/',
+    searchField: 'name',
+    itemsNumPerView: [6, 12, 24],
+    multiselectOptions : multiselectOptions,
+  }
+
+
+
+
+
+
+  $scope.tableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableData);
+
+    if (action == 'new') {
+      $scope.openProductForm();
+    }else {
+      for (var i = 0; i < $scope.data.tableData.length; i++) {
+        if ($scope.data.tableData[i].pk == parseInt(target)) {
+          if (action == 'edit') {
+            $scope.openProductForm(i);
+          }else {
+            $scope.openProductInfo(i);
+          }
+        }
+      }
+    }
+
+
+
+  }
+
+  $scope.tableActionCustomer = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.customerDataTable);
+
+    if (action == 'new') {
+      $scope.openCustomerForm();
+    }else {
+      for (var i = 0; i < $scope.data.customerDataTable.length; i++) {
+        if ($scope.data.customerDataTable[i].pk == parseInt(target)) {
+          if (action == 'edit') {
+            $scope.openCustomerForm(i);
+          }else {
+            $scope.openCustomerInfo(i);
+          }
+        }
+      }
+    }
+
+  }
+
+  $scope.tableActionInvoice = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.invoiceDataTable);
+
+    if (action == 'new') {
+      $scope.createInvoice();
+    }else {
+      for (var i = 0; i < $scope.data.invoiceDataTable.length; i++) {
+        if ($scope.data.invoiceDataTable[i].pk == parseInt(target)) {
+          if (action == 'edit') {
+            $scope.openInvoiceForm(i);
+          }else {
+            $scope.openInvoiceinfoForm(i);
+          }
+        }
+      }
+    }
+
+  }
+
+
   $scope.mode='home';
 
   $scope.tabs = [];

@@ -6,82 +6,26 @@
     <div class="container-fluid" ng-if="mode == 'home'">
       <div class="row">
         <div class="col-md-6">
-          <div class="row">
-            <div class="col-md-12">
-              <label>Product</label>
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
-                <span class="input-group-addon" ng-click="openProductForm()"><i class="fa fa-plus" aria-hidden="true"></i></span>
-              </div>
-            </div>
-            <div class="col-md-12" ng-repeat="x in products">
-              <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
-                <div class="row" syle="padding: 7px;">
-                  <div class="col-md-2">
-                    <img src="{{x.img}}" style="width: 70%;">
-                  </div>
-                  <div class="col-md-10" style="margin-top:10px;">
-                    <div class="row">
-                      <div class="col-md-9">
-                        <span style="font-size: 18px;">{{x.name}}</span><br>
-                        <span>MRP:{{x.price}}</span><br>
-                        <span>GST%:{{x.gst}}</span>
-                      </div>
-                      <div class="col-md-2">
-                        <span>HSN/SAC:{{x.sac}}</span><br>
-                        <span>In Stock:{{x.stock}}</span>
-                      </div>
-                      <div class="col-md-1">
-                        <div class="icon-infohover">
-                          <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;" ng-click="openProductInfo($index)"></i></span>
-                        </div><br><br>
-                        <div class="icon-pancilhover">
-                          <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;" ng-click="openProductForm($index)"></i></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+
+
+
           <div class="row" style="margin-top:30px">
-
-
             <uib-tabset style="margin-left: 15px;">
               <uib-tab >
                 <uib-tab-heading>
                   customers
                 </uib-tab-heading>
-                <div class="col-md-12" style="padding-left:0px;margin-top:20px">
+                <!-- <div class="col-md-12" style="padding-left:0px;margin-top:20px">
                   <label>Customers</label>
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
                     <span class="input-group-addon" ><i class="fa fa-plus" style="cursor:pointer;" aria-hidden="true" ng-click="openCustomerForm()"></i></span>
                   </div>
-                </div>
-                <div class="col-md-12" ng-repeat="z in customers" style="padding-left:0px">
-                  <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
-                        <div class="row" style="padding: 7px;">
-                          <div class="col-md-8">
-                            <span style="font-size: 18px;">{{z.name}}</span><br>
-                            <span>Email:{{z.email}}</span><br>
-
-                          </div>
-                          <div class="col-md-3">
-                            <span>Mobile:{{z.mobile}}</span><br>
-                            <span>Company Name:{{z.company}}</span>
-                          </div>
-                          <div class="col-md-1 text-center">
-                            <div class="icon-infohover">
-                              <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="openCustomerInfo($index)"></i></span>
-                            </div><br><br>
-                            <div class="icon-pancilhover" style="margin-top: -10px;">
-                              <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="openCustomerForm($index)"></i></span>
-                            </div>
-                          </div>
-                        </div>
-                  </div>
+                </div> -->
+                <div class="col-md-12" style="padding-left:0px">
+                  <generic-Table data="data.customerDataTable" config-Obj="{{configCustomer}}" callback-Fn="tableActionCustomer"></generic-Table>
                 </div>
               </uib-tab>
                 <uib-tab active="searchTabActive">
@@ -89,42 +33,15 @@
                         Browse
                         <i class="fa fa-list-ul"></i>
                     </uib-tab-heading>
-                    <div class="col-md-12" style="padding-left:0px;margin-top:20px">
+                    <!-- <div class="col-md-12" style="padding-left:0px;margin-top:20px">
                       <label>Invoices</label>
                       <div class="input-group">
                         <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
                         <span class="input-group-addon" ng-click="createInvoice()"><i class="fa fa-plus" aria-hidden="true" style="cursor:pointer;" ></i></span>
                       </div>
-                    </div>
-                    <div class="col-md-12" ng-repeat="y in invoices" style="padding-left:0px">
-                      <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
-                        <div class="row" >
-                          <div class="col-md-3 text-center" style="padding: 20px;">
-                            <span style="font-size: 25px;">{{y.id}}</span>
-                          </div>
-                          <div class="col-md-9" style="margin-top:10px;">
-                            <div class="row">
-                              <div class="col-md-8">
-                                <span style="font-size: 18px;">{{y.name}}</span><br>
-                                <span>Invoice Due Date:{{y.date}}</span><br>
-                                <span>Paid:{{y.paid}}</span>
-                              </div>
-                              <div class="col-md-3">
-                                <span>Mode of Payment:{{y.mode}}</span><br>
-                                <span>Total Amount:{{y.amount}}</span>
-                              </div>
-                              <div class="col-md-1">
-                                <div class="icon-infohover">
-                                  <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="openInvoiceinfoForm($index)"></i></span>
-                                </div><br><br>
-                                <div class="icon-pancilhover">
-                                  <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="openInvoiceForm($index)"></i></span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    </div> -->
+                    <div class="col-md-12" style="padding-left:0px">
+                        <generic-Table data="data.invoiceTableDate" config-Obj="{{configInvoice}}" callback-Fn="tableActionInvoice"></generic-Table>
                     </div>
                 </uib-tab>
             </uib-tabset>
