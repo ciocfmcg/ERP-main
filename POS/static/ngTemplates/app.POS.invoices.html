@@ -1,0 +1,210 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-7" >
+        <div class="form-group">
+          <label>Invoice Serial Number<a href="#"> (Set Sequence)</a></label>
+          <input type="text" class="form-control" placeholder="Invoice Serial Number" >
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Invoice Date </label>
+          <div class="input-group">
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dealEditor.closeDate" is-open="statusInvDate.opened" />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="statusInvDate.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Reference</label>
+          <input type="text" class="form-control" placeholder="PO. Number,text" >
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Due date</label>
+          <div class="input-group">
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="duedate" is-open="statusDue.opened" />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Return Date</label>
+          <select ng-model="selectedName" ng-options="item for item in dates" class="form-control">
+          </select>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Return Quater</label>
+          <select ng-model="returnDate" ng-options="item for item in returndates" class="form-control">
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-md-6">
+    <div class="col-md-10" style="padding-left: 0px;">
+      <div class="form-group">
+        <label>Customer Name</label>
+        <div class="input-group">
+           <input type="text" class="form-control" placeholder="Company Name" ng-model="form.customerName">
+           <div class="input-group-btn">
+             <button class="btn btn-default" type="submit" ng-click="openCustomerForm()">
+               <i class="fa fa-plus"></i>
+             </button>
+           </div>
+         </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>GSTIN:</label>
+            <input type="text" class="form-control" placeholder="" >
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Place of Supply</label>
+            <select class="form-control" >
+                <option>Hariyana</option>
+                <option>Kolkata</option>
+                <option>Bangalore</option>
+                <option>Chennai</option>
+              </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-6">
+        <span><b>Billing Address</b>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Edit</a></span><br>
+        <span>Ashrampara</span><br>
+        <span>some place</span><br>
+        <span>West Bengal,733202</span><br>
+        <span>INDIA</span>
+      </div>
+      <div class="col-md-6">
+        <span><b>Shipping Address</b></span><br>
+        <span>Ashrampara</span><br>
+        <span>some place</span><br>
+        <span>West Bengal,733202</span><br>
+        <span>INDIA</span><br><br>
+        <div class="checkbox">
+          <label><input type="checkbox" value="checked" style="margin-top: -2px;">&nbsp; Same as billing address</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="checkbox">
+  <label><input type="checkbox" value="checked" style="margin-top: -2px;">&nbsp; Rate is Inclusive of Taxes(MRP Invoice)</label>
+</div>
+<div class="container-fluid" style="padding:0px">
+  <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+    <tr style="background-color: #eeeeee;height: 96px;">
+      <th>#</th>
+      <th>Item Description</th>
+      <th>Item Type</th>
+      <th>HSN/SAC</th>
+      <th>Qty</th>
+      <th>Rate(Rs.)</th>
+      <th>Taxable Rate</th>
+      <th>Total Tax</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>Hariyana</option>
+        <option>Kolkata</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>Hariyana</option>
+        <option>Kolkata</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>Hariyana</option>
+        <option>Kolkata</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder=""></td>
+    </tr>
+  </table>
+</div>
+<div class="down-part">
+  <div class="row">
+    <div class="col-md-12 text-center" style="margin-top: 27px;">
+      <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
+      <button type="button" class="btn btn-success">Save Invoice</button>
+    </div>
+  </div>
+</div>

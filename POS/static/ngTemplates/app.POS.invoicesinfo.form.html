@@ -1,0 +1,19 @@
+<div class="modal-header">
+  Invoice  Info
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="row" >
+      <div class="col-md-6">
+        <span style="font-size: 25px;">{{invoice.id}}</span><br>
+        <span style="font-size: 18px;">{{invoice.name}}</span><br>
+        <span>Invoice Due Date:{{invoice.date}}</span>
+      </div>
+          <div class="col-md-6">
+            <span>Paid:{{invoice.paid}}</span><br>
+            <span>Mode of Payment:{{invoice.mode}}</span><br>
+            <span>Total Amount:{{invoice.amount}}</span>
+          </div>
+    </div>
+  </div>
+</div>

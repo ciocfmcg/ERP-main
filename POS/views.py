@@ -1,6 +1,17 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.shortcuts import render
-
+from rest_framework import viewsets , permissions , serializers
+from url_filter.integrations.drf import DjangoFilterBackend
+from .serializers import *
+from API.permissions import *
+from .models import *
 # Create your views here.
+
+class CustomerViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = CustomerSerializer
+    queryset = Customer.objects.all()
+
+class ProductViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()

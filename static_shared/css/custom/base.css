@@ -832,7 +832,35 @@ background-color: white;
   color: black;
   display: block
 }
-/*.cards{
-  border-left:4px solid #4192cd;
-  box-shadow:0 2px 8px rgba(26,24,20,0.2);
-}*/
+.icon-infohover{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    -webkit-transition: all ease .5s;
+    -moz-transition: all ease .5s;
+    transition: all ease .5s;
+  }
+.icon-infohover:hover{
+    opacity: 0;
+  }
+
+  .icon-infohover:hover {
+    opacity: 1;
+  }
+  .icon-pancilhover{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      -webkit-transition: all ease .5s;
+      -moz-transition: all ease .5s;
+      transition: all ease .5s;
+    }
+  .icon-pancilhover:hover{
+      opacity: 0;
+    }
+
+    .icon-pancilhover:hover {
+      opacity: 1;
+    }
