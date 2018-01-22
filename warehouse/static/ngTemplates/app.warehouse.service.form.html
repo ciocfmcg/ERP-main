@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <h3 class="modal-title" ng-if="mode == 'edit'">Edit owners for : <strong>{{data.name}}</strong></h3>
+  <h3 class="modal-title" ng-if="mode == 'new'">Create a new service</h3>
+</div>
+
+<div ng-controller="businessManagement.warehouse.service.form">
+  <div class="modal-body" style="padding-left:40px">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+        <div class="form-group">
+          <label>Cin</label>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+        <div class="form-group">
+          <label>Tin</label>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+        <div class="form-group">
+          <label>Telephone</label>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label>Street</label><br>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+        <div class="form-group">
+          <label>State</label><br>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+        <div class="form-group">
+          <label>Country</label><br>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label>City</label><br>
+          <input type="text" class="form-control" ng-model="product.name">
+        </div>
+        <div class="form-group">
+          <label>PinCode</label><br>
+          <input type="number" class="form-control" ng-model="product.name">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center" style="margin-top: 27px;">
+        <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ app.config(function($stateProvider){
         },
         "@businessManagement.warehouse": {
           templateUrl: '/static/ngTemplates/app.warehouse.default.html',
+
           controller : 'businessManagement.warehouse.default',
         }
     }
@@ -22,3 +23,22 @@ app.config(function($stateProvider){
 app.controller("businessManagement.warehouse.default", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal) {
 
 });
+
+          // controller : 'businessManagement.warehouse.default',
+        }
+    }
+  })
+  // .state('businessManagement.warehouse.expenses', {
+  //   url: "/service",
+  //   templateUrl: '/static/ngTemplates/app.warehouse.service.html',
+  //   controller: 'businessManagement.warehouse.service'
+  // })
+
+});
+
+
+// app.controller('businessManagement.warehouse.default' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+//   // settings main page controller
+//
+//
+// })
