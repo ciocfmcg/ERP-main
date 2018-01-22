@@ -114,6 +114,7 @@ INSTALLED_APPS = (
 
 	'Tutor',# canvas
 
+	'warehouse',# warehouse application
 )
 
 SITE_ID = 1
