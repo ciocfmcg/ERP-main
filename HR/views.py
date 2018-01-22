@@ -205,6 +205,9 @@ def news(request):
 def team(request):
     return render(request,"team.html")
 
+def career(request):
+    return render(request,"career.html")
+
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):
     u = request.user
