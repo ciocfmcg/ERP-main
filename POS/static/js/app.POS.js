@@ -49,11 +49,12 @@ app.controller("controller.POS.productinfo.form" , function($scope , product){
 
   $scope.labels2 = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
   $scope.data2 = [300, 500, 100];
-  $scope.dates = [
-    "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
-  $scope.returndates = [
-      "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
+  // $scope.dates = [
+  //   "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
+  // $scope.returndates = [
+  //     "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
   // $scope.form = {'name' : name , address : {street : '' , state : '' , pincode : '' , country :  'India'}}
+
 })
 app.controller("controller.POS.customer.form" , function($scope , customer , $http , Flash){
 
@@ -133,6 +134,13 @@ app.controller("controller.POS.invoicesinfo.form" , function($scope , invoice){
 
 app.controller("businessManagement.POS.default", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal) {
 
+$scope.item='';
+$scope.items='';
+$scope.items1='';
+$scope.products =[{name:'prabhakar'},{name:'ankita'},{name:'sai'},{name:'swagata'},{name:'pradeep'},{name:'raju'}]
+
+$scope.selected='';
+$scope.customers =[{name:'prabhakar'},{name:'ankita'},{name:'sai'},{name:'swagata'},{name:'pradeep'},{name:'raju'}]
 
   $scope.data = {
     tableData: [], invoiceTableDate : [] , customerDataTable : []
@@ -260,9 +268,35 @@ app.controller("businessManagement.POS.default", function($scope , $state , $use
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
+  var dummyDate = new Date();
 
-  $scope.form = {customerName : '', invoiceDate : new Date(), dewDate : new Date()}
+  var onlyDate = new Date(dummyDate.getFullYear()
+                         ,dummyDate.getMonth()
+                         ,dummyDate.getDate()
+                         ); // 2013-07-30 23:59:59
+  $scope.form = {customerName : '', invoiceDate :onlyDate , dewDate :onlyDate }
+console.log(onlyDate);
 
+// dummyDate.setDate(dummyDate.getDate() + numberOfDaysToAdd);
+// console.log(dummyDate);
+$scope.dates = [];
+var numberOfDaysToAdd = 7;
+d = dummyDate.setDate(dummyDate.getDate() + numberOfDaysToAdd);
+$scope.dates.push(new Date(d));
+
+
+
+$scope.returndates = [];
+var numberOfMonthsToAdd = 3;
+for (i=0;i<1;i++){
+  d = dummyDate.setMonth(dummyDate.getMonth() + numberOfMonthsToAdd);
+  $scope.returndates.push(new Date(d));
+  dummyDate=dummyDate;
+}
+  $scope.cutomerform=true;
+  $scope.doSomething = function(){
+    $scope.cutomerform =$scope.cutomerform;
+  }
   // $scope.products= [
   //   {img:'/static/images/avatar.png',name:"Prabhakar",price:200,gst:"18%",sac:123,stock:10 , pk : 1,description:"a",serialno:12},
   //   {img:'/static/images/avatar2.png',name:"Ankita",price:300,gst:"18%",sac:234,stock:20 , pk : 2,description:"b",serialno:13},
@@ -520,8 +554,24 @@ app.controller("businessManagement.POS.default", function($scope , $state , $use
 
   $scope.labels2 = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
   $scope.data2 = [300, 500, 100];
-  $scope.dates = [
-    "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
-  $scope.returndates = [
-      "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
+  // $scope.dates = [
+  //   "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
+  // $scope.returndates = [
+  //     "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
 });
+
+
+
+// app.directive('myEnter', function () {
+//   return function (scope, element, attrs) {
+//       element.bind("keydown keypress", function (event) {
+//           if(event.which === 13) {
+//               scope.$apply(function (){
+//                   scope.$eval(attrs.myEnter);
+//               });
+//
+//               event.preventDefault();
+//           }
+//       });
+//   };
+// });

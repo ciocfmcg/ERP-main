@@ -115,8 +115,7 @@ INSTALLED_APPS = (
 	'Tutor',# canvas
 
 
-	'warehouse',# warehouse project
-)
+
 
 	'warehouse',# warehouse application
 )

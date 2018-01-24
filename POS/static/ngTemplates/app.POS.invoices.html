@@ -9,9 +9,9 @@
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label>Invoice Date </label>
+          <label>Invoice Date</label>
           <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dealEditor.closeDate" is-open="statusInvDate.opened" />
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.invoiceDate" is-open="statusInvDate.opened" />
             <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="statusInvDate.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
@@ -32,7 +32,7 @@
         <div class="form-group">
           <label>Due date</label>
           <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="duedate" is-open="statusDue.opened" />
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.dewDate" is-open="statusDue.opened" ng-init="today"/>
             <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
@@ -42,14 +42,14 @@
       <div class="col-md-3">
         <div class="form-group">
           <label>Return Date</label>
-          <select ng-model="selectedName" ng-options="item for item in dates" class="form-control">
+          <select ng-model="selectedName" ng-options="item for item in dates" ng-init="selectedName = dates[0]"   class="form-control">
           </select>
         </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
           <label>Return Quater</label>
-          <select ng-model="returnDate" ng-options="item for item in returndates" class="form-control">
+          <select ng-model="returnDate" ng-options="item for item in returndates" class="form-control" ng-init="returnDate = returndates[0]">
           </select>
         </div>
       </div>
@@ -57,16 +57,34 @@
   </div>
 </div>
 <hr>
-<div class="row">
+<div class="row" ng-if="!cutomerform">
   <div class="col-md-6">
     <div class="col-md-10" style="padding-left: 0px;">
       <div class="form-group">
         <label>Customer Name</label>
         <div class="input-group">
-           <input type="text" class="form-control" placeholder="Company Name" ng-model="form.customerName">
+           <input type="text" class="form-control" placeholder="Company Name" ng-model="selected" typeahead="customer.name for customer in customers | filter:$viewvalue" ng-enter="doSomething()">
            <div class="input-group-btn">
              <button class="btn btn-default" type="submit" ng-click="openCustomerForm()">
                <i class="fa fa-plus"></i>
+             </button>
+           </div>
+         </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="row" ng-if="cutomerform">
+  <div class="col-md-6">
+    <div class="col-md-10" style="padding-left: 0px;">
+      <div class="form-group">
+        <label>Customer Name</label>
+        <div class="input-group">
+           <input type="text" class="form-control" placeholder="Company Name" ng-model="selected" typeahead="customer.name for customer in customers | filter:$viewvalue">
+           <div class="input-group-btn">
+             <button class="btn btn-default" type="submit" ng-click="openCustomerForm()">
+               <i class="fa fa-pencil"></i>
              </button>
            </div>
          </div>
@@ -131,7 +149,30 @@
     </tr>
     <tr>
       <td>1</td>
+      <td><input type="text" class="form-control-pos" placeholder="" ng-model="item" typeahead="product.name for product in products | filter:$viewvalue"></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>Hariyana</option>
+        <option>Kolkata</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder="" ></></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select></td>
+      <td><input type="text" class="form-control-pos" placeholder="" ></></td>
+      <td><select class="form-control-pos" id="sel1">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select></td>
       <td><input type="text" class="form-control-pos" placeholder=""></td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><input type="text" class="form-control-pos" placeholder="" ng-model="items" typeahead="product.name for product in products | filter:$viewvalue"></td>
       <td><select class="form-control-pos" id="sel1">
         <option>Hariyana</option>
         <option>Kolkata</option>
@@ -154,30 +195,7 @@
     </tr>
     <tr>
       <td>1</td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>Hariyana</option>
-        <option>Kolkata</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td><input type="text" class="form-control-pos" placeholder="" ng-model="items1" typeahead="product.name for product in products | filter:$viewvalue"></td>
       <td><select class="form-control-pos" id="sel1">
         <option>Hariyana</option>
         <option>Kolkata</option>
