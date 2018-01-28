@@ -789,6 +789,7 @@ app.controller("businessManagement.clientRelationships.contacts.form", function(
     }).
     then(function(response) {
       $scope.form = response.data;
+      console.log($scope.form);
       if ($scope.mode == 'new') {
         $scope.form.pk = response.data.pk;
         $scope.mode = 'edit';

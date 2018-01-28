@@ -1,0 +1,32 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.warehouse.contact.item">
+
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row container-fluid" style="padding-bottom:10px;margin-bottom:15px;padding-top:20px;border-bottom: 1px solid #dedede;">
+      <!-- <i class="fa fa-handshake-o fa-3x pull-right" style="color:#42618b;"></i> -->
+      <label>Name : </label> {{data.name}} <br>
+      <label>Company : </label> {{data.company.name}} <br>
+      <label>Desognation : </label> {{data.designation}} <br>
+    </div>
+    <div class="row container-fluid" style="padding-top:10px;height:50px;">
+      <div class="col-md-10">
+        <span ng-if="data.mobile != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{data.mobile}} <br></span>
+        <span ng-if="data.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{data.email}}</span>
+        <span ng-if="data.mobile == null && data.email == null" class="text-muted">No contact details</span>
+      </div>
+      <div class = "col-md-2">
+        <div style="padding-right:20px;">
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click = "rowActionClicked('edit')">
+              <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+            </span>
+          </div>
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click = "rowActionClicked('details')">
+              <i class="fa fa-reorder fa-lg" style="margin-top:20px;"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

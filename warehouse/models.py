@@ -33,7 +33,7 @@ class Contact(models.Model):
     name = models.CharField(max_length = 100 , null = False)
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
-    company = models.ForeignKey(Service , null = True , related_name = 'contacts')
+    company = models.ForeignKey(Service , null = False , related_name = 'contacts')
     email = models.EmailField(null = True)
     mobile = models.CharField(max_length = 15 , null = True)
     designation = models.CharField(max_length = 30 , null = True)

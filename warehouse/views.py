@@ -19,6 +19,8 @@ class ContactViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
     serializer_class = ContactSerializer
     queryset = Contact.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name',]
 
 class ContractViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )

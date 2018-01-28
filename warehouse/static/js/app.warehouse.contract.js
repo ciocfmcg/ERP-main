@@ -6,6 +6,19 @@ app.config(function($stateProvider){
   });
 });
 
+app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+  if ($scope.data != undefined) {
+    $scope.contract = $scope.data.tableData[$scope.tab.data.index]
+  }
+  console.log($scope.contract);
+
+});
+
+app.controller("businessManagement.warehouse.contract.item", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+
+});
+
 app.controller('businessManagement.warehouse.contract', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   $scope.data = {
     tableData: []
@@ -15,14 +28,14 @@ app.controller('businessManagement.warehouse.contract', function($scope, $http, 
     name: 'list',
     icon: 'fa-th-large',
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.warehouse.evaluation.item.html',
+    itemTemplate: '/static/ngTemplates/app.warehouse.contract.item.html',
   }, ];
 
 
   $scope.config = {
     views: views,
     url: '/api/warehouse/contract/',
-    searchField: 'ques',
+    searchField: 'name',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
   }
@@ -35,23 +48,24 @@ app.controller('businessManagement.warehouse.contract', function($scope, $http, 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
-          var title = 'Edit contract :';
+          var title = 'Edit contract : ';
           var appType = 'contractEditor';
         } else if (action == 'details') {
-          var title = 'contract Details :';
+          var title = 'Contract Details : ';
           var appType = 'contractExplorer';
         }
-
-
+        console.log("sampleee");
+        console.log($scope.data.tableData[i]);
         $scope.addTab({
           title: title + $scope.data.tableData[i].pk,
           cancel: true,
           app: appType,
-          data: {
-            pk: target,
-            index: i,
-            contract : $scope.data.tableData[i]
-          },
+          // data: {
+          //   pk: target,
+          //   index: i,
+          //   contract : $scope.data.tableData[i]
+          // },
+          data:$scope.data.tableData[i],
           active: true
         })
       }
@@ -83,113 +97,102 @@ app.controller('businessManagement.warehouse.contract', function($scope, $http, 
       $scope.tabs.push(input)
     }
   }
-
 });
 
-app.controller("projectManagement.warehouse.evaluation.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  $scope.form = {topic : '' , text : '' , subject : ''}
-  $scope.questions = []
-  $scope.selectedquestions=[]
+app.controller("businessManagement.warehouse.contract.form", function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
 
+  $scope.contract = {company : '' , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqft' ,otherDocs : emptyFile ,occupancy: ''}
+  $scope.dates=[]
+  for (var i = 1; i < 29; i++) {
+    $scope.dates.push(i.toString());
+  }
+  $scope.addDate=function(date){
+    $scope.contract.billingDates +=$scope.contract.billingDates == ''? date : ','+date;
+  }
   if ($scope.tab == undefined || $scope.tab.data == undefined) {
     $scope.mode = 'new';
+    console.log('in new');
   }else {
     $scope.mode = 'edit';
-    $scope.selectedquestions = $scope.tab.data.contract.questions;
-    console.log($scope.selectedquestions );
+    $scope.contract = $scope.tab.data
+    console.log('edited form');
   }
 
-  $scope.$watch('form.topic' , function(newValue , oldValue){
-    if (typeof newValue != 'object') {
-      return;
-    }
-    $scope.fetchQuestions();
-  });
-
-  $scope.fetchQuestions = function() {
-
-    if (typeof $scope.form.topic != 'object') {
-      return;
-    }
-
-    $http({method:'GET',url:'/api/warehouse/question/?topic='+ $scope.form.topic.pk + '&ques__contains=' + $scope.form.text}).
-    then(function(response) {
-      $scope.questions.length=0
-      angular.forEach(response.data,function(obj){
-        $scope.questions.push({'ques':obj})
-      })
-      console.log($scope.questions);
-    })
-  }
-
-  $scope.subjectSearch = function(query) {
-    return $http.get( '/api/warehouse/subject/?title__contains=' + query).
+  $scope.serviceSearch = function(query) {
+    return $http.get( '/api/warehouse/service/?name__contains=' + query).
     then(function(response){
       return response.data;
     })
   };
-
-  $scope.topicSearch = function(query) {
-    return $http.get( '/api/warehouse/topic/?title__contains=' + query).
-    then(function(response){
-      return response.data;
-    })
-  };
-
-  $scope.add = function() {
-    for (var i = 0; i < $scope.questions.length; i++) {
-      console.log($scope.questions[i])
-      if ($scope.questions[i].selected){
-        $scope.selectedquestions.push({'ques':$scope.questions[i].ques , 'marks': 1,'negativeMarks':0.25,'optional':false})
-      }
-    }
-  };
-
 
   $scope.resetForm=function(){
-    $scope.selectedquestions=[]
-    $scope.questions.length=0
-    $scope.form={topic : '' , text : '' , subject : ''}
+    $scope.contract = {company : undefined , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqrt' ,otherDocs : emptyFile ,occupancy: ''}
   }
 
   $scope.save= function(){
-    var toSend=[]
-    for (var i = 0; i < $scope.selectedquestions.length; i++) {
-      console.log($scope.selectedquestions[i])
-      var data = {
-        ques : $scope.selectedquestions[i].ques.pk,
-        marks : $scope.selectedquestions[i].marks,
-        optional : $scope.selectedquestions[i].optional,
-        negativeMarks : $scope.selectedquestions[i].negativeMarks,
-      }
-      toSend.push(data)
+    console.log('entered');
+    var f = $scope.contract;
+    if (f.company.length == 0) {
+      Flash.create('warning' , 'Company can not be blank');
+      return;
+    }else if (typeof f.company != "object") {
+      Flash.create('warning' , "Company doesn't exist!");
+      return;
     }
-    if ($scope.mode=='edit'){
-      var method='PATCH';
-      var url='/api/warehouse/contract/'+$scope.tab.data.contract.pk+'/';
-      $http({method : method , url : url , data :  {questions :toSend}}).
-      then(function(response) {
-          Flash.create('success', 'Question contract Updated');
-          console.log(response.data);
-      })
+    if (f.occupancy.length == 0){
+      Flash.create('warning',"Occupancy Can't be Null");
+    }
+    var url = '/api/warehouse/contract/';
+    if ($scope.mode == 'new'){
+      var method = 'POST';
     }else {
-      var method='POST';
-      var url='/api/warehouse/quescontract/';
-      $http({method : method , url : url , data :  {questions :toSend}}).
-      then(function(response) {
-        Flash.create('success', 'Question contract Created');
-        console.log(response.data);
-        resetForm();
-      })
+      var method = 'PATCH';
+      url += $scope.tab.data.pk +'/';    // $scope.tab.data.service.pk +'/';
     }
 
+    var tosend = new FormData();
+    if (f.contractPaper != emptyFile && f.contractPaper != null) {
+      tosend.append('contractPaper' , f.contractPaper)
+    }
+    if (f.otherDocs != emptyFile && f.otherDocs != null) {
+      tosend.append('otherDocs' , f.otherDocs)
+    }
+    if (f.billingFrequency != f.billingDates.split(',').length){
+      Flash.create('warning' , 'BillingDates count Should Be Equal To BillingFrequency ');
+      return;
+    }
+    tosend.append('company' , f.company.pk);
+    tosend.append('billingFrequency' , f.billingFrequency);
+    tosend.append('billingDates' , f.billingDates);
+    tosend.append('rate' , f.rate);
+    tosend.append('quantity' , f.quantity);
+    tosend.append('unitType' , f.unitType);
+    tosend.append('dueDays' , f.dueDays);
+    tosend.append('occupancy' , f.occupancy);
+    console.log(tosend);
+
+    $http({
+      method: method,
+      url: url,
+      data: tosend,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      if ($scope.mode == 'new') {
+        $scope.contract.pk = response.data.pk;
+        Flash.create('success', 'Created');
+        $scope.resetForm()
+        // $scope.mode = 'edit';
+      }else{
+        Flash.create('success', 'Saved')
+      }
+      console.log('sampleee');
+      console.log(response.data);
+    })
   };
-
-
-
-  $scope.delete=function(indx){
-    $scope.selectedquestions.splice(indx,1)
-  }
 
 });
