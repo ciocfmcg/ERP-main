@@ -32,15 +32,21 @@ class Customer(models.Model):
     pincodeBilling = models.CharField(max_length = 100 , null = True)
     countryBilling = models.CharField(max_length = 100 , null = True)
 
+    def __str__(self):
+        return self.name
+
+from clientRelationships.models import ProductMeta
 
 class Product(models.Model):
     user = models.ForeignKey(User , related_name = 'posProducts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length = 100 , null = False)
-    hsnCode = models.CharField(max_length = 100 , null=False)
+    productMeta = models.ForeignKey(ProductMeta , related_name="POSProducts" , null = True)
     price = models.FloatField(null=False)
     displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True)
-    serialNo = models.CharField(max_length = 30, null=False)
+    serialNo = models.CharField(max_length = 30, null=True)
     description = models.TextField(max_length=300,null=False)
     inStock = models.PositiveIntegerField(default = 0)
+    cost = models.PositiveIntegerField(default= 0)
+    logistics = models.PositiveIntegerField(default = 0)

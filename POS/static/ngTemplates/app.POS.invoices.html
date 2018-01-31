@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-6">
     <div class="row">
-      <div class="col-md-7" >
+      <div class="col-md-7">
         <div class="form-group">
           <label>Invoice Serial Number<a href="#"> (Set Sequence)</a></label>
-          <input type="text" class="form-control" placeholder="Invoice Serial Number" >
+          <input type="text" class="form-control" placeholder="Invoice Serial Number">
         </div>
       </div>
       <div class="col-md-3">
@@ -25,14 +25,14 @@
       <div class="col-md-3">
         <div class="form-group">
           <label>Reference</label>
-          <input type="text" class="form-control" placeholder="PO. Number,text" >
+          <input type="text" class="form-control" placeholder="PO. Number,text">
         </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
           <label>Due date</label>
           <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.dewDate" is-open="statusDue.opened" ng-init="today"/>
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.deuDate" is-open="statusDue.opened" ng-init="today" />
             <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
@@ -42,7 +42,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label>Return Date</label>
-          <select ng-model="selectedName" ng-options="item for item in dates" ng-init="selectedName = dates[0]"   class="form-control">
+          <select ng-model="selectedName" ng-options="item for item in dates" ng-init="selectedName = dates[0]" class="form-control">
           </select>
         </div>
       </div>
@@ -57,49 +57,27 @@
   </div>
 </div>
 <hr>
-<div class="row" ng-if="!cutomerform">
+<div class="row">
   <div class="col-md-6">
     <div class="col-md-10" style="padding-left: 0px;">
       <div class="form-group">
         <label>Customer Name</label>
-        <div class="input-group">
-           <input type="text" class="form-control" placeholder="Company Name" ng-model="selected" typeahead="customer.name for customer in customers | filter:$viewvalue" ng-enter="doSomething()">
-           <div class="input-group-btn">
-             <button class="btn btn-default" type="submit" ng-click="openCustomerForm()">
-               <i class="fa fa-plus"></i>
-             </button>
-           </div>
-         </div>
+        <div class="{{(showCreateCustomerBtn || customerExist) && !showCustomerForm ? 'input-group':''}}">
+          <input uib-typeahead="customer as customer.name for customer in customerNameSearch($viewValue)" ng-model="form.customer" type="text" class="form-control" placeholder="Search using customer name">
+          <span ng-click="openCustomerForm()" ng-if="(showCreateCustomerBtn || customerExist) && !showCustomerForm" class="input-group-addon btn btn-primary"><i class="fa fa-{{!customerExist ? 'plus':'pencil'}}"></i> {{ !customerExist?  'New':'Edit'}}</span>
+        </div>
       </div>
-    </div>
-  </div>
-
-</div>
-<div class="row" ng-if="cutomerform">
-  <div class="col-md-6">
-    <div class="col-md-10" style="padding-left: 0px;">
-      <div class="form-group">
-        <label>Customer Name</label>
-        <div class="input-group">
-           <input type="text" class="form-control" placeholder="Company Name" ng-model="selected" typeahead="customer.name for customer in customers | filter:$viewvalue">
-           <div class="input-group-btn">
-             <button class="btn btn-default" type="submit" ng-click="openCustomerForm()">
-               <i class="fa fa-pencil"></i>
-             </button>
-           </div>
-         </div>
-      </div>
-      <div class="row">
+      <div class="row" ng-if="form.customer.pk">
         <div class="col-md-6">
           <div class="form-group">
             <label>GSTIN:</label>
-            <input type="text" class="form-control" placeholder="" >
+            <input type="text" class="form-control"  ng-model="form.customer.gst">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label>Place of Supply</label>
-            <select class="form-control" >
+            <select class="form-control">
                 <option>Hariyana</option>
                 <option>Kolkata</option>
                 <option>Bangalore</option>
@@ -110,31 +88,34 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6" ng-if="form.customer.pk">
     <div class="row">
-      <div class="col-md-6">
-        <span><b>Billing Address</b>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Edit</a></span><br>
-        <span>Ashrampara</span><br>
-        <span>some place</span><br>
-        <span>West Bengal,733202</span><br>
-        <span>INDIA</span>
+      <div class="col-md-6" style="margin-top: 43px;">
+        <span><b>Billing Address</b></span><br>
+        <span>{{form.customer.street}}</span><br>
+        <span>{{form.customer.city}}</span><br>
+        <span>{{form.customer.state}}</span>
+        <span>{{form.customer.pincode}}</span><br>
+        <span>{{form.customer.country}}</span>
       </div>
-      <div class="col-md-6">
+      <div class="checkbox">
+        <label><input type="checkbox" value="checked" style="margin-top: -2px;"ng-model="customer.sameAsShipping">&nbsp; Billing Address Same as Shipping</label>
+      </div>
+      <div class="col-md-6" ng-if="!customer.sameAsShipping">
         <span><b>Shipping Address</b></span><br>
-        <span>Ashrampara</span><br>
-        <span>some place</span><br>
-        <span>West Bengal,733202</span><br>
-        <span>INDIA</span><br><br>
-        <div class="checkbox">
-          <label><input type="checkbox" value="checked" style="margin-top: -2px;">&nbsp; Same as billing address</label>
-        </div>
+        <span>{{form.customer.street}}</span><br>
+        <span>{{form.customer.city}}</span><br>
+        <span>{{form.customer.state}}</span>
+        <span>{{form.customer.pincode}}</span><br>
+        <span>{{form.customer.country}}</span>
       </div>
+
     </div>
   </div>
 </div>
-<div class="checkbox">
-  <label><input type="checkbox" value="checked" style="margin-top: -2px;">&nbsp; Rate is Inclusive of Taxes(MRP Invoice)</label>
 </div>
+
+
 <div class="container-fluid" style="padding:0px">
   <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
     <tr style="background-color: #eeeeee;height: 96px;">
@@ -144,85 +125,62 @@
       <th>HSN/SAC</th>
       <th>Qty</th>
       <th>Rate(Rs.)</th>
-      <th>Taxable Rate</th>
-      <th>Total Tax</th>
+      <th>Tax</th>
+      <th>Subtotal</th>
+      <th></th>
+    </tr>
+    <tr ng-repeat="item in form.products" >
+      <td>{{$index + 1}}</td>
+      <td>
+        <input type="text" class="form-control-pos"  ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
+      </td>
+      <td>
+          {{item.data.productMeta.typ == 'SAC'? 'Service' : 'Product'}}
+      </td>
+      <td>
+        {{item.data.productMeta.code}} ( {{item.data.productMeta.taxRate}} %)
+      </td>
+      <td>
+        <input type="number" class="form-control-pos" ng-model="item.quantity">
+      </td>
+      <td>
+        <input type="number" class="form-control-pos" ng-model="item.data.price">
+      </td>
+      <td>
+        {{item.data.productMeta.taxRate/100}}
+      </td>
+      <td>
+        {{item.quantity*(item.data.productMeta.taxRate + item.data.price)}}
+      </td>
+      <td>
+        <button type="button" class="btn btn-danger btn-sm"  ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
+      </td>
+
     </tr>
     <tr>
-      <td>1</td>
-      <td><input type="text" class="form-control-pos" placeholder="" ng-model="item" typeahead="product.name for product in products | filter:$viewvalue"></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>Hariyana</option>
-        <option>Kolkata</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder="" ></></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder="" ></></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td><input type="text" class="form-control-pos" placeholder="" ng-model="items" typeahead="product.name for product in products | filter:$viewvalue"></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>Hariyana</option>
-        <option>Kolkata</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td><input type="text" class="form-control-pos" placeholder="" ng-model="items1" typeahead="product.name for product in products | filter:$viewvalue"></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>Hariyana</option>
-        <option>Kolkata</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
-      <td><select class="form-control-pos" id="sel1">
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-      </select></td>
-      <td><input type="text" class="form-control-pos" placeholder=""></td>
+      <td>
+        <div class="container-fluid" style="padding:0px;">
+            <button style="background-color:white;border:none;" ng-click="addRow()"><i class="fa fa-plus" aria-hidden="true"  style="cursor:pointer"></i>
+            </button>
+        </div>
+      </td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td>{{totalTax}}</td>
+      <td>{{grandTotal}}</td>
+
     </tr>
   </table>
+
 </div>
-<div class="down-part">
-  <div class="row">
-    <div class="col-md-12 text-center" style="margin-top: 27px;">
-      <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
-      <button type="button" class="btn btn-success">Save Invoice</button>
+  <div class="down-part">
+    <div class="row">
+      <div class="col-md-12 text-center" style="margin-top: 27px;">
+        <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
+        <button type="button" class="btn btn-success">Save Invoice</button>
+      </div>
     </div>
   </div>
-</div>
