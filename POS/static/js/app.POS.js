@@ -334,33 +334,35 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   var dummyDate = new Date();
 
   var onlyDate = new Date(dummyDate.getFullYear(), dummyDate.getMonth(), dummyDate.getDate()); // 2013-07-30 23:59:59
-  $scope.form = {
-    customer: '',
-    invoiceDate: onlyDate,
-    deuDate: onlyDate,
-    products: [{
-      data: '',quantity:1
 
-    }]
-  }
-  var total = 0;
-  var totalTax = 0;
-  var grandTotal = 0;
-  for (var i = 0; i < $scope.data.length; i++) {
-    $scope.data[i].total = parseInt($scope.data[i].quantity) * parseInt($scope.data[i].rate);
-    $scope.data[i].totalTax = $scope.data[i].total * parseInt($scope.data[i].tax)/100;
-    $scope.data[i].subtotal = $scope.data[i].totalTax + $scope.data[i].total;
-    total += $scope.data[i].total;
-    totalTax += $scope.data[i].totalTax;
-    grandTotal += $scope.data[i].subtotal;
+  $scope.resetForm = function() {
+    $scope.form = {
+      pk : 1,
+      customer: '',
+      invoiceDate: onlyDate,
+      deuDate: onlyDate,
+      products: [{
+        data: '',quantity:1
+      }]
+    }
   }
 
-  $scope.totalTax = totalTax;
-  $scope.total = total;
-  $scope.grandTotal = grandTotal;
+  $scope.resetForm();
 
-  // $scope.quote.calculated = {value : total , tax : totalTax , grand : grandTotal}
-
+  $scope.subTotal = function() {
+       var subTotal = 0;
+       angular.forEach($scope.form.products, function(item) {
+           subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2);
+       })
+       return subTotal;
+   }
+   $scope.subTotalTax = function() {
+        var subTotalTax = 0;
+        angular.forEach($scope.form.products, function(item) {
+            subTotalTax += (item.data.productMeta.taxRate*item.data.price/100).toFixed(2);
+        })
+        return subTotalTax;
+    }
 
   console.log(onlyDate);
   $scope.customerNameSearch = function(query) {
@@ -748,7 +750,57 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.form.products.splice(index, 1);
   };
 
+  $scope.saveInvoice = function() {
+    var f = $scope.invoice;
+    if (f.name.length == 0) {
+      Flash.create('warning', 'Name can not be left blank');
+      return;
+    }
 
+    if ($scope.invoiceMode) {
+
+    }
+
+    var toSend = {
+      name: f.name,
+      sameAsShipping: f.sameAsShipping
+    }
+
+    var toPut = ['serialNumber', 'invoicedate', 'reference', 'duedate', 'returndate', 'returnquater', 'customer', 'products']
+
+    for (var i = 0; i < toPut.length; i++) {
+      var val = f[toPut[i]];
+      if (val != undefined && val.length > 0) {
+        toSend[toPut[i]] = val;
+      }
+    }
+
+    var url = '/api/POS/invoice/';
+    if ($scope.mode == 'new') {
+      var method = 'POST';
+    } else {
+      var method = 'PATCH';
+      url += $scope.invoice.pk + '/';
+    }
+
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      $scope.invoice.pk = response.data.pk;
+      if ($scope.mode == 'new') {
+        Flash.create('success', 'Saved');
+      } else {
+        Flash.create('success', 'Created');
+      }
+      $scope.mode = 'edit';
+      // if ($scope.invoiceMode) {
+      //   $uibModalInstance.dismiss('created||' + response.data.pk)
+      // }
+    })
+  }
 
 
 });

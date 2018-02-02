@@ -50,3 +50,16 @@ class Product(models.Model):
     inStock = models.PositiveIntegerField(default = 0)
     cost = models.PositiveIntegerField(default= 0)
     logistics = models.PositiveIntegerField(default = 0)
+
+
+class Invoice(models.Model):
+        created = models.DateTimeField(auto_now_add = True)
+        updated = models.DateTimeField(auto_now=True)
+        serialNumber = models.CharField(max_length = 100 , null = True)
+        invoicedate = models.DateField(null=True)
+        reference =   models.CharField(max_length = 100 , null = True)
+        duedate =  models.DateField(null=True)
+        returndate =  models.DateField(null=True)
+        returnquater =  models.DateField(null=True)
+        customer=models.ForeignKey(Customer,null=True)
+        products=models.CharField(max_length=10000,null=True)

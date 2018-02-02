@@ -1,13 +1,13 @@
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-5">
     <div class="row">
       <div class="col-md-7">
         <div class="form-group">
-          <label>Invoice Serial Number<a href="#"> (Set Sequence)</a></label>
+          <label>Invoice Serial Number<a href=""> (Set Sequence)</a></label>
           <input type="text" class="form-control" placeholder="Invoice Serial Number">
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-5">
         <div class="form-group">
           <label>Invoice Date</label>
           <div class="input-group">
@@ -20,7 +20,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-7">
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
@@ -147,10 +147,10 @@
         <input type="number" class="form-control-pos" ng-model="item.data.price">
       </td>
       <td>
-        {{item.data.productMeta.taxRate/100}}
+        {{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}
       </td>
       <td>
-        {{item.quantity*(item.data.productMeta.taxRate + item.data.price)}}
+        {{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}
       </td>
       <td>
         <button type="button" class="btn btn-danger btn-sm"  ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
@@ -169,8 +169,8 @@
       <td style="border:none;"></td>
       <td style="border:none;"></td>
       <td style="border:none;"></td>
-      <td>{{totalTax}}</td>
-      <td>{{grandTotal}}</td>
+      <td>{{subTotalTax()}}</td>
+      <td>{{subTotal()}}</td>
 
     </tr>
   </table>
@@ -180,7 +180,11 @@
     <div class="row">
       <div class="col-md-12 text-center" style="margin-top: 27px;">
         <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
-        <button type="button" class="btn btn-success">Save Invoice</button>
+        <button type="button" class="btn btn-success" ng-click="saveInvoice()">Save Invoice</button>
+
+        <a class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
+
+        <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button>
       </div>
     </div>
   </div>

@@ -20,9 +20,13 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
 
+# class InvoiceViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated, )
+#     serializer_class = ProductSerializer
+#     queryset = Product.objects.all()
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['name']
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = ProductSerializer
-    queryset = Product.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    serializer_class = InvoiceSerializer
+    queryset = Invoice.objects.all()
