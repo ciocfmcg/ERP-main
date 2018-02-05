@@ -91,7 +91,7 @@
         <strong>Billing Dates : </strong> <span>{{contract.billingDates}}</span>
       </div>
       <div class="col-md-5">
-        <strong>Contract Paper : </strong> <span>{{contract.contractPaper}}</span>
+        <strong>Contract Paper : </strong> <a href="{{contract.contractPaper}}" target="_blank">{{contract.contractPaper}}</a>
       </div>
     </div>
     <div class="row" style="margin-top:10px;margin-left:20px">
@@ -102,7 +102,7 @@
         <strong>Quantity : </strong><span>{{contract.quantity}}</span>
       </div>
       <div class="col-md-5">
-        <strong>Other Docs : </strong><span>{{contract.otherDocs}}</span>
+        <strong>Other Docs : </strong><a href="{{contract.otherDocs}}" target="_blank">{{contract.otherDocs}}</a>
       </div>
     </div>
 
@@ -212,7 +212,7 @@
                   </td>
                   <td>
                     <div class="btn-group btn-group-sm pull-right">
-                      <a ng-if="c.status != 'cancelled'" href="/api/clientRelationships/downloadInvoice/?contract={{c.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                      <!-- <a ng-if="c.status != 'cancelled'" href="/api/clientRelationships/downloadInvoice/?contract={{c.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a> -->
                       <button ng-if="c.status != 'cancelled'" type="button" class="btn btn-default" ng-click="editQuote($index)">
                         <i class="fa fa-pencil"></i>
                       </button>
