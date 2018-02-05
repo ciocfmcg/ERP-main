@@ -1,3 +1,5 @@
+
+
 <div class="shaddowed card bg-white " style="position:relative;min-height:92vh;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
@@ -25,12 +27,13 @@
                   </div>
                 </div> -->
                 <div class="col-md-12" style="padding-left:0px">
-                  <generic-Table data="data.customerDataTable" config-Obj="{{configCustomer}}" callback-Fn="tableActionCustomer"></generic-Table>
+                  <generic-Table data="data.customerDataTable" config-Obj="{{configCustomer}}" callback-Fn="tableActionCustomer">
+                  </generic-Table>
                 </div>
               </uib-tab>
                 <uib-tab active="searchTabActive">
                     <uib-tab-heading>
-                        Browse
+                        Invoice
                         <i class="fa fa-list-ul"></i>
                     </uib-tab-heading>
                     <!-- <div class="col-md-12" style="padding-left:0px;margin-top:20px">
@@ -41,7 +44,7 @@
                       </div>
                     </div> -->
                     <div class="col-md-12" style="padding-left:0px">
-                        <generic-Table data="data.invoiceTableDate" config-Obj="{{configInvoice}}" callback-Fn="tableActionInvoice"></generic-Table>
+                        <generic-Table data="data.invoiceDataTable" config-Obj="{{configInvoice}}" callback-Fn="tableActionInvoice"></generic-Table>
                     </div>
                 </uib-tab>
             </uib-tabset>

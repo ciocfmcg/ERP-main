@@ -1,4 +1,4 @@
-<div class="modal-header">
+<!-- <div class="modal-header">
   Customer Info
 </div>
 <div class="modal-body">
@@ -36,6 +36,35 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div> -->
+
+<div class="modal-header">
+  Customer Info
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+
+
+  <div class="row">
+    <div class="col-md-6">
+      <span style="font-size: 18px;">{{customer.name}}</span><br>
+      <span>Email:{{customer.email}}</span><br>
+
+    </div>
+    <div class="col-md-6">
+      <span>Mobile:{{customer.mobile}}</span><br>
+    <span>Company Name:{{customer.company}}</span>
+    </div>
+    <div class="row">
+      <div class="col-md-12" ng-repeat="data in invoices">
+        <div ng-include="'/static/ngTemplates/app.POS.invoice.item.html'">
+
         </div>
       </div>
     </div>

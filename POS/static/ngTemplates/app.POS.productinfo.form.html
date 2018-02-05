@@ -1,4 +1,5 @@
-<div class="modal-header">
+
+<!-- <div class="modal-header">
   Product Info
 </div>
 
@@ -35,4 +36,43 @@
       <button type="button" class="btn btn-success">Save</button>
     </div>
   </div>
+</div> -->
+
+<div class="modal-header">
+  Product Info
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="container-fluid">
+        <img ng-src="{{product.displayPicture}}" style="width: 100%;">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <span>Name:{{product.name}}</span><br>
+      <span>MRP:{{product.price}}</span><br>
+      <span>serialNo:{{product.serialNo}}</span><br>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>Description:</label><br>
+          <textarea class="form-control custom-control" rows="3">{{product.description}}</textarea>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" >
+        </canvas>
+      </div>
+    </div>
+
+  <!-- <div class="row">
+    <div class="col-md-12 text-center" style="margin-top: 27px;">
+      <button type="button" class="btn btn-success">Save</button>
+    </div>
+  </div> -->
 </div>

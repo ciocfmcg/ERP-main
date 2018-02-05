@@ -10,6 +10,9 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
+from clientRelationships.models import ProductMeta
+from clientRelationships.serializers import ProductMetaSerializer
+
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -24,12 +27,61 @@ class CustomerSerializer(serializers.ModelSerializer):
         return c
 
 class ProductSerializer(serializers.ModelSerializer):
+    productMeta=ProductMetaSerializer(many=False,read_only=True)
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'hsnCode', 'price', 'displayPicture', 'serialNo', 'description', 'inStock')
-        read_only_fields = ( 'user' , )
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics')
+        read_only_fields = ( 'user' , 'productMeta')
     def create(self , validated_data):
+        print 'entered','***************'
+        print self.context['request'].data
+        print int(self.context['request'].data['productMeta'])
         p = Product(**validated_data)
         p.user = self.context['request'].user
+        p.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
         p.save()
         return p
+    # def update(self ,instance, validated_data):
+    #     print 'entered','***************'
+    #     # print self.context['request'].data
+    #     # print int(self.context['request'].data['productMeta'])
+    #     # p = Product(**validated_data)
+    #     # p.user = self.context['request'].user
+    #     instance.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
+    #     instance.save()
+    #     return instance
+    def update(self ,instance, validated_data):
+        print 'entered in updating'
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'productMeta' in self.context['request'].data:
+            instance.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
+        instance.save()
+        return instance
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    customer=CustomerSerializer(many=False,read_only=True)
+    class Meta:
+        model = Invoice
+        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment')
+        read_only_fields = ( 'user' , 'customer')
+    def create(self , validated_data):
+        print validated_data,'**************'
+        print self.context['request'].data
+        i = Invoice(**validated_data)
+        i.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
+        i.save()
+        return i
+    # def update(self ,instance, validated_data):
+    #     for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'products']:
+    #         try:
+    #             setattr(instance , key , validated_data[key])
+    #         except:
+    #             pass
+    #     if 'customer' in self.context['request'].data:
+    #         instance.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
+    #     instance.save()
+    #     return instance
