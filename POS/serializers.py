@@ -65,21 +65,23 @@ class ProductSerializer(serializers.ModelSerializer):
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
     class Meta:
-        model = Product
-        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'customer' ,'products')
+        model = Invoice
+        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment')
         read_only_fields = ( 'user' , 'customer')
     def create(self , validated_data):
+        print validated_data,'**************'
+        print self.context['request'].data
         i = Invoice(**validated_data)
         i.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
         i.save()
         return i
-    def update(self ,instance, validated_data):
-        for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'products']:
-            try:
-                setattr(instance , key , validated_data[key])
-            except:
-                pass
-        if 'customer' in self.context['request'].data:
-            instance.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
-        instance.save()
-        return instance
+    # def update(self ,instance, validated_data):
+    #     for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'products']:
+    #         try:
+    #             setattr(instance , key , validated_data[key])
+    #         except:
+    #             pass
+    #     if 'customer' in self.context['request'].data:
+    #         instance.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
+    #     instance.save()
+    #     return instance

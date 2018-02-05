@@ -51,15 +51,24 @@ class Product(models.Model):
     cost = models.PositiveIntegerField(default= 0)
     logistics = models.PositiveIntegerField(default = 0)
 
+PAYMENT_CHOICES = (
+    ('card' , 'card'),
+    ('netBanking' , 'netBanking'),
+    ('cash' , 'cash'),
+    ('cheque' , 'cheque')
+)
+
 
 class Invoice(models.Model):
-        created = models.DateTimeField(auto_now_add = True)
-        updated = models.DateTimeField(auto_now=True)
-        serialNumber = models.CharField(max_length = 100 , null = True)
-        invoicedate = models.DateField(null=True)
-        reference =   models.CharField(max_length = 100 , null = True)
-        duedate =  models.DateField(null=True)
-        returndate =  models.DateField(null=True)
-        returnquater =  models.DateField(null=True)
-        customer=models.ForeignKey(Customer,null=True)
-        products=models.CharField(max_length=10000,null=True)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    serialNumber = models.CharField(max_length = 100 , null = True)
+    invoicedate = models.DateField(null=True)
+    reference =   models.CharField(max_length = 100 , null = True)
+    duedate =  models.DateField(null=True)
+    returndate =  models.DateField(null=True)
+    returnquater =  models.DateField(null=True)
+    customer=models.ForeignKey(Customer,null=True)
+    products=models.CharField(max_length=10000,null=True)
+    amountRecieved = models.PositiveIntegerField(default = 0)
+    modeOfPayment = models.CharField(choices = PAYMENT_CHOICES , max_length = 10 , null = True)

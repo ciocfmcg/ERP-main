@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-md-7">
         <div class="form-group">
-          <label>Invoice Serial Number<a href=""> (Set Sequence)</a></label>
-          <input type="text" class="form-control" placeholder="Invoice Serial Number">
+          <label>Invoice Serial Number</label>
+          <input type="text" class="form-control" placeholder="Invoice Serial Number" ng-model="form.serialNumber">
         </div>
       </div>
       <div class="col-md-5">
@@ -25,7 +25,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label>Reference</label>
-          <input type="text" class="form-control" placeholder="PO. Number,text">
+          <input type="text" class="form-control" placeholder="PO. Number,text" ng-model="form.reference">
         </div>
       </div>
       <div class="col-md-3">
@@ -42,15 +42,17 @@
       <div class="col-md-3">
         <div class="form-group">
           <label>Return Date</label>
-          <select ng-model="selectedName" ng-options="item for item in dates" ng-init="selectedName = dates[0]" class="form-control">
-          </select>
+          <input ng-model="form.dates" class="form-control" disabled>
+        </input>
         </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
           <label>Return Quater</label>
-          <select ng-model="returnDate" ng-options="item for item in returndates" class="form-control" ng-init="returnDate = returndates[0]">
-          </select>
+          <!-- <select ng-model="returnDate" ng-options="item for item in returndates" class="form-control" ng-init="returnDate = returndates[0]">
+          </select> -->
+          <input ng-model="form.returndates" class="form-control" disabled>
+        </input>
         </div>
       </div>
     </div>
@@ -71,18 +73,22 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>GSTIN:</label>
-            <input type="text" class="form-control"  ng-model="form.customer.gst">
+            <span>{{form.customer.gst}}</span>
+          </div>
+          <div class="form-group">
+            <label>PAN NO.:</label>
+            <span>{{form.customer.pan}}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label>Place of Supply</label>
-            <select class="form-control">
-                <option>Hariyana</option>
-                <option>Kolkata</option>
-                <option>Bangalore</option>
-                <option>Chennai</option>
-              </select>
+            <label>Place of Supply:</label>
+            <!-- <input type="text" class="form-control"  ng-model="form.customer.city" disabled> -->
+            <span>{{form.customer.city}}</span>
+            <!-- <select class="form-control">
+                <option>{{form.customer.state}}</option>
+
+              </select> -->
           </div>
         </div>
       </div>
@@ -169,13 +175,17 @@
       <td style="border:none;"></td>
       <td style="border:none;"></td>
       <td style="border:none;"></td>
-      <td>{{subTotalTax()}}</td>
-      <td>{{subTotal()}}</td>
+      <td ng-if="form.products[0].data.pk">{{subTotalTax()}}</td>
+      <td ng-if="form.products[0].data.pk">{{subTotal()}}</td>
 
     </tr>
   </table>
 
 </div>
+
+
+
+
   <div class="down-part">
     <div class="row">
       <div class="col-md-12 text-center" style="margin-top: 27px;">

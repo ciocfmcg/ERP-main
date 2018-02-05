@@ -1,18 +1,41 @@
 <div class="modal-header">
   Invoice  Info
+
+    <a class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}" style="margin-left: 450px;"><i class="fa fa-print" ></i></a>
+
 </div>
 <div class="modal-body">
   <div class="container-fluid">
     <div class="row" >
       <div class="col-md-6">
-        <span style="font-size: 25px;">{{invoice.id}}</span><br>
-        <span style="font-size: 18px;">{{invoice.name}}</span><br>
-        <span>Invoice Due Date:{{invoice.date}}</span>
+        <span style="font-size: 25px;">{{invoice.pk}}</span><br>
+        <span style="font-size: 18px;">{{invoice.customer.name}}</span><br>
+        <span>Invoice Due Date:{{invoice.duedate}}</span> <br>
+        <span>Total Amount:{{subTotal()}}</span><br>
+        <span>Mode of Payment : {{invoice.modeOfPayment}}</span><br>
+        <span>Amount Recieved : {{invoice.amountRecieved}}</span><br>
+        <span>GSTIN : {{invoice.customer.gst}}</span><br>
+        <span>PAN NO. : {{invoice.customer.pan}}</span><br>
+        <span>Place of Supply : {{invoice.customer.city}}</span>
+
       </div>
           <div class="col-md-6">
-            <span>Paid:{{invoice.paid}}</span><br>
-            <span>Mode of Payment:{{invoice.mode}}</span><br>
-            <span>Total Amount:{{invoice.amount}}</span>
+            <!-- <span>Paid:{{invoice.paid}}</span><br> -->
+            <div class="form-group">
+              <label> Mode of Payment</label>
+              <select class="form-control" ng-model="invoice.modeOfPayment" ng-options="item for item in modeofpayment">
+                <option value="" disabled selected>select mode of payment</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount Recieved</label>
+              <input type="text" class="form-control" ng-model="invoice.amountRecieved">
+            </div>
+
+            <button type="button" class="btn btn-success" ng-click="save()">
+              Save <i class="fa fa-floppy-o"></i>
+            </button>
+
           </div>
     </div>
   </div>

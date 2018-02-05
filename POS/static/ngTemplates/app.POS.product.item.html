@@ -5,14 +5,14 @@
     </div>
     <div class="col-md-10" style="margin-top:10px;">
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
           <span style="font-size: 18px;">{{data.name}}</span><br>
           <span>MRP:{{data.price}}</span><br>
-          <span>GST%:{{data.gst}}</span>
+          <span>serialNo:{{data.serialNo}}</span>
         </div>
-        <div class="col-md-2">
-          <span>HSN/SAC:{{data.sac}}</span><br>
-          <span>In Stock:{{data.stock}}</span>
+        <div class="col-md-3">
+          <span>HSN/SAC:{{data.productMeta.code}}</span><br>
+          <span>In Stock:{{data.inStock}}</span>
         </div>
         <div class="col-md-1">
           <div class="icon-infohover">
