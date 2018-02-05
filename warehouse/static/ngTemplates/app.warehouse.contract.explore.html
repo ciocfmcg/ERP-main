@@ -1,15 +1,15 @@
 
 <div class="container-fluid" ng-controller="businessManagement.warehouse.contract.explore" style="padding-top:10px;">
   <div class="col-md-3" style="min-height:70vh;border-right:solid 2px #eeeeee;padding-top:20px;">
-    <div class="row">{{data}}
+    <div class="row">
       <div class="container-fluid">
-        <span style="font-size:20px;" class="text-muted"><i class="fa fa-building-o text-muted"></i> {{deal.company.name}}</span>
+        <span style="font-size:20px;" class="text-muted"><i class="fa fa-building-o text-muted"></i> {{contract.company.name}}</span>
       </div>
     </div>
     <div class="row" style="margin-top:20px;">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="text-muted pull-right">Address :</label>
           </div>
         </div>
@@ -17,141 +17,177 @@
           <i class="pull-right fa fa-map-marker fa-3x" style="color:#eeeeee;"></i>
         </div>
         <div class="col-md-9">
-          <span>{{deal.company.address.street}}</span><br>
-          <span>{{deal.company.address.city}}</span><br>
-          <span>{{deal.company.address.pincode}}</span><br>
-          <span>{{deal.company.address.state}}</span><br>
+          <span>{{contract.company.street}}</span><br>
+          <span>{{contract.company.city}}</span><br>
+          <span>{{contract.company.pincode}}</span><br>
+          <span>{{contract.company.state}}</span><br>
+          <span>{{contract.company.country}}</span><br>
         </div>
       </div>
     </div>
     <hr>
     <div class="row" style="margin-top:20px;">
-      <div class="text-right col-md-3">
-        <strong>Web : </strong>
+      <div class="text-right col-md-4">
+        CIN :
       </div>
-      <div class="text-left col-md-9">
-        <a href="{{deal.company.web}}">{{deal.company.web}}</a>
-      </div>
-    </div>
-    <div class="row" style="margin-top:20px;">
-      <div class="text-right col-md-3">
-        <strong>CIN : </strong>
-      </div>
-      <div class="text-left col-md-9">
-        <span>{{deal.company.cin}}</span>
+      <div class="text-left col-md-8">
+        <span>{{contract.company.cin}}</span>
       </div>
     </div>
     <div class="row" style="margin-top:20px;">
-      <div class="text-right col-md-3">
-        <strong>TIN : </strong>
+      <div class="text-right col-md-4">
+        TIN :
       </div>
-      <div class="text-left col-md-9">
-        <span>{{deal.company.tin}}</span>
-      </div>
-    </div>
-    <div class="row" style="margin-top:20px;">
-      <div class="text-right col-md-3">
-        <strong>Mobile : </strong>
-      </div>
-      <div class="text-left col-md-9">
-        <span>{{deal.company.mobile}}</span>
+      <div class="text-left col-md-8">
+        <span>{{contract.company.tin}}</span>
       </div>
     </div>
     <div class="row" style="margin-top:20px;">
-      <div class="text-right col-md-3">
-        <strong>Telephone : </strong>
+      <div class="text-right col-md-4">
+        Telephone :
       </div>
-      <div class="text-left col-md-9">
-        <span>{{deal.company.telephone}}</span>
-      </div>
-    </div>
-    <div class="row" style="margin-top:20px;">
-      <div class="text-right col-md-3">
-        <strong>About : </strong>
-      </div>
-      <div class="text-left col-md-9">
-        <span>{{deal.company.about}}</span>
+      <div class="text-left col-md-8">
+        <span>{{contract.company.telephone}}</span>
       </div>
     </div>
     <hr>
     <div class="row">
       <label class="text-muted">External Stakeholders</label>
-      <div ng-repeat="c in deal.contacts" class="row" style="margin-top:10px;cursor:pointer;" ng-if="c.pk != contact.pk" ng-click="exploreContact(c)">
+      <div ng-repeat="c in contract.contact" class="row" style="margin-top:10px;cursor:pointer;"  ng-if="c.company.pk==contract.company.pk" ng-click="exploreContact(c)">
         <div class="col-md-2">
-          <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getCRMDP}}">
+          <i class="fa fa-user fa-5x"></i>
         </div>
         <div class="col-md-10" style="padding-top:3px;">
           <span>{{c.name}}</span>
           <br> <span class="text-muted">{{c.designation}}</span>
-        </div>
-      </div> <br>
-      <div ng-if="deal.internalUsers.length > 0">
-        <label class="text-muted">Internal Stakeholders</label>
-        <div ng-repeat="c in deal.internalUsers" class="row" style="margin-top:10px;cursor:pointer;">
-          <div class="col-md-2">
-            <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getDP}}">
-          </div>
-          <div class="col-md-10" style="padding-top:3px;">
-            <span> {{c | getName}}</span>
-          </div>
         </div>
       </div>
     </div>
 
   </div>
   <div class="col-md-9">
-    <div class="row" style="padding:10px;padding-bottom:0px;">
+    <div class="row" style="margin-top:10px;">
       <div class="container-fluid">
-        <div class="col-md-5">
-          <div class="col-md-{{minInfo ? '1':'2'}}">
-            <div style="{{ !minInfo? 'width:70px;height:70px;font-size:55px':'width:30px;height:30px;font-size:22px'}}; background:#FCB95B;display:bolck;padding-bottom:5px;border-radius:7px;" class="text-center">
-              <i class="fi-crown" style="color:white;"></i>
-            </div>
-          </div>
-          <div class="col-md-{{minInfo ? '11':'10'}}" style="paddint-top:0px;">
-            <div ng-if="!minInfo">
-              <br><span class="text-muted" style="font-size:18px;">{{deal.name | humanize}}</span>
-            </div>
-            <div ng-if="minInfo">
-
-              <span style="font-size:17px;">{{deal.company.name | humanize}} | </span><span class="text-muted" style="font-size:15px;">{{deal.name | humanize}}</span>
-            </div>
-
-          </div>
-        </div>
-        <div class="col-md-7">
-          <div class="col-md-5">
-            <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">VALUATION </span><br>
-            <span style="font-size:17px;"> <i class="fa fa-{{deal.currency | lowercase}} fa-lg text-muted"></i> {{deal.value}}</span>
-            <button type="button" class="btn btn-default btn-sm" ng-click="editQuote()">
-              <i class="fa fa-plus"></i> Quote
-            </button>
-          </div>
-          <div class="col-md-3">
-            <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">CLOSING DATE </span><br>
-            <span style="font-size:17px;"> <i ng-if="minInfo" class="fa fa-calendar fa-lg text-muted" style="margin-right:20px;"></i> {{deal.closeDate | date:'dd-MMM-yyyy'}}</span>
-          </div>
-          <div class="col-md-4">
-            <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">OWNER </span><br>
-            <img ng-src="{{deal.user | getDP}}" class="img img-rounded" style="{{ !minInfo? 'height:40px;width:40px':'height:30px;width:30px'}};"> <span style="font-size:17px;">{{deal.user | getName}}</span>
-          </div>
-        </div>
+        <label class="text-muted">Requirements</label>
       </div>
     </div>
-    <hr>
-    <div class="row">
-      <div class="container-fluid" style="min-height:100px;">
-        <label class="text-muted">Requirements</label><br>
-        <span ng-bind-html="deal.requirements"></span>
+    <div class="row" style="margin-top:10px;margin-left:20px">
+      <div class="col-md-3">
+        <strong>Rate : </strong><span>{{contract.rate}}</span>
+      </div>
+      <div class="col-md-3">
+        <strong>Billing Frequency : </strong> <span>{{contract.billingFrequency}}</span>
+      </div>
+      <div class="col-md-5">
+        <strong>Occupancy : </strong><span>{{contract.occupancy}}</span>
       </div>
     </div>
+    <div class="row" style="margin-top:10px;margin-left:20px">
+
+      <div class="col-md-3">
+        <strong>Due Days : </strong><span>{{contract.dueDays}}</span>
+      </div>
+      <div class="col-md-3">
+        <strong>Billing Dates : </strong> <span>{{contract.billingDates}}</span>
+      </div>
+      <div class="col-md-5">
+        <strong>Contract Paper : </strong> <span>{{contract.contractPaper}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;margin-left:20px">
+      <div class="col-md-3">
+        <strong>Unit Type : </strong><span>{{contract.unitType}}</span>
+      </div>
+      <div class="col-md-3">
+        <strong>Quantity : </strong><span>{{contract.quantity}}</span>
+      </div>
+      <div class="col-md-5">
+        <strong>Other Docs : </strong><span>{{contract.otherDocs}}</span>
+      </div>
+    </div>
+
+    <!-- <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Rate :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.rate}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Billing Frequency :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.billingFrequency}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Billing Dates :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.billingDates}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Due Days :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.dueDays}}</span>
+      </div>
+    </div> -->
+    <!-- </div> -->
+    <!-- <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Occupancy :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.occupancy}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Quantity :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.quantity}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Unit Type :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.unitType}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Contract Paper :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.contractPaper}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="text-right col-md-2">
+        Other Docs :
+      </div>
+      <div class="text-left col-md-10">
+        <span>{{contract.otherDocs}}</span>
+      </div>
+    </div> -->
     <hr>
     <div class="row">
       <div class="container-fluid">
-        <label class="text-muted">Finances</label><br>
+        <label class="text-muted">Finances</label>
+        <button type="button" class="btn btn-default btn-md pull-right" ng-click="editQuote()">
+          <i class="fa fa-plus"></i> Quote
+        </button><br>
         <div class="container-fluid" style="margin-top:20px;">
           <div class="row">
-
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -164,16 +200,15 @@
                   <th style="width:20%;"></th>
                 </tr>
               </thead>
-
               <tbody>
-                <tr ng-repeat="c in deal.contracts">
+                <tr ng-repeat="c in contract.invoice">
                   <td>{{c.pk}}</td>
-                  <td><i class="fa fa-{{deal.currency | lowercase}}" style="margin-right:20px;"></i>{{c.value}}</td>
+                  <td><i class="fa fa-{{contract.currency | lowercase}}" style="margin-right:20px;"></i>{{c.value}}</td>
                   <td>{{c.data.length}}</td>
                   <td>{{c.created | timeAgo}}</td>
                   <td>{{c.updated | timeAgo}}</td>
                   <td>{{c.status | humanize}} <br>
-                    <span ng-if="c.status == 'billed'"> <strong>Due Date:</strong> {{c.dueDate | date : 'dd-MMM-yyyy'}}</span>
+                    <span ng-if="c.status == 'billed'"> Due Date: {{c.dueDate | date : 'dd-MMM-yyyy'}}</span>
                   </td>
                   <td>
                     <div class="btn-group btn-group-sm pull-right">
@@ -198,20 +233,11 @@
                   </td>
                 </tr>
               </tbody>
-
             </table>
-            <div class="text-center" ng-if="deal.contracts.length == 0" style="margin-top:50px;">
+            <div class="text-center" ng-if="contract.contracts.length == 0" style="margin-top:50px;">
               <span>No data!</span>
             </div>
-          </  div>
-          <!-- <div class="row">
-            <nav>
-              <ul class="pager">
-                <li class="{{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
-                <li class="{{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
-              </ul>
-            </nav>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>

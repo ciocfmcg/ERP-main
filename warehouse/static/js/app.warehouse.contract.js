@@ -6,11 +6,170 @@ app.config(function($stateProvider){
   });
 });
 
-app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
-  if ($scope.data != undefined) {
-    $scope.contract = $scope.data.tableData[$scope.tab.data.index]
+app.controller("businessManagement.warehouse.contract.quote", function($scope, $state, $users, $stateParams, $http, Flash,  $uibModalInstance , quoteData,) {
+  $scope.quote = quoteData;
+  $scope.firstQuote = false;
+  $scope.types  = crmRelationTypes;
+  $scope.total = $scope.quote.value;
+  $scope.data = $scope.quote.data;
+
+  $scope.resetForm = function() {
+    $scope.form = {type : 'onetime' , quantity : 0 , tax : 0 , rate : 0 , desc : '' , productMeta : ''};
   }
+  $scope.searchTaxCode = function(c) {
+    return $http.get('/api/clientRelationships/productMeta/?description__contains='+c).
+    then(function(response) {
+      return response.data;
+    })
+  }
+  $scope.$watch('form.productMeta' , function(newValue , oldValue) {
+    if (typeof newValue == 'object') {
+      $scope.showTaxCodeDetails = true;
+    }else {
+      $scope.showTaxCodeDetails = false;
+    }
+  })
+  $scope.setType = function(typ) {
+    $scope.form.type = typ;
+  }
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+  $scope.remove = function(idx) {
+    $scope.data.splice(idx , 1);
+  }
+  $scope.edit = function(idx) {
+    var d = $scope.data[idx];
+    $scope.form = {type : d.type , quantity : d.quantity , tax : d.tax , rate : d.rate , desc : d.desc};
+    $http({method : 'GET' , url : '/api/clientRelationships/productMeta/?code='+d.taxCode}).
+    then(function(response) {
+      $scope.form.productMeta = response.data[0];
+    })
+    $scope.data.splice(idx , 1);
+  }
+  $scope.calculateTotal = function() {
+    var total = 0;
+    var totalTax = 0;
+    var grandTotal = 0;
+    for (var i = 0; i < $scope.data.length; i++) {
+      $scope.data[i].total = parseInt($scope.data[i].quantity) * parseInt($scope.data[i].rate);
+      $scope.data[i].totalTax = $scope.data[i].total * parseInt($scope.data[i].tax)/100;
+      $scope.data[i].subtotal = $scope.data[i].totalTax + $scope.data[i].total;
+      total += $scope.data[i].total;
+      totalTax += $scope.data[i].totalTax;
+      grandTotal += $scope.data[i].subtotal;
+    }
+
+    $scope.totalTax = totalTax;
+    $scope.total = total;
+    $scope.grandTotal = grandTotal;
+    $scope.quote.calculated = {value : total , tax : totalTax , grand : grandTotal}
+
+  }
+
+  $scope.add = function() {
+    console.log('entered');
+    if ($scope.form.tax>70) {
+      Flash.create('warning' , 'The tax rate is unrealistic');
+      return;
+    }
+    $scope.data.push({type : $scope.form.type , tax: $scope.form.productMeta.taxRate , desc : $scope.form.desc , rate : $scope.form.rate , quantity : $scope.form.quantity, taxCode : $scope.form.productMeta.code})
+    $scope.resetForm();
+  }
+  $scope.resetForm();
+  $scope.$watch('data' , function(newValue , oldValue) {
+    $scope.calculateTotal();
+  }, true)
+
+});
+app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
+  $scope.contract = $scope.tab.data;
+  console.log('invoice');
+  $scope.fetchInvoice = function() {
+    $scope.contract.invoice=[];
+    $http({method : 'GET' , url : '/api/warehouse/invoice/'}).
+    then(function(response){
+      for (var i=0;  i<response.data.length; i++){
+        if(response.data[i].contract==$scope.contract.pk){
+          response.data[i].data = JSON.parse(response.data[i].data );
+          $scope.contract.invoice.push(response.data[i]);
+        }
+      }
+    })
+  }
+  $scope.fetchInvoice();
   console.log($scope.contract);
+  console.log($scope.contract.invoice);
+
+  $scope.contactSearch = function() {
+    return $http.get( '/api/warehouse/contact/').
+    then(function(response){
+      $scope.contract.contact=response.data;
+    })
+  };
+  $scope.contactSearch();
+
+  $scope.editQuote = function(idx) {
+    if (typeof idx == 'number') {
+      $scope.quoteInEditor = $scope.contract.invoice[idx];
+    }else {
+      $scope.quoteInEditor = {data : [] , value : 0 , doc : null , status : 'quoted'  , details: '' , pk : null}
+    }
+    console.log('in quote');
+    $aside.open({
+      templateUrl : '/static/ngTemplates/app.warehouse.quote.form.html',
+      placement: 'right',
+      size: 'xl',
+      resolve: {
+        quoteData : function() {
+          return $scope.quoteInEditor;
+        },
+      },
+      controller : 'businessManagement.warehouse.contract.quote'
+    }).result.then(function () {
+
+    }, function () {
+      console.log('submitting');
+      console.log($scope.contract.pk);
+      console.log($scope.contract);
+      var method;
+      var url = '/api/warehouse/invoice/'
+      if ($scope.quoteInEditor.pk == null) {
+        method = 'POST'
+      }else {
+        method = 'PATCH'
+        url += $scope.quoteInEditor.pk +'/'
+      }
+
+      if ($scope.quoteInEditor.data.length == 0) {
+        return;
+      }
+      var dataToSend = {contract : $scope.contract.pk , data : JSON.stringify($scope.quoteInEditor.data) , value : $scope.quoteInEditor.calculated.value , status : $scope.quoteInEditor.status };
+      console.log($scope.quoteInEditor);
+      console.log(dataToSend);
+      console.log(url);
+      console.log(method);
+      $http({method : method , url : url , data : dataToSend}).
+      then(function(response) {
+        response.data.data = JSON.parse(response.data.data );
+        if ($scope.contract.invoice.length == 0) {
+          $scope.contract.invoice.push(response.data);
+        }else {
+          for (var i = 0; i < $scope.contract.invoice.length; i++) {
+            if ($scope.contract.invoice[i].pk == response.data.pk) {
+              $scope.contract.invoice[i] = response.data;
+            }else {
+              $scope.contract.invoice.push(response.data);
+            }
+          }
+        }
+        $scope.fetchInvoice();
+      })
+      // $scope.fetchInvoice();
+      console.log($scope.quoteData);
+    });
+
+  }
 
 });
 
@@ -102,7 +261,7 @@ app.controller('businessManagement.warehouse.contract', function($scope, $http, 
 
 app.controller("businessManagement.warehouse.contract.form", function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
 
-  $scope.contract = {company : '' , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqft' ,otherDocs : emptyFile ,occupancy: ''}
+  $scope.contract = {company : '' , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqft' ,otherDocs : emptyFile ,occupancy: '' }
   $scope.dates=[]
   for (var i = 1; i < 29; i++) {
     $scope.dates.push(i.toString());

@@ -43,10 +43,11 @@ class ContactSerializer(serializers.ModelSerializer):
 
 class ContractSerializer(serializers.ModelSerializer):
     company=ServiceSerializer(many=False,read_only=True)
+    contacts=ContactSerializer(many = True , read_only = True)
     class Meta:
         model = Contract
-        fields = ('pk' , 'company' , 'billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' )
-        read_only_fields = ('user' ,'company', )
+        fields = ('pk' ,'contacts', 'company' , 'billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' , )
+        read_only_fields = ('user' ,'company','contacts' )
     def create(self , validated_data):
         if validated_data['billingFrequency'] == len(str(validated_data['billingDates']).split(',')):
             c=Contract(**validated_data)
@@ -69,3 +70,8 @@ class ContractSerializer(serializers.ModelSerializer):
             return instance
         else:
             raise ValidationError(detail=None)
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Invoice
+        fields = ('pk','contract','data','value','status','created' ,'updated')

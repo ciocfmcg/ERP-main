@@ -59,3 +59,20 @@ class Contract(models.Model):
     occupancy = models.CharField(max_length = 100, null = False)
     contractPaper = models.FileField(upload_to=getWareHouseContractUploadPath, null=True)
     otherDocs = models.FileField(upload_to=getWareHouseDocUploadPath, null = True)
+
+CONTRACT_STATE_CHOICES = (
+    ('quoted' , 'quoted'),
+    ('cancelled' , 'cancelled'),
+    ('approved' , 'approved'),
+    ('billed' , 'billed'),
+    ('received' , 'received'),
+    ('dueElapsed' , 'dueElapsed'),
+)
+
+class Invoice(models.Model):
+    contract = models.ForeignKey(Contract , null = False , related_name="invoices")
+    data = models.CharField(max_length = 10000 , null = True)
+    value = models.PositiveIntegerField(null = True , default=0)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now = True)
+    status = models.CharField(choices = CONTRACT_STATE_CHOICES , max_length=12 , default = 'quoted')
