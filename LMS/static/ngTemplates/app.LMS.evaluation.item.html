@@ -1,0 +1,10 @@
+<div class="col-md-3 ">
+  <div class="container-fluid card" style="padding-bottom:10px;margin-bottom:15px;padding-top:20px;">
+    <label>Active : </label>{{data.active}} <br>
+    <label>Created By : </label>{{data.user | getName}} <br>
+    <label>Date : </label>{{data.updated}} <br> <br>
+    <label>{{data.questions.length}} </label> Questions<br> <br>
+    <i class="fa fa-pencil" style="cursor:pointer;" ng-click="rowActionClicked('edit')"></i>
+    <i class="fa fa-info pull-right" style="cursor:pointer;" ng-click="rowActionClicked('details')"></i>
+  </div>
+</div>

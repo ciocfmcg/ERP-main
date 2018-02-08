@@ -1,0 +1,362 @@
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+<title>CIOC</title>
+{% endblock %} {% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header page-scroll">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+      <a class="navbar-brand paFge-scroll" href="/">CIOC</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        <li>
+          <a class="page-scroll" href="#services">services</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#portfolio">Portfolio</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#team">Team</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#contact">Contact</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="/blog/">Blog</a>
+        </li>
+        <li>
+        </li>
+        <li>
+          <a class="page-scroll" href="/news/">News & Media</a>
+        </li>
+        <!-- <li>
+                    <a class="page-scroll" href="#about">About</a>
+                </li> -->
+
+
+        <!-- <li>
+          <a class="page-scroll" href="/career">Career</a>
+        </li> -->
+        <li>
+          <a class="page-scroll" href="/login">Login</a>
+        </li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+
+{% endblock %}
+<!-- Header -->
+{% block content %}
+<div ng-app="app" ng-controller="main">
+  {% verbatim %}
+  <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
+    <header style="background-color:#2d5391;height:40vh;width:100%;">
+      <!-- <header  style="background:rgb(29, 98, 180);height:100vh;"> -->
+      <div class="container" style="overflow:hidden;">
+        <div class="intro-text" style="text-align:center;">
+          <div class="intro-lead-in" style="font-size:100px;padding-right:53px;margin-top:-40px;">Our Team</div>
+          <!-- <div class="intro-heading" >Think Free</div> -->
+          <!-- <div class="btn1" style="padding-right: 40px;">
+            <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
+          </div> -->
+        </div>
+      </div>
+    </header>
+  </div>
+  <!--/chatbox-->
+  <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
+    <div class="row" style="border:1px solid #315f82;margin:0px;background-color: #174b6d;">
+      <div class="col-md-10">
+        <span ng-if="data.started" style="font-size:15px;color:white;"><i class="fa fa-user-o" ></i>{{name}}</span>
+        <span ng-if="!data.started" style="font-size:15px;color:white;cursor:pointer;" ng-click="data.minimized = false;"><i class="fa  fa-envelope" ></i> Chat with our support team</span>
+      </div>
+      <div class="col-md-2">
+        <i class="fa fa-angle-{{data.minimized ? 'up':'down'}} pull-right" style="color:white;margin-top:4px;cursor:pointer;" ng-click="data.minimized = !data.minimized"></i>
+      </div>
+    </div>
+    <div class="row" style="border:1px solid #174b6d;margin: 0px;padding:0px;background-color:#e1e5e8;">
+      <div class="container-fluid" ng-if="!data.started && !data.minimized" style="padding:20px;">
+        <form name="myForm">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" ng-model="data.name" required>
+            <div ng-show="myForm.name.$error.required && myForm.name.$touched" class="text-danger">Required!</div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" name="email" ng-model="data.email" required>
+            <div ng-show="myForm.email.$error.email" class="text-danger">Invalid email!</div>
+            <div ng-show="myForm.email.$error.required && myForm.email.$touched" class="text-danger">Required!</div>
+          </div>
+          <button ng-click="authentication()" type="button" class="btn btn-primary">Start</button>
+        </form>
+      </div>
+      <div ng-if="data.started" style="height:{{data.minimized? '0':'300' }}px; overflow-y:auto;" class="container-fluid">
+        <div class="row" ng-repeat="message in messages" style="padding:0px;">
+          <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+            <p style=>{{message.msg}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="border:1px solid #315f82;margin:0px;background-color:#e1e5e8;border-top:none;" ng-if="!data.minimized && data.started">
+      <!-- <div class="col-md-11" style="margin-top: 8px;"> -->
+      <!-- <div class="text-bar"> -->
+      <div class="col-md-9" style="padding:0px;">
+        <input type="text" class="form-control" ng-model="data.msgText" placeholder="Message" style="border-radius:0px;"></div>
+      <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paper-plane-o" ng-click="send()" style="cursor:pointer"></i></div>
+      <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paperclip" style="cursor:pointer"></i></div>
+    </div>
+  </div>
+
+  {% endverbatim %}
+  <!-- Services Section -->
+  <div class="body">
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+      <section id="service1">
+        <div class="container-fluid" style="height: 600px;width: 100%;padding:0px;">
+          <div class="row" style="margin-right: 55px;margin-left: 55px;">
+            <div class="col-md-3 team">
+              <a href="#person1" class="teamdetails-link" data-toggle="modal">
+              <div class="teamdetails-hover" >
+                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
+                  <i class="fa fa-plus fa-3x"></i>
+                </div>
+              </div>
+              </a>
+              <div class="team-details">
+                <div class="container-fluid" style="padding-top: 80px;">
+                  <span class="name">Name</span><br>
+                  <span class="designation">Designation</span><br><br>
+                  <p>This a simple text</p>
+                </div>
+              </div>
+              <div class="member-hover">
+                <img src="/static/images/avatar.png" class="avatar">
+              </div>
+            </div>
+            <div class="col-md-3 team">
+              <a href="#person2" class="teamdetails-link" data-toggle="modal">
+              <div class="teamdetails-hover" >
+                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
+                  <i class="fa fa-plus fa-3x"></i>
+                </div>
+              </div>
+              </a>
+              <div>
+                <img src="/static/images/avatar04.png" class="avatar">
+              </div>
+              <div class="team-details">
+                <div class="container-fluid" style="padding-top: 80px;">
+                  <span class="name">Name</span><br>
+                  <span class="designation">Designation</span><br><br>
+                  <p>This a simple text</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 team">
+              <a href="#person3" class="teamdetails-link" data-toggle="modal">
+              <div class="teamdetails-hover" >
+                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
+                  <i class="fa fa-plus fa-3x"></i>
+                </div>
+              </div>
+              </a>
+              <div class="team-details">
+                <div class="container-fluid" style="padding-top: 80px;">
+                  <span class="name">Name</span><br>
+                  <span class="designation">Designation</span><br><br>
+                  <p>This a simple text</p>
+                </div>
+              </div>
+              <div>
+                <img src="/static/images/avatar2.png" class="avatar">
+              </div>
+            </div>
+            <div class="col-md-3 team">
+              <a href="#person4" class="teamdetails-link" data-toggle="modal">
+              <div class="teamdetails-hover" >
+                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
+                  <i class="fa fa-plus fa-3x"></i>
+                </div>
+              </div>
+              </a>
+              <div>
+                <img src="/static/images/avatar5.png" class="avatar">
+              </div>
+              <div class="team-details">
+                <div class="container-fluid" style="padding-top: 80px;">
+                  <span class="name">Name</span><br>
+                  <span class="designation">Designation</span><br><br>
+                  <p>This a simple text</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Portfolio Modal 1 -->
+      <div class="portfolio-modal modal fade" id="person1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Name</h2>
+                  <p class="item-intro text-muted">Designation</p>
+                  <img class="img-responsive img-centered" src="/static/images/avatar.png" alt="">
+
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-modal modal fade" id="person2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Name</h2>
+                  <p class="item-intro text-muted">Designation</p>
+                  <img class="img-responsive img-centered" src="/static/images/avatar04.png" alt="">
+
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-modal modal fade" id="person3" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Name</h2>
+                  <p class="item-intro text-muted">Designation</p>
+                  <img class="img-responsive img-centered" src="/static/images/avatar2.png" alt="">
+
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-modal modal fade" id="person4" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Name</h2>
+                  <p class="item-intro text-muted">Designation</p>
+                  <img class="img-responsive img-centered" src="/static/images/avatar5.png" alt="">
+
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      {% endblock %} {% block footer %}
+      <footer style="background-color: #eeeeee;">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
+            </div>
+            <div class="col-md-4">
+              <ul class="list-inline social-buttons">
+                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li> -->
+                <li><a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <ul class="list-inline quicklinks">
+                <li><a href="#">Privacy Policy</a>
+                </li>
+                <li><a href="#">Terms of Use</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Portfolio Modals -->
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %} {% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
+<script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+
+{% endblock %}

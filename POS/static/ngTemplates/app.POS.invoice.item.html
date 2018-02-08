@@ -1,0 +1,28 @@
+<div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;" ng-controller="POS.invoice.item">
+  <div class="row" >
+    <div class="col-md-2 text-center" style="padding: 20px;">
+      <span style="font-size: 25px;">{{data.pk}}</span>
+    </div>
+    <div class="col-md-10" style="margin-top:10px;">
+      <div class="row">
+        <div class="col-md-6">
+          <span style="font-size: 18px;">{{data.customer.name}}</span><br>
+          <span>Invoice Due Date:{{data.duedate}}</span><br>
+          <span>Amount Recieved : {{data.amountRecieved}}</span>
+        </div>
+        <div class="col-md-5">
+          <span>Mode of Payment : {{data.modeOfPayment}}</span><br>
+          <span>Total Amount:{{subTotal()}}</span>
+        </div>
+        <div class="col-md-1" ng-if="showControls">
+          <div class="icon-infohover">
+            <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('info')"></i></span>
+          </div><br><br>
+          <div class="icon-pancilhover">
+            <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('edit')"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -768,8 +768,99 @@ body {
 }
 
 .profile-user-img {
-    margin: 0px auto;
-    width: 100px;
-    padding: 3px;
-    border: 3px solid #D2D6DE;
+  margin: 0px auto;
+  width: 100px;
+  padding: 3px;
+  border: 3px solid #D2D6DE;
 }
+.form-control-pos{
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: black;
+  border: none;
+  border-radius: 0px;
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  background-color: white;
+}
+.invoiceTable th{
+  padding: 10px;
+  text-align:center;
+  border: 1px solid #dddddd;
+}
+.invoiceTable td{
+  height: 35px;
+  border: 1px solid #dddddd;
+  text-align: center;
+}
+.down-part{
+   /*position:absolute;*/
+   left:0px;
+   /*bottom:0px;*/
+   height:90px;
+   width:100%;
+   /*background:#dddddd;*/
+   /*border-top:1px solid #dddddd;*/
+   margin-top: 40px;
+}
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+#myInput {
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 15px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+#myUL li  {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 15px;
+  color: black;
+  display: block
+}
+.icon-infohover{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    -webkit-transition: all ease .5s;
+    -moz-transition: all ease .5s;
+    transition: all ease .5s;
+  }
+.icon-infohover:hover{
+    opacity: 0;
+  }
+
+  .icon-infohover:hover {
+    opacity: 1;
+  }
+  .icon-pancilhover{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      -webkit-transition: all ease .5s;
+      -moz-transition: all ease .5s;
+      transition: all ease .5s;
+    }
+  .icon-pancilhover:hover{
+      opacity: 0;
+    }
+
+    .icon-pancilhover:hover {
+      opacity: 1;
+    }

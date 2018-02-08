@@ -1,0 +1,44 @@
+
+.change-icon > .fa + .fa,
+.change-icon:hover > .fa {
+  display: none;
+}
+.change-icon:hover > .fa + .fa {
+  display: inherit;
+}
+.not-selected .fa-play-circle  {
+  color: #7FFFD4
+}
+.not-selected .fa-video-camera {
+  color: #708090
+}
+.ul:hover{
+  background-color:#ddd;
+}
+video {
+    width: 100%;
+    height: auto;
+}
+.checked {
+    color: orange;
+}
+.service1 .team .teamdetails-link .teamdetails-hover{
+  position: absolute;
+  margin-left: -16px;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background: var(--themeMain);
+  -webkit-transition: all ease .5s;
+  -moz-transition: all ease .5s;
+  transition: all ease .5s;
+}
+.service1 .team .teamdetails-link .teamdetails-hover:hover {
+  opacity: 0;
+}
+.service1 .team .teamdetails-link .teamdetails-hover .teamdetails-hover-content i {
+  margin-top: 115px;
+}
+.service1 .team  .teamdetails-link .teamdetails-hover:hover {
+  opacity: 1;
+}

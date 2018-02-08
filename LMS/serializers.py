@@ -88,13 +88,40 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         return instance
 
-class PaperSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many = True , read_only = True)
+class PaperQuesSerializer(serializers.ModelSerializer):
+    ques = QuestionSerializer(many=False , read_only=True)
     class Meta:
-        model = Paper
-        fields = ('pk' , 'created' , 'updated', 'level', 'questions', 'active' , 'topic' , 'user')
+        model = PaperQues
+        fields = ('pk' , 'created' , 'updated', 'user', 'ques', 'marks','optional','negativeMarks' )
         read_only_fields = ('user', )
 
+class PaperSerializer(serializers.ModelSerializer):
+    questions = PaperQuesSerializer(many = True , read_only = True)
+    class Meta:
+        model = Paper
+        fields = ('pk' , 'created' , 'updated', 'questions', 'active' , 'user')
+        read_only_fields = ('user', 'questions')
+    def create(self , validated_data):
+        p=Paper(user=self.context['request'].user)
+        p.save()
+        print self.context['request'].data['questions']
+        for i in self.context['request'].data['questions']:
+            i['ques']=Question.objects.get(id=i['ques'])
+            pq = PaperQues(**i)
+            pq.user = self.context['request'].user
+            pq.save()
+            p.questions.add(pq)
+        return p
+    def update(self , instance , validated_data):
+        for i in instance.questions.all():
+            instance.questions.remove(i)
+        for i in self.context['request'].data['questions']:
+            i['ques']=Question.objects.get(id=i['ques'])
+            pq = PaperQues(**i)
+            pq.user = self.context['request'].user
+            pq.save()
+            instance.questions.add(pq)
+        return instance
 
 class AnswerSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(many = False , read_only = True)

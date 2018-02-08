@@ -109,7 +109,20 @@ INSTALLED_APPS = (
 	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
 	'LMS',# LMS
+	'POS',# POS terminal like tally
+	'tutor',# canvas
+	'workforceManagement',# canvas
+    'support',# canvas
+	'warehouse',# warehouse application
+	'employees',# employees details
+	'payroll',# payroll
+	'performance',# performance
+	'recruitment',# recruitment
+	'organization',# organization
+	'logistic',# logistics
+	'assets',# assets
 )
+
 
 SITE_ID = 1
 
@@ -171,6 +184,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'libreERP', 'templates'),
             os.path.join(BASE_DIR, 'ecommerce', 'templates'),
             os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
+            os.path.join(BASE_DIR, 'LMS', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

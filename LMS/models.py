@@ -96,14 +96,20 @@ class Question(models.Model):
     codeLang = models.CharField(choices = LANGUAGE_CHOICES , default = 'any' , null = False, max_length = 10)
     user = models.ForeignKey(User , null = False , related_name='questionsAuthored')
 
+class PaperQues(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    user = models.ForeignKey(User , null = False , related_name='paperQuesAuthored')
+    ques=models.ForeignKey(Question,null=True,related_name="paperquestion")
+    marks=models.PositiveSmallIntegerField(null=False)
+    optional=models.BooleanField(default=False)
+    negativeMarks=models.FloatField(null=False)
 
 class Paper(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
-    level = models.PositiveIntegerField(null=True)
-    questions = models.ManyToManyField(Question , blank = True)
+    questions = models.ManyToManyField(PaperQues , blank = True)
     active = models.BooleanField(default = False)
-    topic = models.ForeignKey(Topic , null = True , related_name='papers')
     user = models.ForeignKey(User , null = False , related_name='papersAuthored')
 
 CORRECTION_CHOICES = (

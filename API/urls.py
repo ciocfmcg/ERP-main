@@ -16,4 +16,8 @@ urlpatterns = [
     url(r'^events/', include('events.urls')),
     url(r'^clientRelationships/', include('clientRelationships.urls')),
     url(r'^LMS/', include('LMS.urls')),
+    url(r'^POS/', include('POS.urls')),
+    url(r'^warehouse/', include('warehouse.urls')),
+
+
 ]

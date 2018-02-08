@@ -192,6 +192,15 @@ app.controller("projectManagement.LMS.courses.explore", function($scope, $state,
 
   }
 
+  // $scope.open = function () {
+  //   console.log('opening pop up');
+  //   var modalInstance = $modal.open({
+  //     // templateUrl: 'popup.html',
+  //   });
+  // }
+
+
+
 });
 
 app.controller("projectManagement.LMS.courses.form", function($scope, $state, $users, $stateParams, $http, Flash) {

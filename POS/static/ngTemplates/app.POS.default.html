@@ -1,0 +1,129 @@
+<div class="shaddowed card bg-white " style="position:relative;min-height:92vh;">
+  <div class="container-fluid" style="padding:0px;">
+    <breadcrumb></breadcrumb>
+    <div class="container-fluid" ng-if="mode == 'invoice'" ng-include="'/static/ngTemplates/app.POS.invoices.html'">
+    </div>
+    <div class="container-fluid" ng-if="mode == 'home'">
+      <div class="row">
+        <div class="col-md-6">
+
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+
+
+
+          <div class="row" style="margin-top:30px">
+            <uib-tabset style="margin-left: 15px;">
+              <uib-tab >
+                <uib-tab-heading>
+                  customers
+                </uib-tab-heading>
+                <!-- <div class="col-md-12" style="padding-left:0px;margin-top:20px">
+                  <label>Customers</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
+                    <span class="input-group-addon" ><i class="fa fa-plus" style="cursor:pointer;" aria-hidden="true" ng-click="openCustomerForm()"></i></span>
+                  </div>
+                </div> -->
+                <div class="col-md-12" style="padding-left:0px">
+                  <generic-Table data="data.customerDataTable" config-Obj="{{configCustomer}}" callback-Fn="tableActionCustomer">
+                  </generic-Table>
+                </div>
+              </uib-tab>
+                <uib-tab active="searchTabActive">
+                    <uib-tab-heading>
+                        Invoice
+                        <i class="fa fa-list-ul"></i>
+                    </uib-tab-heading>
+                    <!-- <div class="col-md-12" style="padding-left:0px;margin-top:20px">
+                      <label>Invoices</label>
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
+                        <span class="input-group-addon" ng-click="createInvoice()"><i class="fa fa-plus" aria-hidden="true" style="cursor:pointer;" ></i></span>
+                      </div>
+                    </div> -->
+                    <div class="col-md-12" style="padding-left:0px">
+                        <generic-Table data="data.invoiceDataTable" config-Obj="{{configInvoice}}" callback-Fn="tableActionInvoice"></generic-Table>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12">
+              <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2" style="width: 832px;height: 305px;">
+            </canvas>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="small-box bg-aqua">
+                    <div class="inner">
+                      <h3>150</h3>
+                      <p>New Orders</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="small-box bg-green">
+                    <div class="inner">
+                      <h3>53<sup style="font-size: 20px">%</sup></h3>
+                      <p>Bounce Rate</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-bar-chart"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="small-box bg-yellow">
+                    <div class="inner">
+                      <h3>44</h3>
+                      <p>User Registrations</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-user-plus"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="small-box bg-red">
+                    <div class="inner">
+                      <h3>65</h3>
+                      <p>Unique Visitors</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-pie-chart"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:30px">
+
+            <div class="col-md-12">
+              <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" style="width: 832px;height: 305px;">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

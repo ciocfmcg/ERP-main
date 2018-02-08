@@ -1,0 +1,59 @@
+{% load replacetags %}
+{% autoescape on %}
+\documentclass[12pt,paper=a4paper,english]{exam}
+\usepackage[english]{babel}
+\usepackage[ddmmyyyy]{datetime}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\newcommand{\examdate}{\today}
+\pagestyle{head}
+\runningheader{CIOC}{Page \thepage\ of \numpages}{\examdate}
+\runningheadrule
+\begin{document}
+\renewcommand{\dateseparator}{-}
+\begin{center}
+\textsc{\Large CIOC FMCG Pvt.Ltd.}\par
+\Large Question Paper\par
+\end{center}
+\vspace{1cm}
+\noindent
+\begin{tabular}{@{}p{.40\textwidth}@{\hspace{6cm}}p{.40\textwidth}@{}}
+\textbf Name : & \textbf Marks :\\\\
+\textbf Time : 60 minutes & \textbf  Date :{\examdate}\\ % Date
+\end{tabular}\par
+\vspace{0.7cm}
+\noindent\fbox{%
+   \parbox{1\textwidth}{%
+	\textsc\\
+       \textbf {\Large  Instructions :}\par
+       \hspace {0.3cm} 1. Don't use "pen".\par
+       \hspace {0.3cm} 2. Don't use calculaters and electronic gadgets.\par
+       \hspace {0.3cm} 3. Don't do copy.\par
+       \hspace {0.3cm} 4. All the best.\par\
+    }%
+}
+\vspace{0.5cm}
+
+\begin{questions}
+{% for q in ques %}
+\question {{q.ques}}\par\hspace{14.2cm} [ M ]
+  {% if q.qtype == 'mcc' %}
+  \checkboxchar{$\Box$}
+    {% if q.optionsParts.all %} \begin{checkboxes}
+      {% for data in q.optionsParts.all %}
+        {% if data.mode == 'text' %} \choice {{data.txt}}
+        {% else %} \choice \includegraphics[width=0.3\textwidth]{{data.image.path|replacetags}}
+        {% endif %}
+      {% endfor %} \end{checkboxes}
+    {% else %} NO OPTIONS
+    {% endif %}
+  {% elif q.qtype == 'string' %}
+  \makeemptybox{2in}
+  {% elif q.qtype == 'mcq' %}
+  {% endif %}
+{% endfor %}
+\end{questions}
+\end{document}
+{% endautoescape %}

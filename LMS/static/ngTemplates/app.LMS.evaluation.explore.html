@@ -1,0 +1,53 @@
+<div class="container-fluid" ng-controller="projectManagement.LMS.evaluation.explore">
+  <div class="col-md-10">
+  <label class="text-muted"><h4>Question Paper</h4></label>
+    <div class="row" ng-repeat="y in paper.questions">
+      <div class="col-md-1">
+        <div class="form-group pull-right">
+          {{$index + 1}})
+        </div>
+      </div>
+      <div class="col-md-11" style="padding-left:0px;">
+        <div class="form-group">
+          {{y.ques.ques}}
+        </div>
+        <div class="form-inline">
+          <div class="form-group">
+            Marks : {{y.marks}}
+          </div>&emsp;
+          <div class="form-group">
+            Negative Marks : {{y.negativeMarks}}
+          </div>&ensp;
+          <div class="form-group">
+            Optional : {{y.optional}}
+          </div>
+        </div><br>
+      </div>
+      <!-- <div class="col-md-2">
+        <div class="text-center" style="margin-bottom:0px;" ng-if="y.ques.qtype == 'string' || y.ques.qtype == 'mcc'">
+          <label>Answer :</label>
+        </div>
+      </div>
+      <div class="col-md-11 pull-right" ng-if="y.ques.qtype == 'mcq'">
+        <br>
+      </div>
+      <div class="col-md-11 pull-right" ng-if="y.ques.qtype == 'mcc'">
+        <ol type="A">
+        <div ng-repeat="options in y.ques.optionsParts">
+          <div ng-if="options.mode == 'text'">
+            <li>{{options.txt}}</li>
+          </div>
+          <div ng-if="options.mode == 'image'">
+            <li><img ng-src="{{options.image}}" alt="image option" width="20%",height="150px"><br><br>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-11 pull-right" ng-if="y.ques.qtype == 'string'">
+        <textarea rows="10" cols="140" style="width:95%" class="form-control"></textarea><br><br>
+      </div> -->
+    </div>
+  </div>
+  <div class="col-md-2">
+    <h4><a class="btn btn-primary btn-sm pull-right" href="{{'/api/LMS/generateQuesPaper/?paper=' + paper.pk}}" target="_blank"><i class="fa fa-download"></i> Download</a></h4>
+</div>
+</div>
