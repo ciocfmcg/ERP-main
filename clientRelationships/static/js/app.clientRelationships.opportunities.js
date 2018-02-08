@@ -12,12 +12,27 @@ var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'y
 app.controller("businessManagement.clientRelationships.opportunities.quote", function($scope, $state, $users, $stateParams, $http, Flash,  $uibModalInstance , deal) {
 
 
+  $scope.searchTaxCode = function(c) {
+    return $http.get('/api/clientRelationships/productMeta/?description__contains='+c).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
   $scope.firstQuote = true;
 
   $scope.deal = deal;
   $scope.data = [];
 
   console.log($scope.deal);
+
+  $scope.$watch('form.productMeta' , function(newValue , oldValue) {
+    if (typeof newValue == 'object') {
+      $scope.showTaxCodeDetails = true;
+    }else {
+      $scope.showTaxCodeDetails = false;
+    }
+  })
 
   if ($scope.deal.contracts.length >0) {
     $http({method : 'GET' , url : '/api/clientRelationships/contract/' + $scope.deal.contracts[0] +'/'}).
@@ -80,7 +95,7 @@ app.controller("businessManagement.clientRelationships.opportunities.quote", fun
       Flash.create('warning' , 'The tax rate is unrealistic');
       return;
     }
-    $scope.data.push({currency : $scope.form.currency , type : $scope.form.type , tax: $scope.form.tax , desc : $scope.form.desc , rate : $scope.form.rate , quantity : $scope.form.quantity})
+    $scope.data.push({currency : $scope.form.currency , type : $scope.form.type , tax: $scope.form.productMeta.taxRate , desc : $scope.form.desc , rate : $scope.form.rate , quantity : $scope.form.quantity, taxCode : $scope.form.productMeta.code})
     $scope.resetForm();
   }
 
