@@ -2,7 +2,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('workforceManagement.performance.appraisal', {
-      url: "/feedback",
+      url: "/appraisal",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.performance.appraisal.html',

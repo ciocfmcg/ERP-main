@@ -121,3 +121,18 @@ class StudyMaterialViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = StudyMaterialSerializer
     queryset = StudyMaterial.objects.all()
+
+class ChannelViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = ChannelSerializer
+    queryset = Channel.objects.all()
+
+class VideoViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = VideoSerializer
+    queryset = Video.objects.all()
+
+class FeedbackViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = FeedbackSerializer
+    queryset = Feedback.objects.all()

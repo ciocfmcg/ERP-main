@@ -178,3 +178,38 @@ class CourseSerializer(serializers.ModelSerializer):
         for u in self.context['request'].data['TAs']:
             c.TAs.add(User.objects.get(pk = u))
         return c
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = ('pk' , 'created' , 'description', 'title', 'user', 'channel' , 'thumbnail' , 'attachment','updated' ,'views')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        v = Video(**validated_data)
+        v.user = self.context['request'].user
+        v.save()
+        return v
+
+
+class ChannelSerializer(serializers.ModelSerializer):
+    videos = VideoSerializer(many = True , read_only = True)
+    class Meta:
+        model = Channel
+        fields = ('pk' , 'created' , 'description', 'title', 'user', 'dp' ,'updated' , 'videos')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        print '@@@@@@@@@@@@@@'
+        c = Channel(**validated_data)
+        c.user = self.context['request'].user
+        c.save()
+        return c
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ('pk' , 'created' , 'typ','user', 'comment' , 'video' , 'videoSeries','updated')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        f = Feedback(**validated_data)
+        f.user = self.context['request'].user
+        f.save()
+        return f

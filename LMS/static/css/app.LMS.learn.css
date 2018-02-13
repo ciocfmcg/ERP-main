@@ -1,3 +1,8 @@
+.addNewCard:hover{
+  color: white;
+  background: var(--themeMain);
+}
+
 
 .change-icon > .fa + .fa,
 .change-icon:hover > .fa {
@@ -22,7 +27,7 @@ video {
 .checked {
     color: orange;
 }
-.service1 .team .teamdetails-link .teamdetails-hover{
+ .team .teamdetails-link .teamdetails-hover{
   position: absolute;
   margin-left: -16px;
   width: 100%;

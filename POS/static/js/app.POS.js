@@ -732,6 +732,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       backdrop: true,
       resolve: {
         product: function() {
+
+          console.log($scope.products[idx]);
           if (idx == undefined || idx == null) {
             return {};
           } else {

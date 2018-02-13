@@ -1,175 +1,169 @@
 <!-- <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;"> -->
 <breadcrumb></breadcrumb>
-<div class="container-fluid" style="margin-top: -20px;" ng-controller="projectManagement.LMS.learn">
-  <div class="input-group" style="margin:20px" ng-if="overall">
-    <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
-    <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
-  </div>
-  <div class="row" ng-if="overall">
-    <div class="col-md-2" ng-click="video()" ng-if="React">
-      <div class="card" style="height:200px;width:200px;margin:50px;padding: 62px">
-        <img src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/000/026/thumb/react.png" alt="React" title="react image" style="height:60px;width:60px">
-        <div class="container" style="padding:0px">
-          <spam style="font-color:#eeeeee;font-size:20px">React</spam>
+<div class="container-fluid" style="margin-top: -20px;padding:0px" ng-controller="projectManagement.LMS.learn">
+  <div class="container-fluid" ng-if="form.mode == 'search'">
+    <div class="row">
+      <div class="col-md-9" style="padding:30px;">
+        <input class="form-control input-lg" placeholder="Search for {{!form.videos ? 'courses':'videos'}}">
+      </div>
+      <div class="col-md-3 text-center" style="padding-top:30px;">
+        <span style="margin-right:10px;">Courses</span>
+        <switch ng-model="form.videos" class="neutral"></switch><span style="margin-left:10px;">Videos</span>
+      </div>
+    </div>
+
+    <div class="row" ng-if="!form.videos" style="padding:10px">
+      <div class="col-md-3 zoomOnHover" ng-click="openCourse($index)" ng-repeat="c in data">
+        <div class="card text-center" style="padding: 10px;padding-top:20px;min-height:150px;margin-bottom:15px;">
+          <img ng-src="{{c.dp}}"  style="height:60px;width:60px">
+          <br>
+          <spam style="font-color:#eeeeee;font-size:20px">{{c.title}}</spam>
+        </div>
+      </div>
+
+      <div class="col-md-3 zoomOnHover " ng-click="addCourse()">
+        <div class="card text-center addNewCard" style="padding: 10px;padding-top:40px;min-height:150px;margin-bottom:15px;">
+
+          <i class="fa fa-plus fa-5x"></i>
+
+
         </div>
       </div>
     </div>
-    <div class="col-md-2" ng-click="video1()" ng-if="Javascript">
-      <div class="card" style="height:200px;width:200px;margin:50px;padding: 62px">
-        <img src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/000/205/thumb/javascriptlang.png" alt="React" title="react image" style="height:60px;width:60px">
-        <div class="container" style="padding:0px">
-          <spam style="font-color:#eeeeee;font-size:20px;margin-left: -12px;s">Javascript</spam>
+
+    <div class="row" ng-if="form.videos" style="padding:20px">
+      <div class="col-md-3 zoomOnHover" ng-click="openVideo($index)" ng-repeat="v in videos">
+        <div class="card" style="min-height:150px;margin-bottom:15px;">
+          <img style="height:130px;width:100%"  ng-src="{{v.thumbnail}}">
+          <br>
+          <div class="container-fluid">
+            <spam>{{v.title}}</spam><br>
+            <span>{{v.views}}</span><br>
+            <span>{{v.description}}</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-3 zoomOnHover " ng-click="addVideolist()">
+        <div class="card text-center addNewCard" style="padding: 10px;padding-top:40px;min-height:150px;margin-bottom:15px;">
+
+          <i class="fa fa-plus fa-5x"></i>
+
+
         </div>
       </div>
     </div>
-    <div class="col-md-2" ng-click="video2()" ng-if="ReactNative">
-      <div class="card" style="height:200px;width:200px;margin:50px;padding: 62px">
-        <img src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/000/969/thumb/reactnativelogo.png" alt="React" title="react image" style="height:60px;width:60px">
-        <div class="container" style="padding:0px">
-          <spam style="font-color:#eeeeee;font-size:20px;margin-left: -12px;">ReactNative</spam>
+
+  </div>
+
+  <div class="row" ng-if="form.mode == 'explore'" style="padding:20px">
+
+    <!-- <div class="row" style="padding:20px">
+      <div class="col-md-1">
+        <button class="btn btn-default pull-left" ng-click="back()">
+          <i class="fa fa-arrow-left"></i> Back
+        </button>
+      </div>
+    </div> -->
+    <div class="btn-group" style="padding:20px">
+      <button type="button" class="btn btn-default" ng-click="back()"><i class="fa fa-arrow-left"></i> Back</button>
+      <button type="button" class="btn btn-default" ng-click="addCourse(1)"><i class="fa fa-pencil" aria-hidden="true"></i>
+        Edit</button>
+    </div>
+    <div class="row" style="padding:20px">
+      <div class="col-md-7">
+
+        </br>
+        <img src="{{data[couseInView].dp}}" style="height:90px;width:90px"></br>
+        <spam style="font-color:#eeeeee;font-size:30px">{{data[couseInView].title}}</spam>&nbsp;&nbsp;
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <spam>3/5</spam><br/>
+
+        <div ng-bind-html="data[couseInView].description">
         </div>
+      </div>
+      <div class="col-sm-5" style="padding-left:10px; border-left:1px solid #eeeeee;">
+
+        <div class="row" ng-repeat="r in data[couseInView].videos" style="margin-bottom: 20px;">
+          <div class="col-md-8 zoomOnHover">
+              <img controls="false" height="200px" width="100%" ng-src="{{r.thumbnail}}" >
+            </img>
+          </div>
+          <div class="col-md-4">
+            <div class="container-fluid" style="padding:0px">
+              <spam style="font-size:15px">{{r.title}}</spam><br>
+              <span style="font-size:15px">{{r.views}}</span><br>
+              <!-- <span style="font-size:15px">.{{data.courses[couseInView].day}}</span><br> -->
+              <span style="font-size:15px">{{r.description}}</span>
+            </div>
+          </div>
+        </div>
+        <section class="service1">
+            <div class="row" style="margin-left: 0px;">
+              <div class="col-md-8 team zoomOnHover " style="background-color:var(--themeMain);width: 405px;height: 200px;text-align: center;">
+                <a class="teamdetails-link" data-toggle="modal" ng-click="addVideolist()">
+                  <div class="teamdetails-hover">
+                    <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
+                      <i class="fa fa-plus fa-3x"></i>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+        </section>
       </div>
     </div>
   </div>
-  <div class="row" ng-if="!React" style="padding:20px">
-    <div class="col-md-7" ng-repeat="data in Reactvideo">
-      <button class="btn btn-default pull-left" ng-click="back()"><i class="fa fa-arrow-left"></i> Back</button></br>
-      </br>
-      <img src="{{data.image}}" alt="React" title="react image" style="height:90px;width:90px"></br>
-      <spam style="font-color:#eeeeee;font-size:30px">{{data.name}}</spam>&nbsp;&nbsp;
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star"></span>
-      <span class="fa fa-star"></span>
-      <spam>3/5</spam><br/>
-      <spam style="font-color:#eeeeee;font-size:15px">{{data.details}}</spam>
-    </div>
-    <div class="col-sm-5" style="padding-left:10px; border-left:1px solid #eeeeee">
-      <ul class="list-group" style="margin-bottom: 0px;" ng-repeat="data in videoForm">
-        <div class="row">
-          <div class="col-md-7">
-            <video controls="false" width="400">
-                  <source src="{{data.file}}" type="video/ogg">
-            </video>
-          </div>
-          <div class="col-md-5">
-            <spam style="font-color:#eeeeee;font-size:20px">{{data.title}}</spam>
-            </br>
-            <spam class="text-" style="font-color:#eeeeee;font-size:10px" class="text-muted">{{data.playList}}</spam>
-          </div>
+
+  <div ng-if="form.mode == 'video'">
+    <div class="container-fluid" style="padding:0px" >
+      <div class="row" style="padding:20px">
+        <div class="col-md-1" >
+          <button class="btn btn-default" ng-click="back()">
+            <i class="fa fa-arrow-left"></i> Back
+          </button>
         </div>
-        <hr>
-      </ul>
-      <section class="service1">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-3 team" style="background-color:var(--themeMain);width: 400px;height: 200px;text-align: center;">
-              <a class="teamdetails-link" data-toggle="modal" ng-click="openUploadForm()">
-                <div class="teamdetails-hover">
-                  <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                    <i class="fa fa-plus fa-3x"></i>
-                  </div>
-                </div>
-              </a>
+        <div class="col-md-6 ">
+          <span style="font-size:20px">{{videos[videoInView].title}}</span> |
+          <span class="text-muted" style="font-size:20px">{{videos[videoInView].description}}</span>
+        </div>
+        <div class="col-md-5" style="text-align:right">
+          <span style="font-size:20px">1 Like </span>&nbsp;
+          <span style="font-size:20px">{{comments.length}} comments</span>
+        </div>
+      </div>
+      <video  controls="false" width="100%" height="500px" frameborder="0 " ng-src="{{videos[videoInView].attachment}}" autoplay >
+      </video>
+      <div class="container-fluid" style="width:600px;font-size:15px;border:1px solid var(--themeMain);margin:10px;padding-top:10px;padding-bottom: 10px;"  ng-repeat=" p in comments" >
+          <span ng-if="p.msg != '' || p.msg != undefined">{{p.msg}}</span><br>
+          <span class="text-muted">on : {{p.date}}</span>
+          <span class="text-muted">{{p.time}}</span>
+      </div>
+      <div class="container-fluid" style="padding:;border-top:30px;width:600px;margin-left: 12px;">
+        <div class="row" style="margin:0px;margin-top:40px;margin-bottom:60px;">
+          <form>
+            <div class="input-group">
+              <input type="text" class="form-control"placeholder="Message">
+              <!-- <span class="input-group-addon"style="cursor:pointer"><i class="fa fa-paperclip" aria-hidden="true"></i></span> -->
+              <span class="input-group-addon" ng-click="send()" style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
             </div>
-          </div>
+          </form>
         </div>
-      </section>
+      </div>
+
+
     </div>
+
   </div>
-  <div class="row" ng-if="!Javascript" style="padding:20px">
-    <div class="col-md-7" ng-if="!Javascript" ng-repeat="data in Javascriptvideo">
-      <button class="btn btn-default pull-left" ng-click="back()"><i class="fa fa-arrow-left"></i>Back</button></br>
-      </br>
-      <img src={{data.image}} alt="React" title="react image" style="height:90px;width:90px"><br/>
-      <spam style="font-color:#eeeeee;font-size:30px">{{data.name}}</spam>&nbsp;&nbsp;
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star"></span>
-      <span class="fa fa-star"></span>
-      <spam>3/5</spam><br/>
-      <spam style="font-color:#eeeeee;font-size:15px">{{data.details}}
-        <spam>
-    </div>
-    <div class="col-sm-5" style="padding-left:10px; border-left:1px solid #eeeeee">
-      <ul class="list-group" style="margin-bottom: 0px;" ng-repeat="data in videoForm">
-        <div class="row">
-          <div class="col-md-7">
-            <video controls="false" width="400">
-                  <source src="{{data.file}}" type="video/ogg">
-            </video>
-          </div>
-          <div class="col-md-5">
-            <spam style="font-color:#eeeeee;font-size:20px">{{data.title}}</spam>
-            </br>
-            <spam class="text-" style="font-color:#eeeeee;font-size:10px" class="text-muted">{{data.playList}}</spam>
-          </div>
-        </div>
-        <hr>
-      </ul>
-      <section class="service1">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-3 team" style="background-color:var(--themeMain);width: 400px;height: 200px;text-align: center;">
-              <a class="teamdetails-link" data-toggle="modal" ng-click="openUploadForm()">
-                <div class="teamdetails-hover">
-                  <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                    <i class="fa fa-plus fa-3x"></i>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-  <div class="row" ng-if="!ReactNative" style="padding:20px">
-    <div class="col-md-7" ng-repeat="data in Reactnativevideo">
-      <button class="btn btn-default pull-left" ng-click="back()"><i class="fa fa-arrow-left"></i>Back</button></br>
-      </br>
-      <img src="{{data.image}}" alt="React" title="react image" style="height:90px;width:90px"></br>
-      <spam style="font-color:#eeeeee;font-size:30px">{{data.name}}</spam>&nbsp;&nbsp;
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star"></span>
-      <span class="fa fa-star"></span>
-      <span class="fa fa-star"></span>
-      <spam>2/5</spam><br/>
-      <spam style="font-color:#eeeeee;font-size:15px">{{data.details}}</spam>
-    </div>
-    <div class="col-sm-5" style="padding-left:10px; border-left:1px solid #eeeeee">
-      <ul class="list-group" style="margin-bottom: 0px;" ng-repeat="data in videoForm">
-        <div class="row">
-          <div class="col-md-7">
-            <video controls="false" width="400">
-                  <source src="{{data.file}}" type="video/ogg">
-            </video>
-          </div>
-          <div class="col-md-5">
-            <spam style="font-color:#eeeeee;font-size:20px">{{data.title}}</spam>
-            </br>
-            <spam class="text-" style="font-color:#eeeeee;font-size:10px" class="text-muted">{{data.playList}}</spam>
-          </div>
-        </div>
-        <hr>
-      </ul>
-      <section class="service1">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-3 team" style="background-color:var(--themeMain);width: 400px;height: 200px;text-align: center;">
-              <a class="teamdetails-link" data-toggle="modal" ng-click="openUploadForm()">
-                <div class="teamdetails-hover">
-                  <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                    <i class="fa fa-plus fa-3x"></i>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
+
+  <!-- <div class="row" ng-if="form.mode == 'explore'" style="padding:20px">
+
+
+  </div> -->
+
+</div>
