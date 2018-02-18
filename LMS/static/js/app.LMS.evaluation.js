@@ -192,8 +192,6 @@ app.controller("projectManagement.LMS.evaluation.form", function($scope, $state,
 
   };
 
-
-
   $scope.delete=function(indx){
     $scope.selectedquestions.splice(indx,1)
   }

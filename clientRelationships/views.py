@@ -380,14 +380,15 @@ def genInvoice(response , contract, request):
 class DownloadInvoice(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
+        print '****** entered'
         if 'contract' not in request.GET:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         response = HttpResponse(content_type='application/pdf')
         o = Contract.objects.get(id = request.GET['contract'])
-        response['Content-Disposition'] = 'attachment; filename="invoice%s%s%s.pdf"' %(o.deal.pk, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
+        response['Content-Disposition'] = 'attachment; filename="CR_invoice%s_%s_%s.pdf"' %(o.deal.pk, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
         genInvoice(response , o , request)
-        f = open('./media_root/invoice%s%s%s.pdf'%(o.deal.pk, o.pk, o.status) , 'wb')
+        f = open('./media_root/CR_invoice%s%s_%s.pdf'%(o.deal.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk) , 'wb')
         f.write(response.content)
         f.close()
         if 'saveOnly' in request.GET:
