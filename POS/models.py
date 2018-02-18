@@ -55,7 +55,8 @@ PAYMENT_CHOICES = (
     ('card' , 'card'),
     ('netBanking' , 'netBanking'),
     ('cash' , 'cash'),
-    ('cheque' , 'cheque')
+    ('cheque' , 'cheque'),
+    ('wallet' , 'wallet')
 )
 
 
@@ -72,3 +73,7 @@ class Invoice(models.Model):
     products=models.CharField(max_length=10000,null=True)
     amountRecieved = models.PositiveIntegerField(default = 0)
     modeOfPayment = models.CharField(choices = PAYMENT_CHOICES , max_length = 10 , null = True)
+    received = models.BooleanField(default = True)
+    grandTotal = models.FloatField(null=False)
+    totalTax = models.FloatField(null=False)
+    paymentRefNum = models.PositiveIntegerField(default = 0)

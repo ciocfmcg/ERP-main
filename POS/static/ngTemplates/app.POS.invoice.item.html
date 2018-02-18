@@ -7,12 +7,12 @@
       <div class="row">
         <div class="col-md-6">
           <span style="font-size: 18px;">{{data.customer.name}}</span><br>
-          <span>Invoice Due Date:{{data.duedate}}</span><br>
+          <span>Invoice Due Date:{{data.duedate | date:'dd MMM yyyy'}}</span><br>
           <span>Amount Recieved : {{data.amountRecieved}}</span>
         </div>
         <div class="col-md-5">
           <span>Mode of Payment : {{data.modeOfPayment}}</span><br>
-          <span>Total Amount:{{subTotal()}}</span>
+          <span>Total Amount:{{data.grandTotal}}</span>
         </div>
         <div class="col-md-1" ng-if="showControls">
           <div class="icon-infohover">

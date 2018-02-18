@@ -1,169 +1,36 @@
-<!-- <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;"> -->
+
 <breadcrumb></breadcrumb>
-<div class="container-fluid" style="margin-top: -20px;padding:0px" ng-controller="projectManagement.LMS.learn">
-  <div class="container-fluid" ng-if="form.mode == 'search'">
-    <div class="row">
-      <div class="col-md-9" style="padding:30px;">
-        <input class="form-control input-lg" placeholder="Search for {{!form.videos ? 'courses':'videos'}}">
+<div class="container-fluid">
+  <uib-tabset>
+    <uib-tab active="searchTabActive">
+      <uib-tab-heading>
+        Courses <i class="fa fa-book" aria-hidden="true"></i>
+      </uib-tab-heading>
+      <div class="container-fluid">
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
       </div>
-      <div class="col-md-3 text-center" style="padding-top:30px;">
-        <span style="margin-right:10px;">Courses</span>
-        <switch ng-model="form.videos" class="neutral"></switch><span style="margin-left:10px;">Videos</span>
-      </div>
-    </div>
-
-    <div class="row" ng-if="!form.videos" style="padding:10px">
-      <div class="col-md-3 zoomOnHover" ng-click="openCourse($index)" ng-repeat="c in data">
-        <div class="card text-center" style="padding: 10px;padding-top:20px;min-height:150px;margin-bottom:15px;">
-          <img ng-src="{{c.dp}}"  style="height:60px;width:60px">
-          <br>
-          <spam style="font-color:#eeeeee;font-size:20px">{{c.title}}</spam>
-        </div>
-      </div>
-
-      <div class="col-md-3 zoomOnHover " ng-click="addCourse()">
-        <div class="card text-center addNewCard" style="padding: 10px;padding-top:40px;min-height:150px;margin-bottom:15px;">
-
-          <i class="fa fa-plus fa-5x"></i>
-
-
-        </div>
-      </div>
-    </div>
-
-    <div class="row" ng-if="form.videos" style="padding:20px">
-      <div class="col-md-3 zoomOnHover" ng-click="openVideo($index)" ng-repeat="v in videos">
-        <div class="card" style="min-height:150px;margin-bottom:15px;">
-          <img style="height:130px;width:100%"  ng-src="{{v.thumbnail}}">
-          <br>
+    </uib-tab>
+      <uib-tab>
+          <uib-tab-heading>
+              Videos
+              <i class="fa fa-youtube-play" aria-hidden="true"></i>
+          </uib-tab-heading>
           <div class="container-fluid">
-            <spam>{{v.title}}</spam><br>
-            <span>{{v.views}}</span><br>
-            <span>{{v.description}}</span>
+              <generic-Table data="data.videosTableData" config-Obj="{{configVideos}}" callback-Fn="tableActionVideos"></generic-Table>
           </div>
+      </uib-tab>
 
-        </div>
-      </div>
-      <div class="col-md-3 zoomOnHover " ng-click="addVideolist()">
-        <div class="card text-center addNewCard" style="padding: 10px;padding-top:40px;min-height:150px;margin-bottom:15px;">
-
-          <i class="fa fa-plus fa-5x"></i>
-
-
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="row" ng-if="form.mode == 'explore'" style="padding:20px">
-
-    <!-- <div class="row" style="padding:20px">
-      <div class="col-md-1">
-        <button class="btn btn-default pull-left" ng-click="back()">
-          <i class="fa fa-arrow-left"></i> Back
-        </button>
-      </div>
-    </div> -->
-    <div class="btn-group" style="padding:20px">
-      <button type="button" class="btn btn-default" ng-click="back()"><i class="fa fa-arrow-left"></i> Back</button>
-      <button type="button" class="btn btn-default" ng-click="addCourse(1)"><i class="fa fa-pencil" aria-hidden="true"></i>
-        Edit</button>
-    </div>
-    <div class="row" style="padding:20px">
-      <div class="col-md-7">
-
-        </br>
-        <img src="{{data[couseInView].dp}}" style="height:90px;width:90px"></br>
-        <spam style="font-color:#eeeeee;font-size:30px">{{data[couseInView].title}}</spam>&nbsp;&nbsp;
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star"></span>
-        <span class="fa fa-star"></span>
-        <spam>3/5</spam><br/>
-
-        <div ng-bind-html="data[couseInView].description">
-        </div>
-      </div>
-      <div class="col-sm-5" style="padding-left:10px; border-left:1px solid #eeeeee;">
-
-        <div class="row" ng-repeat="r in data[couseInView].videos" style="margin-bottom: 20px;">
-          <div class="col-md-8 zoomOnHover">
-              <img controls="false" height="200px" width="100%" ng-src="{{r.thumbnail}}" >
-            </img>
+      <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+          <uib-tab-heading >
+              {{tab.title}}
+              <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+          </uib-tab-heading>
+          <div ng-if="tab.app == 'explore'">
+              <div ng-include="'/static/ngTemplates/app.LMS.learn.opencourse.html'"></div>
           </div>
-          <div class="col-md-4">
-            <div class="container-fluid" style="padding:0px">
-              <spam style="font-size:15px">{{r.title}}</spam><br>
-              <span style="font-size:15px">{{r.views}}</span><br>
-              <!-- <span style="font-size:15px">.{{data.courses[couseInView].day}}</span><br> -->
-              <span style="font-size:15px">{{r.description}}</span>
-            </div>
+          <div ng-if="tab.app == 'video'">
+              <div ng-include="'/static/ngTemplates/app.LMS.learn.openvideos.html'"></div>
           </div>
-        </div>
-        <section class="service1">
-            <div class="row" style="margin-left: 0px;">
-              <div class="col-md-8 team zoomOnHover " style="background-color:var(--themeMain);width: 405px;height: 200px;text-align: center;">
-                <a class="teamdetails-link" data-toggle="modal" ng-click="addVideolist()">
-                  <div class="teamdetails-hover">
-                    <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                      <i class="fa fa-plus fa-3x"></i>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-
-        </section>
-      </div>
-    </div>
-  </div>
-
-  <div ng-if="form.mode == 'video'">
-    <div class="container-fluid" style="padding:0px" >
-      <div class="row" style="padding:20px">
-        <div class="col-md-1" >
-          <button class="btn btn-default" ng-click="back()">
-            <i class="fa fa-arrow-left"></i> Back
-          </button>
-        </div>
-        <div class="col-md-6 ">
-          <span style="font-size:20px">{{videos[videoInView].title}}</span> |
-          <span class="text-muted" style="font-size:20px">{{videos[videoInView].description}}</span>
-        </div>
-        <div class="col-md-5" style="text-align:right">
-          <span style="font-size:20px">1 Like </span>&nbsp;
-          <span style="font-size:20px">{{comments.length}} comments</span>
-        </div>
-      </div>
-      <video  controls="false" width="100%" height="500px" frameborder="0 " ng-src="{{videos[videoInView].attachment}}" autoplay >
-      </video>
-      <div class="container-fluid" style="width:600px;font-size:15px;border:1px solid var(--themeMain);margin:10px;padding-top:10px;padding-bottom: 10px;"  ng-repeat=" p in comments" >
-          <span ng-if="p.msg != '' || p.msg != undefined">{{p.msg}}</span><br>
-          <span class="text-muted">on : {{p.date}}</span>
-          <span class="text-muted">{{p.time}}</span>
-      </div>
-      <div class="container-fluid" style="padding:;border-top:30px;width:600px;margin-left: 12px;">
-        <div class="row" style="margin:0px;margin-top:40px;margin-bottom:60px;">
-          <form>
-            <div class="input-group">
-              <input type="text" class="form-control"placeholder="Message">
-              <!-- <span class="input-group-addon"style="cursor:pointer"><i class="fa fa-paperclip" aria-hidden="true"></i></span> -->
-              <span class="input-group-addon" ng-click="send()" style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
-            </div>
-          </form>
-        </div>
-      </div>
-
-
-    </div>
-
-  </div>
-
-  <!-- <div class="row" ng-if="form.mode == 'explore'" style="padding:20px">
-
-
-  </div> -->
-
+      </uib-tab>
+  </uib-tabset>
 </div>

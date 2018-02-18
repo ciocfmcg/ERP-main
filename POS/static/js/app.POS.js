@@ -105,20 +105,12 @@ app.controller("POS.invoice.item", function($scope) {
     $scope.data.products = JSON.parse($scope.data.products);
   }
 
-  console.log();
   if ($scope.$parent.$parent.$parent.customer != undefined) {
     $scope.showControls = false;
   }else {
     $scope.showControls = true;
   }
 
-  $scope.subTotal = function() {
-       var subTotal = 0;
-       angular.forEach($scope.data.products, function(item) {
-           subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price));
-       })
-       return subTotal.toFixed(2);
-   }
 });
 
 app.controller("controller.POS.productinfo.form", function($scope, product) {
@@ -316,7 +308,8 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice,$htt
      console.log(f.modeOfPayment);
      var toSend = {
        amountRecieved: f.amountRecieved,
-       modeOfPayment: f.modeOfPayment
+       modeOfPayment: f.modeOfPayment,
+       paymentRefNum :f.paymentRefNum
      }
      console.log(toSend);
 
@@ -498,6 +491,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.form = {
       customer: '',
       invoiceDate: onlyDate,
+      totalTax:0,
+      grandTotal:0,
       deuDate: onlyDate,
       products: [{
         data: '',quantity:1
@@ -510,14 +505,18 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.subTotal = function() {
        var subTotal = 0;
        angular.forEach($scope.form.products, function(item) {
+         if(item.data.productMeta != undefined){
            subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price));
+         }
        })
        return subTotal.toFixed(2);
    }
    $scope.subTotalTax = function() {
         var subTotalTax = 0;
         angular.forEach($scope.form.products, function(item) {
+           if(item.data.productMeta != undefined){
             subTotalTax += (item.data.productMeta.taxRate*item.data.price/100);
+          }
         })
         return subTotalTax.toFixed(2);
     }
@@ -676,7 +675,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.openInvoiceinfoForm = function(idx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.invoicesinfo.form.html',
-      size: 'md',
+      size: 'lg',
       backdrop: true,
       resolve: {
         invoice: function() {
@@ -947,12 +946,14 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       returnquater: $scope.form.returndates,
       returndate: $scope.form.dates,
       products: JSON.stringify(f.products),
-      customer: f.customer.pk
+      customer: f.customer.pk,
+      grandTotal : $scope.subTotal() ,
+      totalTax : $scope.subTotalTax()
     }
     var returnquaterParts=toSend.returnquater.split('/');
-    toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[1]+'-'+returnquaterParts[0];
+    toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[0]+'-'+returnquaterParts[1];
     var returndateParts=toSend.returndate.split('/');
-    toSend.returndate=returndateParts[2]+'-'+returndateParts[1]+'-'+returndateParts[0];
+    toSend.returndate=returndateParts[2]+'-'+returndateParts[0]+'-'+returndateParts[1];
     console.log(toSend);
     var url = '/api/POS/invoice/';
     if ($scope.form.pk == undefined) {

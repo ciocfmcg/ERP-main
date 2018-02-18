@@ -126,11 +126,15 @@ class ChannelViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = ChannelSerializer
     queryset = Channel.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
 
 class VideoViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = VideoSerializer
     queryset = Video.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
 
 class FeedbackViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

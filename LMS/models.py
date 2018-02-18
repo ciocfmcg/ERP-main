@@ -220,6 +220,7 @@ class Channel(models.Model):
     title = models.CharField(max_length = 100 , null = False)
     description = models.CharField(max_length = 20000 , null = False)
     dp = models.ImageField(upload_to = getChannelDPPath , null = True)
+    version =  models.CharField(max_length = 100 , null = False)
 
 
 class Video(models.Model):
@@ -243,3 +244,6 @@ class Feedback(models.Model):
     comment = models.CharField(null = True , max_length = 1000)
     video = models.ForeignKey(Video , null = True , related_name="feedbacks")
     videoSeries = models.ForeignKey(Channel , null = True , related_name="feedbacks")
+
+    class Meta:
+        unique_together = ('user', 'video', 'typ')

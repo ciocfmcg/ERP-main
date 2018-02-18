@@ -64,7 +64,7 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 
-settingsFields = application.objects.get(name = 'app.POS').settings.all()
+settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
 
 
 class FullPageImage(Flowable):
@@ -92,16 +92,16 @@ class expanseReportHead(Flowable):
         """
         draw the floable
         """
-        print self.invoice.status
+        # print self.invoice.status
         now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-        print self.invoice.status
-        if self.invoice.status in ['quoted']:
-            docTitle = 'SALES QUOTATION'
-        else:
-            docTitle = 'TAX INVOICE'
+        # print self.invoice.status
+        # if self.invoice.status in ['quoted']:
+        #     docTitle = 'SALES QUOTATION'
+        # else:
+        docTitle = 'TAX INVOICE'
 
         passKey = '%s%s'%(str(self.req.user.date_joined.year) , self.req.user.pk) # also the user ID
-        docID = '%s%s%s' %( now.year , self.invoice.pk)
+        docID = '%s%s' %( now.year , self.invoice.pk)
 
 
         pSrc = '''
@@ -131,7 +131,7 @@ def addPageNumber(canvas, doc):
     print doc.invoice
     now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
     passKey = '%s%s'%(str(doc.request.user.date_joined.year) , doc.request.user.pk) # also the user ID
-    docID = '%s%s%s' %( now.year , doc.invoice.pk)
+    docID = '%s%s' %( now.year , doc.invoice.pk)
 
     qrw = QrCodeWidget('http://cioc.co.in/documents?id=%s&passkey=%s&app=crmInvoice' %(docID , passKey))
     b = qrw.getBounds()
@@ -259,9 +259,9 @@ def genInvoice(response , invoice, request):
     pHeadTaxCode = Paragraph('<strong>HSN/<br/>SAC</strong>' , tableHeaderStyle)
     pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
     pHeadPrice = Paragraph('<strong>Rate</strong>' , tableHeaderStyle)
-    pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
-    pHeadTax = Paragraph('<strong>IGST <br/> Tax</strong>' , tableHeaderStyle)
-    pHeadSubTotal = Paragraph('<strong>Sub Total</strong>' , tableHeaderStyle)
+    # pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
+    pHeadsubTotalTax  = Paragraph('<strong>IGST <br/> Tax</strong>' , tableHeaderStyle)
+    pHeadsubTotal = Paragraph('<strong>Sub Total</strong>' , tableHeaderStyle)
 
     # # bookingTotal , bookingHrs = getBookingAmount(o)
     #
@@ -270,7 +270,8 @@ def genInvoice(response , invoice, request):
     # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
     # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
 
-    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty, pHeadTotal, pHeadTax ,pHeadSubTotal ]]
+    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty, pHeadsubTotalTax ,pHeadsubTotal ]]
+
 
     totalQuant = 0
     totalTax = 0
@@ -283,34 +284,45 @@ def genInvoice(response , invoice, request):
         pDescSrc = i['data']['name']
 
         totalQuant += i['quantity']
-        totalTax += i['quantity']
-        grandTotal += i['quantity']
+
+        print i
+        #
+        # if 'price' not in i:
+        #     print "Continuing"
+        #     continue
+
+        i['subTotalTax'] = i['data']['price'] * i['quantity'] * ( i['data']['productMeta']['taxRate']/float(100))
+
+        i['subTotal'] = i['data']['price'] * i['quantity'] * (1+ i['data']['productMeta']['taxRate']/float(100))
+
+        totalTax += i['subTotalTax']
+        grandTotal += i['subTotal']
 
         pBodyProd = Paragraph('Service' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
         pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
-        pBodyPrice = Paragraph(str(i['quantity']) , tableBodyStyle)
-        if 'taxCode' in i:
-            taxCode = '%s(%s %%)' %(i['taxCode'] , i['tax'])
-        else:
-            taxCode = ''
+        pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
+        # if 'taxCode' in i:
+        taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
+        # else:
+            # taxCode = ''
 
         pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
-        pBodyTax = Paragraph(str(i['totalTax']) , tableBodyStyle)
-        pBodyTotal = Paragraph(str(i['quantity']*i['rate']) , tableBodyStyle)
-        pBodySubTotal = Paragraph(str(i['subtotal']) , tableBodyStyle)
+        pBodysubTotalTax = Paragraph(str(i['subTotalTax']) , tableBodyStyle)
+        pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
+        pBodySubTotal = Paragraph(str(i['subTotal']) , tableBodyStyle)
 
-        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodyTotal, pBodyTax , pBodySubTotal])
+        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodyTotal, pBodysubTotalTax , pBodySubTotal])
 
-    invoice.subTotal = subTotal
-    invoice.saveInvoiceForm()
+    invoice.subTotal = grandTotal
+    # invoice.saveInvoiceForm()
 
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
     tableGrandStyle.fontSize = 10
 
 
-    data += [['', '','','', '', '',Paragraph(str(totalTax) , tableBodyStyle)  , Paragraph(str(subTotal) , tableBodyStyle) ],
-            ['', '', '', '', '',  Paragraph('sub Total (INR)' , tableHeaderStyle), '' , Paragraph(str(subTotal) , tableGrandStyle)]]
+    data += [['', '','','', '', '',Paragraph(str(totalTax) , tableBodyStyle)  , Paragraph(str(grandTotal) , tableBodyStyle) ],
+            ['', '', '', '', '',  Paragraph('sub Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
     t=Table(data)
     ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
                 ('VALIGN',(0,1),(-1,-3),'TOP'),
@@ -348,12 +360,12 @@ def genInvoice(response , invoice, request):
     story.append(expHead)
     story.append(Spacer(2.5,0.75*cm))
 
-    adrs = invoice.deal.company.address
+    adrs = invoice.customer
 
-    if invoice.deal.company.tin is None:
+    if invoice.customer.gst is None:
         tin = 'NA'
     else:
-        tin = invoice.deal.company.tin
+        tin = invoice.customer.gst
 
     summryParaSrc = """
     <font size='11'><strong>Customer details:</strong></font> <br/><br/>
@@ -366,24 +378,24 @@ def genInvoice(response , invoice, request):
     %s<br/>
     <strong>GSTIN:</strong>%s<br/>
     </font>
-    """ %(invoice.deal.contacts.all()[0].name , invoice.deal.company.name, adrs.street , adrs.city , adrs.state , adrs.pincode , adrs.country, tin)
+    """ %(invoice.customer.name , invoice.customer.company , invoice.customer.street , invoice.customer.city ,invoice.customer.state , invoice.customer.pincode , invoice.customer.country , tin)
     story.append(Paragraph(summryParaSrc , styleN))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
 
-    if invoice.status in ['billed' , 'approved' , 'recieved']:
-        summryParaSrc = settingsFields.get(name = 'regulatoryDetails').value
-        story.append(Paragraph(summryParaSrc , styleN))
-
-        summryParaSrc = settingsFields.get(name = 'bankDetails').value
-        story.append(Paragraph(summryParaSrc , styleN))
-
-        tncPara = settingsFields.get(name = 'tncInvoice').value
-
-    else:
-        tncPara = settingsFields.get(name = 'tncQuotation').value
-
-    story.append(Paragraph(tncPara , styleN))
+    # if invoice.status in ['billed' , 'approved' , 'recieved']:
+    #     summryParaSrc = settingsFields.get(name = 'regulatoryDetails').value
+    #     story.append(Paragraph(summryParaSrc , styleN))
+    #
+    #     summryParaSrc = settingsFields.get(name = 'bankDetails').value
+    #     story.append(Paragraph(summryParaSrc , styleN))
+    #
+    #     tncPara = settingsFields.get(name = 'tncInvoice').value
+    #
+    # else:
+    # tncPara = settingsFields.get(name = 'tncQuotation').value
+    #
+    # story.append(Paragraph(tncPara , styleN))
 
     # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
     # for s in scans:
@@ -395,7 +407,7 @@ def genInvoice(response , invoice, request):
 
 
 
-class DownloadInvoice(APIView):
+class invoicePrint(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         if 'invoice' not in request.GET:
@@ -406,9 +418,9 @@ class DownloadInvoice(APIView):
         o = Invoice.objects.get(id = request.GET['invoice'])
         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
         genInvoice(response , o , request)
-        f = open('./media_root/invoicedownload%s%s.pdf'%(o.pk, o.status) , 'wb')
-        f.write(response.content)
-        f.close()
+        # f = open('./media_root/invoicedownload%s%s.pdf'%(o.pk, o.status) , 'wb')
+        # f.write(response.content)
+        # f.close()
         if 'saveOnly' in request.GET:
             return Response(status=status.HTTP_200_OK)
         return response
