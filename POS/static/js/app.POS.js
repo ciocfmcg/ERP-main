@@ -762,12 +762,12 @@ app.controller("controller.POS.customer.form", function($scope, customer, $http,
     }).
     then(function(response) {
       $scope.customer.pk = response.data.pk;
+      $scope.mode = 'edit';
       if ($scope.mode == 'new') {
         Flash.create('success', 'Saved');
       } else {
         Flash.create('success', 'Created');
       }
-      $scope.mode = 'edit';
       if ($scope.invoiceMode) {
         $uibModalInstance.dismiss('created||' + response.data.pk)
       }
@@ -1161,6 +1161,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       console.log(d);
     }, function(d) {
       console.log(d);
+
+      if ($scope.form.customer.pk != undefined) {
+        $http({method : 'GET' , url : '/api/POS/customer/' + $scope.form.customer.pk + '/'}).
+        then(function(response) {
+          $scope.form.customer = respo
+        })
+      }
+
+
+
       if (d.split('||')[0] == 'created') {
         $http({
           method: 'GET',
@@ -1443,13 +1453,6 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.saveInvoice = function() {
     console.log('************');
-    console.log(typeof $scope.form.invoiceDate);
-    console.log(typeof $scope.form.deuDate);
-    console.log( $scope.form.dates);
-    console.log( $scope.form.returndates);
-    console.log($scope.form.serialNumber);
-    console.log($scope.form.customer.pk);
-    console.log($scope.form);
     // console.log($scope.products.data.pk);
 
     var f = $scope.form;
@@ -1476,9 +1479,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       customer: f.customer.pk
     }
     var returnquaterParts=toSend.returnquater.split('/');
-    toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[1]+'-'+returnquaterParts[0];
+    toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[0]+'-'+returnquaterParts[1];
     var returndateParts=toSend.returndate.split('/');
-    toSend.returndate=returndateParts[2]+'-'+returndateParts[1]+'-'+returndateParts[0];
+    toSend.returndate=returndateParts[2]+'-'+returndateParts[0]+'-'+returndateParts[1];
+    console.log(typeof toSend.returnquater,toSend.returnquater);
     console.log(toSend);
     var url = '/api/POS/invoice/';
     if ($scope.form.pk == undefined) {

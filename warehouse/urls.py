@@ -11,4 +11,5 @@ router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),
 ]
