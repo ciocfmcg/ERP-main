@@ -1,11 +1,11 @@
 app.config(function($stateProvider){
 
   $stateProvider
-  .state('projectManagement.Tutor', {
-    url: "/Tutor",
+  .state('projectManagement.tutor', {
+    url: "/tutor",
     views: {
        "": {
-          templateUrl: '/static/ngTemplates/app.Tutor.default.html',
+          templateUrl: '/static/ngTemplates/app.tutor.default.html',
           controller : 'projectManagement.Tutor.default',
        }
     }

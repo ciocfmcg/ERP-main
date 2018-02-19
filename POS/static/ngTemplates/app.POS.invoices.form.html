@@ -1,147 +1,6 @@
-<!--
 <div class="modal-header">
   Edit Invoice : {{invoice.pk}}
 </div>
-
-<div class="modal-body">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group">
-            <label>Invoice Date </label>
-            <div class="input-group">
-              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dealEditor.closeDate" is-open="statusInvDate.opened" />
-              <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="statusInvDate.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Reference</label>
-            <input type="text" class="form-control" placeholder="PO. Number,text" >
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Due date</label>
-            <div class="input-group">
-              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="duedate" is-open="statusDue.opened" />
-              <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <div class="checkbox">
-    <label><input type="checkbox" value="checked" style="margin-top: -2px;">&nbsp; Rate is Inclusive of Taxes(MRP Invoice)</label>
-  </div>
-  <div class="container-fluid" style="padding:0px">
-    <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
-      <tr style="background-color: #eeeeee;height: 96px;">
-        <th>#</th>
-        <th>Item Description</th>
-        <th>Item Type</th>
-        <th>HSN/SAC</th>
-        <th>Qty</th>
-        <th>Rate(Rs.)</th>
-        <th>Taxable Rate</th>
-        <th>Total Tax</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>Hariyana</option>
-          <option>Kolkata</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>0</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>Hariyana</option>
-          <option>Kolkata</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>0</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>Hariyana</option>
-          <option>Kolkata</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-        <td><select class="form-control-pos" id="sel1">
-          <option>0</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-        </select></td>
-        <td><input type="text" class="form-control-pos" placeholder=""></td>
-      </tr>
-    </table>
-  </div>
-  <div class="down-part">
-    <div class="row">
-      <div class="col-md-12 text-center" style="margin-top: 27px;">
-        <button type="button" class="btn btn-success">Save</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<div class="modal-header">
-  Edit Invoice : {{invoice.pk}}
-</div>
-
 <div class="modal-body">
   <div class="row">
     <div class="col-md-4">
@@ -175,12 +34,9 @@
             </div>
           </div>
         </div>
-        <div class="col-md-2">
-          <label>Return Date</label>
-          <span>{{invoice.returndate}}</span>
-        </div>
+
         <div class="col-md-3">
-            <label>Return Quater</label>
+          <label>Return Quater</label><br>
           <span>{{invoice.returnquater}}</span>
         </div>
       </div>
@@ -228,103 +84,91 @@
           <span>{{invoice.customer.pincode}}</span><br>
           <span>{{invoice.customer.country}}</span>
         </div>
-
-        <div class="col-md-6" >
+        <div class="col-md-6">
           <div class="checkbox">
             <label style="margin-top: -20px;"><input type="checkbox" value="checked" style="margin-top: -2px;"ng-model="customer.sameAsShipping">&nbsp; Billing Address Same as Shipping</label>
           </div>
           <div class="container-fluid" ng-if="!customer.sameAsShipping">
-
-
-          <span><b>Shipping Address</b></span><br>
-          <span>{{form.customer.street}}</span><br>
-          <span>{{form.customer.city}}</span><br>
-          <span>{{form.customer.state}}</span>
-          <span>{{form.customer.pincode}}</span><br>
-          <span>{{form.customer.country}}</span>
-        </div>
+            <span><b>Shipping Address</b></span><br>
+            <span>{{form.customer.street}}</span><br>
+            <span>{{form.customer.city}}</span><br>
+            <span>{{form.customer.state}}</span>
+            <span>{{form.customer.pincode}}</span><br>
+            <span>{{form.customer.country}}</span>
           </div>
+        </div>
       </div>
     </div>
   </div>
-  </div>
-
-
-  <div class="container-fluid" >
-    <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
-      <tr style="background-color: #eeeeee;height: 96px;">
-        <th>#</th>
-        <th>Item Description</th>
-        <th>Item Type</th>
-        <th>HSN/SAC</th>
-        <th>Qty</th>
-        <th>Rate(Rs.)</th>
-        <th>Tax</th>
-        <th>Subtotal</th>
-        <th></th>
-      </tr>
-      <tr ng-repeat="item in form.products" >
-        <td>{{$index + 1}}</td>
-        <td>
-          <input type="text" class="form-control-pos"  ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
-        </td>
-        <td>
-            {{item.data.productMeta.typ == 'SAC'? 'Service' : 'Product'}}
-        </td>
-        <td>
-          {{item.data.productMeta.code}} ( {{item.data.productMeta.taxRate}} %)
-        </td>
-        <td>
-          <input type="number" class="form-control-pos" ng-model="item.quantity">
-        </td>
-        <td>
-          <input type="number" class="form-control-pos" ng-model="item.data.price">
-        </td>
-        <td>
-          {{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}
-        </td>
-        <td>
-          {{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}
-        </td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm"  ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
-        </td>
-
-      </tr>
-      <tr>
-        <td>
-          <div class="container-fluid" style="padding:0px;">
-              <button style="background-color:white;border:none;" ng-click="addTableRow()" ><i class="fa fa-plus" aria-hidden="true"  style="cursor:pointer"></i>
+</div>
+<div class="container-fluid">
+  <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+    <tr style="background-color: #eeeeee;height: 96px;">
+      <th>#</th>
+      <th>Item Description</th>
+      <th>Item Type</th>
+      <th>HSN/SAC</th>
+      <th>Qty</th>
+      <th>Rate(Rs.)</th>
+      <th>Tax</th>
+      <th>Subtotal</th>
+      <th></th>
+    </tr>
+    <tr ng-repeat="item in form.products">
+      <td>{{$index + 1}}</td>
+      <td>
+        <input type="text" class="form-control-pos" ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
+      </td>
+      <td>
+        {{item.data.productMeta.typ == 'SAC'? 'Service' : 'Product'}}
+      </td>
+      <td>
+        {{item.data.productMeta.code}} ( {{item.data.productMeta.taxRate}} %)
+      </td>
+      <td>
+        <input type="number" class="form-control-pos" ng-model="item.quantity">
+      </td>
+      <td>
+        <input type="number" class="form-control-pos" ng-model="item.data.price">
+      </td>
+      <td>
+        {{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}
+      </td>
+      <td>
+        {{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}
+      </td>
+      <td>
+        <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="container-fluid" style="padding:0px;">
+          <button style="background-color:white;border:none;" ng-click="addTableRow()"><i class="fa fa-plus" aria-hidden="true"  style="cursor:pointer"></i>
               </button>
-          </div>
-        </td>
-        <td style="border:none;"></td>
-        <td style="border:none;"></td>
-        <td style="border:none;"></td>
-        <td style="border:none;"></td>
-        <td style="border:none;"></td>
-        <td ng-if="form.products[0].data.pk">{{subTotalTax()}}</td>
-        <td ng-if="form.products[0].data.pk">{{subTotal()}}</td>
-
-      </tr>
-    </table>
-
-  </div>
-
-
-
-
-    <div class="down-part">
-      <div class="row">
-        <div class="col-md-12 text-center" style="margin-top: 27px;">
-          <!-- <button type="button" class="btn btn-default" ng-click="goHome()">Back</button> -->
-          <button type="button" class="btn btn-success" ng-click="saveInvoiceForm()">Save Invoice</button>
-
-          <a class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
-
-          <!-- <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button> -->
         </div>
-      </div>
+      </td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td style="border:none;"></td>
+      <td ng-if="form.products[0].data.pk">{{subTotalTax()}}</td>
+      <td ng-if="form.products[0].data.pk">{{subTotal()}}</td>
+    </tr>
+  </table>
+</div>
+<div class="down-part">
+  <div class="row">
+    <div class="col-md-12 text-center" style="margin-top: 27px;">
+      <!-- <button type="button" class="btn btn-default" ng-click="goHome()">Back</button> -->
+      <button type="button" class="btn btn-success" ng-click="saveInvoiceForm()">Save Invoice</button>
+
+      <a class="btn btn-default" target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
+
+      <!-- <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button> -->
     </div>
+  </div>
+</div>
 
 </div>

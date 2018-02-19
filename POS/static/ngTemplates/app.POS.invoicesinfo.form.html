@@ -1,23 +1,4 @@
 
-<!-- <div class="modal-header">
-  Invoice  Info
-</div>
-<div class="modal-body">
-  <div class="container-fluid">
-    <div class="row" >
-      <div class="col-md-6">
-        <span style="font-size: 25px;">{{invoice.id}}</span><br>
-        <span style="font-size: 18px;">{{invoice.name}}</span><br>
-        <span>Invoice Due Date:{{invoice.date}}</span>
-      </div>
-          <div class="col-md-6">
-            <span>Paid:{{invoice.paid}}</span><br>
-            <span>Mode of Payment:{{invoice.mode}}</span><br>
-            <span>Total Amount:{{invoice.amount}}</span>
-          </div>
-    </div>
-  </div>
-</div> -->
 
 <div class="modal-header">
   Invoice  Info
@@ -42,6 +23,14 @@
         </div>
         <div class="row">
           <div class="col-md-6 text-right">
+            <strong>Received Date:</strong>
+          </div>
+          <div class="col-md-6">
+            {{invoice.receivedDate | date:'dd MMM yyyy'}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
             <strong>Total Amount:</strong>
           </div>
           <div class="col-md-6">
@@ -53,7 +42,7 @@
             <strong>Mode of Payment:</strong>
           </div>
           <div class="col-md-6">
-            {{invoice.modeOfPayment | humanize}}
+            <span ng-if="invoice.modeOfPayment != null">{{invoice.modeOfPayment | humanize}}</span>
           </div>
         </div>
         <div class="row">
@@ -121,6 +110,15 @@
             <div class="form-group">
               <label>Reference Number</label>
               <input type="number" class="form-control" ng-model="invoice.paymentRefNum">
+            </div>
+            <div class="form-group">
+              <label>Received Date</label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.receivedDate" is-open="statusDue.opened" ng-init="today" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </div>
             </div>
 
             <button type="button" class="btn btn-success" ng-click="save()">
