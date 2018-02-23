@@ -135,7 +135,7 @@ app.controller("controller.POS.productinfo.form", function($scope, product) {
   // $scope.products=products;
 
     $scope.labels = ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"];
-  $scope.series = ['Series A'];
+
   $scope.data = [
     [65, 59, 80, 81, 56, 55, 40,50,30,44,55,66]
 

@@ -6,8 +6,7 @@
     <div class="container-fluid" ng-if="mode == 'home'">
       <div class="row">
         <div class="col-md-6">
-          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
-          <div class="row" style="margin-top:30px">
+          <div class="row">
             <uib-tabset style="margin-left: 15px;">
               <uib-tab>
                 <uib-tab-heading>
@@ -29,6 +28,7 @@
               </uib-tab>
             </uib-tabset>
           </div>
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
         </div>
         <div class="col-md-6">
           <div class="row">
@@ -172,7 +172,7 @@
           </div>
           <div class="row" style="margin-top:30px">
             <div class="col-md-12">
-              <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" style="width: 832px;height: 305px;">
+              <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true"  chart-click="onClick" style="width: 832px;height: 305px;">
               </canvas>
             </div>
           </div>
