@@ -296,6 +296,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       console.log($scope.contract.areas.contractSpace.length);
       for (var i = 0; i < $scope.contract.areas.contractSpace.length; i++) {
         console.log('pushing');
+        console.log(i);
         $scope.arrays.push({'array':[ ]})
       }
       console.log($scope.arrays);
@@ -345,25 +346,32 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         fill('white', gx , gy );
       }
       if ($scope.contract.occupancy.length > 0) {
-        $scope.selectingAreas = $scope.contract.occupancy
-        if (typeof $scope.selectingAreas == 'string') {
-          $scope.selectingAreas = JSON.parse($scope.selectingAreas)
+        if ($scope.contract.areas.pk==$scope.areasData) {
+          $scope.selectingAreas = $scope.contract.occupancy
+          if (typeof $scope.selectingAreas == 'string') {
+            $scope.selectingAreas = JSON.parse($scope.selectingAreas)
+          }
+        }else {
+            $scope.selectingAreas = [];
         }
       }
+      console.log($scope.selectingAreas);
       for (var i = 0; i < $scope.contract.areas.contractSpace.length; i++) {
         console.log('infoooooooo');
+        console.log($scope.contract.areas.contractSpace.length);
+        console.log($scope.arrays.length);
         $scope.arrays[i].array = $scope.contract.areas.contractSpace[i];
         if (typeof $scope.arrays[i].array.occupancy == 'string'){
           $scope.arrays[i].array.occupancy=JSON.parse($scope.arrays[i].array.occupancy)
         }
         console.log($scope.selectingAreas,'.....');
         console.log($scope.arrays[i].array.occupancy);
+      }
+      for (var i = 0; i < $scope.arrays.length; i++) {
         if (JSON.stringify($scope.arrays[i].array.occupancy) == JSON.stringify($scope.selectingAreas)) {
           console.log('equallllll');
-          // JSON.stringify($scope.selectingAreas)
           $scope.arrays.splice(i,1);
         }
-
       }
       for (var i = 0; i < $scope.arrays.length; i++) {
         $scope.selectedContractColour = $scope.getRandomColor();
