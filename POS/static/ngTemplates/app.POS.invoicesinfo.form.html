@@ -1,28 +1,9 @@
 
-<!-- <div class="modal-header">
-  Invoice  Info
-</div>
-<div class="modal-body">
-  <div class="container-fluid">
-    <div class="row" >
-      <div class="col-md-6">
-        <span style="font-size: 25px;">{{invoice.id}}</span><br>
-        <span style="font-size: 18px;">{{invoice.name}}</span><br>
-        <span>Invoice Due Date:{{invoice.date}}</span>
-      </div>
-          <div class="col-md-6">
-            <span>Paid:{{invoice.paid}}</span><br>
-            <span>Mode of Payment:{{invoice.mode}}</span><br>
-            <span>Total Amount:{{invoice.amount}}</span>
-          </div>
-    </div>
-  </div>
-</div> -->
 
 <div class="modal-header">
   Invoice  Info
 
-    <a class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}" style="margin-left: 450px;"><i class="fa fa-print" ></i></a>
+    <a class="btn btn-default pull-right"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}" ><i class="fa fa-print" ></i></a>
 
 </div>
 <div class="modal-body">
@@ -31,13 +12,87 @@
       <div class="col-md-6">
         <span style="font-size: 25px;">{{invoice.pk}}</span><br>
         <span style="font-size: 18px;">{{invoice.customer.name}}</span><br>
-        <span>Invoice Due Date:{{invoice.duedate}}</span> <br>
-        <span>Total Amount:{{subTotal()}}</span><br>
-        <span>Mode of Payment : {{invoice.modeOfPayment}}</span><br>
+
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Due Date:</strong>
+          </div>
+          <div class="col-md-6">
+            {{invoice.duedate | date:'dd MMM yyyy'}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Received Date:</strong>
+          </div>
+          <div class="col-md-6">
+            {{invoice.receivedDate | date:'dd MMM yyyy'}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Total Amount:</strong>
+          </div>
+          <div class="col-md-6">
+            {{invoice.grandTotal}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Mode of Payment:</strong>
+          </div>
+          <div class="col-md-6">
+            <span ng-if="invoice.modeOfPayment != null">{{invoice.modeOfPayment | humanize}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Amount Recieved:</strong>
+          </div>
+          <div class="col-md-6">
+             {{invoice.amountRecieved}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>GSTIN:</strong>
+          </div>
+          <div class="col-md-6">
+          {{invoice.customer.gst}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>PAN NO.:</strong>
+          </div>
+          <div class="col-md-6">
+            {{invoice.customer.pan}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Reference Number:</strong>
+          </div>
+          <div class="col-md-6">
+            {{invoice.paymentRefNum}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Place of Supply:</strong>
+          </div>
+          <div class="col-md-6">
+            {{invoice.customer.city}}
+          </div>
+        </div>
+
+<!--
+        <span>Total Amount:{{invoice.grandTotal}}</span><br>
+        <span>Mode of Payment : {{invoice.modeOfPayment | humanize}}</span><br>
         <span>Amount Recieved : {{invoice.amountRecieved}}</span><br>
         <span>GSTIN : {{invoice.customer.gst}}</span><br>
         <span>PAN NO. : {{invoice.customer.pan}}</span><br>
-        <span>Place of Supply : {{invoice.customer.city}}</span>
+        <span>Place of Supply : {{invoice.customer.city}}</span> -->
 
       </div>
           <div class="col-md-6">
@@ -50,7 +105,20 @@
             </div>
             <div class="form-group">
               <label>Amount Recieved</label>
-              <input type="text" class="form-control" ng-model="invoice.amountRecieved">
+              <input type="number" class="form-control" ng-model="invoice.amountRecieved">
+            </div>
+            <div class="form-group">
+              <label>Reference Number</label>
+              <input type="number" class="form-control" ng-model="invoice.paymentRefNum">
+            </div>
+            <div class="form-group">
+              <label>Received Date</label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.receivedDate" is-open="statusDue.opened" ng-init="today" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </div>
             </div>
 
             <button type="button" class="btn btn-success" ng-click="save()">

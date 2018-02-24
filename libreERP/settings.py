@@ -109,15 +109,18 @@ INSTALLED_APPS = (
 	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
 	'LMS',# LMS
-
 	'POS',# POS terminal like tally
-
-	'Tutor',# canvas
-
-
-
-
+	'tutor',# canvas
+	'workforceManagement',# canvas
+    'support',# canvas
 	'warehouse',# warehouse application
+	'employees',# employees details
+	'payroll',# payroll
+	'performance',# performance
+	'recruitment',# recruitment
+	'organization',# organization
+	'logistic',# logistics
+	'assets',# assets
 )
 
 

@@ -1,0 +1,168 @@
+<!-- <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;"> -->
+  <breadcrumb></breadcrumb>
+  <div class="container-fluid" style="margin-top: -20px;" ng-controller="businessManagement.support">
+    <div class="row" style="background-color: white;">
+      <div class="col-md-3" style="padding:0px;">
+        <div class="container-fluid"  style="background-color:#ffffff;padding-right:0px;">
+          <tabs-Strip tabs="tabs" active="data.activeTab" style="padding-left:10px;"></tabs-Strip>
+          <div class="container-fluid" style="padding-left:0px;" ng-if="data.activeTab==0">
+            <div class="input-group" style="margin-top:10px;">
+              <input type="text" class="form-control" value="{{names[data.xInView].name}}">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+              </span>
+            </div>
+            <div class="input-group" style="margin-top:10px;">
+              <input type="text" class="form-control" value="{{names[data.xInView].email}}">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+              </span>
+            </div>
+            <div class="container-fluid" style="margin-top:10px;margin-bottom:20px;">
+              <div class="row">
+                <div class="col-md-7">
+                  <span>{{names[data.xInView].address}} </span>
+                </div>
+                <div class="col-md-3" style="padding-left:0px;">
+                  <span>{{names[data.xInView].location}} </span>
+                </div>
+              </div>
+              <div class="text-right">
+                <span>{{names[data.xInView].time}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="height:340px;margin-top:20px;padding:0px;" ng-if="data.activeTab==0">
+            <div class="container-fluid" style="padding-left:0px;">
+              <label class="text-muted">Messages</label>
+            </div>
+            <div class="container" style="width:auto;font-size:15px;padding-left:0px;">
+              <div class="container-fluid" style="border:1px solid #a6abb2;margin-bottom:10px height:40px;cursor:pointer;margin-top:10px;" ng-repeat=" y in templates  track by $index" ng-click="display($index)">
+                <div class="row">
+                  <div class="container-fluid">
+                    <span>{{y.msg}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" ng-if="data.activeTab==1">
+          <div class="container-fluid" style="margin-top:0px;">
+            <div class="container-fluid" style="margin-bottom:0px;padding:0px;">
+              <div class- "container-fluid" style="margin-top:20px">
+                <button type="button" class="btn btn-primary">{{names[data.xInView].chattime}}</button> <span>Chat Started</span>
+              </div>
+              <div class- "container-fluid" style="margin-top:20px;margin-bottom:20px;">
+                <button type="button" class="btn btn-primary">{{names[data.xInView].chattime}}</button> <span>Visitor navigated to <a href="coic.co.in">coic.co.in</a></span>
+              </div>
+              <div class- "container-fluid" style="margin-top:0px;margin-bottom:95px;">
+                <i class="fa fa-angle-right" aria-hidden="true"></i> <span>https://coic.co.in/</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" ng-if="data.activeTab==2" style="padding: 0px;">
+          <!-- <div class="container-fluid"> -->
+            <div class="container-fluid" style="margin-top:20px;">
+              <textarea name="name" rows="8" cols="20" placeholder="write here something......." class="form-control"></textarea>
+            </div>
+              <div class="container-fluid" style="margin-top:20px;margin-bottom:20px;">
+                <button type="button" class="btn btn-primary">Save</button>
+              </div>
+              <div class="container" style="width:auto;font-size:15px;border:1px solid #a6abb2;margin:10px;padding-top:10px;padding-bottom: 10px;"  ng-repeat=" p in comments" >
+                  <span>{{p.msg}}</span><br>
+                  <span class="text-muted">on : {{p.date}}</span>
+                  <span class="text-muted">{{p.time}}</span>
+              </div>
+            <!-- </div> -->
+
+          <!-- </div> -->
+        </div>
+        <!-- side bar part -->
+       </div>
+      <!-- middle part -->
+       <div class="col-md-7" style="padding:0px;">
+        <div class="container-fluid" style="padding:0px;">
+          <div style="min-height:72vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee;background-color: white;" class="container-fluid">
+            <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:60px;">
+            <div class="container-fluid" style="font-size:25px">
+              <label class="text-muted">{{names[data.xInView].name}}</label>
+            </div>
+          </div>
+            <div class="container-fluid" style="margin-left:10px;margin-right:10px">
+              <div class="row" style="padding:0px;" ng-repeat="message in names[data.xInView].messages">
+                <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+                  <p ng-if="message.msg != '' || message.msg != undefined">{{message.msg}}</p>
+                   <img ng-if="message.img" ng-src="{{message.img}}" >
+                   <video ng-if="message.videoUrl" ng-src="{{message.videoUrl}}" controls></video>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="padding:;border-top:30px;background-color:#eeeeee">
+            <div class="row" style="margin:0px;margin-top:40px;margin-bottom:60px;">
+              <form>
+                <div class="input-group">
+                  <input type="text" class="form-control"placeholder="Message">
+                  <span class="input-group-addon"style="cursor:pointer"><i class="fa fa-paperclip" aria-hidden="true"></i></span>
+                  <span class="input-group-addon" ng-click="send()" style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- right side part -->
+       <div class="col-md-2" style="padding:0px;">
+         <div class="container-fluid" style="background-color:var(--themeMain);color:white;">
+          <div class="row" style="margin-top:10px;margin-bottom:10px;">
+            <div class="col-md-9">
+              <span>INCOMING</span>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-default" style="background-color:var(--themeMain);color:white;">{{incomming.length}}</button>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="background-color:var(--themeMain);color:white;border:1px solid #474444" ng-click="data.xInView = $index" ng-repeat="x in incomming">
+          <div class="row" style="margin-top:10px;margin-bottom:10px;cursor:pointer;hover:#031030">
+            <div class="col-md-9">
+              <span style="cursor:pointer">{{x.name}}</span><br>
+              <i class="fa fa-circle"  style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span> coic</span>
+            </div>
+            <div class="col-md-2">
+              <i class="fa fa-eye-slash" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="background-color:var(--themeMain);color:white;min-height:75vh;padding:0px;">
+          <div class="container-fluid"style="border-bottom:1px solid #474444">
+          <div class="row" style="margin-top:10px;margin-bottom:10px;">
+            <div class="col-md-9">
+              <span>{{me.pk | getName}}</span><br>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-default" style="background-color:var(--themeMain);color:white;">{{names.length}}</button>
+            </div>
+          </div>
+        </div>
+          <ul class="nav nav-sidebar-inverse" style="width:100%;">
+            <li ng-repeat="x in names" ng-click="data.xInView = $index" class="ripple ">
+              <a>
+                <div class="row" >
+                  <div class="container-fluid">
+                    <div class="col-md-7">
+                      <span style="cursor:pointer">{{x.name}}</span><br>
+                      <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span> coic</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- </div> -->

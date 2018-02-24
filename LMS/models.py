@@ -17,6 +17,18 @@ def getAnswerAttachmentPath(instance , filename ):
 def getCourseDPAttachmentPath(instance , filename ):
     return 'lms/DP/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getVideoPath(instance , filename ):
+    return 'lms/videos/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+
+def getVideoThumbnailPath(instance , filename ):
+    return 'lms/videoThumbnail/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+def getChannelDPPath(instance , filename ):
+    return 'lms/courseDP/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+
+
 PART_TYPE_CHOICES = (
     ('text' , 'text'),
     ('image' , 'image'),
@@ -192,3 +204,46 @@ class Like(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     user = models.ForeignKey(User , related_name='lmsMaterialLikes' , null = False)
     studyMaterial = models.ForeignKey(StudyMaterial , related_name='likes' , null = False)
+
+
+TYP_CHOICES = (
+    ('comment','comment'),
+    ('like','like'),
+)
+
+
+
+class Channel(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    user = models.ForeignKey(User ,null = False , related_name ="lmsChannels")
+    title = models.CharField(max_length = 100 , null = False)
+    description = models.CharField(max_length = 20000 , null = False)
+    dp = models.ImageField(upload_to = getChannelDPPath , null = True)
+    version =  models.CharField(max_length = 100 , null = False)
+
+
+class Video(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    user = models.ForeignKey(User ,null = False , related_name ="videoUploads")
+    title = models.CharField(max_length = 100 , null = False)
+    description = models.CharField(max_length = 100 , null = False)
+    # feedbacks = models.ManyToManyField(Feedback ,blank = True)
+    views = models.PositiveIntegerField(default = 0)
+    attachment = models.FileField(upload_to = getVideoPath , null = True)
+    thumbnail = models.ImageField(upload_to = getVideoThumbnailPath , null = True)
+    channel = models.ForeignKey(Channel , null = True , related_name ="videos")
+
+
+class Feedback(models.Model):
+    typ = models.CharField(choices = TYP_CHOICES , max_length = 10 , null = True)
+    user = models.ForeignKey(User ,null = False)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    comment = models.CharField(null = True , max_length = 1000)
+    video = models.ForeignKey(Video , null = True , related_name="feedbacks")
+    videoSeries = models.ForeignKey(Channel , null = True , related_name="feedbacks")
+
+    class Meta:
+        unique_together = ('user', 'video', 'typ')
