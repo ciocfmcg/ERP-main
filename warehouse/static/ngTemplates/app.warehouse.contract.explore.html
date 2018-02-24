@@ -79,7 +79,7 @@
         <strong>Billing Frequency : </strong> <span>{{contract.billingFrequency}}</span>
       </div>
       <div class="col-md-5">
-        <strong>Occupancy : </strong><span>{{contract.occupancy}}</span>
+        <strong>Other Docs : </strong><a href="{{contract.otherDocs}}" target="_blank">{{contract.otherDocs}}</a>
       </div>
     </div>
     <div class="row" style="margin-top:10px;margin-left:20px">
@@ -102,7 +102,12 @@
         <strong>Quantity : </strong><span>{{contract.quantity}}</span>
       </div>
       <div class="col-md-5">
-        <strong>Other Docs : </strong><a href="{{contract.otherDocs}}" target="_blank">{{contract.otherDocs}}</a>
+        <!-- <div class="col-md-4"> -->
+          <strong>Occupancy : </strong>
+        <!-- </div> -->
+        <div class="col-md-9 pull-right">
+          <img ng-src="{{contract.occupancy_screenshort}}" alt="Occupancy Area" height="100px" width="100px">
+        </div>
       </div>
     </div>
 

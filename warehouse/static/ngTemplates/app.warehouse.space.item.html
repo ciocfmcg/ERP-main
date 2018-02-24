@@ -1,0 +1,18 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.warehouse.space.item">
+
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row container-fluid" style="padding-bottom:10px;margin-bottom:15px;padding-top:20px;border-bottom: 1px solid #dedede;">
+      <label><b>Name : </b> </label>{{data.name}} <br>
+      <label><b>Code : </b> </label>{{data.code}} <br> <br>
+    </div>
+    <div class="row container-fluid" style="padding-top:10px;height:30px;">
+      <div class="col-md-10">
+        <span><strong><i class="fa fa-pencil fa-lg" style="cursor:pointer;" ng-click="rowActionClicked('edit')"></i> </strong></span>
+      </div>
+      <div class = "col-md-2">
+        <span><strong><i class="fa fa-info fa-lg pull-right" style="cursor:pointer;" ng-click="rowActionClicked('details')"></i> </strong></span>
+      </div>
+    </div>
+  </div>
+
+</div>

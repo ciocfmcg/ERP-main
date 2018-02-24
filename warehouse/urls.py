@@ -8,6 +8,7 @@ router.register(r'service' , ServiceViewSet , base_name = 'service')
 router.register(r'contact' , ContactViewSet , base_name = 'contact')
 router.register(r'contract' , ContractViewSet , base_name = 'contract')
 router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
+router.register(r'space' , SpaceViewSet , base_name = 'space')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

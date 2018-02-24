@@ -45,6 +45,14 @@ UNIT_TYPE = (
 
 )
 
+class Space(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now = True)
+    user = models.ForeignKey(User , related_name = 'spaces' , null = False)
+    name = models.CharField(max_length = 100 , null = False)
+    areas = models.CharField(max_length = 50000 , null = False)
+    code = models.CharField(max_length = 100 , null = False)
+
 class Contract(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
@@ -56,9 +64,11 @@ class Contract(models.Model):
     quantity = models.IntegerField(null=False)
     unitType = models.CharField(choices = UNIT_TYPE, max_length = 15 , default = "sqft")
     dueDays = models.PositiveIntegerField(null = True)
-    occupancy = models.CharField(max_length = 100, null = False)
+    occupancy = models.CharField(max_length = 50000, null = False)
+    areas = models.ForeignKey(Space , related_name='contractSpace' , null=True)
     contractPaper = models.FileField(upload_to=getWareHouseContractUploadPath, null=True)
     otherDocs = models.FileField(upload_to=getWareHouseDocUploadPath, null = True)
+    occupancy_screenshort = models.CharField(max_length = 100000 , null = True)
 
 CONTRACT_STATE_CHOICES = (
     ('quoted' , 'quoted'),
@@ -76,6 +86,7 @@ class Invoice(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
     status = models.CharField(choices = CONTRACT_STATE_CHOICES , max_length=12 , default = 'quoted')
+
 
 # # -*- coding: utf-8 -*-
 # from __future__ import unicode_literals

@@ -259,9 +259,262 @@ app.controller('businessManagement.warehouse.contract', function($scope, $http, 
 });
 
 
-app.controller("businessManagement.warehouse.contract.form", function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+app.controller("businessManagement.warehouse.contract.form", function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $timeout) {
 
-  $scope.contract = {company : '' , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqft' ,otherDocs : emptyFile ,occupancy: '' }
+  $scope.getRandomColor = function() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  $scope.initializeCanvas = function() {
+
+
+
+
+    console.log("canvas" + $scope.id);
+    var canvas = document.getElementById("canvas" + $scope.id);
+
+    canvas.removeEventListener('click', function() {
+
+    });
+
+
+    c = canvas.getContext("2d");
+    console.log(c);
+    boxSize = 40;
+    boxes = Math.floor(1200 / boxSize);
+    $scope.arr = [];
+    $scope.arrays=[ ];
+    $scope.selectedCompaniesArea = [ ];
+    $scope.selectingAreas = [ ];
+    $scope.selectingColour = $scope.getRandomColor();
+    if (typeof $scope.contract.areas == 'object') {
+      console.log($scope.contract.areas.contractSpace.length);
+      for (var i = 0; i < $scope.contract.areas.contractSpace.length; i++) {
+        console.log('pushing');
+        $scope.arrays.push({'array':[ ]})
+      }
+      console.log($scope.arrays);
+
+    }
+    var w = (canvas.width / boxSize);
+    var h = (canvas.height / boxSize);
+    drawBox();
+    // canvas.addEventListener('click', handleClick);
+    // canvas.addEventListener('mousemove', handleClick);
+    // var value = 0;
+    function drawBox() {
+      c.beginPath();
+      c.fillStyle = "#87CEFA";
+      c.lineWidth = 1;
+      c.strokeStyle = '#eeeeee';
+      for (var row = 0; row < boxes; row++) {
+        for (var column = 0; column < boxes; column++) {
+          var x = row * boxSize;
+          var y = column * boxSize;
+          c.rect(x, y, boxSize, boxSize);
+          c.fill();
+          c.stroke();
+        }
+      }
+
+    }
+
+    var state = new Array(h);
+    for (var y = 0; y < h; ++y) {
+      state[y] = new Array(w);
+    }
+
+    canvas.addEventListener('click', handleClick);
+
+    function fill(s, gx, gy) {
+      c.fillStyle = s;
+      c.fillRect(gx * boxSize, gy * boxSize, boxSize, boxSize);
+    }
+    if ($scope.spaceData) {
+      console.log('entered');
+      $scope.arr = JSON.parse($scope.contract.areas.areas);
+      for (var i = 0; i < $scope.arr.length; i++) {
+        var gx=$scope.arr[i].row
+        var gy=$scope.arr[i].col
+        state[gy][gx] = true;
+        fill('white', gx , gy );
+      }
+      if ($scope.contract.occupancy.length > 0) {
+        $scope.selectingAreas = $scope.contract.occupancy
+        if (typeof $scope.selectingAreas == 'string') {
+          $scope.selectingAreas = JSON.parse($scope.selectingAreas)
+        }
+      }
+      for (var i = 0; i < $scope.contract.areas.contractSpace.length; i++) {
+        console.log('infoooooooo');
+        $scope.arrays[i].array = $scope.contract.areas.contractSpace[i];
+        if (typeof $scope.arrays[i].array.occupancy == 'string'){
+          $scope.arrays[i].array.occupancy=JSON.parse($scope.arrays[i].array.occupancy)
+        }
+        console.log($scope.selectingAreas,'.....');
+        console.log($scope.arrays[i].array.occupancy);
+        if (JSON.stringify($scope.arrays[i].array.occupancy) == JSON.stringify($scope.selectingAreas)) {
+          console.log('equallllll');
+          // JSON.stringify($scope.selectingAreas)
+          $scope.arrays.splice(i,1);
+        }
+
+      }
+      for (var i = 0; i < $scope.arrays.length; i++) {
+        $scope.selectedContractColour = $scope.getRandomColor();
+        $scope.selectedCompaniesArea.push({color: $scope.selectedContractColour,company:$scope.arrays[i].array.company.name})
+        for (var j = 0; j < $scope.arrays[i].array.occupancy.length; j++) {
+          var gx=$scope.arrays[i].array.occupancy[j].row
+          var gy=$scope.arrays[i].array.occupancy[j].col
+          state[gy][gx] = true;
+          fill($scope.selectedContractColour, gx , gy );
+          // console.log(gx,gy,'values');
+        }
+        console.log($scope.selectedContractColour);
+
+      }
+      // for (var i = 0; i < $scope.selectingAreas.length; i++) {
+      //   $scope.selectedContractColour = $scope.selectingColour;
+      //   $scope.selectedCompaniesArea.push({color: $scope.selectedContractColour,company:$scope.contract.company.name})
+      //   for (var j = 0; j < $scope.arrays[i].array.occupancy.length; j++) {
+      //     var gx=$scope.arrays[i].array.occupancy[j].row
+      //     var gy=$scope.arrays[i].array.occupancy[j].col
+      //     state[gy][gx] = true;
+      //     fill($scope.selectedContractColour, gx , gy );
+      //     // console.log(gx,gy,'values');
+      //   }
+      //   console.log($scope.selectedContractColour);
+      //
+      // }
+      if ($scope.selectingAreas.length > 0) {
+        $scope.selectedContractColour = $scope.selectingColour;
+        $scope.selectedCompaniesArea.push({color: $scope.selectedContractColour,company:$scope.contract.company.name})
+        for (var i = 0; i < $scope.selectingAreas.length; i++) {
+          var gx=$scope.selectingAreas[i].row
+          var gy=$scope.selectingAreas[i].col
+          state[gy][gx] = true;
+          fill($scope.selectedContractColour, gx , gy );
+          // console.log(gx,gy,'values');
+        }
+      }
+      // if (true) {
+      //
+      // }
+      // if ($scope.contract.occupancy.length >0){
+      //   if ($scope.contract.areas.pk==$scope.areasData) {
+      //     $scope.array = JSON.parse($scope.contract.occupancy);
+      //   }else {
+      //     $scope.array = [];
+      //   }
+      // }
+      console.log($scope.arrays,'remaining');
+      console.log($scope.selectingAreas,'selecting arraysssssssssssssss');
+    }
+    // for (var i = 0; i < $scope.arr.length; i++) {
+    //   var gx=$scope.arr[i].row
+    //   var gy=$scope.arr[i].col
+    //   state[gy][gx] = true;
+    //   fill('white', gx , gy );
+    // }
+    // for (var i = 0; i < $scope.array.length; i++) {
+    //   var gx=$scope.array[i].row
+    //   var gy=$scope.array[i].col
+    //   state[gy][gx] = true;
+    //   fill('green', gx , gy );
+    // }
+    // $scope.selectingArea = [ ];
+
+    function handleClick(e) {
+      console.log('333',$scope.arrays);
+      $scope.clicked = true;
+      // get mouse click position
+      e.preventDefault()
+      var mx = e.offsetX;
+      var my = e.offsetY;
+      // calculate grid square numbers
+      var gx = ~~(mx / boxSize);
+      var gy = ~~(my / boxSize);
+      // console.log(gx,gy);
+      // make sure we're in bounds
+      if (gx < 0 || gx >= w || gy < 0 || gy >= h) {
+        return;
+      }
+      state[gy][gx] = true;
+      for (var i = 0; i < $scope.arr.length; i++) {
+        if ($scope.arr[i].row == gx && $scope.arr[i].col == gy) {
+          console.log('data',gx,gy);
+          for (var j = 0; j < $scope.arrays.length; j++) {
+            for (var k = 0; k < $scope.arrays[j].array.occupancy.length; k++) {
+              if($scope.arrays[j].array.occupancy[k].row==gx && $scope.arrays[j].array.occupancy[k].col==gy){
+                console.log('arrays there');
+                return
+              }
+              // $scope.selectedArea.push($scope.arrays[j].array.occupancy[k]);
+            }
+            // if($scope.array[j].row==gx && $scope.array[j].col==gy){
+            //   console.log('there');
+            //   $scope.array.splice(j,1);
+            //   console.log('after splice');
+            //   console.log($scope.array);
+            //   fill('white', gx, gy);
+            //   return;
+            // }
+          }
+          console.log('0000000000000');
+          for (var j = 0; j < $scope.selectingAreas.length; j++) {
+            console.log('aaaaaaaaaaaaaaaaaaaaa');
+            if ($scope.selectingAreas[j].row == gx && $scope.selectingAreas[j].col == gy) {
+              console.log('selecting');
+              $scope.selectingAreas.splice(j,1);
+              fill('white', gx, gy);
+              return
+            }
+          }
+          console.log('not there');
+          state[gy][gx] = true;
+          fill($scope.selectingColour, gx, gy);
+          $scope.selectingAreas.push({
+            row: gx,
+            col: gy
+          });
+
+
+          // console.log('66666666666',$scope.selectedArea);
+          // state[gy][gx] = true;
+          //
+          // fill('green', gx, gy);
+          // for (var j = 0; j < $scope.array.length; j++) {
+          //   if ($scope.array[j].row == gx  &&  $scope.array[j].col == gy) {
+          //     return;
+          //   }
+          // }
+          // $scope.array.push({
+          //   row: gx,
+          //   col: gy
+          // });
+        }
+
+      }
+      console.log($scope.selectingAreas);
+      $scope.canvasData = canvas;
+      $scope.dataURL = $scope.canvasData.toDataURL();
+
+    }
+
+
+
+  }
+
+
+  // $scope.contract = {company : '' , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqft' ,otherDocs : emptyFile ,occupancy: '',areas:'' }
+  $scope.resetForm=function(){
+    $scope.contract = {company : '' , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqrt' ,otherDocs : emptyFile ,occupancy: '' ,areas:'' ,occupancy_screenshort:''}
+  }
   $scope.dates=[]
   for (var i = 1; i < 29; i++) {
     $scope.dates.push(i.toString());
@@ -271,12 +524,26 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
   }
   if ($scope.tab == undefined || $scope.tab.data == undefined) {
     $scope.mode = 'new';
+    $scope.resetForm();
     console.log('in new');
   }else {
     $scope.mode = 'edit';
     $scope.contract = $scope.tab.data
+    $scope.areasData=$scope.contract.areas.pk
     console.log('edited form');
   }
+
+  if ($scope.mode == 'new') {
+    $scope.id = '0';
+  }else{
+    $scope.id = $scope.contract.pk;
+  }
+
+  // $timeout(function() {
+  //   $scope.initializeCanvas();
+  // }, 1000)
+
+
 
   $scope.serviceSearch = function(query) {
     return $http.get( '/api/warehouse/service/?name__contains=' + query).
@@ -284,14 +551,42 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       return response.data;
     })
   };
+  $scope.spaceSearch = function(query) {
+    return $http.get( '/api/warehouse/space/?name__contains=' + query).
+    then(function(response){
+      return response.data;
+    })
+  };
 
-  $scope.resetForm=function(){
-    $scope.contract = {company : undefined , rate : 0 , dueDays : 0 ,quantity : 0 ,contractPaper : emptyFile ,billingFrequency : 0 ,billingDates : '' ,unitType : 'sqrt' ,otherDocs : emptyFile ,occupancy: ''}
-  }
+  $scope.$watch('contract.areas' , function(newValue , oldValue) {
+    console.log('cecking',newValue.pk);
+    // if (newValue.pk==$scope.tab.data.areas.pk) {
+    //   $scope.sameData=true;
+    //
+    // }
+    if (typeof newValue == 'object') {
+      $scope.spaceData = true;
+      $timeout(function() {
+        $scope.initializeCanvas();
+      }, 1000)
+
+    }else {
+      $scope.spaceData = false;
+    }
+  })
+
+
+
 
   $scope.save= function(){
     console.log('entered');
+    if ($scope.clicked) {
+      console.log($scope.dataURL);
+      console.log($scope.dataURL.length);
+      $scope.contract.occupancy_screenshort = $scope.dataURL;
+    }
     var f = $scope.contract;
+    console.log($scope.selectingAreas);
     if (f.company.length == 0) {
       Flash.create('warning' , 'Company can not be blank');
       return;
@@ -299,9 +594,22 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       Flash.create('warning' , "Company doesn't exist!");
       return;
     }
-    if (f.occupancy.length == 0){
-      Flash.create('warning',"Occupancy Can't be Null");
+
+    if (f.areas.length != 0) {
+      if (typeof f.areas != 'object') {
+        Flash.create('warning',"No Such Space Available");
+        return;
+      }else {
+        if ($scope.selectingAreas.length == 0) {
+          Flash.create('warning',"Please Select Some Area");
+          return;
+        }
+      }
+    }else {
+      Flash.create('warning',"Space Can't be Null");
+      return;
     }
+
     var url = '/api/warehouse/contract/';
     if ($scope.mode == 'new'){
       var method = 'POST';
@@ -328,7 +636,9 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     tosend.append('quantity' , f.quantity);
     tosend.append('unitType' , f.unitType);
     tosend.append('dueDays' , f.dueDays);
-    tosend.append('occupancy' , f.occupancy);
+    tosend.append('areas' , f.areas.pk);
+    tosend.append('occupancy' , JSON.stringify($scope.selectingAreas));
+    tosend.append('occupancy_screenshort' , f.occupancy_screenshort);
     console.log(tosend);
 
     $http({
@@ -344,8 +654,8 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       if ($scope.mode == 'new') {
         $scope.contract.pk = response.data.pk;
         Flash.create('success', 'Created');
-        $scope.resetForm()
-        // $scope.mode = 'edit';
+        $scope.selectedCompaniesArea = [ ];
+        $scope.resetForm();
       }else{
         Flash.create('success', 'Saved')
       }
