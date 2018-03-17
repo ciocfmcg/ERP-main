@@ -1,3 +1,99 @@
 <div class="container-fluid" ng-controller="businessManagement.warehouse.contract.form">
-<h2>Welcome</h2>
+  <div class="col-md-12">
+    <h3 ng-if="mode=='new'">Create Contract </h3>
+    <h3 ng-if="mode=='edit'">Update Contract </h3>
+    <div class="col-md-10">
+      <div class="row">
+        <div class="col-md-12" >
+          <div class="form-group">
+            <label>Company</label>
+            <input type="text" class="form-control" ng-model="contract.company" uib-typeahead="service as service.name for service in serviceSearch($viewValue)">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Rate</label>
+            <input type="number" class="form-control" ng-model="contract.rate">
+          </div>
+          <div class="form-group">
+            <label>Due Days</label>
+            <input type="number" class="form-control" ng-model="contract.dueDays">
+          </div>
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" class="form-control" ng-model="contract.quantity">
+          </div>
+          <div class="form-group">
+            <label>Contract Paper</label>
+            <input type="file" name="contractPaper" file-model="contract.contractPaper">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Billing Frequency</label>
+            <input type="number" class="form-control" ng-model="contract.billingFrequency">
+          </div>
+          <div class="form-group">
+            <label>Billing Dates</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="contract.billingDates">
+              <span ng-click="showDates = !showDates" class="input-group-addon btn btn-primary" >Dates</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Unit Type</label>
+            <select class="form-control" ng-model="contract.unitType" >
+              <option value="sqft">sqft</option>
+              <option value="msq">msq</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Other Docs</label>
+            <input type="file" name="otherDocs" file-model="contract.otherDocs">
+          </div>
+        </div>
+        <div class="col-md-12" >
+          <div class="form-group">
+            <label>Space</label>
+            <input type="text" class="form-control" ng-model="contract.areas" uib-typeahead="space as space.name for space in spaceSearch($viewValue)" placeholder="Search For Spaces">
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 27px;" ng-if="spaceData">
+        <div class="col-md-10">
+          <div class="form-group">
+            <label>Occupancy</label>
+            <!-- <input type="text" class="form-control" ng-model="contract.occupancy"> -->
+            <div class="form-group" style="margin-left=100px">
+              <canvas id="canvas{{id}}" height=1200 width=1200></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12" style="margin-top:30px;">
+          <button type="button" class="btn btn-lg btn-primary" ng-click="save()">Save</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="col-md-7" style="height:620px;padding-left:30px">
+        <div ng-if="showDates" class="animated fadeIn">
+          <div ng-repeat="date in dates" onmouseover="this.style='background-color:gray';" onmouseout="this.style='background-color:white';">
+              {{date}}<button type="button" class="btn btn-xs btn-primary fa fa-plus pull-right" ng-click="addDate(date)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-11 pull-right" ng-if="spaceData">
+        <div class="row" ng-repeat="data in selectedCompaniesArea">
+          <div class="col-md-3">
+            <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
+          </div>
+          <div class="col-md-9">
+            <b>{{data.company}}</b><hr>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -24,6 +24,10 @@ from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 from .models import *
 from .serializers import *
+# import tempfile
+from backports import tempfile
+from subprocess import Popen, PIPE
+import os
 
 
 
@@ -60,6 +64,29 @@ class DownloadQuesPaper(APIView):
         f.write(response.content)
         f.close()
         return response
+
+
+        # p = Paper.objects.get(pk = request.GET.get('paper',None))
+        # print p.pk,'***************'
+        # ques=Question.objects.filter(id__in = [i.ques.pk for i in p.questions.all()])
+        # tex_body = get_template('my_latex_template.tex').render({"ques" : ques})
+        # content= str(tex_body)
+        # print content
+        # with tempfile.TemporaryDirectory() as tempdir:
+        #     # Create subprocess, supress output with PIPE and
+        #     # run latex twice to generate the TOC properly.
+        #     # Finally read the generated pdf.
+        #     for i in range(2):
+        #         process = Popen(['pdflatex', '-output-directory', tempdir],stdin=PIPE,stdout=PIPE,shell=True)
+        #         process.communicate(content)
+        #     with open(os.path.join(tempdir, 'texput.pdf'), 'rb') as f:
+        #         pdf = f.read()
+        # response = HttpResponse(content,content_type='text/plain')
+        # response['Content-Disposition'] = 'attachment; filename="questionPaper%s_%s.txt"' %(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year)
+        # f = open('./media_root/questionPaper%s_%s.txt'%(p.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year) , 'wb')
+        # f.write(response.content)
+        # f.close()
+        # return response
 
 
         # with tempfile.TemporaryDirectory() as tempdir:
@@ -121,3 +148,22 @@ class StudyMaterialViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = StudyMaterialSerializer
     queryset = StudyMaterial.objects.all()
+
+class ChannelViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = ChannelSerializer
+    queryset = Channel.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
+
+class VideoViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = VideoSerializer
+    queryset = Video.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
+
+class FeedbackViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = FeedbackSerializer
+    queryset = Feedback.objects.all()

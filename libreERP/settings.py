@@ -36,7 +36,7 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/foodLogin.png'
+LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
 
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
@@ -68,7 +68,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'India'
 
-BRAND_LOGO = '/static/images/cioc_icon.svg'
+BRAND_LOGO = '/static/images/anchor.png'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 

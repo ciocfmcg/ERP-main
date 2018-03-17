@@ -1,3 +1,5 @@
+
+
 <div class="row">
   <div class="col-md-5">
     <div class="row">
@@ -41,17 +43,14 @@
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label>Return Date</label>
-          <input ng-model="form.dates" class="form-control" disabled>
-        </input>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
           <label>Return Quater</label>
-          <!-- <select ng-model="returnDate" ng-options="item for item in returndates" class="form-control" ng-init="returnDate = returndates[0]">
-          </select> -->
-          <input ng-model="form.returndates" class="form-control" disabled>
+          <select ng-model="form.returnquater" class="form-control">
+            <option value="" disabled selected>select Return Quater</option>
+            <option value="jan-march">January - March</option>
+            <option value="april-june">April - June</option>
+            <option value="july-sep">July - September</option>
+            <option value="oct-dec">October - December</option>
+          </select>
         </input>
         </div>
       </div>
@@ -141,22 +140,25 @@
         <input type="text" class="form-control-pos"  ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
       </td>
       <td>
-          {{item.data.productMeta.typ == 'SAC'? 'Service' : 'Product'}}
+          <span ng-if="item.data.pk">{{item.data.productMeta.typ == 'SAC'? 'Service' : 'Product'}}</span>
       </td>
       <td>
-        {{item.data.productMeta.code}} ( {{item.data.productMeta.taxRate}} %)
+        <span ng-if="item.data.pk">{{item.data.productMeta.code}} ( {{item.data.productMeta.taxRate}} %)</span>
+
       </td>
       <td>
-        <input type="number" class="form-control-pos" ng-model="item.quantity">
+        <input type="number" class="form-control-pos" ng-model="item.quantity" ng-if="item.data.pk">
       </td>
       <td>
-        <input type="number" class="form-control-pos" ng-model="item.data.price">
+        <input type="number" class="form-control-pos" ng-model="item.data.price" ng-if="item.data.pk">
       </td>
       <td>
-        {{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}
+        <span ng-if="item.data.pk">{{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}</span>
+
       </td>
       <td>
-        {{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}
+        <span ng-if="item.data.pk">{{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}</span>
+
       </td>
       <td>
         <button type="button" class="btn btn-danger btn-sm"  ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
@@ -175,8 +177,8 @@
       <td style="border:none;"></td>
       <td style="border:none;"></td>
       <td style="border:none;"></td>
-      <td ng-if="form.products[0].data.pk">{{subTotalTax()}}</td>
-      <td ng-if="form.products[0].data.pk">{{subTotal()}}</td>
+      <td ng-if="form.products[0].data.pk" >{{subTotalTax()}}</td>
+      <td ng-if="form.products[0].data.pk" >{{subTotal()}}</td>
 
     </tr>
   </table>
@@ -192,7 +194,7 @@
         <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
         <button type="button" class="btn btn-success" ng-click="saveInvoice()">Save Invoice</button>
 
-        <a class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
+        <a ng-if="form.pk" class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
 
         <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button>
       </div>

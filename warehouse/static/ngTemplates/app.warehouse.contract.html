@@ -7,9 +7,7 @@
             New
             <i class="fa fa-plus"></i>
         </uib-tab-heading>
-        <div class="container-fluid">
-
-
+        <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.warehouse.contract.form.html'">
         </div>
     </uib-tab>
       <uib-tab active="searchTabActive">
@@ -27,8 +25,11 @@
               {{tab.title}}
               <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
-          <div ng-if="tab.app == 'expenseSheetBrowser'">
-              <div ng-include="'/static/ngTemplates/app.finance.expenseSheet.explore.html'"></div>
+          <div ng-if="tab.app == 'contractEditor'">
+              <div ng-include="'/static/ngTemplates/app.warehouse.contract.form.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'contractExplorer'">
+              <div ng-include="'/static/ngTemplates/app.warehouse.contract.explore.html'"></div>
           </div>
       </uib-tab>
   </uib-tabset>
