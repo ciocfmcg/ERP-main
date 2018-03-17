@@ -49,7 +49,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)
     class Meta:
         model = Invoice
-        fields = ('pk', 'user' , 'created' , 'service' , 'amount' , 'currency' , 'dated' , 'attachment' , 'sheet', 'description', 'approved')
+        fields = ('pk', 'user' , 'created' , 'service' ,'code', 'amount' , 'currency' , 'dated' , 'attachment','sheet' , 'description','approved')
         read_only_fields = ('user',)
 
     def create(self , validated_data):
@@ -64,28 +64,31 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # if the user is manager or something then he can update the approved flag
-        instance.service = service.objects.get(pk = self.context['request'].data['service'])
         reqData = self.context['request'].data
-        dateStr = reqData['dated']
-        instance.dated = datetime.strptime(dateStr, '%Y-%m-%d').date()
-        print service.objects.get(pk = reqData['service'])
-        instance.service = service.objects.get(pk = reqData['service'])
+        if 'approved' in reqData:
+            instance.approved = validated_data.pop('approved')
+            instance.save()
+            return instance
+        if 'service' in reqData:
+            instance.service = service.objects.get(pk = reqData['service'])
+        if 'dated':
+            dateStr = reqData['dated']
+            instance.dated = datetime.strptime(dateStr, '%Y-%m-%d').date()
         for f in ['amount' , 'currency' , 'sheet' , 'description']:
             setattr(instance , f , validated_data.pop(f))
         if 'attachment' in reqData:
             instance.attachment = validated_data.pop('attachment')
         instance.save()
-        print instance.service
+        # print instance.service
         return instance
 
-
 class ExpenseSheetSerializer(serializers.ModelSerializer):
-    invoices = InvoiceSerializer(many = True , read_only = True)
+    # invoice = InvoiceSerializer(many = True , read_only = True)
     project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = ExpenseSheet
-        fields = ('pk','user' , 'created' , 'approved' , 'approvalMatrix' , 'approvalStage' , 'dispensed' , 'notes' , 'project' , 'transaction', 'invoices', 'submitted')
-        read_only_fields = ('transaction', 'invoices', 'user', 'project' )
+        fields = ('pk','created','approved','approvalMatrix','approvalStage','dispensed','notes' , 'project','transaction','submitted' )
+        read_only_fields = ( 'project', 'user',)
     def create(self , validated_data):
         u = self.context['request'].user
         reqData = self.context['request'].data
@@ -105,6 +108,8 @@ class ExpenseSheetSerializer(serializers.ModelSerializer):
         reqData = self.context['request'].data
         if 'notes' in reqData:
             instance.notes = validated_data.pop('notes')
+        if 'approved' in reqData:
+                    instance.approved = validated_data.pop('approved')
         if 'project' in reqData:
             instance.project = project.objects.get(pk = int(reqData['project']))
         if instance.user == self.context['request'].user and 'submitted' in reqData:
