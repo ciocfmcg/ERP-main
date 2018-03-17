@@ -60,6 +60,9 @@ import pytz
 import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from openpyxl import load_workbook
+from io import BytesIO
+import re
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -459,3 +462,30 @@ class InvoicePrint(APIView):
         if 'saveOnly' in request.GET:
             return Response(status=status.HTTP_200_OK)
         return response
+
+
+class BulkProductsCreationAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, format=None):
+        print 'hiiiiiiiiiiiiiiiiii'
+        wb = load_workbook(filename = BytesIO(request.FILES['xl'].read()))
+        ws = wb.worksheets[0]
+        row_count = ws.max_row
+        count = 0
+        print request.user ,type(request.user),request.user.pk
+        for i in range(1, row_count):
+            a = ws['A' + str(i+1)].value
+            b = ws['B' + str(i+1)].value
+            c = ws['C' + str(i+1)].value
+            quantity = b if b else 0
+            price = c if c else 0
+            if re.search('[a-zA-Z]+',a) and '(' in a:
+                data = {'user':request.user, 'name':a.split('(')[0], 'price':price, 'serialNo':a.split('(')[-1][0:-1], 'inStock':quantity}
+                print data
+                count += 1
+                p,created = Product.objects.get_or_create(**data)
+
+
+        return Response({"count" : count}, status = status.HTTP_200_OK)
