@@ -1,0 +1,34 @@
+<breadcrumb></breadcrumb>
+<div class="container-fluid">
+  <uib-tabset>
+    <uib-tab>
+      <uib-tab-heading>
+        New <i class="fa fa-plus"></i>
+      </uib-tab-heading>
+      <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.warehouse.space.form.html'">
+      </div>
+    </uib-tab>
+      <uib-tab active="searchTabActive">
+          <uib-tab-heading>
+              Browse
+              <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+              <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+          </div>
+      </uib-tab>
+
+      <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+          <uib-tab-heading >
+              {{tab.title}}
+              <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+          </uib-tab-heading>
+          <div ng-if="tab.app == 'spaceEditor'">
+              <div ng-include="'/static/ngTemplates/app.warehouse.space.form.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'spaceExplorer'">
+              <div ng-include="'/static/ngTemplates/app.warehouse.space.explore.html'"></div>
+          </div>
+      </uib-tab>
+  </uib-tabset>
+</div>

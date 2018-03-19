@@ -877,7 +877,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   };
 
   $scope.labels2 = ["Sales","Products"];
-  $scope.data2 = [300, 500];
+  $scope.data2 = [800, 500];
 
 
   $scope.addRow = function() {
@@ -895,12 +895,47 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     // console.log($scope.products.data.pk);
 
     var f = $scope.form;
+    console.log(f);
+    console.log('0000000000000',f.products);
+    for (var i = 0; i < f.products.length; i++) {
+      console.log(f.products[i].data.pk,f.products[i].quantity);
+
+
+      var fd = new FormData();
+
+      fd.append('name', f.products[i].data.name);
+      fd.append('productMeta', f.products[i].data.productMeta.pk);
+      fd.append('price', f.products[i].data.price);
+      fd.append('serialNo', f.products[i].data.serialNo);
+      fd.append('description', f.products[i].data.description);
+      fd.append('inStock', (f.products[i].data.inStock-f.products[i].quantity));
+      fd.append('cost', f.products[i].data.cost);
+      fd.append('logistics', f.products[i].data.logistics);
+
+      var url = '/api/POS/product/'+f.products[i].data.pk+'/'
+      // console.log(sendData);
+      $http({
+        method: 'PATCH',
+        url: url,
+        data: fd,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).
+      then(function(response) {
+        console.log('789',response.data);
+      })
+    }
     if (f.serialNumber.length == 0) {
       Flash.create('warning', 'serialNumber can not be left blank');
       return;
     }
 
-    console.log(f);
+
+
+
+    //
 
     // if ($scope.invoiceMode) {
     //

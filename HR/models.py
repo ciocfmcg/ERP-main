@@ -36,7 +36,7 @@ class Document(models.Model):
     email = models.CharField(max_length = 35, blank = False)
     docID = models.CharField(max_length = 10 , blank = True)
     app = models.CharField(max_length = 20 , blank = True)
-    
+
     def __str__(self):
         return "%s : %s" %(self.issuedTo , self.description)
 
@@ -160,6 +160,36 @@ class designation(models.Model):
     secondaryApprover = models.ForeignKey(User , related_name = "alsoApproving" , null=True)
 
 User.designation = property(lambda u : designation.objects.get_or_create(user = u)[0])
+
+
+class payroll(models.Model):
+    user = models.ForeignKey(User , related_name = "payrollAuthored" , null=False)
+    # user = models.OneToOneField(User)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    hra = models.PositiveIntegerField(null = True)
+    special = models.PositiveIntegerField(null = True)
+    lta = models.PositiveIntegerField(null = True)
+    basic = models.PositiveIntegerField(null = True)
+    adHoc = models.PositiveIntegerField(null = True)
+    policyNumber = models.CharField(null = True , max_length = 50)
+    provider = models.CharField(max_length = 30 , null = True)
+    amount = models.PositiveIntegerField(null = True)
+    noticePeriodRecovery = models.BooleanField(default=False)
+    al = models.PositiveIntegerField(null = True)
+    ml = models.PositiveIntegerField(null = True)
+    adHocLeaves = models.PositiveIntegerField(null = True)
+    joiningDate = models.DateField(null = True)
+    off = models.BooleanField(default=True)
+    accountNumber = models.CharField(null = True , max_length = 40)
+    ifscCode = models.CharField(max_length = 30 , null = True)
+    bankName = models.CharField(max_length = 30 , null = True)
+    deboarded = models.BooleanField(default = False)
+    lastWorkingDate = models.DateField(null = True)
+
+User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
+
+
 
 @receiver(user_signed_up, dispatch_uid="user_signed_up")
 def user_signed_up_(request, user, **kwargs):

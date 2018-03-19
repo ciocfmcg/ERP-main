@@ -11,6 +11,65 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
 });
 
 
+
+app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
+
+  $scope.user = $scope.tab.data;
+
+  $http({method : 'GET' , url : '/api/HR/payroll/' + $scope.tab.data.payroll.pk + '/'}).
+  then(function(response) {
+    $scope.form = response.data;
+  })
+
+  $scope.save = function() {
+    // make patch request
+    var f = $scope.form;
+    dataToSend = {
+      user : f.pk,
+      hra : f.hra,
+      special : f.special,
+      lta : f.lta,
+      basic : f.basic,
+      adHoc : f.adHoc,
+      policyNumber : f.policyNumber,
+      provider : f.provider,
+      amount : f.amount,
+      noticePeriodRecovery : f.noticePeriodRecovery,
+      al : f.al,
+      ml : f.ml,
+      adHocLeaves : f.adHocLeaves,
+      joiningDate : f.joiningDate.toJSON().split('T')[0],
+      off : f.off,
+      accountNumber : f.accountNumber,
+      ifscCode : f.ifscCode,
+      bankName : f.bankName,
+      deboarded : f.deboarded,
+      lastWorkingDate :f.lastWorkingDate.toJSON().split('T')[0],
+
+    }
+
+    $http({method : 'PATCH' , url :'/api/HR/payroll/'+f.pk+'/'  , data : dataToSend }).
+     then(function(response){
+
+       // $scope.data.pk=response.data.pk
+
+        Flash.create('success', response.status + ' : ' + response.statusText);
+     // }, function(response){
+     //    Flash.create('danger', response.status + ' : ' + response.statusText);
+   }, function(err) {
+
+   })
+
+
+
+  }
+
+
+
+
+});
+
+
 app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter){
 
   var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
@@ -24,7 +83,9 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
       {icon : '' , text : 'editProfile' },
       {icon : '' , text : 'editDesignation' },
       {icon : '' , text : 'editPermissions' },
-      {icon : '' , text : 'editMaster' },]
+      {icon : '' , text : 'editMaster' },
+      {icon : '' , text : 'editPayroll' },
+    ]
     };
   var fields = ['username' , 'email' , 'first_name' , 'last_name' , 'profile'];
 
@@ -146,6 +207,20 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
             $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPermissions' , data : permissionsFormData , active : true})
           }
         })(target));
+      }else if (action == 'editPayroll') {
+
+        for (var i = 0; i < $scope.data.tableData.length; i++) {
+          if ($scope.data.tableData[i].pk == target) {
+
+            var u = $scope.data.tableData[i];
+
+            $scope.addTab({title : 'Edit Payroll for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : u , active : true})
+          }
+        }
+
+
+
+
       }
       // for the single select actions
     } else {
@@ -230,5 +305,47 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
        Flash.create('danger', response.status + ' : ' + response.statusText);
     });
   }
+
+  // $scope.editPayroll = function(index){
+  //   var userData = $scope.tabs[index].data;
+  //   dataToSend = {
+  //     user : userData.pk,
+  //     // last_name : userData.last_name,
+  //     // first_name : userData.first_name,
+  //     // is_staff : userData.is_staff,
+  //     // is_active : userData.is_active,
+  //     hra : userData.hra,
+  //     special : userData.special,
+  //     lta : userData.lta,
+  //     basic : userData.basic,
+  //     adHoc : userData.adHoc,
+  //     policyNumber : userData.policyNumber,
+  //     provider : userData.provider,
+  //     amount : userData.amount,
+  //     noticePeriodRecovery : userData.noticePeriodRecovery,
+  //     al : userData.al,
+  //     ml : userData.ml,
+  //     adHocLeaves : userData.adHocLeaves,
+  //     joiningDate : userData.joiningDate.toJSON().split('T')[0],
+  //     off : userData.off,
+  //     accountNumber : userData.accountNumber,
+  //     ifscCode : userData.ifscCode,
+  //     bankDetais : userData.bankName,
+  //
+  //
+  //   }
+  //   // if (userData.password != '') {
+  //   //   dataToSend.password = userData.password
+  //   // }
+  //   $http({method : 'POST' , url :'/api/HR/payroll/'  , data : dataToSend }).
+  //   then(function(response){
+  //     console.log('before',$scope.data);
+  //     $scope.data.pk=response.data.pk
+  //     console.log('0000',$scope.data);
+  //      Flash.create('success', response.status + ' : ' + response.statusText);
+  //   }, function(response){
+  //      Flash.create('danger', response.status + ' : ' + response.statusText);
+  //   });
+  // }
 
 });

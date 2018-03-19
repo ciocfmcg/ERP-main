@@ -52,12 +52,21 @@
             <input type="file" name="otherDocs" file-model="contract.otherDocs">
           </div>
         </div>
+        <div class="col-md-12" >
+          <div class="form-group">
+            <label>Space</label>
+            <input type="text" class="form-control" ng-model="contract.areas" uib-typeahead="space as space.name for space in spaceSearch($viewValue)" placeholder="Search For Spaces">
+          </div>
+        </div>
       </div>
-      <div class="row" style="margin-top: 27px;">
+      <div class="row" style="margin-top: 27px;" ng-if="spaceData">
         <div class="col-md-10">
           <div class="form-group">
             <label>Occupancy</label>
-            <input type="text" class="form-control" ng-model="contract.occupancy">
+            <!-- <input type="text" class="form-control" ng-model="contract.occupancy"> -->
+            <div class="form-group" style="margin-left=100px">
+              <canvas id="canvas{{id}}" height=1200 width=1200></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -67,10 +76,22 @@
         </div>
       </div>
     </div>
-    <div class="col-md-1">
-      <div ng-if="showDates" class="animated fadeIn">
-        <div ng-repeat="date in dates" onmouseover="this.style='background-color:gray';" onmouseout="this.style='background-color:white';">
-            {{date}}<button type="button" class="btn btn-xs btn-primary fa fa-plus pull-right" ng-click="addDate(date)">Add</button>
+    <div class="col-md-2">
+      <div class="col-md-7" style="height:620px;padding-left:30px">
+        <div ng-if="showDates" class="animated fadeIn">
+          <div ng-repeat="date in dates" onmouseover="this.style='background-color:gray';" onmouseout="this.style='background-color:white';">
+              {{date}}<button type="button" class="btn btn-xs btn-primary fa fa-plus pull-right" ng-click="addDate(date)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-11 pull-right">
+        <div class="row" ng-repeat="data in selectedCompaniesArea">
+          <div class="col-md-3">
+            <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
+          </div>
+          <div class="col-md-9">
+            <b>{{data.company}}</b><hr>
+          </div>
         </div>
       </div>
     </div>

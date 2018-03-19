@@ -53,6 +53,13 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['contract']
 
+class SpaceViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = SpaceSerializer
+    queryset = Space.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
+
 def genInvoice(response , contract, request):
 
     themeColor = colors.HexColor('#227daa')

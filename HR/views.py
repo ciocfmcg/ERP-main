@@ -286,3 +286,10 @@ class rankViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = rank.objects.all()
     serializer_class = rankSerializer
+
+class payrollViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = payroll.objects.all()
+    serializer_class = payrollSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user' ]

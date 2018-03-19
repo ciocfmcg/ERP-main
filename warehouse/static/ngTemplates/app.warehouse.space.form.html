@@ -1,0 +1,43 @@
+<div ng-controller="businessManagement.warehouse.space.form">
+  <div class="container-fluid">
+    <h3 ng-if="mode == 'edit'">Edit Space : <strong>{{form.name}}</strong></h3>
+    <h3 ng-if="mode == 'new'">Create a new Space</h3>
+  </div>
+  <div class="container-fluid">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" ng-model="form.name">
+      </div>
+      <div class="form-group">
+        <label>Area</label>
+        <!-- <input type="text " class="form-control" ng-model="form.areas"> -->
+        <div class="form-group" style="margin-left=100px" ng-model="form.areas">
+          <canvas id="canvas{{id}}{{modeType}}" height=1200 width=1200></canvas>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Code</label>
+        <div class="input-group">
+          <input type="text " class="form-control" ng-model="form.code">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-success" ng-click="createCode()" >Auto Generate</button>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <button type="button" class="btn btn-primary" ng-click="createSpace()" >Save</button>
+      </div>
+    </div>
+    <div class="col-md-2 pull-right" style="margin-top:110px">
+      <div class="row" ng-repeat="data in companiesArea">
+        <div class="col-md-3">
+          <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
+        </div>
+        <div class="col-md-9" style="padding-left:0px">
+          <b>{{data.company}}</b>
+        </div><hr>
+      </div>
+    </div>
+  </div>
+</div>
