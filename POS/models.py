@@ -47,8 +47,8 @@ class Product(models.Model):
     price = models.FloatField(null=False)
     displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True)
     serialNo = models.CharField(max_length = 30, null=True)
-    description = models.TextField(max_length=10000,null=False)
-    inStock = models.PositiveIntegerField(default = 0)
+    description = models.TextField(max_length=10000,null=True)
+    inStock = models.IntegerField(default = 0)
     cost = models.PositiveIntegerField(default= 0)
     logistics = models.PositiveIntegerField(default = 0)
 

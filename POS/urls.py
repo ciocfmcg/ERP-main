@@ -12,5 +12,6 @@ router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'invoicePrint/$' , InvoicePrint.as_view() ),
+    url(r'bulkProductsCreation/$' , BulkProductsCreationAPI.as_view() ),
 
 ]

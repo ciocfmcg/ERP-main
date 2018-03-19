@@ -1,0 +1,24 @@
+<div class="modal-header">
+  Bulk products creation
+</div>
+
+<div class="modal-body">
+
+    <p class="text-danger">Please check out a sample format before uploading any file</p>
+
+    <!-- <a href="/static/vamsoProducts.xlsx" target="_blank">Download sample</a> -->
+    <!-- <br><br> -->
+    <div class="form-group">
+      <label>Excel file</label>
+      <input type="file" file-model="bulkForm.xlFile">
+    </div>
+
+    <div class="alert alert-success" role="alert" ng-if="bulkForm.success" style="margin-bottom:20px;">
+      {{form.usrCount}} Products Created !
+    </div>
+
+    <button type="button" class="btn btn-primary" ng-if="bulkForm.success == false" ng-click="upload()">
+      Upload
+    </button>
+
+  </div>
