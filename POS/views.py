@@ -315,7 +315,7 @@ def genInvoice(response , invoice, request):
     tableBodyStyle.fontSize = 7
 
     for i in json.loads(invoice.products):
-        print i
+        print '***********',i
         pDescSrc = i['data']['name']
 
         totalQuant += i['quantity']
