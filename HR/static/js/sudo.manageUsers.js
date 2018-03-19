@@ -25,6 +25,7 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
       {icon : '' , text : 'editDesignation' },
       {icon : '' , text : 'editPermissions' },
       {icon : '' , text : 'editMaster' },]
+      // {icon : '' , text : 'editPayroll' },]
     };
   var fields = ['username' , 'email' , 'first_name' , 'last_name' , 'profile'];
 
@@ -144,6 +145,16 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
               url : target,
             }
             $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPermissions' , data : permissionsFormData , active : true})
+          }
+        })(target));
+      } else if (action == 'editPayroll') {
+        u = $users.get(target)
+        $http.get('/api/HR/payroll/?user='+ u.username ).
+        success((function(target){
+          return function(data){
+            u = $users.get(target)
+
+            $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : data , active : true})
           }
         })(target));
       }

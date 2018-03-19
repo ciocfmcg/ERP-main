@@ -102,3 +102,26 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model=Invoice
         fields = ('pk','contract','data','value','status','created' ,'updated')
+
+class CheckinsSerializer(serializers.ModelSerializer):
+    contract=ContractSerializer(many=False,read_only=True)
+    class Meta:
+        model = Checkin
+        fields = ('pk','created' ,'updated' , 'contract' , 'description' , 'height' , 'width','length','weight','checkedin','qty')
+        # read_only_fields = ('contract')
+    def create(self , validated_data):
+        c=Checkin(**validated_data)
+        c.user=self.context['request'].user
+        c.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
+        c.save()
+        return c
+    # def update(self ,instance, validated_data):
+    #     for key in ['name', 'email' , 'mobile' , 'designation' , 'notes' ,]:
+    #         try:
+    #             setattr(instance , key , validated_data[key])
+    #         except:
+    #             pass
+    #     if 'company' in self.context['request'].data:
+    #         instance.company = Service.objects.get(pk=self.context['request'].data['company'])
+    #     instance.save()
+    #     return instance

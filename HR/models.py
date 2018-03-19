@@ -36,7 +36,7 @@ class Document(models.Model):
     email = models.CharField(max_length = 35, blank = False)
     docID = models.CharField(max_length = 10 , blank = True)
     app = models.CharField(max_length = 20 , blank = True)
-    
+
     def __str__(self):
         return "%s : %s" %(self.issuedTo , self.description)
 
@@ -152,7 +152,7 @@ class designation(models.Model):
     user = models.OneToOneField(User)
     unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
     domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
-    unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty
+    unit = models.CharField(max_length = 30 , null = True) # this \should be unique for a given facilty
     department = models.CharField(max_length = 30 , null = True)
     rank = models.ForeignKey( rank , null = True )
     reportingTo = models.ForeignKey(User , related_name = "managing" , null=True)

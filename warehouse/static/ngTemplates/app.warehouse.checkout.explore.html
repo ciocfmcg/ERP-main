@@ -1,0 +1,57 @@
+<div style="padding-top:20px;">
+  <div class="col-md-10">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+      <div class="row text-center">
+        <!-- <h3>{{data[0].contract.pk}}</h3> -->
+      </div>
+      <div class="row" style="position:relative;min-height:250px;">
+        <i class="fa fa-building-o" style="font-size:260px;color:#fcf7f7;margin-left:80px;margin-top:140px;"></i>
+        <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
+          <label class="text-muted"> <i class="fa fa-building-o" style="width:20px;"></i> Organisation</label>
+          <br>
+          <h5 style="margin-left:22px;">{{data[0].contract.company.name}}</h5> <br>
+          <div class="row" style="margin-top:10px;">
+            <div class="col-md-2">
+              <i class="fa fa-map-marker fa-3x pull-right" style="color:#8faec2;"></i>
+            </div>
+            <div class="col-md-10">
+              <span>{{data[0].contract.company.cin}}</span> <br>
+              <span>{{data[0].contract.company.street}}</span> <br>
+              <span>{{data[0].contract.company.city}}</span> <br>
+              <span>{{data[0].contract.company.pincode}}</span> <br>
+              <span>{{data[0].contract.company.state}}</span> <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-8" style="padding:30px">
+      <div class="card" sytle="padding:10px;height:300px">
+        <div class="row">
+          <div class="col-md-8">
+            <span>Company Details</span>
+          </div>
+          <div class="col-md-4">
+            <span>Checkin</span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div class="col-md-8">
+      <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
+        <div class="row" style="padding: 15px;min-height:50px;">
+          <div class="col-md-9">
+            <span style="font-size: 18px;">Company details</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-default" ng-click="openCheckinDetails()"><i class="fa fa-info-circle" style="font-size:20px"></i></button>
+          </div>
+          <div class="col-md-3 text-right">
+            <span style="font-size: 18px;">Checkout &nbsp;&nbsp;<i class="fa fa-check" style="color:green"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+</div>

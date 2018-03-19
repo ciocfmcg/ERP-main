@@ -1,0 +1,84 @@
+<div style="padding-top:20px;" ng-controller="businessManagement.warehouse.checkin.explore">
+  <div class="col-md-12">
+    <div class="col-md-2" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+      <div class="row text-center">
+        <!-- <h3>{{data[0].contract.pk}}</h3> -->
+      </div>
+      <div class="row" style="position:relative;min-height:250px;">
+        <i class="fa fa-building-o" style="font-size:260px;color:#fcf7f7;margin-left:20px;margin-top:140px;"></i>
+        <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
+          <label class="text-muted"> <i class="fa fa-building-o" style="width:20px;"></i> Organisation</label>
+          <br>
+          <h5 style="margin-left:22px;">{{data.company.name}}</h5> <br>
+          <div class="row" style="margin-top:10px;">
+            <div class="col-md-2">
+              <i class="fa fa-map-marker fa-3x pull-right" style="color:#8faec2;"></i>
+            </div>
+            <div class="col-md-10">
+              <span>{{data.company.cin}}</span> <br>
+              <span>{{data.company.street}}</span> <br>
+              <span>{{data.company.city}}</span> <br>
+              <span>{{data.company.pincode}}</span> <br>
+              <span>{{data.company.state}}</span> <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-10">
+      <div class="row">
+        <div class="container-fluid">
+          <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
+            <div class="row" style="padding: 15px;min-height:50px;">
+              <div class="col-md-9">
+                <span style="font-size: 18px;">{{data.company.name}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-default" ng-click="openCheckinDetails()"><i class="fa fa-info-circle" style="font-size:20px"></i></button>
+              </div>
+              <div class="col-md-3 text-right">
+                <span style="font-size: 18px;">Checkout &nbsp;&nbsp;<i class="fa fa-check" style="color:green"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding:20px">
+        <uib-tabset>
+          <uib-tab active="searchTabActive">
+            <uib-tab-heading>
+              Checkin
+            </uib-tab-heading>
+            <div class="container-fluid" ng-include="'/static/ngTemplates/app.warehouse.checkin.form.html'" style="margin-top:20px">
+            </div>
+          </uib-tab>
+          <uib-tab>
+            <uib-tab-heading>
+              Checkout
+            </uib-tab-heading>
+            <!-- <div class="container-fluid" ng-include="'/static/ngTemplates/app.warehouse.checkin.form.html'">
+                </div> -->
+            <!-- <div class="container-fluid" ng-include="'/static/ngTemplates/app.warehouse.checkout.item.html'" style="margin-top:20px">
+            </div> -->
+            <div class="container-fluid">
+                  <generic-Table data="data.checkouttableData" config-Obj="{{configCheckout}}" callback-Fn="tableActionCheckout"></generic-Table>
+              </div>
+
+          </uib-tab>
+          <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+              <uib-tab-heading >
+                  {{tab.title}}
+                  <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+              </uib-tab-heading>
+
+              <div ng-if="tab.app == 'checkoutExplorer'">
+                  <div ng-include="'/static/ngTemplates/app.payroll.salary.payrollinfo.html'"></div>
+              </div>
+              <!-- <div ng-if="tab.app == 'reportExplorer'">
+                  <div ng-include="'/static/ngTemplates/app.oayroll.salary.refortinfo.html'"></div>
+              </div> -->
+
+          </uib-tab>
+        </uib-tabset>
+      </div>
+    </div>
+  </div>
+</div>
