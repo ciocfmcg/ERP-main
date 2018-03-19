@@ -25,7 +25,7 @@ from django.core.mail import send_mail, EmailMessage
 from .models import *
 from .serializers import *
 # import tempfile
-from backports import tempfile
+# from backports import tempfile
 from subprocess import Popen, PIPE
 import os
 

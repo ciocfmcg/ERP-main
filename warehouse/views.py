@@ -192,7 +192,7 @@ class PageNumCanvas(canvas.Canvas):
         """
         page_count = len(self.pages)
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
         for page in self.pages:
             self.__dict__.update(page)
             # self.draw_page_number(page_count)
@@ -202,7 +202,7 @@ class PageNumCanvas(canvas.Canvas):
         canvas.Canvas.save(self)
 
 
-=======
+# =======
 
 themeColor = colors.HexColor('#227daa')
 
@@ -332,7 +332,7 @@ class PageNumCanvas(canvas.Canvas):
         canvas.Canvas.save(self)
 
 
->>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
+# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
     #----------------------------------------------------------------------
     def draw_page_number(self, page_count):
         """
@@ -379,12 +379,12 @@ class PageNumCanvas(canvas.Canvas):
         # self.setFont("Helvetica", 9)
         # self.drawRightString(195*mm, 272*mm, page)
 
-
-<<<<<<< HEAD
-def genInvoice(response , contract, invoicepk,request):
-=======
+#
+# <<<<<<< HEAD
+# def genInvoice(response , contract, invoicepk,request):
+# =======
 def genInvoice(response , contract, request):
->>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
+# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
 
 
     MARGIN_SIZE = 8 * mm
@@ -431,11 +431,11 @@ def genInvoice(response , contract, request):
     tableBodyStyle = styles['Normal'].clone('tableBodyStyle')
     tableBodyStyle.fontSize = 7
 
-<<<<<<< HEAD
-    invoiceobj=Invoice.objects.get(pk=invoicepk)
-=======
+# <<<<<<< HEAD
+#     invoiceobj=Invoice.objects.get(pk=invoicepk)
+# =======
     invoiceobj=Invoice.objects.get(contract=contract.pk)
->>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
+# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
     for i in json.loads(invoiceobj.data):
         print i
         pDescSrc = i['desc']
@@ -552,11 +552,11 @@ def genInvoice(response , contract, request):
     #     tncPara = settingsFields.get(name = 'tncInvoice').value
     #
     # else:
-<<<<<<< HEAD
-    #     tncPara = settingsFields.get(name = 'tncQuotation').value
-=======
-    # tncPara = settingsFields.get(name = 'tncQuotation').value
->>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
+# <<<<<<< HEAD
+#     #     tncPara = settingsFields.get(name = 'tncQuotation').value
+# =======
+#     # tncPara = settingsFields.get(name = 'tncQuotation').value
+# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
     #
     # story.append(Paragraph(tncPara , styleN))
 
@@ -578,20 +578,20 @@ class DownloadInvoice(APIView):
 
         response = HttpResponse(content_type='application/pdf')
         print request.GET['contract']
-<<<<<<< HEAD
-        print request.GET['invoice']
-        invoicepk = request.GET['invoice']
-        # invoice = request.GET['invoice']
-        o = Contract.objects.get(id = request.GET['contract'])
-        # o = Invoice.objects.get(contract = request.GET['contract'])
-        response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
-        genInvoice(response , o , invoicepk,request)
-=======
+# <<<<<<< HEAD
+#         print request.GET['invoice']
+#         invoicepk = request.GET['invoice']
+#         # invoice = request.GET['invoice']
+#         o = Contract.objects.get(id = request.GET['contract'])
+#         # o = Invoice.objects.get(contract = request.GET['contract'])
+#         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
+#         genInvoice(response , o , invoicepk,request)
+# =======
         o = Contract.objects.get(id = request.GET['contract'])
         # o = Invoice.objects.get(contract = request.GET['contract'])
         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
         genInvoice(response , o , request)
->>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
+# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
         # f = open('./media_root/invoicedownload%s%s.pdf'%(o.pk, o.status) , 'wb')
         # f.write(response.content)
         # f.close()
