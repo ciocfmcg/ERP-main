@@ -55,7 +55,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105']
+ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -68,7 +68,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'India'
 
-BRAND_LOGO = '/static/images/anchor.png'
+BRAND_LOGO = '/static/images/cioc_icon.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -121,6 +121,7 @@ INSTALLED_APPS = (
 	'organization',# organization
 	'logistic',# logistics
 	'assets',# assets
+	'productsInventory',# inventory for POS products
 )
 
 
@@ -289,4 +290,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'cioc.co.in'
+WAMP_SERVER = 'cioc.in'

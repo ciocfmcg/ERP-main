@@ -133,7 +133,9 @@ getType = function(input){
   if (typeof input =='boolean' || input == null) {
     return 'string';
   }
-  // console.log(str);
+  if (typeof input == 'number') {
+    return 'number';
+  }
   if ( input.indexOf(' ') !=-1) {
     return 'string';
   }
