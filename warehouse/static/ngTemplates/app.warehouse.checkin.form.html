@@ -1,12 +1,12 @@
-<div class="container-fluid" ng-controller="businessManagement.warehouse.checkin.form">
+<div class="container-fluid" ng-controller="businessManagement.warehouse.checkin.explore">
 
     <h3>Add new Checkin for {{data.company.name}} </h3>
     <!-- <h3 ng-if="mode=='edit'">Update Checkin products</h3> -->
   <div class="col-md-6">
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label>Contract</label>
       <input type="text" class="form-control" ng-model="checkin.contract" uib-typeahead="q as q.company.name for q in serviceSearch($viewValue)">
-    </div>
+    </div> -->
     <div class="form-group">
       <label>Item Description</label>
       <textarea type="text" class="form-control" ng-model="checkin.description"></textarea>

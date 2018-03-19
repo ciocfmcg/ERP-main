@@ -14,13 +14,13 @@ app.config(function($stateProvider) {
 
 app.controller("controller.warehouse.checkin.info", function($scope, $state, $users, $stateParams, $http, Flash,checkin) {
 
-  $http({
-    method: 'GET',
-    url: '/api/warehouse/checkin/?contract=' + checkin
-  }).
-  then(function(response) {
-    $scope.checkin = response.data;
-  })
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/warehouse/checkin/?contract=' + checkin
+  // }).
+  // then(function(response) {
+  //   $scope.checkin = response.data;
+  // })
   // $scope.data = $scope.tab.data;
 
 });
@@ -61,12 +61,94 @@ app.controller("businessManagement.warehouse.checkin.explore", function($scope, 
 
 
   }
+  $scope.checkinData = [];
+console.log($scope.data.pk);
+  $http({
+    method: 'GET',
+    url: '/api/warehouse/checkin/?contract='+$scope.data.pk
+  }).
+  then(function(response) {
+    $scope.checkinData = response.data;
+    // console.log($scope.checkin.pk);
+  })
+
+  $scope.serviceSearch = function(query) {
+    return $http.get('/api/warehouse/contract/?company__name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+  $scope.checkin = {
+    'contract': '',
+    'description': '',
+    'height': 0,
+    'width': 0,
+    'length': 0,
+    'weight': 0,
+    'qty':0
+  }
+
+  // if ($scope.checkin.pk != undefined) {
+  //   $scope.mode = 'edit';
+  //   $scope.checkin = checkin;
+  //   }else{
+  //   $scope.mode = 'new';
+  //   $scope.checkin = {'contract':'','description':'','height':0,'width':0,'length':0,'weight':0}
+  // }
+
+  $scope.save = function() {
+    var f = $scope.checkin;
+    console.log(f);
+    // if (f.serialNumber.length == 0) {
+    //   Flash.create('warning', 'serialNumber can not be left blank');
+    //   return;
+    // }
+    var toSend = {
+      contract:   $scope.data.pk,
+      description: f.description,
+      height: f.height,
+      width: f.width,
+      length: f.length,
+      weight: f.weight,
+      qty:f.qty
+
+    }
+
+    console.log(toSend);
+    var url = '/api/warehouse/checkin/';
+    if ($scope.checkin.pk == undefined) {
+      var method = 'POST';
+    } else {
+      var method = 'PATCH';
+      url += $scope.checkin.pk + '/';
+    }
+
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      $scope.checkin= response.data;
+      $scope.checkinData.push(response.data);
+      console.log('$$$$$$$$$$$$$$$',$scope.checkinData);
+      Flash.create('success', 'Saved');
+    })
+  }
 
 });
 
 app.controller("businessManagement.warehouse.checkin.item", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $http({method : 'GET' , url : '/api/warehouse/checkin/?contract=' + $scope.data.pk})
+
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/warehouse/checkin/'
+  // }).
+  // then(function(response) {
+  //   $scope.checkinData = response.data;
+  // })
 
 });
 
@@ -208,66 +290,68 @@ app.controller("businessManagement.warehouse.checkin", function($scope, $state, 
 
 app.controller("businessManagement.warehouse.checkin.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  $scope.serviceSearch = function(query) {
-    return $http.get('/api/warehouse/contract/?company__name__contains=' + query).
-    then(function(response) {
-      return response.data;
-    })
-  };
-  $scope.checkin = {
-    'contract': '',
-    'description': '',
-    'height': 0,
-    'width': 0,
-    'length': 0,
-    'weight': 0,
-    'qty':0
-  }
-
-  // if ($scope.checkin.pk != undefined) {
-  //   $scope.mode = 'edit';
-  //   $scope.checkin = checkin;
-  //   }else{
-  //   $scope.mode = 'new';
-  //   $scope.checkin = {'contract':'','description':'','height':0,'width':0,'length':0,'weight':0}
+  // $scope.serviceSearch = function(query) {
+  //   return $http.get('/api/warehouse/contract/?company__name__contains=' + query).
+  //   then(function(response) {
+  //     return response.data;
+  //   })
+  // };
+  // $scope.checkin = {
+  //   'contract': '',
+  //   'description': '',
+  //   'height': 0,
+  //   'width': 0,
+  //   'length': 0,
+  //   'weight': 0,
+  //   'qty':0
   // }
-  $scope.save = function() {
-    var f = $scope.checkin;
-    console.log(f);
-    // if (f.serialNumber.length == 0) {
-    //   Flash.create('warning', 'serialNumber can not be left blank');
-    //   return;
-    // }
-    var toSend = {
-      contract: f.contract.pk,
-      description: f.description,
-      height: f.height,
-      width: f.width,
-      length: f.length,
-      weight: f.weight,
-      qty:f.qty
-
-    }
-
-    console.log(toSend);
-    var url = '/api/warehouse/checkin/';
-    if ($scope.checkin.pk == undefined) {
-      var method = 'POST';
-    } else {
-      var method = 'PATCH';
-      url += $scope.checkin.pk + '/';
-    }
-
-    $http({
-      method: method,
-      url: url,
-      data: toSend
-    }).
-    then(function(response) {
-      $scope.checkin.pk = response.data.pk;
-      Flash.create('success', 'Saved');
-    })
-  }
+  //
+  // // if ($scope.checkin.pk != undefined) {
+  // //   $scope.mode = 'edit';
+  // //   $scope.checkin = checkin;
+  // //   }else{
+  // //   $scope.mode = 'new';
+  // //   $scope.checkin = {'contract':'','description':'','height':0,'width':0,'length':0,'weight':0}
+  // // }
+  // $scope.checkinData = [];
+  // $scope.save = function() {
+  //   var f = $scope.checkin;
+  //   console.log(f);
+  //   // if (f.serialNumber.length == 0) {
+  //   //   Flash.create('warning', 'serialNumber can not be left blank');
+  //   //   return;
+  //   // }
+  //   var toSend = {
+  //     contract: f.contract.pk,
+  //     description: f.description,
+  //     height: f.height,
+  //     width: f.width,
+  //     length: f.length,
+  //     weight: f.weight,
+  //     qty:f.qty
+  //
+  //   }
+  //
+  //   console.log(toSend);
+  //   var url = '/api/warehouse/checkin/';
+  //   if ($scope.checkin.pk == undefined) {
+  //     var method = 'POST';
+  //   } else {
+  //     var method = 'PATCH';
+  //     url += $scope.checkin.pk + '/';
+  //   }
+  //
+  //   $http({
+  //     method: method,
+  //     url: url,
+  //     data: toSend
+  //   }).
+  //   then(function(response) {
+  //     $scope.checkin.pk = response.data.pk;
+  //     $scope.checkinData.push(response.data);
+  //     Flash.create('success', 'Saved');
+  //   })
+  // }
 
 
 

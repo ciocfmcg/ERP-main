@@ -96,7 +96,7 @@ class Checkin(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
     # user = models.ForeignKey(User , related_name = 'contract' , null = False)
-    contract = models.ForeignKey(Contract , null = False , related_name="checkins")
+    contract = models.ForeignKey(Contract , null = True , related_name="checkins")
     description = models.CharField(max_length = 10000 , null = False)
     height = models.PositiveIntegerField(null = True)
     width = models.PositiveIntegerField(null = True)
