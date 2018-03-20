@@ -18,6 +18,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         s.save()
         return s
 
+
+
 class ContactSerializer(serializers.ModelSerializer):
     company=ServiceSerializer(many=False,read_only=True)
     class Meta:
@@ -102,3 +104,29 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model=Invoice
         fields = ('pk','contract','data','value','status','created' ,'updated')
+
+class CheckinsSerializer(serializers.ModelSerializer):
+    contract=ContractSerializer(many=False,read_only=True)
+    class Meta:
+        model = Checkin
+        fields = ('pk','created' ,'updated' , 'contract' , 'description' , 'height' , 'width','length','weight','checkedin','qty')
+        # read_only_fields = ('contract')
+    def create(self , validated_data):
+        c=Checkin(**validated_data)
+        c.user=self.context['request'].user
+        c.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
+        c.save()
+        return c
+
+class CheckoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Checkout
+        fields = ('pk' ,'user' , 'parent' , 'typ' , 'initial' , 'value','final', 'created')
+        read_only_fields = ('user' , )
+    def create(self , validated_data):
+        c=Checkout(**validated_data)
+        c.user=self.context['request'].user
+        c.parent.qty = validated_data.pop('final')
+        c.parent.save()
+        c.save()
+        return c

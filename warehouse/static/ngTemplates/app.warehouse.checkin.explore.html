@@ -1,0 +1,35 @@
+<div style="padding-top:20px;" ng-controller="businessManagement.warehouse.checkin.explore">
+  <div class="col-md-12">
+    <div class="col-md-2" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+      <div class="row" style="position:relative;min-height:250px;">
+        <i class="fa fa-building-o" style="font-size:260px;color:#fcf7f7;margin-left:20px;margin-top:140px;"></i>
+        <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
+
+          <label class="text-muted"> <i class="fa fa-handshake-o" style="width:20px;"></i> Contract ID</label> : {{contract.pk}}
+
+          <br>
+          <br>
+
+          <label class="text-muted"> <i class="fa fa-building-o" style="width:20px;"></i> Organisation</label>
+          <br>
+          <h5 style="margin-left:22px;">{{contract.company.name}}</h5> <br>
+          <div class="row" style="margin-top:10px;">
+            <div class="col-md-2">
+              <i class="fa fa-map-marker fa-3x pull-right" style="color:#8faec2;"></i>
+            </div>
+            <div class="col-md-10">
+              <span>{{contract.company.cin}}</span> <br>
+              <span>{{contract.company.street}}</span> <br>
+              <span>{{contract.company.city}}</span> <br>
+              <span>{{contract.company.pincode}}</span> <br>
+              <span>{{contract.company.state}}</span> <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-10">
+      <generic-Table data="data.checkinTableData" config-Obj="{{configCheckin}}" callback-Fn="tableActionCheckin"></generic-Table>
+    </div>
+  </div>
+</div>
