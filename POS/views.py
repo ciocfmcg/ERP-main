@@ -1,32 +1,3 @@
-# from django.shortcuts import render
-# from rest_framework import viewsets , permissions , serializers
-# from url_filter.integrations.drf import DjangoFilterBackend
-# from .serializers import *
-# from API.permissions import *
-# from .models import *
-# # Create your views here.
-#
-# class CustomerViewSet(viewsets.ModelViewSet):
-#     permission_classes = (permissions.IsAuthenticated, )
-#     serializer_class = CustomerSerializer
-#     queryset = Customer.objects.all()
-#     filter_backends = [DjangoFilterBackend]
-#     filter_fields = ['name']
-#
-# class ProductViewSet(viewsets.ModelViewSet):
-#     permission_classes = (permissions.IsAuthenticated, )
-#     serializer_class = ProductSerializer
-#     queryset = Product.objects.all()
-#     filter_backends = [DjangoFilterBackend]
-#     filter_fields = ['name']
-#
-# class InvoiceViewSet(viewsets.ModelViewSet):
-#     permission_classes = (permissions.IsAuthenticated, )
-#     serializer_class = ProductSerializer
-#     queryset = Product.objects.all()
-#     filter_backends = [DjangoFilterBackend]
-#     filter_fields = ['name']
-
 from django.shortcuts import render
 from rest_framework import viewsets , permissions , serializers
 from url_filter.integrations.drf import DjangoFilterBackend
@@ -60,6 +31,10 @@ import pytz
 import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+# from openpyxl import load_workbook
+from io import BytesIO
+import re
+from rest_framework import filters
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -73,8 +48,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_backends = [DjangoFilterBackend , filters.SearchFilter]
+    search_fields = ('name', 'serialNo', 'description')
+    # filter_fields = ['name']
+    # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
 #     permission_classes = (permissions.IsAuthenticated, )
@@ -315,7 +292,7 @@ def genInvoice(response , invoice, request):
     tableBodyStyle.fontSize = 7
 
     for i in json.loads(invoice.products):
-        print i
+        print '***********',i
         pDescSrc = i['data']['name']
 
         totalQuant += i['quantity']
@@ -333,7 +310,7 @@ def genInvoice(response , invoice, request):
         totalTax += i['subTotalTax']
         grandTotal += i['subTotal']
 
-        pBodyProd = Paragraph('Service' , tableBodyStyle)
+        pBodyProd = Paragraph('Product' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
         pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
         pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
@@ -440,6 +417,98 @@ def genInvoice(response , invoice, request):
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
+from BeautifulSoup import BeautifulSoup as bs
+import pandas as pd
+import re
+
+class ExternalEmailOrders(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        # print request.data
+        print '----------------------\n\n'
+        body = request.data['html']
+        subject = request.data['subject'].lower()
+        seller = None
+        if 'flipkart' in body.lower():
+            seller = 'flipkart'
+        if 'amazon' in body.lower():
+            seller = 'amazon'
+
+        # print seller
+        # print subject
+        typ = None
+        soup = bs(body)
+        tables = soup.findAll("table")
+
+        for table in tables:
+             if table.findParent("table") is None:
+
+                if seller == 'amazon':
+                    if 'refund for order' in subject:
+                        typ = 'return'
+                    if 'ship now' in subject:
+                        typ = 'new'
+                    if 'has dispatched the item you sold' in subject:
+                        typ = 'shipped'
+                if seller == 'flipkart':
+                    if 'flipkart return initiated' in subject:
+                        typ = 'rto'
+                    if 'new flipkart order' in subject:
+                        typ = 'new'
+
+                print "Type : " , typ , "Seller : " , seller
+                t = pd.read_html(str(table))[0]
+                if t.shape[0] >1:
+                    if seller == 'amazon':
+                        if typ == 'return' and 'order items' in t[0][0].lower() and 'refund reason' in t[1][0].lower():
+                            reason = t[1][1]
+                            items = t[0][1]
+                            if 'of' in items:
+                                items = items[items.index('of')+2:]
+
+                            print reason , items
+                    if seller == 'flipkart':
+                        if typ == 'new':
+                            sku = t[3][1]
+                            qty = t[4][1]
+                            orderID = t[0][1]
+                            price = t[5][1].replace('Rs.' , '').strip()
+
+                            print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
+
+                            p = Product.objects.get(serialNo = sku)
+                            p.inStock -= int(qty)
+
+                            p.save()
+                    # print t , t.__class__ , typ
+
+                if seller == 'amazon':
+                    if typ == 'new':
+                        sku = body[body.index('SKU:')+4: body.index('Quantity:')].replace('<br>' , '').strip()
+
+                        qty = body[body.index('Quantity:')+9: body.index('Order date:')].replace('<br>' , '').strip()
+
+                        price = body[body.index(' price:')+7:].split('<br>')[0].replace('INR ' , '').strip()
+
+
+                        orderID = body[body.index('Order ID:')+9:].split('<br>')[0].strip()
+
+
+                        p = Product.objects.get(serialNo = sku)
+                        p.inStock -= int(qty)
+
+                        p.save()
+
+                        print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
+                        # reg = "(?<=%s).*?(?=%s)" % ('Item','<br>')
+                        # print re.match(reg, body)
+
+
+        # print dir(request)
+        # print dir(request.FILES['attachment'])
+        # print request.FILES['attachment'].size
+        return Response({"saved" : True},status=status.HTTP_200_OK)
 
 
 class InvoicePrint(APIView):
@@ -459,3 +528,30 @@ class InvoicePrint(APIView):
         if 'saveOnly' in request.GET:
             return Response(status=status.HTTP_200_OK)
         return response
+
+
+class BulkProductsCreationAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, format=None):
+        print 'hiiiiiiiiiiiiiiiiii'
+        wb = load_workbook(filename = BytesIO(request.FILES['xl'].read()))
+        ws = wb.worksheets[0]
+        row_count = ws.max_row
+        count = 0
+        print request.user ,type(request.user),request.user.pk
+        for i in range(1, row_count):
+            a = ws['A' + str(i+1)].value
+            b = ws['B' + str(i+1)].value
+            c = ws['C' + str(i+1)].value
+            quantity = b if b else 0
+            price = c if c else 0
+            if re.search('[a-zA-Z]+',a) and '(' in a:
+                data = {'user':request.user, 'name':a.split('(')[0], 'price':price, 'serialNo':a.split('(')[-1][0:-1], 'inStock':quantity}
+                print data
+                count += 1
+                p,created = Product.objects.get_or_create(**data)
+
+
+        return Response({"count" : count}, status = status.HTTP_200_OK)

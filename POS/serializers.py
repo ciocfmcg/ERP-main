@@ -51,7 +51,6 @@ class ProductSerializer(serializers.ModelSerializer):
     #     instance.save()
     #     return instance
     def update(self ,instance, validated_data):
-        print 'entered in updating'
         for key in ['name', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics']:
             try:
                 setattr(instance , key , validated_data[key])

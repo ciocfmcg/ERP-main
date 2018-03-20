@@ -1,0 +1,107 @@
+<div class="col-md-12" ng-controller="businessManagement.warehouse.checkin.item" style="margin-bottom:10px;">
+
+  <div class="card container-fluid">
+    <div class="row ">
+      <div class="col-md-7">
+        <div class="row" style="padding:10px;">
+          <p>{{data.description}}</p>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-4 text-right">
+                <label>Weight</label>
+              </div>
+              <div class="col-md-8">
+                {{data.weight}} (kg)
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 text-right">
+                <label>Length</label>
+              </div>
+              <div class="col-md-8">
+                {{data.length}} (cm)
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+
+            <div class="row">
+              <div class="col-md-4 text-right">
+                <label>Height</label>
+              </div>
+              <div class="col-md-8">
+                {{data.height}} (cm)
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 text-right">
+                <label>Width</label>
+              </div>
+              <div class="col-md-8">
+                {{data.width}} (cm)
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+      <div class="col-md-1 text-center" style="padding-top:20px;">
+        <label>Quantity</label> <br>
+        {{data.qty}}
+      </div>
+
+      <div ng-if="data.qty > 0" class="col-md-2 text-center" style="padding-top:10px;">
+        <span style="margin-right:10px;">Percent</span>
+        <switch ng-model="form.typ" class="neutral"></switch><span style="margin-left:10px;">Value</span>
+      </div>
+
+      <div  class="col-md-2 text-center pull-right" style="padding-top:10px;">
+        <div class = "input-group" ng-if="data.qty > 0">
+          <input type = "text" class = "form-control" ng-model="form.value">
+          <span class = "input-group-btn">
+            <button class = "btn btn-default" type = "button" mwl-confirm
+              title="Confirm"
+              message="Are you sure?"
+              confirm-text="Yes <i class='fa fa-check'></i>"
+              cancel-text="No"
+              on-confirm="checkout()"
+              confirm-button-type="danger"
+              cancel-button-type="default">
+               Checkout
+            </button>
+          </span>
+        </div><!-- /input-group -->
+
+        <hr>
+
+        <span class="text-primary" ng-click="open = !open" style="cursor:pointer;">Review checkouts</span>
+
+      </div>
+    </div>
+    <hr ng-if="open">
+    <div class="row" style="min-height:100px;" ng-if="open">
+
+      <div class="col-md-12 text-center" ng-if="data.checkouts.length == 0">
+        <h3 class="text-muted">No checkouts available</h3>
+      </div>
+
+      <div class="col-md-4" style="padding:10px;" ng-repeat="co in data.checkouts">
+
+        <div class="container-fluid" style="border:solid 2px #1998b4;padding:10px;">
+          <label>By : </label> {{co.user | getName}} <br>
+          <label>Type : </label> <span ng-if="co.typ == 'percent'">Percentage</span><span ng-if="co.typ == 'qty'">Quantity</span> <br>
+          <label>Value : </label> {{co.value}} <br>
+          <label>When : </label> {{co.created | date : 'dd-MMM-yyyy hh:mm a'}} <br>
+          <label>Initial Value before checkout : </label> {{co.initial}} <br>
+          <label>Final Value After checkout : </label> {{co.final}} <br>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

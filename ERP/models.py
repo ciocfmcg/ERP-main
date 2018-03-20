@@ -74,7 +74,7 @@ class ApiUsage(models.Model): # to store the monthly api usage for the api
     month = models.PositiveIntegerField(default=0) # assuming 0 for the month of January 2017 and 1 for february and so on
 
 class permission(models.Model):
-    app = models.ForeignKey(application , null=False)
+    app = models.ForeignKey(application , null=False , related_name="permissions")
     user = models.ForeignKey(User , related_name = "accessibleApps" , null=False)
     givenBy = models.ForeignKey(User , related_name = "approvedAccess" , null=False)
     created = models.DateTimeField(auto_now_add = True)

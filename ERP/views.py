@@ -31,8 +31,6 @@ class SendSMSApi(APIView):
             requests.get(url)
             return Response(status = status.HTTP_200_OK)
 
-
-
 def serviceRegistration(request): # the landing page for the vendors registration page
     return render(request , 'app.ecommerce.register.partner.html')
 
