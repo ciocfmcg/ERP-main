@@ -217,10 +217,7 @@ app.controller('businessManagement.finance.expenses.form', function($scope, $htt
   } else {
     $scope.resetForm();
   }
-  // $scope.form = {
-  //   'notes': '',
-  //   'project': ''
-  // }
+
   $scope.invoiceForm = {
     'service': '',
     'code': '',
@@ -230,7 +227,7 @@ app.controller('businessManagement.finance.expenses.form', function($scope, $htt
     'attachment': null,
     'description': '',
   }
-  // $scope.projectData = {};
+
 
   $scope.$watch('form.project', function(newValue, oldValue) {
     console.log('cecking', newValue.pk);
@@ -275,15 +272,15 @@ app.controller('businessManagement.finance.expenses.form', function($scope, $htt
     }).
     then(function(response) {
       $scope.form.pk = response.data.pk;
-      $scope.invoiceOptions = !$scope.invoiceOptions;
-      $scope.refreshOption = !$scope.refreshOption;
+      $scope.invoiceOptions = true;
+      $scope.refreshOption = false;
       Flash.create('success', 'Saved');
       $scope.refreshInvoice();
     })
   }
   if($scope.mode == 'edit'){
-    $scope.invoiceOptions = !$scope.invoiceOptions;
-    $scope.refreshOption = !$scope.refreshOption;
+    $scope.invoiceOptions = true;
+    $scope.refreshOption = false;
     $http({
       method: 'GET',
       url: '/api/finance/invoices/?sheet=' + $scope.form.pk
@@ -292,7 +289,7 @@ app.controller('businessManagement.finance.expenses.form', function($scope, $htt
       $scope.invoiceData = response.data;
     })
   }
-  // $scope.invoiceDel=[];
+
   $scope.deleteInvoice=function(pk ,ind){
     $http({
       method: 'DELETE',
@@ -353,11 +350,6 @@ app.controller('businessManagement.finance.expenses.form', function($scope, $htt
       $scope.refreshInvoice();
     })
   }
-  // $scope.deleteInvoice = function(index) {
-  //   $scope.invoiceForm.splice(index, 1);
-  // };
 
-
-  // console.log("gfghhg",$scope.invoiceData)
 
 });

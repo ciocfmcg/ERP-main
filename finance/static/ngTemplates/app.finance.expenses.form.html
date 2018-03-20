@@ -27,7 +27,7 @@
           <div class="col-md-12">
             <span><strong>Service:</strong>{{data.service.name}}</span><br/><br/>
             <span><strong>Dated:</strong>{{data.dated}}</span>
-              <!-- <button type="button" class="btn btn-danger btn-sm  pull-right" ng-click="deleteInvoice($index)"><i class="fa fa-trash" ></i></button> -->
+              <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a>
               <button type="button"
                 mwl-confirm
                 title="Confirm"
@@ -37,7 +37,7 @@
                 on-confirm="deleteInvoice(data.pk , $index)"
                 confirm-button-type="danger"
                 cancel-button-type="default"
-               class="btn-danger btn-sm  pull-right" > <i class="fa fa-trash"></i> </button>
+               class="btn-danger btn-sm  pull-right" style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </button>
           </div>
         </div>
       </div>
