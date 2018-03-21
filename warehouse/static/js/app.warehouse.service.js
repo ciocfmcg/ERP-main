@@ -8,9 +8,9 @@ app.config(function($stateProvider){
 });
 
 
-app.controller("businessManagement.warehouse.service", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal) {
-
-})
+// app.controller("businessManagement.warehouse.service", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal) {
+//
+// })
 
 
 

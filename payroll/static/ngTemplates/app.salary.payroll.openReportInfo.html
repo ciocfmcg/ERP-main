@@ -1,0 +1,152 @@
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="modal-header">
+      Payroll for {{payroll.user | getName}}
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>HRA:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                <i class="fa fa-inr" aria-hidden="true"></i>  {{payroll.hra}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>Special:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.special}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>LTA:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.lta}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>Basic:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.basic}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>AdHOC:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.adHoc}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>Policy Number:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                {{payroll.policyNumber}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>Provider:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+              {{payroll.provider}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right" style="padding-left: 0px;">
+                <strong>Amount:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.amount}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>Al:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+              {{payroll.al}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>ML:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+              {{payroll.ml}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>AdHOC Leaves:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                {{payroll.adHocLeaves}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>Joinning Date:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                {{payroll.joiningDate}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>Last Working Date:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                <span>{{payroll.lastWorkingDate}}<span ng-if="!payroll.lastWorkingDate" class="text-danger">NA</span></span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>Account Number:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                {{payroll.accountNumber}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>IFSC code:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                {{payroll.ifscCode}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 text-right" style="padding-left: 0px;">
+                <strong>Bank Details:</strong>
+              </div>
+              <div class="col-md-4" style="padding-left: 0px;">
+                {{payroll.bankName}}
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+
+
+      <!-- <div class="col-md-12 text-right" style="margin-top:10px">
+        <button type="button" class="btn btn-default btn" ng-click="cancel()">Back</button>
+      </div> -->
+    </div>
+  </div>
+</div>

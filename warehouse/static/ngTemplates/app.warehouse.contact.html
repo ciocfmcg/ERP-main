@@ -1,10 +1,16 @@
 <breadcrumb></breadcrumb>
 <div class="container-fluid">
-
   <uib-tabset>
+    <uib-tab>
+      <uib-tab-heading>
+        New <i class="fa fa-plus"></i>
+      </uib-tab-heading>
+      <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.warehouse.contact.form.html'">
+      </div>
+    </uib-tab>
       <uib-tab active="searchTabActive">
           <uib-tab-heading>
-              Contact
+              Browse
               <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
           <div class="container-fluid">
@@ -17,10 +23,12 @@
               {{tab.title}}
               <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
-          <div ng-if="tab.app == 'ContactBrowser'">
-              <div ng-include="'/static/ngTemplates/app.warehouse.Contact.explore.html'"></div>
+          <div ng-if="tab.app == 'contactEditor'">
+              <div ng-include="'/static/ngTemplates/app.warehouse.contact.form.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'contactExplorer'">
+              <div ng-include="'/static/ngTemplates/app.warehouse.contact.explore.html'"></div>
           </div>
       </uib-tab>
   </uib-tabset>
-
 </div>

@@ -1,0 +1,124 @@
+<div ng-controller="workforceManagement.salary.payroll.report">
+
+  <div class="modal-header bg-blue" style="height:7vh;">
+    <div class="container-fluid">
+      <h4>
+        <div class="row">
+          <div class="col-md-1" ng-click="save(false)">
+            <span style="cursor:pointer"><i class="fa fa-floppy-o"></i> Save</span>
+          </div>
+          <div class="col-md-2 text-center" ng-click="save(false)">
+            <span style="cursor:pointer"><i class="fa fa-floppy-o"></i> submit</span>
+          </div>
+          <div class="col-md-1">
+            <span style="cursor:pointer" mwl-confirm
+            title="Confirm"
+            message="Are you sure?"
+            confirm-text="Yes <i class='fa fa-check'></i>"
+            cancel-text="No"
+            on-confirm="initializeSheet()"
+            confirm-button-type="danger"
+            cancel-button-type="default" data-placement="bottom"><i class="fa fa-refresh"></i> Reset</span>
+          </div>
+          <div class="col-md-3" style="margin-top:-8px">
+            <select class="form-control" ng-model="selectedMonth">
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">Octobar</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+          <div class="col-md-3" style="margin-top:-8px">
+            <select class="form-control" ng-model="selectedYear" ng-options="p for p in years">
+            </select>
+          </div>
+
+          <div class="col-md-2 pull-right">
+            <span class="pull-right">
+              Create a Salary Report
+            </span>
+          </div>
+
+        </div>
+      </h4>
+    </div>
+  </div>
+
+
+
+
+  <div class="row" style="height:93vh;overflow:auto;margin:0px;">
+    <div class="col-md-12" style="padding:0px;">
+      <div class="container-fluid" style="padding:0px;">
+
+        <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+          <tr style="background-color: #eeeeee;height: 96px;">
+            <th>Sl No.</th>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Amount</th>
+            <th>Reimbursement</th>
+            <th>TDS</th>
+            <th>Total Payable</th>
+            <th>AdHoc</th>
+            <th>Days</th>
+            <th></th>
+          </tr>
+          <tr ng-repeat="item in report.payslips" style="background-color:{{item.payslipID && !item.deffered ? '#d1ffb8' :''}}  {{item.deffered ?  '#fcd4b3':''}} ">
+            <td>{{$index + 1}}</td>
+            <td>{{item.joiningDate | date:"yyyy"}}{{item.user}}</td>
+            <td>{{item.user | getName}}</td>
+            <td>{{item.amount}}</td>
+            <td>{{item.reimbursement}}</td>
+            <td>{{item.tds}}</td>
+            <td>{{item.totalPayable}}</td>
+            <td><input type="number" class="form-control-pos" ng-model="item.adHoc"></td>
+            <td><input type="number" class="form-control-pos" ng-model="item.days"></td>
+            <td>
+              <button type="button"
+                mwl-confirm
+                title="Confirm"
+                message="Are you sure?"
+                confirm-text="Yes <i class='fa fa-check'></i>"
+                cancel-text="No"
+                on-confirm="deffer($index)"
+                confirm-button-type="danger"
+                cancel-button-type="default"
+               class="btn btn-warning btn-sm"> <i class="fa fa-exclamation-triangle"></i> </button>
+              <button type="button" class="btn btn-success btn-sm" ng-click="saveIndividualPayslip(item.payslipID, $index)"> <i class="fa fa-floppy-o"></i> </button>
+              <!-- <button type="button" class="btn btn-default btn-sm"> <i class="fa fa-info"></i> </button> -->
+              <button ng-click="openReportInfo($index)"type="button" class="btn btn-default btn-sm"><i class="fa fa-info"></i></button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding:10px">
+    <div class="col-md-4">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-10">
+            <input type="text" ng-model="data.allTableData.user" class="form-control" uib-typeahead="p as p.user.username for p in userSearch($viewValue)">
+          </div>
+          <div class="col-md-2">
+            <div class="container-fluid" style="padding:0px;">
+              <button ng-click="addTableRow()">Add<i class="fa fa-plus"style="cursor:pointer"></i></button>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

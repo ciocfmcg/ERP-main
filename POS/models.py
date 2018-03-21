@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -17,7 +18,7 @@ class Customer(models.Model):
     company = models.CharField(max_length = 100 , null = True)
     email = models.EmailField(null = True)
     mobile = models.CharField(max_length = 12 , null = True)
-    notes = models.TextField(max_length=300 , null=True)
+    notes = models.TextField(max_length=10000 , null=True)
     pan = models.CharField(max_length = 100 , null = True)
     gst = models.CharField(max_length = 100 , null = True)
     street = models.CharField(max_length = 100 , null = True)
@@ -46,7 +47,7 @@ class Product(models.Model):
     price = models.FloatField(null=False)
     displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True)
     serialNo = models.CharField(max_length = 30, null=True)
-    description = models.TextField(max_length=300,null=False)
+    description = models.TextField(max_length=10000,null=False)
     inStock = models.PositiveIntegerField(default = 0)
     cost = models.PositiveIntegerField(default= 0)
     logistics = models.PositiveIntegerField(default = 0)
@@ -55,7 +56,15 @@ PAYMENT_CHOICES = (
     ('card' , 'card'),
     ('netBanking' , 'netBanking'),
     ('cash' , 'cash'),
-    ('cheque' , 'cheque')
+    ('cheque' , 'cheque'),
+    ('wallet' , 'wallet')
+)
+
+MONTH_CHOICES = (
+    ('jan-march' , 'jan-march'),
+    ('april-june' , 'april-june'),
+    ('july-sep' , 'july-sep'),
+    ('oct-dec' , 'oct-dec')
 )
 
 
@@ -66,9 +75,14 @@ class Invoice(models.Model):
     invoicedate = models.DateField(null=True)
     reference =   models.CharField(max_length = 100 , null = True)
     duedate =  models.DateField(null=True)
-    returndate =  models.DateField(null=True)
-    returnquater =  models.DateField(null=True)
+    # returndate =  models.DateField(null=True)
+    returnquater =  models.CharField(choices = MONTH_CHOICES , max_length = 10 , null = True)
     customer=models.ForeignKey(Customer,null=True)
     products=models.CharField(max_length=10000,null=True)
     amountRecieved = models.PositiveIntegerField(default = 0)
     modeOfPayment = models.CharField(choices = PAYMENT_CHOICES , max_length = 10 , null = True)
+    received = models.BooleanField(default = True)
+    grandTotal = models.FloatField(null=False)
+    totalTax = models.FloatField(null=False)
+    paymentRefNum = models.PositiveIntegerField(default = 0)
+    receivedDate = models.DateField(null=True)

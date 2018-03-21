@@ -2,11 +2,11 @@ app.config(function($stateProvider){
 
   $stateProvider
   .state('projectManagement.tutor', {
-    url: "/Tutor",
+    url: "/tutor",
     views: {
        "": {
           templateUrl: '/static/ngTemplates/app.tutor.default.html',
-          controller : 'projectManagement.tutor.default',
+          controller : 'projectManagement.Tutor.default',
        }
     }
   })
@@ -15,7 +15,7 @@ app.config(function($stateProvider){
 
 
 
-app.controller("projectManagement.tutor.default", function($scope , $state , $users ,  $stateParams , $http , Flash) {
+app.controller("projectManagement.Tutor.default", function($scope , $state , $users ,  $stateParams , $http , Flash) {
 
     $scope.me = $users.get('mySelf');
     $scope.editor = {pencil : false , eraser:false , eraserSize: 1, rect : false , dragging : false , rectStartX : undefined, rectStartY : undefined,rectEndX : undefined, rectEndY : undefined , eraserStartX : undefined, eraserStartY : undefined , eraserEndX : undefined, eraserEndY : undefined , color:'#000000'}

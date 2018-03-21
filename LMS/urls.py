@@ -17,6 +17,9 @@ router.register(r'comment' , CommentViewSet , base_name ='comment')
 router.register(r'like' , LikeViewSet , base_name ='like')
 router.register(r'studyMaterial' , StudyMaterialViewSet , base_name ='studyMaterial')
 router.register(r'quesPaper' , PaperQuesViewSet , base_name ='quesPaper')
+router.register(r'channel' , ChannelViewSet , base_name ='channel')
+router.register(r'video' , VideoViewSet , base_name ='video')
+router.register(r'feedback' , FeedbackViewSet , base_name ='feedback')
 
 
 urlpatterns = [

@@ -1,3 +1,5 @@
+
+
 app.config(function($stateProvider) {
 
   $stateProvider
@@ -81,7 +83,8 @@ app.controller("controller.POS.invoice.form", function($scope, invoice,$http,Fla
         var date=$scope.invoice.duedate
       }
       var toSend = {
-        invoicedate: date,
+        // invoicedate: date,
+        duedate :date,
         products: JSON.stringify(f.products),
       }
 
@@ -105,20 +108,14 @@ app.controller("POS.invoice.item", function($scope) {
     $scope.data.products = JSON.parse($scope.data.products);
   }
 
-  console.log();
   if ($scope.$parent.$parent.$parent.customer != undefined) {
     $scope.showControls = false;
   }else {
     $scope.showControls = true;
   }
 
-  $scope.subTotal = function() {
-       var subTotal = 0;
-       angular.forEach($scope.data.products, function(item) {
-           subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price));
-       })
-       return subTotal.toFixed(2);
-   }
+  $scope.hover = false;
+
 });
 
 app.controller("controller.POS.productinfo.form", function($scope, product) {
@@ -137,23 +134,16 @@ app.controller("controller.POS.productinfo.form", function($scope, product) {
 
   // $scope.products=products;
 
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
+    $scope.labels = ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"];
+
   $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
+    [65, 59, 80, 81, 56, 55, 40,50,30,44,55,66]
+
   ];
   $scope.onClick = function(points, evt) {
     console.log(points, evt);
   };
 
-  $scope.labels2 = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
-  $scope.data2 = [300, 500, 100];
-  // $scope.dates = [
-  //   "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
-  // $scope.returndates = [
-  //     "jan-march-2018", "Apr-jun-2018", "jul-Sep-2018","oct-Dec-2018"];
-  // $scope.form = {'name' : name , address : {street : '' , state : '' , pincode : '' , country :  'India'}}
 
 })
 app.controller("controller.POS.customer.form", function($scope, customer, $http, Flash, $uibModalInstance) {
@@ -234,13 +224,14 @@ app.controller("controller.POS.customer.form", function($scope, customer, $http,
     }).
     then(function(response) {
       $scope.customer.pk = response.data.pk;
+      $scope.mode = 'edit';
       if ($scope.mode == 'new') {
         Flash.create('success', 'Saved');
       } else {
         Flash.create('success', 'Created');
       }
-      $scope.mode = 'edit';
       if ($scope.invoiceMode) {
+        console.log("will close");
         $uibModalInstance.dismiss('created||' + response.data.pk)
       }
     })
@@ -316,19 +307,14 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice,$htt
      console.log(f.modeOfPayment);
      var toSend = {
        amountRecieved: f.amountRecieved,
-       modeOfPayment: f.modeOfPayment
+       modeOfPayment: f.modeOfPayment,
+       paymentRefNum :f.paymentRefNum,
+       receivedDate:f.receivedDate.toJSON().split('T')[0]
      }
      console.log(toSend);
 
 
-     // var url = '/api/POS/invoice/';
-     // if ($scope.form.pk == undefined)  {
-     //   var method = 'POST';
-     // } else {
-     //   var method = 'PATCH';
-     //   url += $scope.form.pk + '/';
-     // }
-     //
+
      $http({
        method: 'PATCH',
        url:'/api/POS/invoice/'+f.pk+'/',
@@ -341,7 +327,9 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice,$htt
 
 })
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+
+  $scope.hover = false;
 
   $scope.item = '';
   $scope.items = '';
@@ -495,29 +483,42 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   var onlyDate = new Date(dummyDate.getFullYear(), dummyDate.getMonth(), dummyDate.getDate()); // 2013-07-30 23:59:59
 
   $scope.resetForm = function() {
+    var dummyDate = new Date();
+
+    var onlyDate = new Date(dummyDate.getFullYear(), dummyDate.getMonth(), dummyDate.getDate()); // 2013-07-30 23:59:59
     $scope.form = {
       customer: '',
       invoiceDate: onlyDate,
+      totalTax:0,
+      grandTotal:0,
       deuDate: onlyDate,
       products: [{
         data: '',quantity:1
-      }]
+      }],
+      // returnquater : 'jan-march'
     }
+
   }
+
+  $scope.returnquaters = ['jan-march' , 'april-june' , 'july-sep' , 'oct-dec']
 
   $scope.resetForm();
 
   $scope.subTotal = function() {
        var subTotal = 0;
        angular.forEach($scope.form.products, function(item) {
+         if(item.data.productMeta != undefined){
            subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price));
+         }
        })
        return subTotal.toFixed(2);
    }
    $scope.subTotalTax = function() {
         var subTotalTax = 0;
         angular.forEach($scope.form.products, function(item) {
+           if(item.data.productMeta != undefined){
             subTotalTax += (item.data.productMeta.taxRate*item.data.price/100);
+          }
         })
         return subTotalTax.toFixed(2);
     }
@@ -550,42 +551,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   });
 
-  // $scope.createCustomer = function() {
-  //   if ($scope.customerExist) {
-  //     $scope.showCustomerForm = true;
-  //     $scope.showCreateCustomerBtn = false;
-  //     return
-  //   }
-  //
-  //   if (typeof $scope.form.customer == "string" && $scope.form.customer.length > 1) {
-  //     var dataToSend = {
-  //       name: $scope.form.customer,
-  //       user: $scope.me.pk
-  //     }
-  //     $http({
-  //       method: 'POST',
-  //       url: '/api/POS/customer/',
-  //       data: dataToSend
-  //     }).
-  //     then(function(response) {
-  //       $scope.form.customer = response.data;
-  //       Flash.create('success', 'Created');
-  //     })
-  //   } else {
-  //     Flash.create('warning', 'Company name too small')
-  //   }
-  // }
 
-
-  var numberOfDaysToAdd = 7;
-  d = dummyDate.setDate(dummyDate.getDate() + numberOfDaysToAdd);
-  $scope.form.dates=new Date(d).toLocaleDateString();
-
-
-  var numberOfMonthsToAdd = 3;
-
-  d = dummyDate.setMonth(dummyDate.getMonth() + numberOfMonthsToAdd);
-  $scope.form.returndates=new Date(d).toLocaleDateString();
 
 
 
@@ -602,6 +568,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.mode = 'invoice';
   }
   $scope.goHome = function() {
+    $rootScope.$broadcast('forceRefetch' , {});
     $scope.mode = 'home';
   }
 
@@ -633,6 +600,14 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       console.log(d);
     }, function(d) {
       console.log(d);
+      $rootScope.$broadcast('forceRefetch' , {});
+      if ($scope.form.customer.pk != undefined) {
+        $http({method : 'GET' , url : '/api/POS/customer/' + $scope.form.customer.pk + '/'}).
+        then(function(response) {
+          $scope.form.customer = response.data;
+        })
+      }
+
       if (d.split('||')[0] == 'created') {
         $http({
           method: 'GET',
@@ -666,7 +641,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     }).result.then(function() {
 
     }, function() {
-
+      $rootScope.$broadcast('forceRefetch' , {});
     });
 
 
@@ -676,7 +651,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.openInvoiceinfoForm = function(idx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.invoicesinfo.form.html',
-      size: 'md',
+      size: 'lg',
       backdrop: true,
       resolve: {
         invoice: function() {
@@ -732,6 +707,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       backdrop: true,
       resolve: {
         product: function() {
+
+          console.log($scope.products[idx]);
           if (idx == undefined || idx == null) {
             return {};
           } else {
@@ -792,7 +769,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           }
 
           var fd = new FormData();
-          if (f.displayPicture != emptyFile && f.displayPicture != null) {
+          if (f.displayPicture != emptyFile && typeof f.displayPicture != 'string') {
             fd.append('displayPicture', f.displayPicture)
           }
 
@@ -825,7 +802,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           then(function(response) {
             $scope.product.pk = response.data.pk;
             if ($scope.mode == 'new') {
-              $scope.form.pk = response.data.pk;
+              $scope.product.pk = response.data.pk;
               $scope.mode = 'edit';
             }
             Flash.create('success', 'Saved')
@@ -849,7 +826,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.invoices.form.html',
-      size: 'lg',
+      size: 'xl',
       backdrop: true,
       resolve: {
         invoice: function() {
@@ -889,18 +866,18 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
 
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
+  $scope.labels = ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"];
+  // $scope.series = ['Series A'];
   $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
+    [65, 59, 80, 81, 56, 55, 50,60,71,66,77,44]
+
   ];
   $scope.onClick = function(points, evt) {
     console.log(points, evt);
   };
 
-  $scope.labels2 = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
-  $scope.data2 = [300, 500, 100];
+  $scope.labels2 = ["Sales","Products"];
+  $scope.data2 = [800, 500];
 
 
   $scope.addRow = function() {
@@ -915,22 +892,50 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.saveInvoice = function() {
     console.log('************');
-    console.log(typeof $scope.form.invoiceDate);
-    console.log(typeof $scope.form.deuDate);
-    console.log( $scope.form.dates);
-    console.log( $scope.form.returndates);
-    console.log($scope.form.serialNumber);
-    console.log($scope.form.customer.pk);
-    console.log($scope.form);
     // console.log($scope.products.data.pk);
 
     var f = $scope.form;
+    console.log(f);
+    console.log('0000000000000',f.products);
+    for (var i = 0; i < f.products.length; i++) {
+      console.log(f.products[i].data.pk,f.products[i].quantity);
+
+
+      var fd = new FormData();
+
+      fd.append('name', f.products[i].data.name);
+      fd.append('productMeta', f.products[i].data.productMeta.pk);
+      fd.append('price', f.products[i].data.price);
+      fd.append('serialNo', f.products[i].data.serialNo);
+      fd.append('description', f.products[i].data.description);
+      fd.append('inStock', (f.products[i].data.inStock-f.products[i].quantity));
+      fd.append('cost', f.products[i].data.cost);
+      fd.append('logistics', f.products[i].data.logistics);
+
+      var url = '/api/POS/product/'+f.products[i].data.pk+'/'
+      // console.log(sendData);
+      $http({
+        method: 'PATCH',
+        url: url,
+        data: fd,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).
+      then(function(response) {
+        console.log('789',response.data);
+      })
+    }
     if (f.serialNumber.length == 0) {
       Flash.create('warning', 'serialNumber can not be left blank');
       return;
     }
 
-    console.log(f);
+
+
+
+    //
 
     // if ($scope.invoiceMode) {
     //
@@ -942,15 +947,18 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       invoicedate: f.invoiceDate.toJSON().split('T')[0],
       reference: f.reference,
       duedate: f.deuDate.toJSON().split('T')[0],
-      returnquater: $scope.form.returndates,
-      returndate: $scope.form.dates,
+      returnquater: f.returnquater,
+
       products: JSON.stringify(f.products),
-      customer: f.customer.pk
+      customer: f.customer.pk,
+      grandTotal : $scope.subTotal() ,
+      totalTax : $scope.subTotalTax()
     }
-    var returnquaterParts=toSend.returnquater.split('/');
-    toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[1]+'-'+returnquaterParts[0];
-    var returndateParts=toSend.returndate.split('/');
-    toSend.returndate=returndateParts[2]+'-'+returndateParts[1]+'-'+returndateParts[0];
+    // var returnquaterParts=toSend.returnquater.split('/');
+    // toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[0]+'-'+returnquaterParts[1];
+    // var returndateParts=toSend.returndate.split('/');
+    // toSend.returndate=returndateParts[2]+'-'+returndateParts[0]+'-'+returndateParts[1];
+    // console.log(typeof toSend.returnquater,toSend.returnquater);
     console.log(toSend);
     var url = '/api/POS/invoice/';
     if ($scope.form.pk == undefined) {

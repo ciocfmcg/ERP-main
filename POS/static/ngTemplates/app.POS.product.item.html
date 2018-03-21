@@ -1,5 +1,7 @@
+
+
 <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
-  <div class="row" syle="padding: 7px;">
+  <div class="row" syle="padding: 7px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
     <div class="col-md-2">
       <img ng-src="{{data.displayPicture}}" style="width: 70%;">
     </div>
@@ -14,14 +16,11 @@
           <span>HSN/SAC:{{data.productMeta.code}}</span><br>
           <span>In Stock:{{data.inStock}}</span>
         </div>
-        <div class="col-md-1">
-          <div class="icon-infohover">
-            <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;" ng-click="rowActionClicked('info')"></i></span>
-          </div><br><br>
-          <div class="icon-pancilhover">
-            <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;" ng-click="rowActionClicked('edit')"></i></span>
+        <div class="col-md-1 text-center" ng-if="hover">
+            <span><i class="fa fa-info" style="color: rgb(24, 108, 219);font-size: 20px;" ng-click="rowActionClicked('info')"></i></span>
+          <br><br>
+            <span><i class="fa fa-pencil"  style="color: rgb(24, 108, 219);font-size: 20px;" ng-click="rowActionClicked('edit')"></i></span>
           </div>
-        </div>
       </div>
     </div>
   </div>

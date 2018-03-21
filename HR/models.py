@@ -161,6 +161,36 @@ class designation(models.Model):
 
 User.designation = property(lambda u : designation.objects.get_or_create(user = u)[0])
 
+
+class payroll(models.Model):
+    user = models.ForeignKey(User , related_name = "payrollAuthored" , null=False)
+    # user = models.OneToOneField(User)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    hra = models.PositiveIntegerField(null = True)
+    special = models.PositiveIntegerField(null = True)
+    lta = models.PositiveIntegerField(null = True)
+    basic = models.PositiveIntegerField(null = True)
+    adHoc = models.PositiveIntegerField(null = True)
+    policyNumber = models.CharField(null = True , max_length = 50)
+    provider = models.CharField(max_length = 30 , null = True)
+    amount = models.PositiveIntegerField(null = True)
+    noticePeriodRecovery = models.BooleanField(default=False)
+    al = models.PositiveIntegerField(null = True)
+    ml = models.PositiveIntegerField(null = True)
+    adHocLeaves = models.PositiveIntegerField(null = True)
+    joiningDate = models.DateField(null = True)
+    off = models.BooleanField(default=True)
+    accountNumber = models.CharField(null = True , max_length = 40)
+    ifscCode = models.CharField(max_length = 30 , null = True)
+    bankName = models.CharField(max_length = 30 , null = True)
+    deboarded = models.BooleanField(default = False)
+    lastWorkingDate = models.DateField(null = True)
+
+User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
+
+
+
 @receiver(user_signed_up, dispatch_uid="user_signed_up")
 def user_signed_up_(request, user, **kwargs):
     user.username = user.email+str(user.pk)

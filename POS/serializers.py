@@ -51,7 +51,7 @@ class ProductSerializer(serializers.ModelSerializer):
     #     instance.save()
     #     return instance
     def update(self ,instance, validated_data):
-        print 'entered in updating'
+        print 'entered in updating ************************************'
         for key in ['name', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics']:
             try:
                 setattr(instance , key , validated_data[key])
@@ -66,7 +66,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
     class Meta:
         model = Invoice
-        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment')
+        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate')
         read_only_fields = ( 'user' , 'customer')
     def create(self , validated_data):
         print validated_data,'**************'

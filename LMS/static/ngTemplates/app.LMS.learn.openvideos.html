@@ -1,0 +1,45 @@
+<div class="container-fluid" style="padding:0px" ng-controller="projectManagement.LMS.videos.explore">
+  <div class="row" style="padding:20px">
+    <div class="col-md-5 ">
+      <span style="font-size:20px">{{video.title}}</span> |
+      <span class="text-muted" style="font-size:20px">{{video.description}}</span>
+    </div>
+    <div class="col-md-5" style="text-align:right">
+      <span style="font-size:20px">{{form.likes}} Like </span>&nbsp;
+      <span style="font-size:20px">{{form.comments}} comments</span>
+    </div>
+    <div class="col-md-2 text-right">
+      <span style="font-size:30px;" ng-click="like()"><i class="fa fa-thumbs{{form.liked? '':'-o'}}-up" aria-hidden="true" style="cursor:pointer"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" ng-click="editVideo(1)" style="margin-top: -15px;"><i class="fa fa-pencil" aria-hidden="true"></i>
+          Edit</button>
+      </div>
+    </div>
+  </div>
+  <video controls="false" width="100%" height="500px" frameborder="0 " ng-src="{{video.attachment}}" autoplay>
+  </video>
+  <div class="container-fluid" style="width:600px;font-size:15px;border:1px solid var(--themeMain);margin:10px;padding-top:10px;padding-bottom: 10px;" ng-repeat=" data in video.feedbacks" ng-if="data.typ == 'comment'">
+
+    <div class="row">
+      <div class="col-md-2">
+        <img ng-src="{{data.user | getDP}}" style="width:50px;height:50px;" class="img img-circle">
+      </div>
+      <div class="col-md-10">
+        <span>{{data.comment}}</span><br>
+        <span class="text-muted">on : {{data.created | timeAgo}}</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="container-fluid" style="padding:;border-top:30px;width:600px;margin-left: 12px;">
+    <div class="row" style="margin:0px;margin-top:40px;margin-bottom:60px;">
+      <form>
+        <div class="input-group">
+          <input type="text" ng-enter="send()" ng-model="form.comment" class="form-control" placeholder="Message">
+
+          <span class="input-group-addon"  ng-click="send()" style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
