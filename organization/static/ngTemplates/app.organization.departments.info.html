@@ -1,0 +1,65 @@
+<div ng-controller="workforceManagement.organization.departments.info" style="padding-top:20px;">
+  <div class="col-md-10">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:14vh;position:relative;">
+
+
+
+      <div class="row text-center">
+        <img ng-src="{{departments.picture}}" style="width:100px;">
+      </div>
+
+    </div>
+    <div class="col-md-9" style="padding:20px;border-left:solid 1px #eeeeee;">
+      <div class="row">
+        <label>Name:</label>
+        <span>
+          {{departments.dept_name}}
+        </span>
+      </div>
+
+
+      <div class="row">
+        <label>Telephone:</label>
+        <span>
+            {{departments.telephone}}
+        </span>
+      </div>
+
+      <div class="row">
+        <label>Mobile:</label>
+        <span>
+          {{departments.mobile}}
+        </span>
+      </div>
+
+      <div class="row">
+        <label>FAX:</label>
+        <span>
+          {{departments.fax}}
+        </span>
+
+      </div>
+
+      <div class="row">
+        <label>Units:</label> <br>
+        <div ng-repeat="c in departments.units">
+          <span class="col-md-3">
+                    {{c.name}}
+          </span>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <label>Contact:</label> <br>
+
+        <div class="row" ng-repeat="c in departments.contacts">
+          <div class="col-md-2">
+            <img ng-src="{{c | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;">
+          </div>
+          <div class="col-md-4">
+            {{c | getName}}
+          </div>
+        </div>
+      </div>
+    </div>

@@ -29,6 +29,9 @@
         <div ng-if="tab.app == 'editPermissions'">
           <div ng-include="'/static/ngTemplates/app.HR.form.editPermissions.html'"></div>
         </div>
+        <div ng-if="tab.app == 'editDesignation'">
+          <div ng-include="'/static/ngTemplates/app.HR.form.editDesignation.html'" data="tab.data" submit-Fn="editDesignation($index)" form-title="tab.title"></div>
+        </div>
       </uib-tab>
     </uib-tabset>
   </div>

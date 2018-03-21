@@ -1,0 +1,28 @@
+<div class="col-md-6" ng-controller='admin.manageUsers'>
+<br>
+<h3>Designation for {{name}}</h3>
+
+  <div class="form-group">
+      <label>Username</label>
+    <input type="text" class="form-control" disabled value='{{name}}'>
+  </div>
+
+  <div class="form-group">
+    <label>ReportingTo</label>
+    <input uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.reportingTo" type="text" class="form-control" placeholder="Select division">
+  </div>
+
+  <div class="form-group">
+    <label>PrimaryApprover</label>
+    <input  uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.primaryApprover" type="text" class="form-control" placeholder="Select Unit">
+  </div>
+
+  <div class="form-group">
+    <label>SecondaryApprover</label>
+    <input  uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.secondaryApprover"  type="text" class="form-control" placeholder="Select department">
+  </div>
+
+  <div class="btn-group ">
+    <button type="button" class="btn btn-primary " ng-click="save()">Save</button>
+  </div>
+</div>

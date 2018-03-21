@@ -1,0 +1,50 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+
+
+  <div class="container-fluid card " style="padding-bottom:10px;">
+    <div class="row" style="border-bottom: 1px solid #dedede;">
+
+      <div class="col-md-8" style="position:relative;display:block;">
+        <div class="row" style="padding-left:30px;">
+          <h3>{{data.name}}</h3>
+          <span class="fa fa-th-large"><strong> Division: </strong>{{data.division.name}}</span><br>
+          <span class="fa fa-address-book"><strong> Contacts: </strong>{{data.contacts.length}}</span><br>
+
+        </div>
+      </div>
+    </div>
+    <div class="row container-fluid" style="padding-top:20px;height:70px;">
+      <div class="col-md-10">
+        <strong>Mobile:</strong> {{data.mobile}} <br>
+        <strong>Pincode:</strong> {{data.pincode}} <br>
+        <strong>L1:</strong> {{data.l1}} <br>
+      </div>
+      <div class="col-md-2">
+        <div style="padding-right:20px;">
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
+            <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+          </span> <br>
+            <span class="pull-right " style="cursor:pointer;">
+          <i class="fa fa-trash fa-lg " style="margin-top:0px;" mwl-confirm
+            title="Confirm"
+            message="Are you sure?"
+            confirm-text="Yes <i class='fa fa-check'></i>"
+            cancel-text="No"
+            on-confirm="delete(data.pk , index)"
+            confirm-button-type="danger"
+            cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">
+          </i>
+        </span><br>
+            <span class="pull-right" style="cursor:pointer;">
+          <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
+        </span>
+
+          </div>
+          <div class="row">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

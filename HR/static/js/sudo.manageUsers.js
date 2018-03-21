@@ -146,6 +146,14 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
             $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPermissions' , data : permissionsFormData , active : true})
           }
         })(target));
+      }else if(action == 'editDesignation'){
+          u = $users.get(target)
+          // permissionsFormData = {
+          //   appsToAdd : data,
+          //   url : target,
+          // }
+          $scope.addTab({title : 'Edit designation  for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editDesignation' , active : true})
+          $scope.name=u.first_name+' '+u.last_name;
       }
       // for the single select actions
     } else {
@@ -230,5 +238,74 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
        Flash.create('danger', response.status + ' : ' + response.statusText);
     });
   }
+
+   $scope.editDesignation = function(index){
+      // var userData = $scope.tabs[index].data;
+      // dataToSend = {
+      //
+      //
+      // }
+      // if (userData.password != '') {
+      //   dataToSend.password = userData.password
+      // }
+      // $http({method : 'PATCH' , url : userData.url.replace('users' , 'usersAdminMode') , data : dataToSend }).
+      // then(function(response){
+      //    Flash.create('success', response.status + ' : ' + response.statusText);
+      // }, function(response){
+      //    Flash.create('danger', response.status + ' : ' + response.statusText);
+      // });
+    }
+
+    $scope.Reporting = function(query) {
+      // console.log('************',query);
+      console.log("@@@@@@@@@@@@@@");
+          return $http.get('/api/HR/users/?username__contains=' + query).
+      then(function(response) {
+        console.log('@', response.data)
+        return response.data;
+      })
+    };
+
+
+
+
+
+
+
+
+    $scope.save = function() {
+      console.log('entered');
+      var f = $scope.form;
+      var toSend={
+        'reportingTo': f.reportingTo.pk,
+        'primaryApprover': f.primaryApprover.pk,
+        'secondaryApprover': f.secondaryApprover.pk,
+      }
+   console.log('222222222',toSend);
+
+      $scope.me=$users.get('mySelf');
+      $http({
+        method: 'POST',
+        url: '/api/HR/designation/',
+        data: toSend,
+      }).
+      then(function(response) {
+        $scope.form.pk = response.data.pk;
+        Flash.create('success', 'Saved')
+        // $scope.fetchData();
+        //  $scope.$broadcast('forceRefetch',)
+        //    $scope.$broadcast('forcerefresh', response.data);
+        //  $route.reload();
+      })
+    }
+    //
+    // var name=$scope.tabs[index].data;
+    // console.log('@@@@@@@@@@@@@@@@',name);
+
+
+
+
+
+
 
 });

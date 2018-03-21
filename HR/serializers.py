@@ -25,10 +25,21 @@ class rankSerializer(serializers.ModelSerializer):
         fields = ( 'title' , 'category' )
 
 class userDesignationSerializer(serializers.ModelSerializer):
-    rank = rankSerializer(read_only = True, many = False)
     class Meta:
         model = designation
-        fields = ('pk' , 'unitType' , 'domain' , 'rank' , 'unit' , 'department' , 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
+        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
+        print 'ssssssssssssssssssssssssssssss'
+        read_only_fields=('user',)
+        def create(self , validated_data):
+            print 'ssssssssssssssssssssssssssssss'
+            d = designation()
+            d.user=User.objects.get(pk=self.context['request'].user)
+            d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
+            d.primaryApprover=User.objects.get(pk=self.context['request'].data['primaryApprover'])
+            d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
+            d.save()
+            return d
+        #  'unitType' , 'domain' , 'rank' , 'unit' , 'department' ,
 class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:

@@ -36,7 +36,7 @@ class Document(models.Model):
     email = models.CharField(max_length = 35, blank = False)
     docID = models.CharField(max_length = 10 , blank = True)
     app = models.CharField(max_length = 20 , blank = True)
-    
+
     def __str__(self):
         return "%s : %s" %(self.issuedTo , self.description)
 
@@ -129,32 +129,32 @@ class rank(models.Model):
     created = models.DateTimeField(auto_now_add = True)
 
 class designation(models.Model):
-    DOMAIN_CHOICES = (
-        ('Not selected..' , 'Not selected..'),
-        ('Automotive' , 'Automotive'),
-        ('Service' , 'Service'),
-        ('University' , 'University'),
-        ('FMCG' , 'FMCG'),
-        ('Power' , 'Power'),
-        ('Pharmaceuticals' , 'Pharmaceuticals'),
-        ('Manufacturing' , 'Manufacturing'),
-        ('Tele Communications' , 'Tele Communications'),
-    )
-    UNIT_TYPE_CHOICE = (
-        ('Not selected..' , 'Not selected..'),
-        ('Research and Development' , 'Research and Development'),
-        ('Operations' , 'Operations'),
-        ('Management' , 'Management'),
-    )
-
-    """ One more field can be user here
-    """
-    user = models.OneToOneField(User)
-    unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
-    domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
-    unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty
-    department = models.CharField(max_length = 30 , null = True)
-    rank = models.ForeignKey( rank , null = True )
+    # DOMAIN_CHOICES = (
+    #     ('Not selected..' , 'Not selected..'),
+    #     ('Automotive' , 'Automotive'),
+    #     ('Service' , 'Service'),
+    #     ('University' , 'University'),
+    #     ('FMCG' , 'FMCG'),
+    #     ('Power' , 'Power'),
+    #     ('Pharmaceuticals' , 'Pharmaceuticals'),
+    #     ('Manufacturing' , 'Manufacturing'),
+    #     ('Tele Communications' , 'Tele Communications'),
+    # )
+    # UNIT_TYPE_CHOICE = (
+    #     ('Not selected..' , 'Not selected..'),
+    #     ('Research and Development' , 'Research and Development'),
+    #     ('Operations' , 'Operations'),
+    #     ('Management' , 'Management'),
+    # )
+    #
+    # """ One more field can be user here
+    # """
+    user = models.OneToOneField(User, null=False)
+    # unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
+    # domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
+    # unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty
+    # department = models.CharField(max_length = 30 , null = True)
+    # rank = models.ForeignKey( rank , null = True )
     reportingTo = models.ForeignKey(User , related_name = "managing" , null=True)
     primaryApprover = models.ForeignKey(User, related_name = "approving" , null=True)
     secondaryApprover = models.ForeignKey(User , related_name = "alsoApproving" , null=True)

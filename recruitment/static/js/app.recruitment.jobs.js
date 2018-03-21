@@ -12,4 +12,5 @@ app.config(function($stateProvider) {
     })
 });
 app.controller("workforceManagement.recruitment.jobs", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+
 });
