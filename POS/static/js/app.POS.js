@@ -748,9 +748,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
             'inStock': 0,
             'cost':0,
             'logistics':0,
-
-
-            pk: null
+            'serialId':'',
+            'reorderTrashold':0,
+            'pk': null
           }
         }
 
@@ -785,6 +785,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           fd.append('inStock', f.inStock);
           fd.append('cost', f.cost);
           fd.append('logistics', f.logistics);
+          fd.append('serialId', f.serialId);
+          fd.append('reorderTrashold', f.reorderTrashold);
 
 
           console.log(f.displayPicture);

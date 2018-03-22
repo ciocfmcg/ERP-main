@@ -58,25 +58,55 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
 
 })
 
+app.controller("workforceManagement.salary.payslips.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+
+  $scope.data = $scope.tab.data;
+
+  $scope.months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"]
+  //
+  //   $scope.reportData = [];
+  //
+  //   $http({
+  //   method: 'GET',
+  //   url: '/api/payroll/report/?month='+$scope.data.month
+  // }).
+  // then(function(response) {
+  //   $scope.reportData = response.data;
+  //   console.log($scope.reportData);
+  //   // console.log($scope.checkin.pk);
+  // })
+
+  // $scope.yearInView = $scope.data.joiningDate;
+
+})
+
+app.controller("workforceManagement.salary.payslipscard.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+
+  // $scope.data = $scope.tab.data;
+
+  // }
+
+
+
+
+
+
+})
+
 app.controller("workforceManagement.salary.payroll.report", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
   $scope.userSearch = function(query) {
-      return $http.get('/api/HR/userSearch/?username__contains=' + query).
-      then(function(response){
-        return response.data;
-      })
-    };
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
 
   var today = new Date();
   $scope.selectedYear = today.getFullYear();
   $scope.selectedMonth = today.getMonth() + 1 + '';
 
-  // $scope.dynamicPopover = {
-  //   content: 'Payroll Details',
-  //   templateUrl: 'app.payroll.salary.report.popupdetails.html',
-  //   title: 'Employee Details'
-  // };
 
   // $scope.data = $scope.tab.data;
 
@@ -84,7 +114,7 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
 
   $scope.data = []
 
-  $scope.daysInMonth = new Date(parseInt($scope.selectedYear), parseInt($scope.selectedMonth),0).getDate();
+  $scope.daysInMonth = new Date(parseInt($scope.selectedYear), parseInt($scope.selectedMonth), 0).getDate();
 
   $scope.initializeSheet = function() {
 
@@ -94,7 +124,10 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
     }
 
     for (var i = 0; i < toDelete.length; i++) {
-      $http({method : 'DELETE' , url : '/api/payroll/payslip/' + toDelete[i] + '/'}).
+      $http({
+        method: 'DELETE',
+        url: '/api/payroll/payslip/' + toDelete[i] + '/'
+      }).
       then(function(response) {
 
       })
@@ -152,8 +185,14 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
 
   $scope.deffer = function(indx) {
     $scope.report.payslips[indx].deffered = true;
-    if ($scope.report.payslips[indx].payslipID != undefined  ) {
-      $http({method : 'PATCH' , url : '/api/payroll/payslip/' + $scope.report.payslips[indx].payslipID + '/' , data : {deffered : true}}).
+    if ($scope.report.payslips[indx].payslipID != undefined) {
+      $http({
+        method: 'PATCH',
+        url: '/api/payroll/payslip/' + $scope.report.payslips[indx].payslipID + '/',
+        data: {
+          deffered: true
+        }
+      }).
       then(function(response) {
 
       })
@@ -224,13 +263,7 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
         for (var i = 0; i < $scope.report.payslips.length; i++) {
           $scope.report.payslips[i].payslipID = $scope.report.payslips[i].pk;
         }
-        // $scope.data = $scope.report.payslips;
-        //
-        // for (var i = 0; i < $scope.data.length; i++) {
-        //   $scope.data[i].daysInMonth = $scope.daysInMonth;
-        // }
-        //
-        // console.log($scope.data[i].daysInMonth);
+
 
       }
     })
@@ -274,30 +307,37 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
     $scope.fetchOrCreate();
   })
 
-  // $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"];
+
   $scope.years = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030]
+
+
+  $scope.months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"]
+
+
+  // if ($scope.report != undefined){
+  $http({
+    method: 'GET',
+    url: '/api/payroll/report/?month=' + $scope.data
+  }).
+  then(function(response) {
+    $scope.reportData = response.data;
+    // $scope.reportData = [];
+    // console.log('******************', response.data);
+    // // $scope.reportData = response.data;
+    // for (var i = 0; i < response.data.length; i++) {
+    //   $scope.reportData.push(response.data[i]);
+    // }
+
+
+
+  })
 
 
 })
 
-app.controller('workforceManagement.salary.payroll.report.item' , function($scope){
+app.controller('workforceManagement.salary.payroll.report.item', function($scope) {
 
   $scope.months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"]
-
-//   $scope.getStatusColor = function() {
-//   var reportStatus = $scope.report;
-//   if (reportStatus == 'created') {
-//     return 'bg-orange';
-//   }else if (reportStatus == 'submitted') {
-//     return 'bg-black';
-//   }else if (reportStatus == 'approved') {
-//     return 'bg-blue';
-//   }else if (reportStatus == 'processed'){
-//     return 'bg-green';
-//   }else if (reportStatus == 'reconciled'){
-//     return 'bg-green';
-//   }
-// }
 
 });
 
@@ -305,14 +345,6 @@ app.controller('workforceManagement.salary.payroll.report.item' , function($scop
 
 app.controller("workforceManagement.salary", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $aside) {
 
-  //   app.filter('month',['$filter',function($filter){
-  //     return function(month) {
-  //       return $filter("date")(new Date(),'MMMM');
-  //     }
-  // }]);
-
-  // var today = new Date();
-  // $scope.month = today.getMonth() + 1 + '';
 
   $scope.data = {
     tableData: [],
@@ -339,13 +371,6 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
   $scope.tableActionAll = function(target, action, mode) {
     for (var i = 0; i < $scope.data.allTableData.length; i++) {
       if ($scope.data.allTableData[i].pk == parseInt(target)) {
-        // if (action == 'edit') {
-        //   var title = 'Edit payroll :';
-        //   var appType = 'payrollEditor';
-        // } else if (action == 'explore') {
-        //   var title = 'Details :';
-        //   var appType = 'payrollExplorer';
-        // }
         if (action == 'explore') {
           var title = 'payroll :';
           var appType = 'payrollExplorer';
@@ -369,10 +394,6 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
           title: title + $scope.data.allTableData[i].user,
           cancel: true,
           app: appType,
-          // data: {
-          //   pk: target,
-          //   index: i
-          // },
           data: $scope.data.allTableData[i],
           active: true
         })
@@ -419,13 +440,6 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
     } else {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)) {
-          // if (action == 'edit') {
-          //   var title = 'Edit payroll :';
-          //   var appType = 'payrollEditor';
-          // } else if (action == 'explore') {
-          //   var title = 'Details :';
-          //   var appType = 'payrollExplorer';
-          // }
           if (action == 'details') {
             var title = 'Report :';
             var appType = 'reportExplorer';
@@ -449,10 +463,6 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
             title: title + $scope.data.tableData[i].pk,
             cancel: true,
             app: appType,
-            // data: {
-            //   pk: target,
-            //   index: i
-            // },
             data: $scope.data.tableData[i],
             active: true
           })
@@ -461,6 +471,7 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
     }
 
   }
+
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
@@ -485,10 +496,7 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
     }
   }
 
-  // $scope.cancel = function() {
-  //   console.log('eeeeeeeeeeeeeeeeeeeeee');
-  //   $uibModalInstance.dismiss();
-  // };
+
 
 
 

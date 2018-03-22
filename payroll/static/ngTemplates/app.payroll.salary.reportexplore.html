@@ -1,0 +1,12 @@
+<div class="col-md-4 " style="margin-bottom:10px;" ng-controller="workforceManagement.salary.payroll.report">
+  <div class="card" style="padding:10px;min-height:150px;" ng-repeat="a in reportData">
+    <h4>{{a.user |  getName}}</h4>
+    <div>
+      <hr>
+      <div class="pull-left">
+        <span>{{months[a.month]}}</span>
+      </div>
+    </div>
+    <a style="position:absolute;right:20px;bottom:10px;cursor:pointer;" target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}"><i class="fa fa-download fa-3x" ></i></a>
+  </div>
+</div>

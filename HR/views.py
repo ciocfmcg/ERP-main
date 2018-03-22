@@ -208,6 +208,18 @@ def team(request):
 def career(request):
     return render(request,"career.html")
 
+def policy(request):
+    return render(request,"policy.html")
+
+def terms(request):
+    return render(request,"terms.html")
+
+def refund(request):
+    return render(request,"refund.html")
+
+def contacts(request):
+    return render(request,"contacts.html")
+
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):
     u = request.user

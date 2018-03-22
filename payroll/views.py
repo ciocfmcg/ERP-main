@@ -23,6 +23,35 @@ import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
 # Create your views here.
+from reportlab import *
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm, mm
+from reportlab.lib import colors , utils
+from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
+from PIL import Image
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
+from reportlab.graphics import barcode , renderPDF
+from reportlab.graphics.shapes import *
+from reportlab.graphics.barcode.qr import QrCodeWidget
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
+from django.http import HttpResponse
+import datetime
+import json
+import pytz
+import requests
+from django.template.loader import render_to_string, get_template
+from django.core.mail import send_mail, EmailMessage
+from reportlab.lib.pagesizes import letter,A5,A4,A3
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
+from reportlab.lib.enums import TA_LEFT, TA_CENTER
+from reportlab.lib.colors import *
+from reportlab.lib.units import inch, cm
+import calendar
+# import datetime
+from forex_python.converter import CurrencyCodes
 
 
 class payslipViewSet(viewsets.ModelViewSet):

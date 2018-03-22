@@ -4,7 +4,9 @@
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 
-<nav class="navbar navbar-default navbar-fixed-top">
+
+
+<nav class="navbar navbar-default navbar-shrink bg-blue navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header page-scroll">
@@ -16,6 +18,7 @@
             </button>
       <a class="navbar-brand paFge-scroll" href="/">CIOC</a>
     </div>
+
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
@@ -35,12 +38,18 @@
           <a class="page-scroll" href="/blog/">Blog</a>
         </li>
         <li>
+        </li>
+        <li>
           <a class="page-scroll" href="/news/">News & Media</a>
         </li>
+        <!-- <li>
+                    <a class="page-scroll" href="#about">About</a>
+                </li> -->
 
-        <li>
-          <a class="page-scroll" href="/career/">Career</a>
-        </li>
+
+        <!-- <li>
+          <a class="page-scroll" href="/career">Career</a>
+        </li> -->
         <li>
           <a class="page-scroll" href="/login">Login</a>
         </li>
@@ -56,156 +65,145 @@
 {% block content %}
 <div ng-app="app" ng-controller="main">
   {% verbatim %}
-  <!--/chatbox-->
-  <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
 
-    <div class="row" style="border:1px solid #315f82;margin:0px;background-color: #174b6d;">
-      <div class="col-md-10">
-        <span ng-if="data.started" style="font-size:15px;color:white;"><i class="fa fa-user-o" ></i>{{name}}</span>
-        <span ng-if="!data.started" style="font-size:15px;color:white;cursor:pointer;" ng-click="data.minimized = false;"><i class="fa  fa-envelope" ></i> Chat with our support team</span>
-      </div>
-      <div class="col-md-2">
-        <i class="fa fa-angle-{{data.minimized ? 'up':'down'}} pull-right" style="color:white;margin-top:4px;cursor:pointer;" ng-click="data.minimized = !data.minimized"></i>
-      </div>
-    </div>
-    <div class="row" style="border:1px solid #174b6d;margin: 0px;padding:0px;background-color:#e1e5e8;">
-      <div class="container-fluid" ng-if="!data.started && !data.minimized" style="padding:20px;">
-        <form name="myForm">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" name="name" class="form-control" ng-model="data.name" required>
-            <div ng-show="myForm.name.$error.required && myForm.name.$touched" class="text-danger">Required!</div>
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" class="form-control" name="email" ng-model="data.email" required>
-            <div ng-show="myForm.email.$error.email" class="text-danger">Invalid email!</div>
-            <div ng-show="myForm.email.$error.required && myForm.email.$touched" class="text-danger">Required!</div>
-          </div>
-          <button ng-click="authentication()" type="button" class="btn btn-primary">Start</button>
-        </form>
-      </div>
-      <div ng-if="data.started" style="height:{{data.minimized? '0':'300' }}px; overflow-y:auto;" class="container-fluid">
-        <div class="row" ng-repeat="message in messages" style="padding:0px;">
-          <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-            <p style=>{{message.msg}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row" style="border:1px solid #315f82;margin:0px;background-color:#e1e5e8;border-top:none;" ng-if="!data.minimized && data.started">
-      <!-- <div class="col-md-11" style="margin-top: 8px;"> -->
-      <!-- <div class="text-bar"> -->
-      <div class="col-md-9" style="padding:0px;">
-        <input type="text" class="form-control" ng-model="data.msgText" placeholder="Message" style="border-radius:0px;"></div>
-      <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paper-plane-o" ng-click="send()" style="cursor:pointer"></i></div>
-      <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paperclip" style="cursor:pointer"></i></div>
-    </div>
-  </div>
+
+  <!--/chatbox-->
+
+
+
+
   {% endverbatim %}
   <!-- Services Section -->
-  <div class="body" >
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;" >
-      <section id="careerservice">
-        <div class="container-fluid" style="padding:0px;">
-          <div class="career-media">
-            <span class="pull-right" style="font-size: 65px;color: white;margin-right: 20px;">Career</span>
-          </div>
-        </div>
-      </section>
-      <section style="padding: 0px 0;">
-        <div class="container-fluid" style="background-color:#fff;padding:20px;">
-          <div class="row">
-            <div class="col-md-12">
-              <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p><br><br>
-              <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
-            </div>
-          </div>
-          <div class="row" >
-            <div class="col-md-12">
-              <div class="job-header">
-                <h5 style="text-transform:uppercase;color:rgb(16, 68, 106);">bangalore</h5>
-                <ul class="row table-header hidden-xs" style="list-style-type:none;">
-                  <li class="col-md-3">Role</li>
-                  <li class="col-md-3">Funtional Area</li>
-                  <li class="col-md-3">Experience</li>
-                  <li class="col-md-3"></li>
-                </ul>
-              </div>
-              <div class="job-section" style="margin-top:20px">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">Backend Developer</li>
-                  <li class="col-md-3">Web Application Development</li>
-                  <li class="col-md-3">0-1 years</li>
-                </ul>
-              </div>
-              <div class="job-section" style="margin-top:20px">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">Android Developer</li>
-                  <li class="col-md-3">Web Application Development</li>
-                  <li class="col-md-3">0-1 years</li>
+  <div class="body">
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
 
-                </ul>
-              </div>
-              <!-- <div id="demo2" class="collapse">
-                <div class="row">
-                  <div class="col-md-12" style="margin-top:30px">
-                    <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
-                  </div>
-                </div>
-                <div class="row" >
-                  <div class="col-md-12 text-right" style="margin-bottom:20px;margin-left: -20px;">
-                    <button class="btn btn-primary">Apply</button>
-                  </div>
-                </div>
-              </div> -->
-              <div class="job-section" style="margin-top:20px">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">Software Developer Intern(Frontend,Backend,Andriod)</li>
-                  <li class="col-md-3">Web Application Development</li>
-                  <li class="col-md-3">0-1 years</li>
-
-                </ul>
-              </div>
-      
-              <div class="row" style="margin-top:20px">
-                <div class="col-md-12">
-                  <p>We're aggressively looking out for software engineers and interns. If you are looking for a fresher job in Bangalore or internship  in Bangalore please mail your resume and cover letter to <strong>jobs@cioc.in.</strong></p>
-                </div>
+        <section id="contact" style="background-image: url({% static 'images/map-image.png' %})">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Contact Us</h2>
+                <h3 class="section-subheading text-muted">Get in touch to know how we can colaborate together.</h3>
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="container-fluid">
+                  <p style="color:white;font-size:20px">We are just one email/call away from you.
+                    You are most welcome to visit one of our offices. We would be very happy to meet you.
+                  </p>
+                  <div class="col-lg-12" style="padding:10px">
+                    <span style="color:white;font-size:28px">Head Office: Bangalore</span>
+                    <img src="/static/images/bottom-border.png" alt="">
+                  </div>
+                  <div class="container-fluid" style="padding:10px">
+                    <div class="row">
+                      <div class="col-md-1">
+                        <span style="color:white;font-size:25px"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                      </div>
+                      <div class="col-md-7">
+                        <span style="color:white;font-size:15px">4th Floor, Venkateshwara Heritage,Kudlu Hosa Road, Opp Sai Purna Premium Apartment,</span><br>
+                        <span style="color:white;font-size:15px">Sai Meadows Kudlu,Bengaluru,</span><br>
+                        <span style="color:white;font-size:15px">Karnataka 560068</span>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="container-fluid" style="padding:10px">
+                      <span style="text:bold;color:white;font-size:25px">For Related Queries</span><br>
+                      <img src="/static/images/bottom-border.png" alt="">
+                    </div>
+                    <div class="container-fluid" style="padding:10px">
+                      <div class="row">
+                        <div class="col-md-1">
+                          <span style="color:white;font-size:25px"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="col-md-7">
+                          <span style="color:white;font-size:20px">7001448033</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-1">
+                          <span style="color:white;font-size:25px"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="col-md-7">
+                          <span style="color:white;font-size:20px">info@cioc.co.in</span>
+                        </div>
+                      </div>
+                      <div class="row" style="padding:10px">
+                        <div class="col-md-12">
+                          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.3496240573213!2d77.65382111421069!3d12.885225720255487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1355d65f4703%3A0x85053037befdb9b6!2sCIOC+FMCG+Pvt+Ltd!5e0!3m2!1sen!2sin!4v1521715410797" width="500" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post">
+                  {% csrf_token %}
+                  <!-- <div class="row"> -->
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Name *" name="name" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Your Email *" name="email" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="tel" class="form-control" placeholder="Your Phone *" name="phone" required>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <textarea class="form-control" placeholder="Your Message *" id="message" name="comments"></textarea>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-12 text-center" style="margin-top: 105px;">
+                      <button type="submit" class="btn btn-xl">Send Message</button>
+                    </div>
+                  <!-- </div> -->
+                </form>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+
+
 
       {% endblock %} {% block footer %}
-      <footer style="background-color: #eeeeee;">
+      <footer>
         <div class="container">
           <div class="row">
             <div class="col-md-4">
               <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
               <ul class="list-inline social-buttons">
+                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li> -->
                 <li><a href="#"><i class="fa fa-facebook"></i></a>
                 </li>
                 <li><a href="#"><i class="fa fa-linkedin"></i></a>
                 </li>
               </ul>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <ul class="list-inline quicklinks">
-                <li><a href="#">Privacy Policy</a>
+                <li><a href="/policy/">Privacy Policy</a>
                 </li>
-                <li><a href="#">Terms of Use</a>
+                <li><a href="/terms/">Terms of Use</a>
+                </li>
+                <li><a href="/refund/">Refund and Cancellation Policy </a>
                 </li>
               </ul>
             </div>
           </div>
         </div>
       </footer>
+
       <!-- Portfolio Modals -->
       <!-- Use the modals below to showcase details about your portfolio projects! -->
+
       <!-- Portfolio Modal 1 -->
       <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -238,6 +236,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 2 -->
       <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -262,6 +261,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 3 -->
       <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -286,6 +286,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 4 -->
       <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -313,6 +314,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 5 -->
       <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -340,6 +342,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 6 -->
       <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -370,14 +373,18 @@
     </div>
   </div>
 </div>
+
+
+
+
 {% endblock %} {% block specific_js %}
 <script src="{% static 'js/jquery.easing.min.js' %}"></script>
 <script src="{% static 'js/classie.js' %}"></script>
-<script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
+<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
 <script src="{% static 'js/agency.js' %}"></script>
-<script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
 <script src="{% static 'js/angular.min.js' %}"></script>
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
 <script src="{% static 'js/app.homepage.js' %}"></script>
+
 {% endblock %}

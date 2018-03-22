@@ -51,6 +51,8 @@ class Product(models.Model):
     inStock = models.PositiveIntegerField(default = 0)
     cost = models.PositiveIntegerField(default= 0)
     logistics = models.PositiveIntegerField(default = 0)
+    serialId = models.CharField(max_length = 50, null=True)
+    reorderTrashold = models.PositiveIntegerField(default = 0)
 
 PAYMENT_CHOICES = (
     ('card' , 'card'),

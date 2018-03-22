@@ -4,7 +4,7 @@
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header page-scroll">
@@ -14,17 +14,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-      <a class="navbar-brand paFge-scroll" href="/">CIOC</a>
+      <a class="navbar-brand paFge-scroll" href="#page-top">CIOC</a>
     </div>
+
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
+
         <li>
-          <a class="page-scroll" href="#services">services</a>
+          <a class="page-scroll" href="#services">Services</a>
         </li>
         <li>
           <a class="page-scroll" href="#portfolio">Portfolio</a>
         </li>
+
         <li>
           <a class="page-scroll" href="#team">Team</a>
         </li>
@@ -32,14 +35,7 @@
           <a class="page-scroll" href="#contact">Contact</a>
         </li>
         <li>
-          <a class="page-scroll" href="/blog/">Blog</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/news/">News & Media</a>
-        </li>
-
-        <li>
-          <a class="page-scroll" href="/career/">Career</a>
+          <a class="page-scroll" href="/career">Career</a>
         </li>
         <li>
           <a class="page-scroll" href="/login">Login</a>
@@ -56,19 +52,23 @@
 {% block content %}
 <div ng-app="app" ng-controller="main">
   {% verbatim %}
-  <!--/chatbox-->
+
   <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
 
     <div class="row" style="border:1px solid #315f82;margin:0px;background-color: #174b6d;">
       <div class="col-md-10">
         <span ng-if="data.started" style="font-size:15px;color:white;"><i class="fa fa-user-o" ></i>{{name}}</span>
         <span ng-if="!data.started" style="font-size:15px;color:white;cursor:pointer;" ng-click="data.minimized = false;"><i class="fa  fa-envelope" ></i> Chat with our support team</span>
+
+
       </div>
       <div class="col-md-2">
         <i class="fa fa-angle-{{data.minimized ? 'up':'down'}} pull-right" style="color:white;margin-top:4px;cursor:pointer;" ng-click="data.minimized = !data.minimized"></i>
       </div>
     </div>
     <div class="row" style="border:1px solid #174b6d;margin: 0px;padding:0px;background-color:#e1e5e8;">
+      <!-- <div class="col-md-12" style="background-color:#e1e5e8;"> -->
+
       <div class="container-fluid" ng-if="!data.started && !data.minimized" style="padding:20px;">
         <form name="myForm">
           <div class="form-group">
@@ -76,22 +76,31 @@
             <input type="text" name="name" class="form-control" ng-model="data.name" required>
             <div ng-show="myForm.name.$error.required && myForm.name.$touched" class="text-danger">Required!</div>
           </div>
+
           <div class="form-group">
             <label>Email</label>
             <input type="email" class="form-control" name="email" ng-model="data.email" required>
             <div ng-show="myForm.email.$error.email" class="text-danger">Invalid email!</div>
             <div ng-show="myForm.email.$error.required && myForm.email.$touched" class="text-danger">Required!</div>
           </div>
+
           <button ng-click="authentication()" type="button" class="btn btn-primary">Start</button>
+
         </form>
       </div>
+
+
       <div ng-if="data.started" style="height:{{data.minimized? '0':'300' }}px; overflow-y:auto;" class="container-fluid">
+
+
         <div class="row" ng-repeat="message in messages" style="padding:0px;">
           <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
             <p style=>{{message.msg}}</p>
           </div>
+
         </div>
       </div>
+
     </div>
     <div class="row" style="border:1px solid #315f82;margin:0px;background-color:#e1e5e8;border-top:none;" ng-if="!data.minimized && data.started">
       <!-- <div class="col-md-11" style="margin-top: 8px;"> -->
@@ -100,83 +109,115 @@
         <input type="text" class="form-control" ng-model="data.msgText" placeholder="Message" style="border-radius:0px;"></div>
       <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paper-plane-o" ng-click="send()" style="cursor:pointer"></i></div>
       <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paperclip" style="cursor:pointer"></i></div>
+
     </div>
   </div>
+
+
+
   {% endverbatim %}
   <!-- Services Section -->
-  <div class="body" >
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;" >
-      <section id="careerservice">
-        <div class="container-fluid" style="padding:0px;">
-          <div class="career-media">
-            <span class="pull-right" style="font-size: 65px;color: white;margin-right: 20px;">Career</span>
-          </div>
-        </div>
-      </section>
-      <section style="padding: 0px 0;">
-        <div class="container-fluid" style="background-color:#fff;padding:20px;">
+  <div class="body">
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+      <section id="contact" style="background-color:white">
+        <div class="container">
           <div class="row">
-            <div class="col-md-12">
-              <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p><br><br>
-              <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
+            <div class="col-md-6" style="background-color:#0b1859;padding:15px;height: 550px;">
+              <div class="row">
+                <div class="col-lg-12 text-center" style="margin-bottom:40px;">
+                  <h2 class="section-heading" style="color: #fff;margin-bottom:0px">Login</h2>
+                  <img src="/static/images/bottom-border.png" alt="">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12">
+                  <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post" style="padding-left: 50px;padding-right: 50px;">
+                    {% csrf_token %}
+                    <div class="row" style="margin-bottom:15px;">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-1">
+                            <span><i class="fa fa-user" style="margin-top: 45px;font-size: 30px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11">
+                            <div class="form-group">
+                              <input type="text" class="form-control" style="border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(11, 24, 89, 0.1);padding-bottom: 0px;margin-top: 30px;background-color:#0b1859;color:#fff;padding-left:0px"
+                                required/>
+                              <span class="floating-label">First Name *</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-1">
+                            <span><i class="fa fa-unlock-alt" style="margin-top: 45px;font-size: 30px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11">
+                            <div class="form-group">
+                              <input type="password" class="form-control" style="border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(11, 24, 89, 0.1);padding-bottom: 0px;margin-top: 30px;background-color:#0b1859;color:#fff;padding-left:0px"
+                                required/>
+                              <span class="floating-label">Password *</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-12 text-center">
+                      <button type="submit" class="btn btn-xl">Submit</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="row" >
-            <div class="col-md-12">
-              <div class="job-header">
-                <h5 style="text-transform:uppercase;color:rgb(16, 68, 106);">bangalore</h5>
-                <ul class="row table-header hidden-xs" style="list-style-type:none;">
-                  <li class="col-md-3">Role</li>
-                  <li class="col-md-3">Funtional Area</li>
-                  <li class="col-md-3">Experience</li>
-                  <li class="col-md-3"></li>
-                </ul>
-              </div>
-              <div class="job-section" style="margin-top:20px">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">Backend Developer</li>
-                  <li class="col-md-3">Web Application Development</li>
-                  <li class="col-md-3">0-1 years</li>
-                </ul>
-              </div>
-              <div class="job-section" style="margin-top:20px">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">Android Developer</li>
-                  <li class="col-md-3">Web Application Development</li>
-                  <li class="col-md-3">0-1 years</li>
 
-                </ul>
-              </div>
-              <!-- <div id="demo2" class="collapse">
+            <div class="col-md-6" style="padding:0px">
+              <div class="new-user">
                 <div class="row">
-                  <div class="col-md-12" style="margin-top:30px">
-                    <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
+                  <div class="col-lg-12 text-center" style="margin-bottom:60px;margin-top:20px">
+                    <h2 class="section-heading" style="color: #fff;margin-bottom:0px">New User</h2>
+                    <img src="/static/images/bottom-border.png" alt="">
                   </div>
                 </div>
-                <div class="row" >
-                  <div class="col-md-12 text-right" style="margin-bottom:20px;margin-left: -20px;">
-                    <button class="btn btn-primary">Apply</button>
-                  </div>
-                </div>
-              </div> -->
-              <div class="job-section" style="margin-top:20px">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">Software Developer Intern(Frontend,Backend,Andriod)</li>
-                  <li class="col-md-3">Web Application Development</li>
-                  <li class="col-md-3">0-1 years</li>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post">
+                      {% csrf_token %}
+                      <div class="row" style="margin-bottom:15px;">
+                        <div class="col-md-12">
+                          <div class="col-lg-12 text-center">
+                            <button type="submit" class="btn btn-xl2">Submit</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="col-lg-12 text-center">
+                            <button type="submit" class="btn btn-xl3">Submit</button>
+                          </div>
+                        </div>
+                      </div>
 
-                </ul>
-              </div>
-      
-              <div class="row" style="margin-top:20px">
-                <div class="col-md-12">
-                  <p>We're aggressively looking out for software engineers and interns. If you are looking for a fresher job in Bangalore or internship  in Bangalore please mail your resume and cover letter to <strong>jobs@cioc.in.</strong></p>
+                      <div class="clearfix"></div>
+
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
+
       </section>
+      <!-- Portfolio Grid Section -->
+
+
+
+
 
       {% endblock %} {% block footer %}
       <footer style="background-color: #eeeeee;">
@@ -187,6 +228,8 @@
             </div>
             <div class="col-md-4">
               <ul class="list-inline social-buttons">
+                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li> -->
                 <li><a href="#"><i class="fa fa-facebook"></i></a>
                 </li>
                 <li><a href="#"><i class="fa fa-linkedin"></i></a>
@@ -204,8 +247,10 @@
           </div>
         </div>
       </footer>
+
       <!-- Portfolio Modals -->
       <!-- Use the modals below to showcase details about your portfolio projects! -->
+
       <!-- Portfolio Modal 1 -->
       <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -238,6 +283,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 2 -->
       <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -262,6 +308,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 3 -->
       <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -286,6 +333,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 4 -->
       <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -313,6 +361,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 5 -->
       <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -340,6 +389,7 @@
           </div>
         </div>
       </div>
+
       <!-- Portfolio Modal 6 -->
       <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -370,14 +420,18 @@
     </div>
   </div>
 </div>
+
+
+
+
 {% endblock %} {% block specific_js %}
 <script src="{% static 'js/jquery.easing.min.js' %}"></script>
 <script src="{% static 'js/classie.js' %}"></script>
 <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
 <script src="{% static 'js/agency.js' %}"></script>
-<script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
 <script src="{% static 'js/angular.min.js' %}"></script>
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
 <script src="{% static 'js/app.homepage.js' %}"></script>
+
 {% endblock %}
