@@ -9,7 +9,7 @@ from HR.views import loginView , logoutView , home , registerView , tokenAuthent
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 urlpatterns = [
-    url(r'^$', root , name ='root'),
+    url(r'^$', index , name ='root'),
     url(r"^ecommerce/", ecommerceHome , name = 'ecommerce'), # public  ecommerce app
     url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),

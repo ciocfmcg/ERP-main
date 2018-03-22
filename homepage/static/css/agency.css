@@ -86,7 +86,7 @@ a {
 }
 
 a:hover, a:focus, a:active, a.active {
-  color: #009099;
+  color: #077d85;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -251,7 +251,7 @@ color:#53a309;
 
 .navbar-default .nav li a:hover, .navbar-default .nav li a:focus {
   outline: 0;
-  color: #077d85;
+  color: #fff;
 }
 
 .navbar-default .navbar-nav>.active>a {
