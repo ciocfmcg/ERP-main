@@ -5,7 +5,25 @@
 
   <div class="modal-body">
     <div class="row">
-      <div class="col-md-6">
+
+      <div class="col-md-3">
+        <div class="row" ng-repeat="data in checkinDetails" style="margin-left:2px;padding:5px 0px">
+          <div class="col-md-3">
+            <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
+          </div>
+          <div class="col-md-9">
+            <b>{{data.name}}</b>
+          </div>
+        </div><br>
+        <p align="center"><b>Selected Space </b></p><hr>
+        <div class="row" ng-repeat="data in selectedCheckinArea" style="margin-left:2px;padding:5px 0px">
+          <div class="col-md-3">
+            <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
+          </div>
+          <div class="col-md-9">
+            <b>{{data.name}}</b>
+          </div>
+        </div>
         <div class="form-group">
           <label>Item Description</label>
           <textarea type="text" class="form-control" ng-model="checkin.description"></textarea>
@@ -33,6 +51,17 @@
           <label>Quantity</label>
           <input type="float" class="form-control" ng-model="checkin.qty">
         </div>
+        <div class="form-group">
+          <label>AWB</label>
+          <input type="file" name="awb" file-model="checkin.awb">
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <div class="form-group" style="margin-left=100px">
+          <canvas id="canvas{{contractId}}" height=600 width=600 ></canvas>
+        </div>
+
       </div>
     </div>
 

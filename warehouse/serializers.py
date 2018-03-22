@@ -109,13 +109,15 @@ class CheckinsSerializer(serializers.ModelSerializer):
     contract=ContractSerializer(many=False,read_only=True)
     class Meta:
         model = Checkin
-        fields = ('pk','created' ,'updated' , 'contract' , 'description' , 'height' , 'width','length','weight','checkedin','qty')
+        fields = ('pk','created' ,'updated' , 'contract' , 'description' , 'height' , 'width','length','weight','checkedin','qty' , 'place' , 'awb')
         # read_only_fields = ('contract')
     def create(self , validated_data):
+        print 'enttttttttttttttt'
         c=Checkin(**validated_data)
-        c.user=self.context['request'].user
+        # c.user=self.context['request'].user
         c.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
         c.save()
+        print 'enddddddddddddddddddd'
         return c
 
 class CheckoutSerializer(serializers.ModelSerializer):

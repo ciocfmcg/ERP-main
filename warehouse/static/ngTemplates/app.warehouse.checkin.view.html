@@ -1,0 +1,37 @@
+<div class="row" style="margin-top:20px;margin-left:10px">
+  <div class="col-md-3">
+    <div class="row" ng-repeat="data in checkinDetails" style="margin-left:2px;padding:5px 0px">
+      <div class="col-md-3">
+        <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
+      </div>
+      <div class="col-md-9">
+        <b>{{data.name}}</b>
+      </div>
+    </div><br>
+    <p align="center"><b>Selected Space </b></p>
+    <div class="row" ng-repeat="da in CheckinArea" style="margin-left:2px;padding:5px 0px">
+      <div class="col-md-3">
+        <div style="border:1px solid {{da.color}} ; height:30px;width:40px ;background-color:{{da.color}}"></div>
+      </div>
+      <div class="col-md-9">
+        <b>{{da.name}}</b>
+      </div>
+    </div><br>
+    <div class="row" ng-repeat="d in selectedCheckinArea">
+      <p align="center"><b>This Checkin Space </b></p>
+      <div class="row" style="border:2px solid black;margin-left:2px;padding:5px 0px">        
+        <div class="col-md-3">
+          <div style="border:1px solid {{d.color}} ; height:30px;width:40px ;background-color:{{d.color}}"></div>
+        </div>
+        <div class="col-md-9">
+          <b>{{d.name}}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="form-group" style="margin-left=100px">
+      <canvas id="canvas{{contractId}}" height=600 width=600 ></canvas>
+    </div>
+  </div>
+</div>

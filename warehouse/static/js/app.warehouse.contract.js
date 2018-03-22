@@ -592,12 +592,15 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         }
         console.log($scope.selectingAreas, '.....');
         console.log($scope.arrays[i].array.occupancy);
+
+
+      }
+      for (var i = 0; i < $scope.arrays.length; i++) {
         if (JSON.stringify($scope.arrays[i].array.occupancy) == JSON.stringify($scope.selectingAreas)) {
           console.log('equallllll');
           // JSON.stringify($scope.selectingAreas)
           $scope.arrays.splice(i, 1);
         }
-
       }
       for (var i = 0; i < $scope.arrays.length; i++) {
         $scope.selectedContractColour = $scope.getRandomColor();
@@ -712,6 +715,8 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
               console.log('selecting');
               $scope.selectingAreas.splice(j, 1);
               fill('white', gx, gy);
+              $scope.canvasData = canvas;
+              $scope.dataURL = $scope.canvasData.toDataURL();
               return
             }
           }
@@ -722,6 +727,8 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
             row: gx,
             col: gy
           });
+          $scope.canvasData = canvas;
+          $scope.dataURL = $scope.canvasData.toDataURL();
 
 
           // console.log('66666666666',$scope.selectedArea);
@@ -740,7 +747,6 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         }
 
       }
-      console.log($scope.selectingAreas);
       $scope.canvasData = canvas;
       $scope.dataURL = $scope.canvasData.toDataURL();
 
@@ -773,6 +779,9 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     $scope.dates.push(i.toString());
   }
   $scope.addDate = function(date) {
+    if ($scope.contract.billingDates.indexOf(date)>=0) {
+      return
+    }
     $scope.contract.billingDates += $scope.contract.billingDates == '' ? date : ',' + date;
   }
   if ($scope.tab == undefined || $scope.tab.data == undefined) {

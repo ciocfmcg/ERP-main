@@ -13,6 +13,8 @@ def getWareHouseContractUploadPath(instance , filename ):
     return 'warehouse/contracts/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 def getWareHouseDocUploadPath(instance , filename ):
     return 'warehouse/docs/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+def checkinUploadPath(instance , filename ):
+    return 'warehouse/checkin/%s_%s_%s' % (str(time()).replace('.', '_'), instance.description, filename)
 
 
 
@@ -104,6 +106,8 @@ class Checkin(models.Model):
     weight = models.PositiveIntegerField(null = True)
     checkedin = models.BooleanField(default = True)
     qty = models.FloatField(null = True)
+    place = models.CharField(max_length = 50000, null = True)
+    awb = models.FileField(upload_to=checkinUploadPath, null=True)
 
 CHECKOUT_TYPE_CHOICES = (
     ('qty', 'qty'),
