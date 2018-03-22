@@ -1,0 +1,62 @@
+<div class="container-fluid" ng-controller="workforceManagement.organization.units.form">
+  <div class="col-md-6">
+    <div>
+      <label>Division</label>
+      <input uib-typeahead="div as div.name for div in divisionSearch($viewValue)" ng-model="form.division" type="text" class="form-control" placeholder="Add division name">
+    </div>
+    <br>
+
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" class="form-control" ng-model="form.name" placeholder="enter name">
+    </div>
+
+    <div class="form-group">
+      <label>Address</label>
+      <input type="text " class="form-control" ng-model="form.address" placeholder="enter address">
+    </div>
+
+    <div class="form-group">
+      <label>Pincode</label>
+      <input type="number" class="form-control" ng-model="form.pincode" placeholder="enter pincode">
+    </div>
+
+
+    <div class="form-group">
+      <label>L1</label>
+      <input type="text " class="form-control" ng-model="form.l1" placeholder="enter L1">
+    </div>
+
+    <div class="form-group">
+      <label>L2</label>
+      <input type="text " class="form-control" ng-model="form.l2" placeholder="enter L2">
+    </div>
+
+    <div class="form-group">
+      <label>Mobile</label>
+      <input type="number" class="form-control" ng-model="form.mobile" placeholder="enter mobile number">
+    </div>
+
+    <div class="form-group">
+      <label>Telephone</label>
+      <input type="number" class="form-control" ng-model="form.telephone" placeholder="enter telephone number">
+    </div>
+
+    <div class="form-group">
+      <label>FAX</label>
+      <input type="number" class="form-control" ng-model="form.fax" placeholder="enter fax">
+    </div>
+
+    <users-Field data="form.contacts" url="/api/HR/userSearch/" col="4" label="Contacts"></users-Field>
+    
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-default" ng-click="resetForm()">
+              Reset
+            </button>
+      <button type="button" class="btn btn-primary pull-right" ng-click="save()">Save</button>
+    </div>
+
+
+  </div>
+</div>
+</div>

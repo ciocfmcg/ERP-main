@@ -344,8 +344,8 @@ app.controller('projectManagement.taskBoard.default' , function($scope , $http ,
     ],
     drills : [
       {icon : 'fa fa-bars' , name : 'includeWhereIam' , btnClass : 'default' , options : [
-        {key : 'follower', value : false},
-        {key : 'assignee', value : false},
+        {key : 'follower', value : true},
+        {key : 'assignee', value : true},
         {key : 'responsible', value : true},
       ]}
     ]

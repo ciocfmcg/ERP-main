@@ -1,3 +1,4 @@
+
 from django.contrib.auth.models import User , Group
 from django.contrib.auth import authenticate
 from rest_framework import serializers
@@ -16,7 +17,7 @@ class userSearchSerializer(serializers.ModelSerializer):
     profile = userProfileLiteSerializer(many=False , read_only=True)
     class Meta:
         model = User
-        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation')
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation' )
 
 
 class rankSerializer(serializers.ModelSerializer):
@@ -25,10 +26,21 @@ class rankSerializer(serializers.ModelSerializer):
         fields = ( 'title' , 'category' )
 
 class userDesignationSerializer(serializers.ModelSerializer):
-    rank = rankSerializer(read_only = True, many = False)
     class Meta:
         model = designation
-        fields = ('pk' , 'unitType' , 'domain' , 'rank' , 'unit' , 'department' , 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
+        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
+
+        read_only_fields=('user',)
+        def create(self , validated_data):
+        
+            d = designation()
+            d.user=User.objects.get(pk=self.context['request'].user)
+            d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
+            d.primaryApprover=User.objects.get(pk=self.context['request'].data['primaryApprover'])
+            d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
+            d.save()
+            return d
+        #  'unitType' , 'domain' , 'rank' , 'unit' , 'department' ,
 class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:
@@ -46,12 +58,32 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
         'note1' , 'note2' , 'note3')
 
 
+class payrollSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = payroll
+        fields = ('pk','user','created','updated','hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
+
+    def update(self ,instance, validated_data):
+        for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        return instance
+
+class payrollLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = payroll
+        fields = ('pk','user', 'al','ml','adHocLeaves','joiningDate','off')
+
 class userSerializer(serializers.ModelSerializer):
     profile = userProfileSerializer(many=False , read_only=True)
+    payroll = payrollLiteSerializer(many = False , read_only = True)
     class Meta:
         model = User
-        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'social')
-        read_only_fields = ('designation' , 'profile' , 'settings' ,'social' )
+        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'social', 'payroll')
+        read_only_fields = ('designation' , 'profile' , 'settings' ,'social', 'payroll' )
         extra_kwargs = {'password': {'write_only': True} }
     def create(self , validated_data):
         raise PermissionDenied(detail=None)

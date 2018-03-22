@@ -1,3 +1,5 @@
+
+
 <div class="modal-header">
   <span ng-if="mode == 'new'">Create a new Product</span>
   <span ng-if="mode == 'edit'">Edit product : {{product.name}}</span>
@@ -24,7 +26,7 @@
       </div>
 
       <div class="form-group">
-        <label>Serial No.</label>
+        <label>SKU</label>
         <input type="tel" class="form-control"  ng-model="product.serialNo">
       </div>
       <div class="form-group">
@@ -60,12 +62,20 @@
 
       </div>
       <div class="form-group">
-        <label>productMeta</label>
+        <label>Product Meta</label>
         <!-- <input type="text" class="form-control" ng-model="product.productMeta"> -->
         <input type="text" class="form-control" ng-model="product.productMeta" uib-typeahead="meta as meta.description for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
         <span ng-if="showTaxCodeDetails"> <button type="button" class="btn btn-default btn-sm" ng-click="product.productMeta = ''">
           Edit <i class="fa fa-pencil"></i>
         </button> <br> {{product.productMeta.description}} <br><strong>Code Type : </strong> {{product.productMeta.typ}} <br> <strong>Code : </strong> {{product.productMeta.code}} <br> <strong>Tax Rate :</strong>{{product.productMeta.taxRate}}</span>
+      </div>
+      <div class="form-group">
+        <label>Serial Id</label>
+        <input type="text" class="form-control" ng-model="product.serialId">
+      </div>
+      <div class="form-group">
+        <label>Reorder Threshold</label>
+        <input type="number" class="form-control"    ng-model="product.reorderTrashold">
       </div>
     </div>
   </div>

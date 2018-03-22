@@ -1,0 +1,437 @@
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+<title>CIOC</title>
+{% endblock %} {% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header page-scroll">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+      <a class="navbar-brand paFge-scroll" href="#page-top">CIOC</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        <li>
+          <a class="page-scroll" href="#services">Services</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#portfolio">Portfolio</a>
+        </li>
+
+        <li>
+          <a class="page-scroll" href="#team">Team</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#contact">Contact</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="/career">Career</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="/login">Login</a>
+        </li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+
+{% endblock %}
+<!-- Header -->
+{% block content %}
+<div ng-app="app" ng-controller="main">
+  {% verbatim %}
+
+  <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
+
+    <div class="row" style="border:1px solid #315f82;margin:0px;background-color: #174b6d;">
+      <div class="col-md-10">
+        <span ng-if="data.started" style="font-size:15px;color:white;"><i class="fa fa-user-o" ></i>{{name}}</span>
+        <span ng-if="!data.started" style="font-size:15px;color:white;cursor:pointer;" ng-click="data.minimized = false;"><i class="fa  fa-envelope" ></i> Chat with our support team</span>
+
+
+      </div>
+      <div class="col-md-2">
+        <i class="fa fa-angle-{{data.minimized ? 'up':'down'}} pull-right" style="color:white;margin-top:4px;cursor:pointer;" ng-click="data.minimized = !data.minimized"></i>
+      </div>
+    </div>
+    <div class="row" style="border:1px solid #174b6d;margin: 0px;padding:0px;background-color:#e1e5e8;">
+      <!-- <div class="col-md-12" style="background-color:#e1e5e8;"> -->
+
+      <div class="container-fluid" ng-if="!data.started && !data.minimized" style="padding:20px;">
+        <form name="myForm">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" ng-model="data.name" required>
+            <div ng-show="myForm.name.$error.required && myForm.name.$touched" class="text-danger">Required!</div>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" name="email" ng-model="data.email" required>
+            <div ng-show="myForm.email.$error.email" class="text-danger">Invalid email!</div>
+            <div ng-show="myForm.email.$error.required && myForm.email.$touched" class="text-danger">Required!</div>
+          </div>
+
+          <button ng-click="authentication()" type="button" class="btn btn-primary">Start</button>
+
+        </form>
+      </div>
+
+
+      <div ng-if="data.started" style="height:{{data.minimized? '0':'300' }}px; overflow-y:auto;" class="container-fluid">
+
+
+        <div class="row" ng-repeat="message in messages" style="padding:0px;">
+          <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+            <p style=>{{message.msg}}</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="row" style="border:1px solid #315f82;margin:0px;background-color:#e1e5e8;border-top:none;" ng-if="!data.minimized && data.started">
+      <!-- <div class="col-md-11" style="margin-top: 8px;"> -->
+      <!-- <div class="text-bar"> -->
+      <div class="col-md-9" style="padding:0px;">
+        <input type="text" class="form-control" ng-model="data.msgText" placeholder="Message" style="border-radius:0px;"></div>
+      <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paper-plane-o" ng-click="send()" style="cursor:pointer"></i></div>
+      <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paperclip" style="cursor:pointer"></i></div>
+
+    </div>
+  </div>
+
+
+
+  {% endverbatim %}
+  <!-- Services Section -->
+  <div class="body">
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+      <section id="contact" style="background-color:white">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6" style="background-color:#0b1859;padding:15px;height: 550px;">
+              <div class="row">
+                <div class="col-lg-12 text-center" style="margin-bottom:40px;">
+                  <h2 class="section-heading" style="color: #fff;margin-bottom:0px">Login</h2>
+                  <img src="/static/images/bottom-border.png" alt="">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12">
+                  <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post" style="padding-left: 50px;padding-right: 50px;">
+                    {% csrf_token %}
+                    <div class="row" style="margin-bottom:15px;">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-1">
+                            <span><i class="fa fa-user" style="margin-top: 45px;font-size: 30px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11">
+                            <div class="form-group">
+                              <input type="text" class="form-control" style="border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(11, 24, 89, 0.1);padding-bottom: 0px;margin-top: 30px;background-color:#0b1859;color:#fff;padding-left:0px"
+                                required/>
+                              <span class="floating-label">First Name *</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-1">
+                            <span><i class="fa fa-unlock-alt" style="margin-top: 45px;font-size: 30px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11">
+                            <div class="form-group">
+                              <input type="password" class="form-control" style="border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(11, 24, 89, 0.1);padding-bottom: 0px;margin-top: 30px;background-color:#0b1859;color:#fff;padding-left:0px"
+                                required/>
+                              <span class="floating-label">Password *</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-12 text-center">
+                      <button type="submit" class="btn btn-xl">Submit</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6" style="padding:0px">
+              <div class="new-user">
+                <div class="row">
+                  <div class="col-lg-12 text-center" style="margin-bottom:60px;margin-top:20px">
+                    <h2 class="section-heading" style="color: #fff;margin-bottom:0px">New User</h2>
+                    <img src="/static/images/bottom-border.png" alt="">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form name="sentMessage" id="contactForm" action="/api/events/subscribe/" method="post">
+                      {% csrf_token %}
+                      <div class="row" style="margin-bottom:15px;">
+                        <div class="col-md-12">
+                          <div class="col-lg-12 text-center">
+                            <button type="submit" class="btn btn-xl2">Submit</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="col-lg-12 text-center">
+                            <button type="submit" class="btn btn-xl3">Submit</button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="clearfix"></div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+      <!-- Portfolio Grid Section -->
+
+
+
+
+
+      {% endblock %} {% block footer %}
+      <footer style="background-color: #eeeeee;">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
+            </div>
+            <div class="col-md-4">
+              <ul class="list-inline social-buttons">
+                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li> -->
+                <li><a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <ul class="list-inline quicklinks">
+                <li><a href="#">Privacy Policy</a>
+                </li>
+                <li><a href="#">Terms of Use</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Portfolio Modals -->
+      <!-- Use the modals below to showcase details about your portfolio projects! -->
+
+      <!-- Portfolio Modal 1 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>ERP</h2>
+                  <p class="item-intro text-muted">An open source and free platform.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/erp.png' %}" alt="">
+                  <p>Minimize your business expenditure by switching to LibreERP. Once deployed it gives you project management , HR, Business management and many more modules along with their mobile apps.</p>
+                  <p>
+                    <strong>Want to try it out?</strong>You can download the source at <a href="https://github.com/pkyad/libreERP-main">github.com</a>, or you can contact us by sending an email to info@cioc.co.in</p>
+                  <!-- <ul class="list-inline">
+                            <li>Date: July 2014</li>
+                            <li>Client: Round Icons</li>
+                            <li>Category: Graphic Design</li>
+                        </ul> -->
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 2 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <h2>RPA</h2>
+                  <p class="item-intro text-muted">Automate web apps and citrix applications with this free RPA platform.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/rpa.jpg' %}" alt="">
+                  <p>Contact us for a demo by sending an email to info@cioc.co.in</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 3 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Assist</h2>
+                  <p class="item-intro text-muted">24X7 online information desk on your website powered by LibreAssist, an open source chatbot platform with advance NLP capabilities.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/assist.jpg' %}" alt="">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 4 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Project Name</h2>
+                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/golden-preview.png' %}" alt="">
+                  <p>Start Bootstrap's Agency theme is based on Golden, a free PSD website template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Golden is a modern and clean one page web template that was made exclusively for
+                    Best PSD Freebies. This template has a great portfolio, timeline, and meet your team sections that can be easily modified to fit your needs.</p>
+                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/golden-free-one-page-web-template/">FreebiesXpress.com</a>.</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 5 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Project Name</h2>
+                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/escape-preview.png' %}" alt="">
+                  <p>Escape is a free PSD web template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Escape is a one page web template that was designed with agencies in mind. This template is ideal for those looking for a simple
+                    one page solution to describe your business and offer your services.</p>
+                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/escape-one-page-psd-web-template/">FreebiesXpress.com</a>.</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 6 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Project Name</h2>
+                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/dreams-preview.png' %}" alt="">
+                  <p>Dreams is a free PSD web template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Dreams is a modern one page web template designed for almost any purpose. It’s a beautiful template that’s designed with the
+                    Bootstrap framework in mind.</p>
+                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/dreams-free-one-page-web-template/">FreebiesXpress.com</a>.</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %} {% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
+<script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+<div style="padding-top:20px;" ng-controller="workforceManagement.organization.unit.info">
+  <div class="col-md-10">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:14vh;position:relative;">
+
+
+      <div class="row text-center">
+        <h2>{{unit.name}}</h2>
+      </div>
+    </div>
+    <div class="col-md-9" style="padding:20px;border-left:solid 1px #eeeeee;">
+
+
+      <label>Name:</label>
+      <span>
+      {{unit.name}}
+      </span>
+      <br>
+
+      <label>Address:</label>
+      <span>
+      {{unit.address}}
+      </span>
+      <br>
+
+      <label>Pincode:</label>
+      <span>
+      {{unit.pincode}}
+      </span>
+      <br>
+
+      <label>Mobile:</label>
+      <span>
+      {{unit.mobile}}
+      </span>
+      <br>
+
+      <label>Telephone:</label>
+      <span>
+      {{unit.telephone}}
+      </span>
+      <br>
+
+      <label>L1:</label>
+      <span>
+      {{unit.l1}}
+       </span>
+      <br>
+
+      <label>L2:</label>
+      <span>
+        {{unit.l2}}
+      </span>
+      <br>
+
+      <label>Fax:</label>
+      <span>
+        {{unit.fax}}
+      </span>
+      <br>
+
+      <label>Contact:</label> <br>
+
+      <div class="row" ng-repeat="c in unit.contacts">
+        <div class="col-md-2">
+          <img ng-src="{{c | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;">
+        </div>
+        <div class="col-md-4">
+          {{c | getName}}
+        </div>
+      </div>
+
+      <hr>
+
+      <label>Division:</label><br>
+      <span>
+        <img ng-src="{{unit.division.logo}}" style="width:120px;height:120px">
+      </span>
+      <br><br <label>Name:</label>
+      <span>
+        {{unit.division.name}}
+      </span>
+      <br>
+
+      <label>Website:</label>
+      <span>
+          {{unit.division.website}}
+      </span>
+      <br>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>

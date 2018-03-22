@@ -103,7 +103,7 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
     console.log("recieved");
     console.log(input);
     $scope.addTab({
-      "title": "Details :" + input.contact.name,
+    "title": "Details :" + input.contact.name,
       "cancel": true,
       "app": "contactExplorer",
       "data": {
@@ -133,6 +133,8 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
 })
 
 app.controller("businessManagement.clientRelationships.contacts.item", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+
 
 
 

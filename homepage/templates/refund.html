@@ -1,0 +1,319 @@
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+<title>CIOC</title>
+{% endblock %} {% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+
+
+
+<nav class="navbar navbar-default navbar-shrink bg-blue navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header page-scroll">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+      <a class="navbar-brand paFge-scroll" href="/">CIOC</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a class="page-scroll" href="#services">services</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#portfolio">Portfolio</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#team">Team</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#contact">Contact</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="/blog/">Blog</a>
+        </li>
+        <li>
+        </li>
+        <li>
+          <a class="page-scroll" href="/news/">News & Media</a>
+        </li>
+        <!-- <li>
+                    <a class="page-scroll" href="#about">About</a>
+                </li> -->
+
+
+        <!-- <li>
+          <a class="page-scroll" href="/career">Career</a>
+        </li> -->
+        <li>
+          <a class="page-scroll" href="/login">Login</a>
+        </li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+
+{% endblock %}
+<!-- Header -->
+{% block content %}
+<div ng-app="app" ng-controller="main">
+  {% verbatim %}
+
+
+  <!--/chatbox-->
+
+
+
+
+  {% endverbatim %}
+  <!-- Services Section -->
+  <div class="body">
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+      <div class="container-fluid">
+        <section id="services" >
+          <div class="row">
+            <div class="col-md-12" style="margin-left: 40px;">
+              <p><b>Disclaimer:</b> Please read and edit the Refund & Cancellation Policy given below as per your /website’s requirement. Don’t use or apply these as is basis on your website</p>
+            </div>
+            <div class="col-md-12 text-center" style="margin-left: 40px;">
+              <h2>Refund and Cancellation Policy </h2>
+            </div>
+          </div>
+          <div class="container-fluid" style="margin-left:40px;padding:0px">
+            <p>Our focus is complete customer satisfaction. In the event, if you are displeased with the services provided, we will refund back the money, provided the reasons are genuine and proved after investigation. Please read the fine prints of each deal before buying it, it provides all the details about the services or the product you purchase.<br> In case of dissatisfaction from our services, clients have the liberty to cancel their projects and request a refund from us. Our Policy for the cancellation and refund will be as follows:</p><br><br>
+            <h4>Cancellation Policy</h4>
+            <p>For Cancellations please contact the us via contact us link.<br>
+              Requests received later than ____business days prior to the end of the current service period will be treated as cancellation of services for the next service period. </p><br><br>
+            <h4>Refund Policy</h4>
+            <p>We will try our best to create the suitable design concepts for our clients.<br> In case any client is not completely satisfied with our products we can provide a refund.<br> If paid by credit card, refunds will be issued to the original credit card provided at the time of purchase and in case of payment gateway name payments refund will be made to the same account. </p>
+          </div>
+        </section>
+      </div>
+
+
+
+      {% endblock %} {% block footer %}
+      <footer>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
+            </div>
+            <div class="col-md-2">
+              <ul class="list-inline social-buttons">
+                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li> -->
+                <li><a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-inline quicklinks">
+                <li><a href="/policy/">Privacy Policy</a>
+                </li>
+                <li><a href="/terms/">Terms of Use</a>
+                </li>
+                <li><a href="/refund/">Refund and Cancellation Policy </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Portfolio Modals -->
+      <!-- Use the modals below to showcase details about your portfolio projects! -->
+
+      <!-- Portfolio Modal 1 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>ERP</h2>
+                  <p class="item-intro text-muted">An open source and free platform.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/erp.png' %}" alt="">
+                  <p>Minimize your business expenditure by switching to LibreERP. Once deployed it gives you project management , HR, Business management and many more modules along with their mobile apps.</p>
+                  <p>
+                    <strong>Want to try it out?</strong>You can download the source at <a href="https://github.com/pkyad/libreERP-main">github.com</a>, or you can contact us by sending an email to info@cioc.co.in</p>
+                  <!-- <ul class="list-inline">
+                            <li>Date: July 2014</li>
+                            <li>Client: Round Icons</li>
+                            <li>Category: Graphic Design</li>
+                        </ul> -->
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 2 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <h2>RPA</h2>
+                  <p class="item-intro text-muted">Automate web apps and citrix applications with this free RPA platform.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/rpa.jpg' %}" alt="">
+                  <p>Contact us for a demo by sending an email to info@cioc.co.in</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 3 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Assist</h2>
+                  <p class="item-intro text-muted">24X7 online information desk on your website powered by LibreAssist, an open source chatbot platform with advance NLP capabilities.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/assist.jpg' %}" alt="">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 4 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Project Name</h2>
+                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/golden-preview.png' %}" alt="">
+                  <p>Start Bootstrap's Agency theme is based on Golden, a free PSD website template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Golden is a modern and clean one page web template that was made exclusively for
+                    Best PSD Freebies. This template has a great portfolio, timeline, and meet your team sections that can be easily modified to fit your needs.</p>
+                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/golden-free-one-page-web-template/">FreebiesXpress.com</a>.</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 5 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Project Name</h2>
+                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/escape-preview.png' %}" alt="">
+                  <p>Escape is a free PSD web template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Escape is a one page web template that was designed with agencies in mind. This template is ideal for those looking for a simple
+                    one page solution to describe your business and offer your services.</p>
+                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/escape-one-page-psd-web-template/">FreebiesXpress.com</a>.</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Modal 6 -->
+      <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl">
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2>Project Name</h2>
+                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/dreams-preview.png' %}" alt="">
+                  <p>Dreams is a free PSD web template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Dreams is a modern one page web template designed for almost any purpose. It’s a beautiful template that’s designed with the
+                    Bootstrap framework in mind.</p>
+                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/dreams-free-one-page-web-template/">FreebiesXpress.com</a>.</p>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %} {% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
+<script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+
+{% endblock %}

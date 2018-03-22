@@ -61,14 +61,14 @@ ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.1
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
 
-LOGOUT_REDIRECT = 'index' # similarly the url to which the user will be directed one logged out
+LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
 BRAND_NAME = 'India'
 
-BRAND_LOGO = '/static/images/cioc_icon.svg'
+BRAND_LOGO = '/static/images/rackmint.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 

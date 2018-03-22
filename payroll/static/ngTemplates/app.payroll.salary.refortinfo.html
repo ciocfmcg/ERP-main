@@ -1,0 +1,28 @@
+<div style="padding-top:20px;" ng-controller="workforceManagement.salary.payslips.info">
+  <div class="col-md-12">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+      <div class="row text-center">
+      </div>
+      <div class="row" style="position:relative;min-height:250px;">
+        <i class="fa fa-user-o" style="font-size:260px;color:#fcf7f7;margin-left:80px;margin-top:140px;"></i>
+        <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
+          <span class="text-muted" style="font-size:15px;"> <i class="fa fa-user-o" style="width:20px;"></i> Payroll for {{months[data.month]}}</span>
+          <div class="row" style="margin-top:10px;">
+            <div class="col-md-12">
+              <span>Month:{{months[data.month]}}</span><br>
+              <span>Year:{{data.year}}</span><br>
+              <span style="font-size:15px">Total:{{data.total}} <span ng-if="!data.total" class="text-danger">NA</span></span><br>
+              <span style="font-size:15px">TDS :{{data.totalTDS}} <span ng-if="!data.totalTDS" class="text-danger">NA</span></span><br>
+              <span style="font-size:15px">Date of Processing:{{data.dateOfProcessing}} <span ng-if="!data.dateOfProcessing" class="text-danger">NA</span> </span><br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="container-fluid" ng-include="'/static/ngTemplates/app.payroll.salary.reportexplore.html'">
+      </div>
+      <!-- <generic-Table data="data.reportTableData" config-Obj="{{configReport}}" callback-Fn="tableActionReport"></generic-Table> -->
+    </div>
+  </div>
+</div>

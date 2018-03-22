@@ -1,0 +1,91 @@
+<div ng-controller="businessManagement.finance.expenses.form">
+  <div class="container-fluid">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-5">
+      <h3 ng-if="mode == 'edit'">Edit Expense : <strong>{{form.notes}}</strong></h3>
+      <h3 ng-if="mode == 'new'">Create a Expense</h3>
+      <div class="form-group" style="padding-top: 19px;">
+        <label>Title</label>
+        <input type="text" class="form-control" ng-model="form.notes">
+      </div>
+      <div class="form-group">
+        <label>Project</label>
+        <input type="text" class="form-control" ng-model="form.project" uib-typeahead="p as p.title for p in projectSearch($viewValue)" placeholder="Search For Project">
+      </div>
+      <div class="form-group" ng-if="projectData">
+        <strong>Description:</strong>{{projectData.description}}
+      </div>
+      <div class="btn-group ">
+        <button type="button" class="btn btn-danger" ng-click="resetForm()" ng-if="refreshOption">
+          Reset
+          </button>
+        <button type="button" class="btn btn-default" ng-click="saveExpenseSheet()">Save</button>
+      </div>
+      <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;" ng-repeat="data in invoiceData">
+        <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
+          <div class="col-md-12">
+            <span><strong>Service:</strong>{{data.service.name}}</span><br/><br/>
+            <span><strong>Dated:</strong>{{data.dated}}</span>
+              <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a>
+              <button type="button"
+                mwl-confirm
+                title="Confirm"
+                message="Are you sure?"
+                confirm-text="Yes <i class='fa fa-check'></i>"
+                cancel-text="No"
+                on-confirm="deleteInvoice(data.pk , $index)"
+                confirm-button-type="danger"
+                cancel-button-type="default"
+               class="btn-danger btn-sm  pull-right" style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5" ng-if="invoiceOptions">
+      <h3>Add a Invoice</h3>
+      <div class="form-group" style="padding-top: 19px;">
+        <label>Service</label>
+        <input type="text" class="form-control" ng-model="invoiceForm.service" uib-typeahead="p as p.name for p in serviceSearch($viewValue)" placeholder="Search For Service">
+      </div>
+      <div class="form-group" ng-if="serviceData">
+        <strong>City:</strong>{{serviceData.address.city}}<br/>
+        <strong>State:</strong>{{serviceData.address.state}}<br/>
+        <strong>Pincode:</strong>{{serviceData.address.pincode}}<br/>
+      </div>
+      <div class="form-group col-md-6" style="padding-left:0px">
+        <label>Expense Code</label>
+        <input type="tel" class="form-control" ng-model="invoiceForm.code">
+      </div>
+      <div class="form-group col-md-6" style="padding-right:0px">
+        <label>Amount</label>
+        <input type="tel" class="form-control" ng-model="invoiceForm.amount">
+      </div>
+      <div class="form-group  col-md-6" style="padding-left:0px">
+        <label>Currency</label>
+        <select class="form-control" ng-model="invoiceForm.currency">
+          <option value="INR">INR</option>
+          <option value="USD">USD</option>
+        </select>
+      </div>
+      <div class="form-group col-md-6" style="padding-right:0px">
+        <label>Dated</label>
+        <div class="input-group">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="invoiceForm.dated" is-open="statusDue.opened" ng-init="today" />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Attachment</label>
+        <input type="file" file-model="invoiceForm.attachment">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" rows="8" ng-model="invoiceForm.description"></textarea>
+      </div>
+      <button type="button" class="btn btn-primary" ng-click="saveInvoice()">Add</button>
+    </div>
+  </div>
+</div>

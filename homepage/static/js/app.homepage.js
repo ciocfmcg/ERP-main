@@ -4,27 +4,29 @@ var app = angular.module('app' , ['ui.router']);
 
 app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $provide ){
 
-  $urlRouterProvider.otherwise('/home');
+  // $urlRouterProvider.otherwise('/home');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
 
 
+
+
 });
 
-app.run([ '$rootScope', '$state', '$stateParams', function ($rootScope,   $state,   $stateParams) {
-    $rootScope.$state = $state;
-    $rootScope.$stateParams = $stateParams;
-    $rootScope.$on("$stateChangeError", console.log.bind(console));
-  }
-]);
+// app.run([ '$rootScope', '$state', '$stateParams', function ($rootScope,   $state,   $stateParams) {
+//     $rootScope.$state = $state;
+//     $rootScope.$stateParams = $stateParams;
+//     $rootScope.$on("$stateChangeError", console.log.bind(console));
+//   }
+// ]);
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('main' , function($scope , $state , $http , $timeout , $interval){
   console.log("main loded");
   $scope.crmBannerID = 1;
 
-  $scope.mainBannerImages = ['/static/images/banner-img2.jpg' ]
+  $scope.mainBannerImages = ['/static/images/rackmint_banner.png' ]
   $scope.bannerID = 0;
 
   $interval(function() {
@@ -41,12 +43,7 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval)
     }
   } , 1000)
 
-  $scope.elements = [
-    {role: 'FrontEnd Developer',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'},
-    {role: 'Backend Developer',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'},
-    {role: 'Android Developer',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'},
-    {role: 'Software Developer Intern',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'}
-  ];
+
 
 });
 app.controller('homepage.chat' , function($scope , $state , $http , $timeout , $interval){
@@ -77,5 +74,16 @@ app.controller('homepage.chat' , function($scope , $state , $http , $timeout , $
     }
 
 
+
+});
+
+app.controller('homepage.career' , function($scope , $state , $http , $timeout , $interval){
+
+  $scope.elements = [
+    {role: 'FrontEnd Developer',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'},
+    {role: 'Backend Developer',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'},
+    {role: 'Android Developer',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'},
+    {role: 'Software Developer Intern',functionalarea:'Web Application Development',experience:'0-1 years',roledetails:'view details',notes:'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'}
+  ];
 
 });

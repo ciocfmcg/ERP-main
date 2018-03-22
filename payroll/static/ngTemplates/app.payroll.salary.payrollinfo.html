@@ -1,0 +1,227 @@
+
+<div style="padding-top:20px;" ng-controller="workforceManagement.salary.payroll.info">
+  <div class="col-md-12">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+      <div class="row text-center">
+        <!-- <h3>{{data[0].contract.pk}}</h3> -->
+      </div>
+      <div class="row" style="position:relative;min-height:250px;">
+        <i class="fa fa-user-o" style="font-size:260px;color:#fcf7f7;margin-left:80px;margin-top:140px;"></i>
+        <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
+          <span class="text-muted" style="font-size:15px;"> <i class="fa fa-user-o" style="width:20px;"></i> Payroll for {{data.user | getName}}</span>
+          <!-- <h5 style="margin-left:22px;"></h5> <br> -->
+          <div class="row" style="margin-top:10px;">
+            <div class="col-md-2">
+              <!-- <i class="fa fa-map-marker fa-3x pull-right" style="color:#8faec2;"></i> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 text-left">
+      <h3>Details of {{data.user | getName}}</h3>
+    </div>
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>HRA:</strong>
+            </div>
+            <div class="col-md-6">
+              {{data.hra}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Special:</strong>
+            </div>
+            <div class="col-md-6">
+              {{data.special}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>LTA:</strong>
+            </div>
+            <div class="col-md-6">
+              {{data.lta}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Basic:</strong>
+            </div>
+            <div class="col-md-6">
+              {{data.basic}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>AdHOC:</strong>
+            </div>
+            <div class="col-md-6">
+              {{data.adHoc}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Policy Number:</strong>
+            </div>
+            <div class="col-md-6">
+              {{data.policyNumber}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Provider:</strong>
+            </div>
+            <div class="col-md-6">
+            {{data.provider}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Amount:</strong>
+            </div>
+            <div class="col-md-8">
+              {{data.amount}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Al:</strong>
+            </div>
+            <div class="col-md-8">
+            {{data.al}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>ML:</strong>
+            </div>
+            <div class="col-md-8">
+            {{data.ml}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>AdHOC Leaves:</strong>
+            </div>
+            <div class="col-md-8">
+              {{data.adHocLeaves}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Joinning Date:</strong>
+            </div>
+            <div class="col-md-8">
+              {{data.joiningDate}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Last Working Date:</strong>
+            </div>
+            <div class="col-md-8">
+              {{data.lastWorkingDate}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Account Number:</strong>
+            </div>
+            <div class="col-md-8">
+              {{data.accountNumber}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>IFSC code:</strong>
+            </div>
+            <div class="col-md-8">
+              {{data.ifscCode}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 text-right">
+              <strong>Bank Details:</strong>
+            </div>
+            <div class="col-md-8">
+              {{data.bankName}}
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <div class="container-fluid">
+              <h3></h3>
+              <span>Earning so far:</span><br>
+              <span>Annual leaves:</span><br>
+              <span>Medical Leaves:</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-md-6">
+          <div class="container-fluid">
+            <div class="row text-center" style="margin-bottom:10px">
+              <ul class="pager">
+                <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prev()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+                <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="next()">Next <span aria-hidden="true">&rarr;</span></a></li>
+              </ul>
+              <span style="font-size:20px;">{{yearInView}}</span>
+            </div>
+            <!-- <span class="text-center">{{data.joiningDate}}</span> -->
+            <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+              <tr ng-repeat ="n in months">
+                <td><span>{{n}}</span></td>
+              </tr>
+              <!-- <tr>
+                <td><span>February:</span></td>
+              </tr>
+              <tr>
+                <td><span>March:</span></td>
+              </tr>
+              <tr>
+                <td><span>April:</span></td>
+              </tr>
+              <tr>
+                <td><span>May:</span></td>
+              </tr>
+              <tr>
+                <td><span>June:</span></td>
+              </tr>
+              <tr>
+                <td><span>July:</span></td>
+              </tr>
+              <tr>
+                <td><span>August:</span></td>
+              </tr>
+              <tr>
+                <td><span>September:</span></td>
+              </tr>
+              <tr>
+                <td><span>Octobar:</span></td>
+              </tr>
+              <tr>
+                <td><span>November:</span></td>
+              </tr>
+              <tr>
+                <td><span>December:</span></td>
+              </tr> -->
+
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -5,11 +5,11 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from events.views import eventHome
-from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView,blog,news,team, career
+from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView,blog,news,team, career ,policy ,terms ,refund ,contacts
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 urlpatterns = [
-    url(r'^$', root , name ='root'),
+    url(r'^$', index , name ='root'),
     url(r"^ecommerce/", ecommerceHome , name = 'ecommerce'), # public  ecommerce app
     url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),
@@ -31,6 +31,11 @@ urlpatterns = [
     url(r'^news', news , name ='news'),
     url(r'^team', team , name ='team'),
     url(r'^career', career , name ='career'),
+    url(r'^policy', policy , name ='policy'),
+    url(r'^terms', terms , name ='terms'),
+    url(r'^refund', refund , name ='refund'),
+    url(r'^contacts', contacts , name ='contacts'),
+
 ]
 
 if settings.DEBUG:
