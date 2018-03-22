@@ -47,8 +47,8 @@ class Product(models.Model):
     price = models.FloatField(null=False)
     displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True)
     serialNo = models.CharField(max_length = 30, null=True)
-    description = models.TextField(max_length=10000,null=False)
-    inStock = models.PositiveIntegerField(default = 0)
+    description = models.TextField(max_length=10000,null=True)
+    inStock = models.IntegerField(default = 0)
     cost = models.PositiveIntegerField(default= 0)
     logistics = models.PositiveIntegerField(default = 0)
     serialId = models.CharField(max_length = 50, null=True)
@@ -88,3 +88,62 @@ class Invoice(models.Model):
     totalTax = models.FloatField(null=False)
     paymentRefNum = models.PositiveIntegerField(default = 0)
     receivedDate = models.DateField(null=True)
+
+class ExternalOrdersQtyMap(models.Model):
+    product = models.ForeignKey(Product , related_name='externalOrders')
+    qty = models.PositiveIntegerField(default=1)
+
+EXTERNAL_ORDER_STATUS_CHOICES = (
+    ('new','new'),
+    ('packed','packed'),
+    ('shipped','shipped'),
+    ('recieved','recieved'),
+    ('paid','paid'),
+    ('reconciled','reconciled'),
+    ('cancelled','cancelled'), # when user cancelled it
+    ('rto','rto'),
+    ('returned','returned'),
+)
+
+class ExternalOrders(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    marketPlace = models.CharField(max_length = 50 , null = True)
+    orderID = models.CharField(max_length = 100 , null = True)
+    products = models.ManyToManyField(ExternalOrdersQtyMap , blank = False)
+    status = models.CharField(max_length = 10 , default = 'new' , choices = EXTERNAL_ORDER_STATUS_CHOICES)
+    buyersPrice = models.FloatField(null= True)
+    tax = models.FloatField(null= True)
+    shipper = models.CharField(max_length = 100 , null = True)
+    shipperAWB = models.CharField(max_length = 100 , null = True)
+    shippingFees = models.FloatField(null= True)
+    shippingTax = models.FloatField(null= True)
+    marketPlaceTax = models.FloatField(null= True)
+    earnings = models.FloatField(null= True)
+    buyerPincode = models.CharField(null= True , max_length = 7)
+
+from django.db.models.signals import post_save , pre_delete
+from django.dispatch import receiver
+from django.conf import settings as globalSettings
+import requests
+from ERP.models import application
+@receiver(post_save, sender=Product, dispatch_uid="server_post_save")
+def updateProductsStock(sender, instance, **kwargs):
+
+    for p in application.objects.get(name = 'app.productsInventory').permissions.all():
+        print "Sending to : " , p.user.username
+        requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
+            json={
+              'topic': 'service.dashboard.' + p.user.username,
+              'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
+            }
+        )
+
+    for u in User.objects.filter(is_superuser=True):
+        print "Sending to : " , u.username
+        requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
+            json={
+              'topic': 'service.dashboard.' + u.username,
+              'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
+            }
+        )

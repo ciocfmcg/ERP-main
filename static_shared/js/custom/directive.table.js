@@ -32,6 +32,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   $scope.itemsNumPerView = angular.isDefined($scope.config.itemsNumPerView) ? $scope.config.itemsNumPerView:[5, 10, 20];
   $scope.itemsPerView = $scope.itemsNumPerView[0];
   $scope.deletable = angular.isDefined($scope.config.deletable) ? $scope.config.deletable:false;
+  $scope.filterSearch = angular.isDefined($scope.config.filterSearch) ? $scope.config.filterSearch:false;
   $scope.editorTemplate = angular.isDefined($scope.config.editorTemplate) ? $scope.config.editorTemplate:'';
 
   $scope.haveOptions = angular.isDefined($scope.config.options) ? true:false;
@@ -77,7 +78,10 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
          return $scope.callbackFn; // pass data directly from the template to the callbackFn
        }
       },
-      controller: function($scope , submitFormFn ){
+      controller: function($scope , submitFormFn , $uibModalInstance ){
+
+
+
         $scope.submitForm = submitFormFn;
         $scope.mode = 'new';
         $scope.data = {};
@@ -179,7 +183,14 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
     if (typeof $scope.searchField == 'undefined' || $scope.searchField =='') {
       fetch.url = $scope.url +'?&limit='+ $scope.itemsPerView + '&offset='+ ($scope.pageNo-1)*$scope.itemsPerView;
     } else {
-      fetch.url = $scope.url +'?&'+ $scope.searchField +'__contains=' + $scope.getStr + '&limit='+ $scope.itemsPerView + '&offset='+ ($scope.pageNo-1)*$scope.itemsPerView;
+
+      if (!$scope.filterSearch) {
+        var searchUrl = $scope.searchField + '__contains=';
+      }else {
+        var searchUrl = 'search=';
+      }
+
+      fetch.url = $scope.url +'?&'+ searchUrl + $scope.getStr + '&limit='+ $scope.itemsPerView + '&offset='+ ($scope.pageNo-1)*$scope.itemsPerView;
     }
     if (typeof $scope.getParams != 'undefined') {
       for (var i = 0; i < $scope.getParams.length; i++) {
@@ -456,12 +467,16 @@ app.controller('genericTableItem' , function($scope , $uibModal){
          return $scope.config;
        },
       },
-      controller: function($scope , submitFormFn , data , config){
+      controller: function($scope , submitFormFn , data , config , $uibModalInstance){
         $scope.submitForm = submitFormFn;
         $scope.data = data;
         $scope.data.formData = [];
         $scope.mode = 'edit';
         $scope.config = config;
+
+        $scope.$on('closeEditModalWindow', function(event, input) {
+          $uibModalInstance.dismiss();
+        });
       },
     });
   }

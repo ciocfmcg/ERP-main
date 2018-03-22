@@ -67,6 +67,7 @@ def generateOTPCode():
     return ''.join(rnd.choice(chars) for i in range(length))
 
 def tokenAuthentication(request):
+
     ak = get_object_or_404(accountsKey, activation_key=request.GET['key'] , keyType='hashed')
     #check if the activation key has expired, if it hase then render confirm_expired.html
     if ak.key_expires < timezone.now():
@@ -97,6 +98,9 @@ def generateOTP(request):
     return JsonResponse({} ,status =200 )
 
 def loginView(request):
+
+    print request.META['HTTP_USER_AGENT']
+
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
     authStatus = {'status' : 'default' , 'message' : '' }

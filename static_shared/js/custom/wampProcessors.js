@@ -9,7 +9,7 @@ connection.onopen = function (session) {
    //
   function chatResonse (args) {
     console.log(args);
-    
+
     var status = args[0];
     var msg = args[1];
     var friend = args[2];
@@ -56,7 +56,10 @@ connection.onopen = function (session) {
   };
 
   processDashboardUpdates = function(args) {
+    console.log(args);
     var scope = angular.element(document.getElementById('dashboard')).scope();
+    console.log(scope);
+
     if (typeof scope != 'undefined') {
       scope.$apply(function() {
         scope.refreshDashboard(args[0]);

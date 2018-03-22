@@ -207,31 +207,16 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
             $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPermissions' , data : permissionsFormData , active : true})
           }
         })(target));
+      } else if (action == 'editPayroll') {
+        u = $users.get(target)
+        $http.get('/api/HR/payroll/?user='+ u.username ).
+        success((function(target){
+          return function(data){
+            u = $users.get(target)
 
-      }else if(action == 'editDesignation'){
-          u = $users.get(target)
-          // permissionsFormData = {
-          //   appsToAdd : data,
-          //   url : target,
-          // }
-          $scope.addTab({title : 'Edit designation  for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editDesignation' , active : true})
-          $scope.name=u.first_name+' '+u.last_name;
-
-      }else if (action == 'editPayroll') {
-
-        for (var i = 0; i < $scope.data.tableData.length; i++) {
-          if ($scope.data.tableData[i].pk == target) {
-
-            var u = $scope.data.tableData[i];
-
-            $scope.addTab({title : 'Edit Payroll for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : u , active : true})
+            $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : data , active : true})
           }
-        }
-
-
-
-
-
+        })(target));
       }
       // for the single select actions
     } else {

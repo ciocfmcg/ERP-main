@@ -129,7 +129,7 @@
         <input type="number" class="form-control-pos" ng-model="item.quantity">
       </td>
       <td>
-        <input type="number" class="form-control-pos" ng-model="item.data.price">
+        <input type="float" class="form-control-pos" ng-model="item.data.price">
       </td>
       <td>
         {{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}

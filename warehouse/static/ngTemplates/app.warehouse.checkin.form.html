@@ -1,0 +1,47 @@
+<div ng-controller="businessManagement.warehouse.checkin.form">
+  <div class="modal-header">
+    Add new Checkin for {{contract.company.name}} (Contract ID : {{contract.pk}})
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Item Description</label>
+          <textarea type="text" class="form-control" ng-model="checkin.description"></textarea>
+        </div>
+        <div class="form-group">
+          <h4>Size</h4>
+        </div>
+        <div class="form-group">
+          <label>Height</label>
+          <input type="float" class="form-control" ng-model="checkin.height">
+        </div>
+        <div class="form-group">
+          <label>Width</label>
+          <input type="float" class="form-control" ng-model="checkin.width">
+        </div>
+        <div class="form-group">
+          <label>Length</label>
+          <input type="float" class="form-control" ng-model="checkin.length">
+        </div>
+        <div class="form-group">
+          <label>Weight</label>
+          <input type="float" class="form-control" ng-model="checkin.weight">
+        </div>
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="float" class="form-control" ng-model="checkin.qty">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+        <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

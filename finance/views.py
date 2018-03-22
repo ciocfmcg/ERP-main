@@ -35,7 +35,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = InvoiceSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['description', 'dated']
+    filter_fields = ['description', 'dated','sheet']
     def get_queryset(self):
         u = self.request.user
         return Invoice.objects.all()

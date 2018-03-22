@@ -1,0 +1,23 @@
+<div class="modal-header">
+  Edit {{data.mode | humanize}} : {{data.name}}
+</div>
+
+<div ng-controller="businessManagement.productsInventory.edit" class="modal-body">
+
+  <label>Current Stock : </label> {{data.inStock}}
+
+  <div class="form-group">
+    <label>Quantity</label>
+    <div class = "input-group">
+       <input type = "number" class = "form-control" ng-model="data.qty">
+       <span class = "input-group-btn">
+          <button type="button" class="btn btn-success" ng-click="save(true)">Increase</button>
+       </span>
+       <span class = "input-group-btn">
+          <button type="button" class="btn btn-danger" ng-click="save(false)">Decrease</button>
+       </span>
+    </div>
+  </div>
+
+
+</div>

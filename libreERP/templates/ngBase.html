@@ -46,12 +46,73 @@
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
 
-    <div style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:13%;min-height:100vh;position:fixed;" ng-include="sideMenu">
+    <div style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:13%;min-height:100vh;position:fixed;" class="sideMenuView" ng-include="sideMenu">
     </div>
 
-    <div class="col-md-1" style="width:87%;margin-left:13%;">
+    <div class="col-md-1 mainUIViewParent" style="width:87%;margin-left:13%;">
       <div ng-include="headerUrl"></div>
-      <div style="margin:0.5vh;margin-top:6.5vh;" ui-view ng-if="modules.length>0"></div>
+      <div style="margin:0.5vh;margin-top:6.5vh;" class="mainUIView" ui-view ng-if="modules.length>0">
+
+        <style>
+
+          .mainUIViewParent{
+            width:100% !important;
+            margin-left: 0px !important;
+          }
+          .sideMenuView{
+            display: none;
+          }
+
+          .mainUIView{
+            margin: 0px !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+
+            color: rgb(23, 109, 158);
+            text-transform: uppercase;
+            font-family: -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Oxygen-Sans,
+                Ubuntu,
+                Cantarell,
+                Helvetica,
+                sans-serif;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+          }
+          body {
+            margin: 0;
+            padding: 0;
+          }
+
+          @keyframes dots {
+            50% {
+              transform: translateY(-.4rem);
+            }
+            100% {
+              transform: translateY(0);
+            }
+          }
+
+          .d {
+            animation: dots 1.5s ease-out infinite;
+          }
+          .d-2 {
+            animation-delay: .5s;
+          }
+          .d-3 {
+            animation-delay: 1s;
+          }
+          </style>
+
+          <img src="/static/images/spinner.gif" alt="">
+          Loading<span class="d">.</span><span class="d d-2">.</span><span class="d d-3">.</span>
+
+      </div>
     </div>
 
 

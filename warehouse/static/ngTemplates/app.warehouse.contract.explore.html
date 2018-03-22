@@ -109,6 +109,7 @@
           <img ng-src="{{contract.occupancy_screenshort}}" alt="Occupancy Area" height="100px" width="100px">
         </div>
       </div>
+
     </div>
 
     <!-- <div class="row" style="margin-top:10px;">
@@ -217,11 +218,15 @@
                   </td>
                   <td>
                     <div class="btn-group btn-group-sm pull-right">
+<!-- <<<<<<< HEAD
+                      <a ng-if="c.status != 'cancelled'" href="/api/warehouse/downloadInvoice/?contract={{contract.pk}}&invoice={{c.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+======= -->
                       <a ng-if="c.status != 'cancelled'" href="/api/warehouse/downloadInvoice/?contract={{contract.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+<!-- >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c -->
                       <button ng-if="c.status != 'cancelled'" type="button" class="btn btn-default" ng-click="editQuote($index)">
                         <i class="fa fa-pencil"></i>
                       </button>
-                      <button type="button" class="btn btn-info" ng-click="sendNotification($index)" ng-if="['billed' , 'recieved', 'dueElapsed'].indexOf(c.status) != -1">
+                      <button type="button" class="btn btn-info" ng-click="sendNotification($index)" ng-if="['billed' , 'received', 'dueElapsed'].indexOf(c.status) != -1">
                         <i class="fa fa-envelope-o"></i>
                       </button>
                       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
