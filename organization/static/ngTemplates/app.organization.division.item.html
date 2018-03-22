@@ -1,0 +1,50 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row" style="border-bottom: 1px solid #dedede;">
+      <div class="col-md-4" style="padding:0px;">
+        <img style="height:120px;width:120px; padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px" ng-src="{{data.logo}}">
+      </div>
+      <div class="col-md-8" style="position:relative;display:block;">
+        <div class="row" style="padding-left:10px;">
+          <h3>{{data.name}}</h3>
+          <span style="font-size:15px;" class="fa fa-address-book"> Contacts : {{data.contacts.length}}</span><br>
+          <span style="font-size:15px;" class="fa fa-globe"> <a href="{{data.website}}" target="_blank">{{data.website}}</a> </span><br>
+        </div>
+      </div>
+    </div>
+    <div class="row container-fluid" style="padding-top:20px;height:70px;">
+      <div class="col-md-10">
+        <strong>PAN:</strong> {{data.pan}} <br>
+        <strong>CIN:</strong> {{data.cin}} <br>
+        <strong>GSTIN:</strong> {{data.gstin}} <br>
+
+      </div>
+      <div class="col-md-2">
+        <div style="padding-right:20px;">
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
+            <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+          </span> <br>
+            <span class="pull-right " style="cursor:pointer;">
+          <i class="fa fa-trash fa-lg " style="margin-top:0px;" mwl-confirm
+            title="Confirm"
+            message="Are you sure?"
+            confirm-text="Yes <i class='fa fa-check'></i>"
+            cancel-text="No"
+            on-confirm="delete(data.pk , index)"
+            confirm-button-type="danger"
+            cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">
+          </i>
+        </span><br>
+            <span class="pull-right" style="cursor:pointer;">
+          <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
+        </span>
+
+          </div>
+          <div class="row">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -37,8 +37,7 @@
         <li>
           <a class="page-scroll" href="/blog/">Blog</a>
         </li>
-        <li>
-        </li>
+
         <li>
           <a class="page-scroll" href="/news/">News & Media</a>
         </li>
@@ -59,8 +58,9 @@
   <!-- Services Section -->
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
-      <section id="service1">
-        <div class="container-fluid" style="height: 600px;width: 100%;padding:0px;">
+      <div class="container-fluid">
+      <!-- <section id="service1">
+        <div class="container-fluid">
           <div class="row" style="margin-right: 55px;margin-left: 55px;">
             <div class="col-md-3 team">
               <a href="#person1" class="teamdetails-link" data-toggle="modal">
@@ -140,7 +140,134 @@
             </div>
           </div>
         </div>
+      </section> -->
+      <section id="team" class="bg-light-gray">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <h2 class="section-heading">Our Amazing Team</h2>
+              <!-- <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="team-member">
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Pradeep</h4>
+                <p class="text-muted">Technology</p>
+                <ul class="list-inline social-buttons">
+                  <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                  </li>
+                  <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                  </li>
+                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="team-member">
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Raj</h4>
+                <p class="text-muted">Technology</p>
+                <ul class="list-inline social-buttons">
+                  </li>
+                  </li>
+                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="team-member">
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Sowmya</h4>
+                <p class="text-muted">Sales</p>
+                <ul class="list-inline social-buttons">
+                  <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                  </li>
+                  <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                  </li>
+                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="team-member">
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Deepika</h4>
+                <p class="text-muted">Finance</p>
+                <ul class="list-inline social-buttons">
+                  <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                  </li>
+                  <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                  </li>
+                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="team-member">
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Santosh</h4>
+                <p class="text-muted">Admin</p>
+                <ul class="list-inline social-buttons">
+                  <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
+                  </li>
+                  <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+                  </li>
+                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4 text-center">
+              <!-- <div class="team-member">
+                <a class="circleBtn" href="/team">More <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+              </div> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+              <p class="large text-muted">We started turning our own ideas into reality of free and open source business platform in the form of LibreERP and LibreRPA then we thought why not help others too in their entrepreneurial journey</p>
+            </div>
+          </div>
+        </div>
       </section>
+
+    </div>
+
+    {% endblock %} {% block footer %}
+    <footer style="background-color: #eeeeee;">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
+          </div>
+          <div class="col-md-4">
+            <ul class="list-inline social-buttons">
+              <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
+                  </li> -->
+              <li><a href="#"><i class="fa fa-facebook"></i></a>
+              </li>
+              <li><a href="#"><i class="fa fa-linkedin"></i></a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <ul class="list-inline quicklinks">
+              <li><a href="#">Privacy Policy</a>
+              </li>
+              <li><a href="#">Terms of Use</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+        <!-- </div> -->
       <!-- Portfolio Modal 1 -->
       <div class="portfolio-modal modal fade" id="person1" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
@@ -241,38 +368,11 @@
 
 
 
-      {% endblock %} {% block footer %}
-      <footer style="background-color: #eeeeee;">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-4">
-              <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
-            </div>
-            <div class="col-md-4">
-              <ul class="list-inline social-buttons">
-                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
-                    </li> -->
-                <li><a href="#"><i class="fa fa-facebook"></i></a>
-                </li>
-                <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                </li>
-              </ul>
-            </div>
-            <div class="col-md-4">
-              <ul class="list-inline quicklinks">
-                <li><a href="#">Privacy Policy</a>
-                </li>
-                <li><a href="#">Terms of Use</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
+
 
       <!-- Portfolio Modals -->
 
-    </div>
+    <!-- </div> -->
   </div>
 </div>
 

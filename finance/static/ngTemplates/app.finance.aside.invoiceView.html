@@ -1,6 +1,7 @@
 <div class="modal-header bg-blue" id="aside" style="height:10vh;padding-top:8px;">
-  <div class="col-md-8">
+  <div class="col-md-8">{{inv}}
     <strong>Description</strong> : {{invoice.description}} <br>
+    <strong>Code</strong> : {{invoice.code}} <br>
     <strong>Dated </strong> : {{invoice.dated | date: 'dd-MMM-yyyy'}}  <br>
     <strong>Submitted On </strong> : {{invoice.created | date: 'dd-MMM-yyyy : hh:mm a'}}  <br>
   </div>

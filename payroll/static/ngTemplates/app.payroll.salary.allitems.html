@@ -1,0 +1,183 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" >
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row" style="border-bottom: 1px solid #dedede;">
+      <div class="col-md-4" style="padding:0px;">
+        <img style="width: 120px;height:120px;" class="img" ng-src="{{data.user | getDP}}" >
+      </div>
+      <div class="col-md-8" style="position:relative;display:block;">
+        <div class="row" style="padding-left:10px;">
+          <h3>{{data.user |  getName}}</h3>
+          <!-- <h3>{{data.user.username}}</h3> -->
+        </div>
+        <div class="row">
+          <span style="position:absolute;left:10px;bottom:-55px;" class="text-muted">
+
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="padding-top:20px;height:70px;">
+      <div class="col-md-10">
+        <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>HRA:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.hra}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Special:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.special}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>LTA:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.lta}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Basic:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.basic}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>AdHOC:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.adHoc}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Policy Number:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.policyNumber}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Provider:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+            {{data.provider}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Amount:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.amount}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Al:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+            {{data.al}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>ML:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+            {{data.ml}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>AdHOC Leaves:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.adHocLeaves}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Joinning Date:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.joiningDate}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Last Working Date:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.lastWorkingDate}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Account Number:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.accountNumber}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>IFSC code:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.ifscCode}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Bank Details:</strong>
+            </div>
+            <div class="col-md-6" style="padding-left: 0px;">
+              {{data.bankName}}
+            </div>
+          </div>
+          <!-- <span style="font-size:15px;"></span><br>
+          <span style="font-size:15px;">Special:{{data.special}}</span><br>
+          <span style="font-size:15px;">LTA:{{data.lta}}</span><br>
+          <span style="font-size:15px;">Basic:{{data.basic}}</span><br>
+          <span style="font-size:15px;">AdHOC:{{data.adHoc}}</span><br>
+          <span style="font-size:15px;">Policy Number:{{data.policyNumber}}</span><br>
+          <span style="font-size:15px;">Provider:{{data.provider}}</span><br>
+          <span style="font-size:15px;">Amount:{{data.amount}}</span><br>
+          <span style="font-size:15px;">Al:{{data.al}}</span><br>
+          <span style="font-size:15px;">ML:{{data.ml}}</span><br>
+          <span style="font-size:15px;">AdHOC Leaves:{{data.adHocLeaves}}</span><br>
+          <span style="font-size:15px;">Joinning Date:{{data.joiningDate}}</span><br>
+          <span style="font-size:15px;">Account Number:{{data.accountNumber}}</span><br>
+          <span style="font-size:15px;">IFSC code:{{data.ifscCode}}</span><br>
+          <span style="font-size:15px;">Bank Details:{{data.bankName}}</span><br> -->
+        </div>
+        </div>
+      </div>
+      <!-- <i style="position:absolute;bottom:20px;right:80px;color:#fafafa;" class="fa fa-handshake-o fa-5x"></i> -->
+      <div class = "col-md-1">
+        <div style="padding-right:20px;">
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click = "rowActionClicked('explore')">
+              <i class="fa fa-reorder fa-lg"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

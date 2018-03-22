@@ -20,4 +20,6 @@ app.config(function($stateProvider){
   })
 });
 app.controller("workforceManagement.recruitment", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+  // $scope.catgory = [{'name':'prabhakar','location':'bangalore','mob':87654321},{'name':'sankaet','location':'bangalore','mob':87654321},{'name':'sai','location':'bangalore','mob':87654321}];
+
 });

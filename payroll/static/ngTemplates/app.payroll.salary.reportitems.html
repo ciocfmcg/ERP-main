@@ -1,0 +1,22 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="rowActionClicked('details')" ng-controller="workforceManagement.salary.payroll.report.item">
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row container-fluid" style="padding-bottom:10px;margin-bottom:15px;padding-top:20px;">
+      <div class="col-md-10">
+        <span style="font-size:25px">{{months[data.month]}}</span><br>
+        <span style="font-size:17px">{{data.year}}</span><br>
+        <span style="font-size:15px">Total:{{data.total}} <span ng-if="!data.total" class="text-danger">NA</span></span><br>
+        <span style="font-size:15px">TDS :{{data.totalTDS}} <span ng-if="!data.totalTDS" class="text-danger">NA</span></span><br>
+        <span style="font-size:15px">Date of Processing:{{data.dateOfProcessing}} <span ng-if="!data.dateOfProcessing" class="text-danger">NA</span> </span><br>
+        <span style="font-size:15px">Payslips:{{data.payslips.length}}</span>
+      </div>
+      <div class="col-md-2">
+        <span style="color:orange;" ng-if="data.status == 'created'">{{data.status | humanize}}</span>
+        <span style="color:black;" ng-if="data.status == 'submitted'">{{data.status | humanize}}</span>
+        <span style="color:blue;" ng-if="data.status == 'approved'">{{data.status | humanize}}</span>
+        <span style="color:green;" ng-if="data.status == 'processed'">{{data.status | humanize}}</span>
+        <span class="icon fa fa-chevron-circle-down" ng-if="data.status == 'reconciled'">{{data.status}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

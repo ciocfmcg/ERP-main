@@ -1,0 +1,33 @@
+<div style="padding-top:20px;" ng-controller="workforceManagement.organization.roles.info">
+  <div class="col-md-10">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:14vh;position:relative;">
+
+
+      <div class="row text-center">
+        <h2>{{roles.name}}</h2>
+      </div>
+    </div>
+    <div class="col-md-9" style="padding:20px;border-left:solid 1px #eeeeee;">
+
+
+      <label>Division:</label>
+      <span>
+        {{roles.division.name}}
+      </span>
+      <br>
+
+
+      <label>Unit:</label>
+      <span>
+        {{roles.unit.name}}
+      </span>
+      <br>
+
+
+      <label>Department:</label>
+      <span>
+      {{roles.department.dept_name}}
+      </span>
+      <br>
+    </div>
+  </div>

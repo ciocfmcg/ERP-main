@@ -1,0 +1,105 @@
+<div class="container-fluid" ng-controller="sudo.manageUsers.editPayroll">
+
+  <h3>Edit payroll for : {{user.first_name}}</h3>
+
+  <div class="col-md-6">
+    <div class="form-group" >
+      <label>HRA</label>
+      <input type="tel" class="form-control" ng-model="form.hra" required  placeholder="HRA">
+    </div>
+    <div class="form-group">
+      <label>Special Allowance</label>
+      <input type="tel" class="form-control" ng-model="form.special" required placeholder="Special">
+    </div>
+    <div class="form-group">
+      <label>LTA</label>
+      <input type="tel" class="form-control" ng-model="form.lta" required placeholder="LTA">
+    </div>
+    <div class="form-group">
+      <label >Basic</label>
+      <input type="tel" class="form-control" ng-model="form.basic" required placeholder="Basic">
+    </div>
+    <div class="form-group">
+      <label >AdHOC</label>
+      <input type="tel" class="form-control" ng-model="form.adHoc" required placeholder="Ad-HOC">
+    </div>
+    <div class="form-group">
+      <h4>Medical insurence</h4>
+    </div>
+    <div class="form-group">
+      <label >Policy Number</label>
+      <input type="tel" class="form-control" ng-model="form.policyNumber" required placeholder="Policy Number">
+    </div>
+    <div class="form-group">
+      <label >Provider</label>
+      <input type="tel" class="form-control" ng-model="form.provider" required placeholder="Provider">
+    </div>
+    <div class="form-group">
+      <label >Amount</label>
+      <input type="tel" class="form-control" ng-model="form.amount" required placeholder="Amount">
+    </div>
+    <div>
+      <input type="checkbox" ng-model="form.noticePeriodRecovery">
+        <span>Notice Period Recovery</span>
+    </div>
+    <div class="form-group">
+      <h4>Leaves</h4>
+    </div>
+    <div class="form-group">
+      <label >Annual Leaves</label>
+      <input type="tel" class="form-control" ng-model="form.al" required placeholder="AL">
+    </div>
+    <div class="form-group">
+      <label >Medical Leaves</label>
+      <input type="tel" class="form-control" ng-model="form.ml" required placeholder="ML">
+    </div>
+    <div class="form-group">
+      <label >AdHOC Leaves</label>
+      <input type="tel" class="form-control" ng-model="form.adHocLeaves" required placeholder="Ad-HOC Leaves">
+    </div>
+    <!-- <div class="form-group">
+      <label >Joinning Date</label>
+      <input type="date" class="form-control" ng-model="form.joiningDate" required placeholder="Joinning Date">
+    </div> -->
+    <div class="form-group">
+      <label >Joinning Date</label>
+      <div class="input-group">
+        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.joiningDate" is-open="statusDue.opened" ng-init="today" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label >Last Working Date</label>
+      <div class="input-group">
+        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.lastWorkingDate" is-open="statusLast.opened" ng-init="today" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="statusLast.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </div>
+    </div>
+    <div>
+      <input type="checkbox" ng-model="form.off">
+      <span>Saturday Off</span>
+    </div>
+    <div class="form-group">
+      <h4>Bank Details</h4>
+    </div>
+    <div class="form-group">
+      <label >Account Number</label>
+      <input type="tel" class="form-control" ng-model="form.accountNumber" required placeholder="Account Number">
+    </div>
+    <div class="form-group">
+      <label >IFSC Code</label>
+      <input type="tel" class="form-control" ng-model="form.ifscCode" required placeholder="IFSC Code">
+    </div>
+    <div class="form-group">
+      <label >Bank Name</label>
+      <input type="tel" class="form-control" ng-model="form.bankName" required placeholder="Bank Details">
+    </div>
+    <div class="col-md-6 text-left" style="margin-top: 27px;">
+      <button ng-click="save()" type="button" class="btn btn-success">Save</button>
+    </div>
+  </div>
+</div>

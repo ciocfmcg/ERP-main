@@ -35,14 +35,8 @@
           <a class="page-scroll" href="/blog/">Blog</a>
         </li>
         <li>
-        </li>
-        <li>
           <a class="page-scroll" href="/news/">News & Media</a>
         </li>
-        <!-- <li>
-                    <a class="page-scroll" href="#about">About</a>
-                </li> -->
-
 
         <li>
           <a class="page-scroll" href="/career/">Career</a>
@@ -72,17 +66,17 @@
         </div>
       </section>
       <section style="padding: 0px 0;">
-        <div class="container-fluid" style="background-color:#eeeeee;padding:20px;">
+        <div class="container-fluid" style="background-color:#fff;padding:20px;">
           <div class="row">
             <div class="col-md-12">
               <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p><br><br>
               <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
             </div>
           </div>
-          <div class="row">
+          <div class="row" >
             <div class="col-md-12">
               <div class="job-header">
-                <h5 style="text-transform:uppercase;color:rgb(16, 68, 106);">bangalore</h5>{{elements}}
+                <h5 style="text-transform:uppercase;color:rgb(16, 68, 106);">bangalore</h5>
                 <ul class="row table-header hidden-xs" style="list-style-type:none;">
                   <li class="col-md-3">Role</li>
                   <li class="col-md-3">Funtional Area</li>
@@ -90,73 +84,22 @@
                   <li class="col-md-3"></li>
                 </ul>
               </div>
-              <div class="job-section" ng-repeat="data in elements">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">{{data.role}}</li>
-                  <li class="col-md-3">{{data.functionalarea}}</li>
-                  <li class="col-md-3">{{data.experience}}</li>
-                  <li class="col-md-3">{{data.roledetails}} <i class="fa fa-angle-down" aria-hidden="true" style="cursor:pointer;" ng-click="data.isCollapsed = !data.isCollapsed"></i></li>
-                </ul>
-               <div collapse="data.isCollapsed" id="demo">
-                <div class="row" ng-show="data.isCollapsed">
-                  <div class="col-md-12" style="margin-top:30px">
-                    <p>{{data.notes}}</p>
-                  </div>
-                  <div class="col-md-12 text-right" style="margin-bottom:20px;margin-left: -20px;">
-                    <button class="btn btn-primary">Apply</button>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <!-- <div class="job-section" style="margin-top:20px">
+              <div class="job-section" style="margin-top:20px">
                 <ul class="row job" style="list-style-type:none;">
                   <li class="col-md-3">Backend Developer</li>
                   <li class="col-md-3">Web Application Development</li>
                   <li class="col-md-3">0-1 years</li>
-                  <li class="col-md-3">view details <i class="fa fa-angle-down" aria-hidden="true" style="cursor:pointer;" data-toggle="collapse" data-target="#demo1"></i></li>
                 </ul>
-              </div>
-              <div id="demo1" class="collapse">
-                <div class="row">
-                  <div class="col-md-12" style="margin-top:30px">
-                    <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
-                  </div>
-                </div>
-                <div class="row" >
-                  <div class="col-md-12 text-right" style="margin-bottom:20px;margin-left: -20px;">
-                    <button class="btn btn-primary">Apply</button>
-                  </div>
-                </div>
               </div>
               <div class="job-section" style="margin-top:20px">
                 <ul class="row job" style="list-style-type:none;">
                   <li class="col-md-3">Android Developer</li>
                   <li class="col-md-3">Web Application Development</li>
                   <li class="col-md-3">0-1 years</li>
-                  <li class="col-md-3">view details <i class="fa fa-angle-down" aria-hidden="true" style="cursor:pointer;" data-toggle="collapse" data-target="#demo2"></i></li>
+
                 </ul>
               </div>
-              <div id="demo2" class="collapse">
-                <div class="row">
-                  <div class="col-md-12" style="margin-top:30px">
-                    <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
-                  </div>
-                </div>
-                <div class="row" >
-                  <div class="col-md-12 text-right" style="margin-bottom:20px;margin-left: -20px;">
-                    <button class="btn btn-primary">Apply</button>
-                  </div>
-                </div>
-              </div>
-              <div class="job-section" style="margin-top:20px">
-                <ul class="row job" style="list-style-type:none;">
-                  <li class="col-md-3">Software Developer Intern(Frontend,Backend,Andriod)</li>
-                  <li class="col-md-3">Web Application Development</li>
-                  <li class="col-md-3">0-1 years</li>
-                  <li class="col-md-3">view details <i class="fa fa-angle-down" aria-hidden="true" style="cursor:pointer;" data-toggle="collapse" data-target="#demo3"></i></li>
-                </ul>
-              </div>
-              <div id="demo3" class="collapse">
+              <!-- <div id="demo2" class="collapse">
                 <div class="row">
                   <div class="col-md-12" style="margin-top:30px">
                     <p>The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.</p>
@@ -168,9 +111,18 @@
                   </div>
                 </div>
               </div> -->
+              <div class="job-section" style="margin-top:20px">
+                <ul class="row job" style="list-style-type:none;">
+                  <li class="col-md-3">Software Developer Intern(Frontend,Backend,Andriod)</li>
+                  <li class="col-md-3">Web Application Development</li>
+                  <li class="col-md-3">0-1 years</li>
+
+                </ul>
+              </div>
+      
               <div class="row" style="margin-top:20px">
                 <div class="col-md-12">
-                  <p>We're aggressively looking out for software engineers and interns. If you are looking for a fresher job in Bangalore or internship  in Bangalore please mail your resume and cover letter to <strong>jobs@cioc.co.in.</strong></p>
+                  <p>We're aggressively looking out for software engineers and interns. If you are looking for a fresher job in Bangalore or internship  in Bangalore please mail your resume and cover letter to <strong>jobs@cioc.in.</strong></p>
                 </div>
               </div>
             </div>

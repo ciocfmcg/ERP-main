@@ -212,6 +212,18 @@ def team(request):
 def career(request):
     return render(request,"career.html")
 
+def policy(request):
+    return render(request,"policy.html")
+
+def terms(request):
+    return render(request,"terms.html")
+
+def refund(request):
+    return render(request,"refund.html")
+
+def contacts(request):
+    return render(request,"contacts.html")
+
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):
     u = request.user
@@ -237,7 +249,7 @@ class userProfileAdminModeViewSet(viewsets.ModelViewSet):
     queryset = profile.objects.all()
 
 class userDesignationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,isAdminOrReadOnly ,)
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = designation.objects.all()
     serializer_class = userDesignationSerializer
 
@@ -290,3 +302,10 @@ class rankViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = rank.objects.all()
     serializer_class = rankSerializer
+
+class payrollViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = payroll.objects.all()
+    serializer_class = payrollSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user' ]

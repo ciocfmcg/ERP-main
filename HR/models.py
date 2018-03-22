@@ -129,37 +129,67 @@ class rank(models.Model):
     created = models.DateTimeField(auto_now_add = True)
 
 class designation(models.Model):
-    DOMAIN_CHOICES = (
-        ('Not selected..' , 'Not selected..'),
-        ('Automotive' , 'Automotive'),
-        ('Service' , 'Service'),
-        ('University' , 'University'),
-        ('FMCG' , 'FMCG'),
-        ('Power' , 'Power'),
-        ('Pharmaceuticals' , 'Pharmaceuticals'),
-        ('Manufacturing' , 'Manufacturing'),
-        ('Tele Communications' , 'Tele Communications'),
-    )
-    UNIT_TYPE_CHOICE = (
-        ('Not selected..' , 'Not selected..'),
-        ('Research and Development' , 'Research and Development'),
-        ('Operations' , 'Operations'),
-        ('Management' , 'Management'),
-    )
-
-    """ One more field can be user here
-    """
+    # DOMAIN_CHOICES = (
+    #     ('Not selected..' , 'Not selected..'),
+    #     ('Automotive' , 'Automotive'),
+    #     ('Service' , 'Service'),
+    #     ('University' , 'University'),
+    #     ('FMCG' , 'FMCG'),
+    #     ('Power' , 'Power'),
+    #     ('Pharmaceuticals' , 'Pharmaceuticals'),
+    #     ('Manufacturing' , 'Manufacturing'),
+    #     ('Tele Communications' , 'Tele Communications'),
+    # )
+    # UNIT_TYPE_CHOICE = (
+    #     ('Not selected..' , 'Not selected..'),
+    #     ('Research and Development' , 'Research and Development'),
+    #     ('Operations' , 'Operations'),
+    #     ('Management' , 'Management'),
+    # )
+    #
+    # """ One more field can be user here
+    # """
     user = models.OneToOneField(User)
-    unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
-    domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
-    unit = models.CharField(max_length = 30 , null = True) # this \should be unique for a given facilty
-    department = models.CharField(max_length = 30 , null = True)
-    rank = models.ForeignKey( rank , null = True )
+    # unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
+    # domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
+    # unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty
+    # department = models.CharField(max_length = 30 , null = True)
+    # rank = models.ForeignKey( rank , null = True )
     reportingTo = models.ForeignKey(User , related_name = "managing" , null=True)
     primaryApprover = models.ForeignKey(User, related_name = "approving" , null=True)
     secondaryApprover = models.ForeignKey(User , related_name = "alsoApproving" , null=True)
 
 User.designation = property(lambda u : designation.objects.get_or_create(user = u)[0])
+
+
+class payroll(models.Model):
+    user = models.ForeignKey(User , related_name = "payrollAuthored" , null=False)
+    # user = models.OneToOneField(User)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    hra = models.PositiveIntegerField(null = True)
+    special = models.PositiveIntegerField(null = True)
+    lta = models.PositiveIntegerField(null = True)
+    basic = models.PositiveIntegerField(null = True)
+    adHoc = models.PositiveIntegerField(null = True)
+    policyNumber = models.CharField(null = True , max_length = 50)
+    provider = models.CharField(max_length = 30 , null = True)
+    amount = models.PositiveIntegerField(null = True)
+    noticePeriodRecovery = models.BooleanField(default=False)
+    al = models.PositiveIntegerField(null = True)
+    ml = models.PositiveIntegerField(null = True)
+    adHocLeaves = models.PositiveIntegerField(null = True)
+    joiningDate = models.DateField(null = True)
+    off = models.BooleanField(default=True)
+    accountNumber = models.CharField(null = True , max_length = 40)
+    ifscCode = models.CharField(max_length = 30 , null = True)
+    bankName = models.CharField(max_length = 30 , null = True)
+    deboarded = models.BooleanField(default = False)
+    lastWorkingDate = models.DateField(null = True)
+
+User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
+
+
 
 @receiver(user_signed_up, dispatch_uid="user_signed_up")
 def user_signed_up_(request, user, **kwargs):

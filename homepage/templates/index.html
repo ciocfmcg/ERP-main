@@ -3,12 +3,15 @@
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+<<<<<<< HEAD
 
 
 
 <nav class="navbar navbar-default navbar-shrink navbar-fixed-top">
+=======
+<nav class="navbar navbar-default navbar-shrink bg-blue navbar-fixed-top">
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
   <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header page-scroll">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
           <span class="sr-only">Toggle navigation</span>
@@ -20,8 +23,6 @@
         <img src="/static/images/rackmint_invert.svg" style="margin-top:-25px;max-width:400px;" height="60">
       </a>
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -31,24 +32,17 @@
           <a class="page-scroll" href="#portfolio">Portfolio</a>
         </li>
         <li>
-          <a class="page-scroll" href="#team">Team</a>
+          <a class="page-scroll" href="/team/">Team</a>
         </li>
         <li>
-          <a class="page-scroll" href="#contact">Contact</a>
+          <a class="page-scroll" href="/contacts/">Contact</a>
         </li>
         <li>
           <a class="page-scroll" href="/blog/">Blog</a>
         </li>
         <li>
-        </li>
-        <li>
           <a class="page-scroll" href="/news/">News & Media</a>
         </li>
-        <!-- <li>
-                    <a class="page-scroll" href="#about">About</a>
-                </li> -->
-
-
         <li>
           <a class="page-scroll" href="/career/">Career</a>
         </li>
@@ -57,9 +51,7 @@
         </li>
       </ul>
     </div>
-    <!-- /.navbar-collapse -->
   </div>
-  <!-- /.container-fluid -->
 </nav>
 
 {% endblock %}
@@ -69,6 +61,7 @@
   {% verbatim %}
   <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
     <header style="background-image: url({{mainBannerImages[bannerID]}});height:100vh;width:100%;">
+<<<<<<< HEAD
       <iframe class="ware" width="560" style="left:60px;bottom:90px;position:absolute;" height="315" src="https://www.youtube.com/embed/qh5ciVvYgP0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </header>
   </div>
@@ -76,20 +69,40 @@
   <!--/chatbox-->
   <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
 
+=======
+      <div class="container" style="overflow:hidden;">
+        <div class="intro-text" style="text-align:right;">
+          <div class="intro-lead-in" style="font-size:36px;padding-right:53px;">We are your technology partner</div>
+          <div class="btn1" style="padding-right: 40px;">
+            <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+  <!--/chatbox-->
+  <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
     <div class="row" style="border:1px solid #315f82;margin:0px;background-color: #174b6d;">
       <div class="col-md-10">
         <span ng-if="data.started" style="font-size:15px;color:white;"><i class="fa fa-user-o" ></i>{{name}}</span>
         <span ng-if="!data.started" style="font-size:15px;color:white;cursor:pointer;" ng-click="data.minimized = false;"><i class="fa  fa-envelope" ></i> Chat with our support team</span>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
       </div>
       <div class="col-md-2">
         <i class="fa fa-angle-{{data.minimized ? 'up':'down'}} pull-right" style="color:white;margin-top:4px;cursor:pointer;" ng-click="data.minimized = !data.minimized"></i>
       </div>
     </div>
     <div class="row" style="border:1px solid #174b6d;margin: 0px;padding:0px;background-color:#e1e5e8;">
+<<<<<<< HEAD
       <!-- <div class="col-md-12" style="background-color:#e1e5e8;"> -->
 
+=======
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
       <div class="container-fluid" ng-if="!data.started && !data.minimized" style="padding:20px;">
         <form name="myForm">
         <div class="form-group">
@@ -97,13 +110,17 @@
           <input type="text" name="name" class="form-control" ng-model="data.name" required>
           <div ng-show="myForm.name.$error.required && myForm.name.$touched" class="text-danger">Required!</div>
         </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
         <div class="form-group">
           <label>Email</label>
           <input type="email" class="form-control" name="email" ng-model="data.email" required>
           <div ng-show="myForm.email.$error.email" class="text-danger">Invalid email!</div>
           <div ng-show="myForm.email.$error.required && myForm.email.$touched" class="text-danger">Required!</div>
         </div>
+<<<<<<< HEAD
 
         <button ng-click="authentication()" type="button" class="btn btn-primary" >Start</button>
 
@@ -114,10 +131,17 @@
       <div  ng-if="data.started" style="height:{{data.minimized? '0':'300' }}px; overflow-y:auto;" class="container-fluid">
 
 
+=======
+        <button ng-click="authentication()" type="button" class="btn btn-primary" >Start</button>
+      </form>
+      </div>
+      <div  ng-if="data.started" style="height:{{data.minimized? '0':'300' }}px; overflow-y:auto;" class="container-fluid">
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
         <div class="row" ng-repeat="message in messages" style="padding:0px;">
           <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};" >
             <p style=>{{message.msg}}</p>
           </div>
+<<<<<<< HEAD
 
         </div>
       </div>
@@ -126,6 +150,12 @@
     <div class="row" style="border:1px solid #315f82;margin:0px;background-color:#e1e5e8;border-top:none;" ng-if="!data.minimized && data.started">
       <!-- <div class="col-md-11" style="margin-top: 8px;"> -->
       <!-- <div class="text-bar"> -->
+=======
+        </div>
+      </div>
+    </div>
+    <div class="row" style="border:1px solid #315f82;margin:0px;background-color:#e1e5e8;border-top:none;" ng-if="!data.minimized && data.started">
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
       <div class="col-md-9" style="padding:0px;">
         <input type="text" class="form-control" ng-model="data.msgText" placeholder="Message" style="border-radius:0px;"></div>
         <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paper-plane-o" ng-click="send()" style="cursor:pointer"></i></div>
@@ -133,6 +163,7 @@
 
     </div>
   </div>
+<<<<<<< HEAD
 
   <!--header  style="background:rgb(29, 98, 180);height:100vh;">
       <div class="container" style="overflow:hidden;position:relative;height:100%;width:100%;">
@@ -193,13 +224,18 @@
       </div>
   </header-->
 
+=======
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
   {% endverbatim %}
   <!-- Services Section -->
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
       <div class="container-fluid">
         <section id="services">
+<<<<<<< HEAD
 
+=======
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
           <div class="row">
             <div class="col-lg-12 text-center">
               <h2 class="section-heading">Services</h2>
@@ -232,6 +268,7 @@
               <p class="text-muted">When we say mobility we mean serious productivity on the go. Dont let your employee stick to the web or a desktop machine to get the job done. Given them ability to work on the fly.</p>
             </div>
           </div>
+<<<<<<< HEAD
 
         </section>
       </div>
@@ -240,6 +277,14 @@
       <section id="portfolio" class="bg-light-gray">
 
         <div class="row">
+=======
+        </section>
+      </div>
+    </div>
+      <!-- Portfolio Grid Section -->
+      <!-- <section id="portfolio" class="bg-light-gray" style="padding-left:0px;padding-right:0px;"> -->
+        <!-- <div class="row">
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
           <div class="col-lg-12 text-center">
             <h2 class="section-heading">Portfolio/Products</h2>
             <h3 class="section-subheading text-muted">We already have a lot you can use right away.</h3>
@@ -288,6 +333,7 @@
               <p class="text-muted">A chat bot like Siri</p>
             </div>
           </div>
+<<<<<<< HEAD
           <!-- <div class="col-md-4 col-sm-6 portfolio-item">
                   <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
                       <div class="portfolio-hover">
@@ -422,11 +468,141 @@
             <div class="col-lg-12 text-center">
               <h2 class="section-heading">Our Amazing Team</h2>
               <!-- <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3> -->
+=======
+        </div> -->
+        <div class="container" style="padding-left:0px;padding-right:0px;">
+    <div class="container-fluid">
+      <div id="generic_price_table">
+       <div class="container-fluid">
+         <div class="row">
+           <div class="col-md-4">
+             <div class="generic_content active clearfix">
+               <div class="generic_head_price clearfix">
+                  <div class="generic_head_content clearfix">
+                      <!-- <div class="head_bg"></div> -->
+                       <div class="headb"></div>
+                         <div class="head">
+                            <span>Standard</span>
+                         </div>
+                       </div>
+                       <div class="generic_price_tag clearfix">
+                         <span class="price">
+                           <span class="sign">$</span>
+                           <span class="currency">299</span>
+                           <span class="cent">.99</span>
+                           <span class="month">/MON</span>
+                         </span>
+                       </div>
+                     </div>
+                     <div class="generic_feature_list">
+                       <ul>
+                         <li><span>2GB</span> Bandwidth</li>
+                         <li><span>150GB</span> Storage</li>
+                         <li><span>12</span> Accounts</li>
+                         <li><span>7</span> Host Domain</li>
+                         <li><span>24/7</span> Support</li>
+                       </ul>
+                     </div>
+                     <div class="generic_feature_list" style="padding:10px">
+                       <button type="button" class="btn btn-primary">Buy Now</button>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="col-md-4">
+                   <div class="generic_content active clearfix">
+                     <div class="generic_head_price clearfix">
+                       <div class="generic_head_content clearfix">
+                         <div class="head_bg"></div>
+                         <div class="head">
+                           <span>Standard</span>
+                         </div>
+                       </div>
+                       <div class="generic_price_tag clearfix">
+                         <span class="price">
+                           <span class="sign">$</span>
+                           <span class="currency">299</span>
+                           <span class="cent">.99</span>
+                           <span class="month">/MON</span>
+                         </span>
+                       </div>
+                     </div>
+                     <div class="generic_feature_list">
+                       <ul>
+                         <li><span>2GB</span> Bandwidth</li>
+                          <li><span>150GB</span> Storage</li>
+                          <li><span>12</span> Accounts</li>
+                          <li><span>7</span> Host Domain</li>
+                          <li><span>24/7</span> Support</li>
+                       </ul>
+                     </div>
+                     <div class="generic_feature_list" style="padding:10px">
+                       <button type="button" class="btn btn-warning">Buy Now</button>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="col-md-4">
+                   <div class="generic_content active clearfix">
+                     <div class="generic_head_price clearfix">
+                       <div class="generic_head_content clearfix">
+                         <div class="head_b"></div>
+                         <div class="head">
+                           <span>Standard</span>
+                         </div>
+                       </div>
+                       <div class="generic_price_tag clearfix">
+                         <span class="price">
+                           <span class="sign">$</span>
+                           <span class="currency">299</span>
+                           <span class="cent">.99</span>
+                           <span class="month">/MON</span>
+                         </span>
+                       </div>
+                     </div>
+                     <div class="generic_feature_list">
+                       <ul>
+                         <li><span></span> Bandwidth</li>
+                         <li><span></span> Storage</li>
+                         <li><span></span> Accounts</li>
+                         <li><span></span> Host Domain</li>
+                         <li><span>24/7</span> Support</li>
+                       </ul>
+                     </div>
+                     <div class="generic_feature_list" style="padding:10px">
+                       <button type="button" class="btn btn-success">Buy Now</button>
+                     </div>
+                       <!-- div class="generic_price_btn clearfix">
+                         <a class="" href="">Sign up</a>
+                       </div> -->
+                   </div>
+                 </div>
+              </div>
+           </div>
+         </div>
+       </div>
+     </div>
+
+       <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
+       <div class="container" style="padding-left:0px;padding-right:0px;padding-top:0px;box-shadow: -12px 10px 50px 2px #d0d5dd;height:1000px;width: 1169px;">
+         <div class="container-fluid" style="padding-right: 0px;">
+         </div>
+       </div>
+      </section>
+      <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+
+      <!-- </section> -->
+      <!-- Team Section -->
+      <!-- <section id="team" class="bg-light-gray"> -->
+        <!-- <div class="container">
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <h2 class="section-heading">Our Amazing Team</h2>
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
             </div>
           </div>
           <div class="row">
             <div class="col-sm-4">
               <div class="team-member">
+<<<<<<< HEAD
                 <img src="{% static 'images/pradeep.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
                 <h4>Pradeep</h4>
                 <p class="text-muted">Technology</p>
@@ -434,6 +610,15 @@
                   <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                   </li>
                   <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+=======
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Pradeep</h4>
+                <p class="text-muted">Technology</p>
+                <ul class="list-inline social-buttons">
+
+                  </li>
+
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                   </li>
                   <li><a href="#"><i class="fa fa-linkedin"></i></a>
                   </li>
@@ -442,6 +627,7 @@
             </div>
             <div class="col-sm-4">
               <div class="team-member">
+<<<<<<< HEAD
                 <img src="{% static 'images/raj.jpg' %}" style="height:150px" class="img-responsive img-circle" alt="">
                 <h4>Raj</h4>
                 <p class="text-muted">Technology</p>
@@ -449,6 +635,13 @@
                   <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                   </li>
                   <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+=======
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Raj</h4>
+                <p class="text-muted">Technology</p>
+                <ul class="list-inline social-buttons">
+                  </li>
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                   </li>
                   <li><a href="#"><i class="fa fa-linkedin"></i></a>
                   </li>
@@ -457,6 +650,7 @@
             </div>
             <div class="col-sm-4">
               <div class="team-member">
+<<<<<<< HEAD
                 <img src="{% static 'images/sowmya.jpeg' %}" style="height:150px" class="img-responsive img-circle" alt="">
                 <h4>Sowmya</h4>
                 <p class="text-muted">Sales</p>
@@ -464,6 +658,15 @@
                   <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                   </li>
                   <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+=======
+                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <h4>Sowmya</h4>
+                <p class="text-muted">Sales</p>
+                <ul class="list-inline social-buttons">
+
+                  </li>
+
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                   </li>
                   <li><a href="#"><i class="fa fa-linkedin"></i></a>
                   </li>
@@ -476,9 +679,15 @@
                 <h4>Deepika</h4>
                 <p class="text-muted">Finance</p>
                 <ul class="list-inline social-buttons">
+<<<<<<< HEAD
                   <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                   </li>
                   <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+=======
+
+                  </li>
+
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                   </li>
                   <li><a href="#"><i class="fa fa-linkedin"></i></a>
                   </li>
@@ -491,9 +700,15 @@
                 <h4>Santosh</h4>
                 <p class="text-muted">Admin</p>
                 <ul class="list-inline social-buttons">
+<<<<<<< HEAD
                   <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
                   </li>
                   <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
+=======
+
+                  </li>
+
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                   </li>
                   <li><a href="#"><i class="fa fa-linkedin"></i></a>
                   </li>
@@ -502,7 +717,11 @@
             </div>
             <div class="col-sm-4 text-center">
               <div class="team-member">
+<<<<<<< HEAD
                 <!-- <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt=""> -->
+=======
+
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                 <a class="circleBtn" href="/team">More <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
               </div>
             </div>
@@ -512,6 +731,7 @@
               <p class="large text-muted">We started turning our own ideas into reality of free and open source business platform in the form of LibreERP and LibreRPA then we thought why not help others too in their entrepreneurial journey</p>
             </div>
           </div>
+<<<<<<< HEAD
         </div>
       </section>
 
@@ -608,6 +828,43 @@
                 <li><a href="#">Privacy Policy</a>
                 </li>
                 <li><a href="#">Terms of Use</a>
+=======
+        </div> -->
+      <!-- </section> -->
+
+      <!-- Contact Section -->
+
+      {% endblock %} {% block footer %}
+      <footer style="background-color: #eeeeee;">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 text-left">
+              <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
+            </div>
+            <div class="col-md-6 text-right">
+              <ul class="list-inline quicklinks">
+                <li><a href="/policy/">Privacy Policy</a>
+                </li>
+                <li><a href="/terms/">Terms of Use</a>
+                </li>
+                <li><a href="/refund/">Refund and Cancellation Policy </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <ul class="list-inline social-buttons">
+                <li class="facebook"><a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li class="linkedin"><a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+                <li class="instagram"><a href="#"><i class="fa fa-instagram"></i></a>
+                </li>
+                <li class="youtube"><a href="#"><i class="fa fa-youtube-play"></i></a>
+                </li>
+                <li class="google"><a href="#"><i class="fa fa-google-plus"></i></a>
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                 </li>
               </ul>
             </div>
@@ -638,11 +895,14 @@
                   <p>Minimize your business expenditure by switching to LibreERP. Once deployed it gives you project management , HR, Business management and many more modules along with their mobile apps.</p>
                   <p>
                     <strong>Want to try it out?</strong>You can download the source at <a href="https://github.com/pkyad/libreERP-main">github.com</a>, or you can contact us by sending an email to info@cioc.co.in</p>
+<<<<<<< HEAD
                   <!-- <ul class="list-inline">
                             <li>Date: July 2014</li>
                             <li>Client: Round Icons</li>
                             <li>Category: Graphic Design</li>
                         </ul> -->
+=======
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
                   <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
                 </div>
               </div>
@@ -795,6 +1055,10 @@
 <script src="{% static 'js/jquery.easing.min.js' %}"></script>
 <script src="{% static 'js/classie.js' %}"></script>
 <!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
+<<<<<<< HEAD
+=======
+
+>>>>>>> 42da606948e585d9ccfc4159a7565966463cc237
 <script src="{% static 'js/agency.js' %}"></script>
 <script src="{% static 'js/angular.min.js' %}"></script>
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>

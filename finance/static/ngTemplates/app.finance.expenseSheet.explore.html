@@ -2,9 +2,9 @@
   <div class="col-md-4">
 
     <h3>Invocies</h3>
-    <div ng-repeat="i in expense.invoices">
-      <div class="card row" ng-click="viewInvoice($index)"  style="margin-bottom:20px;padding:10px;position:relative;cursor:pointer;">
-        <i class="fa fa-lg fa-check-circle text-{{i.approved ? 'success': 'danger'}}" style="position:absolute;top:10px;right:10px;" ></i>
+    <div ng-repeat="i in invoices">
+      <div class="card row" ng-click="viewInvoice($index)" style="margin-bottom:20px;padding:10px;position:relative;cursor:pointer;">
+        <i class="fa fa-lg fa-check-circle text-{{i.approved ? 'success': 'danger'}}" style="position:absolute;top:10px;right:10px;"></i>
         <div class="col-md-2">
           <div class="row">
             <i class="fa fa-file-text-o fa-3x text-muted"></i>
@@ -23,7 +23,7 @@
             <strong>Dated :</strong>{{i.dated | date:'dd MMM yy'}}
           </div>
           <div class="row">
-            {{i.description}}
+            <strong>Code:</strong> {{i.code}}
           </div>
         </div>
       </div>
@@ -31,18 +31,42 @@
   </div>
   <div class="col-md-8">
     <div class="row" style="padding:20px;padding-left:30px;">
-      <button type="button" class="btn btn-primary">Save</button>
-      <switch ng-model="expense.approved" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approved :</span>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-primary" ng-click=save(expense.pk)>Save</button>
+      </div>
+      <div class="col-md-10 pull-right">
+        <div class="form-group">
+          <div class="row pull-right">
+            <div class="col-md-4">
+              <span>Approved:</span>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control" ng-model="form.approved">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <switch ng-model="form.approved" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approved :</span> -->
     </div>
     <div class="container-fluid" style="padding-top:20px;">
-      <strong>Project :</strong> {{expense.project.title}} <hr>
-      <strong>Created :</strong> {{expense.created | date: 'dd MMM yyyy'}} <hr>
-      <strong>Approval Matrix :</strong> {{expense.approvalMatrix}} <hr>
-      <strong>Approval Stage :</strong> {{expense.approvalStage}} <hr>
-      <strong>Notes :</strong> {{expense.notes}} <hr>
-      <strong>Dispensed :</strong> {{expense.dispensed}}<hr>
-      <strong>Transaction :</strong> {{expense.transaction}} <hr>
-
+      <strong>Project :</strong> {{expense.project.title}}
+      <hr>
+      <strong>Created :</strong> {{expense.created | date: 'dd MMM yyyy'}}
+      <hr>
+      <strong>Approval Matrix :</strong> {{expense.approvalMatrix}}
+      <hr>
+      <strong>Approval Stage :</strong> {{expense.approvalStage}}
+      <hr>
+      <strong>Notes :</strong> {{expense.notes}}
+      <hr>
+      <strong>Dispensed :</strong> {{expense.dispensed}}
+      <hr>
+      <strong>Transaction :</strong> {{expense.transaction}}
+      <hr>
     </div>
   </div>
 </div>

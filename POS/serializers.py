@@ -30,7 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics','serialId','reorderTrashold')
         read_only_fields = ( 'user' , 'productMeta')
     def create(self , validated_data):
         print 'entered','***************'
@@ -51,7 +51,8 @@ class ProductSerializer(serializers.ModelSerializer):
     #     instance.save()
     #     return instance
     def update(self ,instance, validated_data):
-        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics']:
+        print 'entered in updating ************************************'
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics','serialId','reorderTrashold']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
