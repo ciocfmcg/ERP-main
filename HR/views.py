@@ -245,7 +245,7 @@ class userProfileAdminModeViewSet(viewsets.ModelViewSet):
     queryset = profile.objects.all()
 
 class userDesignationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,isAdminOrReadOnly ,)
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = designation.objects.all()
     serializer_class = userDesignationSerializer
 

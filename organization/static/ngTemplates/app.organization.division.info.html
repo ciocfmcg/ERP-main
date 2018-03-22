@@ -1,0 +1,64 @@
+<div ng-controller="workforceManagement.organization.division.info" style="padding-top:20px;">
+  <div class="col-md-10">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:14vh;position:relative;">
+
+
+
+      <div class="row text-center">
+        <img ng-src="{{division.logo}}" style="width:100px;">
+      </div>
+      <div class="row text-center">
+        <h4>{{division.name}}</h4>
+      </div>
+    </div>
+    <div class="col-md-9" style="padding:20px;border-left:solid 1px #eeeeee;">
+
+
+      <label>Name:</label>
+      <span>
+       {{division.name}}
+      </span>
+      <br>
+
+      <label>Website:</label>
+      <span>
+        {{division.website}}
+      </span>
+      <br>
+
+      <label>GSTIN:</label>
+      <span>
+          {{division.gstin}}
+      </span>
+      <br>
+
+      <label>PAN:</label>
+      <span>
+          {{division.pan}}
+      </span>
+      <br>
+
+      <label>L1:</label>
+      <span>
+          {{division.l1}}
+      </span>
+      <br>
+
+      <label>L2:</label>
+      <span>
+        {{division.l2}}
+      </span>
+      <br>
+      <label>Contact:</label> <br>
+
+      <div class="row" ng-repeat="c in division.contacts">
+        <div class="col-md-2">
+          <img ng-src="{{c | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;">
+        </div>
+        <div class="col-md-4">
+          {{c | getName}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
