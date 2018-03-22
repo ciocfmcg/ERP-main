@@ -12,6 +12,8 @@ app.config(function($stateProvider) {
     })
 });
 app.controller("workforceManagement.organization.roles", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+
+
   $scope.data = {
     tableData: []
   };
@@ -33,35 +35,17 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
 
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
-
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
-          var title = 'Edit :';
+          var title = 'Edit Role :';
           var appType = 'rolesEditor';
         } else if (action == 'info') {
-          var title = 'Details :';
+          var title = 'Browse Role :';
           var appType = 'rolesInfo';
         }
-
-
-        console.log({
-          title: title + $scope.data.tableData[i].name,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i,
-            roles: $scope.data.tableData[i]
-          },
-          active: true
-        });
-
-
         $scope.addTab({
-          title: title + $scope.data.tableData[i].name,
+          title: title + $scope.data.tableData[i].pk,
           cancel: true,
           app: appType,
           data: {
@@ -71,6 +55,7 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
           },
           active: true
         })
+        console.log(title);
       }
     }
   }

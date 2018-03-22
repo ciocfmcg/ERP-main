@@ -29,10 +29,10 @@ class userDesignationSerializer(serializers.ModelSerializer):
     class Meta:
         model = designation
         fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
-        print 'ssssssssssssssssssssssssssssss'
+
         read_only_fields=('user',)
         def create(self , validated_data):
-            print 'ssssssssssssssssssssssssssssss'
+        
             d = designation()
             d.user=User.objects.get(pk=self.context['request'].user)
             d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])

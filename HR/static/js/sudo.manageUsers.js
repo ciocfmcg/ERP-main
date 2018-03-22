@@ -317,7 +317,7 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
     });
   }
 
-<<<<<<< HEAD
+
    $scope.editDesignation = function(index){
       // var userData = $scope.tabs[index].data;
       // dataToSend = {
@@ -386,7 +386,7 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
 
 
 
-=======
+
   // $scope.editPayroll = function(index){
   //   var userData = $scope.tabs[index].data;
   //   dataToSend = {
@@ -428,6 +428,6 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
   //      Flash.create('danger', response.status + ' : ' + response.statusText);
   //   });
   // }
->>>>>>> 1935781172480b4009e6cd96245add44da21f882
+
 
 });

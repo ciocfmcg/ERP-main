@@ -23,7 +23,7 @@ def getRolesLogoAttachmentPath(instance , filename ):
 class Division(models.Model):
     name = models.CharField(max_length = 200 , null = False)
     website = models.CharField(max_length = 200 , null = False)
-    contacts = models.ManyToManyField(User ,null=True, related_name='divisionsHeading' )
+    contacts = models.ManyToManyField(User , related_name='divisionsHeading' )
     logo = models.FileField(upload_to = getDivisionLogoAttachmentPath , null = True)
     gstin = models.CharField(max_length = 200 , null = False)
     pan = models.CharField(max_length = 200 , null = False)
@@ -44,8 +44,8 @@ class Units(models.Model):
     mobile = models.PositiveIntegerField(null=True , default=0)
     telephone = models.PositiveIntegerField(null=True , default=0)
     fax = models.PositiveIntegerField(null=True , default=0)
-    contacts = models.ManyToManyField(User ,null=True, related_name='unitsHeading' )
-    division = models.ForeignKey(Division , null = False , related_name = "units")
+    contacts = models.ManyToManyField(User , related_name='unitsHeading' )
+    division = models.ForeignKey(Division , null = True , related_name = "units")
 
 
 
@@ -55,10 +55,10 @@ class Departments(models.Model):
     mobile = models.PositiveIntegerField(null=False)
     telephone = models.PositiveIntegerField(null=True , default=0)
     fax = models.PositiveIntegerField(null=True , default=0)
-    contacts = models.ManyToManyField(User ,null=True, related_name='departmentsHeading' )
+    contacts = models.ManyToManyField(User , related_name='departmentsHeading' )
     # units = models.ForeignKey(Units , null = True , related_name = "departments")
     picture = models.FileField(upload_to = getDepartmentsLogoAttachmentPath , null = True)
-    units = models.ManyToManyField(Units ,null=True, related_name='departmentsHeading' )
+    units = models.ManyToManyField(Units , related_name='departmentsUnits' )
 
 
 

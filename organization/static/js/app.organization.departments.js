@@ -49,7 +49,7 @@ app.controller("workforceManagement.organization.departments", function($scope, 
 
 
         console.log({
-          title: title + $scope.data.tableData[i].name,
+          title: title + $scope.data.tableData[i].pk,
           cancel: true,
           app: appType,
           data: {
@@ -62,7 +62,7 @@ app.controller("workforceManagement.organization.departments", function($scope, 
 
 
         $scope.addTab({
-          title: title + $scope.data.tableData[i].name,
+          title: title + $scope.data.tableData[i].pk,
           cancel: true,
           app: appType,
           data: {
@@ -104,7 +104,7 @@ app.controller("workforceManagement.organization.departments", function($scope, 
 
 
 app.controller("workforceManagement.organization.departments.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
-  console.log($scope.tab);
+
 
   $scope.resetForm = function() {
     $scope.form = {

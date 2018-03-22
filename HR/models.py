@@ -149,7 +149,7 @@ class designation(models.Model):
     #
     # """ One more field can be user here
     # """
-    user = models.OneToOneField(User, null=False)
+    user = models.OneToOneField(User)
     # unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
     # domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
     # unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty

@@ -82,19 +82,23 @@ class DepartmentsSerializer(serializers.ModelSerializer):
         read_only_fields=('contacts','units')
     def create(self , validated_data):
 
-        print self.context['request'].data
+        print '3333333333333333333333',self.context['request'].data
         # a=self.context['request'].data['units'].split(',')
         # for i in a:
         #     print i,type(i)
+        print validated_data
+        del validated_data['units']
         d = Departments(**validated_data)
         # d.units=Units.objects.get(pk=self.context['request'].data['units'])
         d.save()
+        print '111111111111111111'
         # a=self.context['request'].data['contacts'].split(',')
         # b=self.context['request'].data['units'].split(',')
-        for i in self.context['request'].data['contacts'].split(','):
-            print i,type(i)
+        for i in str(self.context['request'].data['contacts']).split(','):
             d.contacts.add(User.objects.get(pk = i))
+            print 'endddddddddddddddddddddddd'
         for i in self.context['request'].data['units'].split(','):
+            print '%%%%%%%%%%%%%%%%%%%%%',self.context['request'].data['units']
             print i,type(i)
             d.units.add(Units.objects.get(pk = i))
             print '@@@@@@@@@@@@@@@@@',validated_data
