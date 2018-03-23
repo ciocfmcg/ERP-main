@@ -37,7 +37,6 @@ urlpatterns = [
     url(r'^terms', terms , name ='terms'),
     url(r'^refund', refund , name ='refund'),
     url(r'^contacts', contacts , name ='contacts'),
-
 ]
 
 if settings.DEBUG:

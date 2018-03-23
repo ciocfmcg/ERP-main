@@ -3,7 +3,6 @@ from django.shortcuts import render
 def index(request):
     return render(request , 'index.html', {"home": True})
 
-
 def blog(request):
     return render(request,"blog.html" , {"home" : False})
 
