@@ -672,10 +672,10 @@ section#contact .form-group {
 
 input:focus ~ .floating-label,
 input:not(:focus):valid ~ .floating-label{
-  top: -5px;
+  top: 6px;
   /* bottom: 10px; */
   left: 5px;
-  font-size: 20px;
+  font-size: 15px;
   opacity: 1;
   color: #147fcc;
 }
@@ -685,7 +685,7 @@ input:not(:focus):valid ~ .floating-label{
   left: 20px;
   top: 40px;
   transition: 0.2s ease all;
-  font-size: 23px;
+  font-size: 18px;
   color: #999;
   /* white-space: nowrap; */
   z-index: 1;

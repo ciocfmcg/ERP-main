@@ -200,29 +200,6 @@ def logoutView(request):
 def root(request):
     return redirect(globalSettings.ROOT_APP)
 
-def blog(request):
-    return render(request,"blog.html")
-
-def news(request):
-    return render(request,"newssection.html")
-
-def team(request):
-    return render(request,"team.html")
-
-def career(request):
-    return render(request,"career.html")
-
-def policy(request):
-    return render(request,"policy.html")
-
-def terms(request):
-    return render(request,"terms.html")
-
-def refund(request):
-    return render(request,"refund.html")
-
-def contacts(request):
-    return render(request,"contacts.html")
 
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):

@@ -4,155 +4,24 @@
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 
-
-<nav class="navbar navbar-default navbar-shrink bg-blue navbar-fixed-top">
-  <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header page-scroll">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-      <a class="navbar-brand paFge-scroll" href="/"><img src="/static/images/rackmint_invert.svg" style="margin-top:-25px;max-width:400px;" height="60"></a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-
-        <li>
-          <a class="page-scroll" href="#services">services</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#portfolio">Portfolio</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#team">Team</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#contact">Contact</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/blog/">Blog</a>
-        </li>
-
-        <li>
-          <a class="page-scroll" href="/news/">News & Media</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/login">Login</a>
-        </li>
-      </ul>
-    </div>
-    <!-- /.navbar-collapse -->
-  </div>
-  <!-- /.container-fluid -->
-</nav>
+{% include "header.html" %}
 
 {% endblock %}
-<!-- Header -->
 {% block content %}
 <div ng-app="app" ng-controller="main">
-  <!-- Services Section -->
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
-      <div class="container-fluid">
-      <!-- <section id="service1">
-        <div class="container-fluid">
-          <div class="row" style="margin-right: 55px;margin-left: 55px;">
-            <div class="col-md-3 team">
-              <a href="#person1" class="teamdetails-link" data-toggle="modal">
-              <div class="teamdetails-hover" >
-                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                  <i class="fa fa-plus fa-3x"></i>
-                </div>
-              </div>
-              </a>
-              <div class="team-details">
-                <div class="container-fluid" style="padding-top: 80px;">
-                  <span class="name">Name</span><br>
-                  <span class="designation">Designation</span><br><br>
-                  <p>This a simple text</p>
-                </div>
-              </div>
-              <div class="member-hover">
-                <img src="/static/images/avatar.png" class="avatar">
-              </div>
-            </div>
-            <div class="col-md-3 team">
-              <a href="#person2" class="teamdetails-link" data-toggle="modal">
-              <div class="teamdetails-hover" >
-                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                  <i class="fa fa-plus fa-3x"></i>
-                </div>
-              </div>
-              </a>
-              <div>
-                <img src="/static/images/avatar04.png" class="avatar">
-              </div>
-              <div class="team-details">
-                <div class="container-fluid" style="padding-top: 80px;">
-                  <span class="name">Name</span><br>
-                  <span class="designation">Designation</span><br><br>
-                  <p>This a simple text</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 team">
-              <a href="#person3" class="teamdetails-link" data-toggle="modal">
-              <div class="teamdetails-hover" >
-                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                  <i class="fa fa-plus fa-3x"></i>
-                </div>
-              </div>
-              </a>
-              <div class="team-details">
-                <div class="container-fluid" style="padding-top: 80px;">
-                  <span class="name">Name</span><br>
-                  <span class="designation">Designation</span><br><br>
-                  <p>This a simple text</p>
-                </div>
-              </div>
-              <div>
-                <img src="/static/images/avatar2.png" class="avatar">
-              </div>
-            </div>
-            <div class="col-md-3 team">
-              <a href="#person4" class="teamdetails-link" data-toggle="modal">
-              <div class="teamdetails-hover" >
-                <div class="teamdetails-hover-content" style="position: absolute;top: 50%;width: 100%;height: 20px;margin-top: -145px;text-align: center;font-size: 20px;color: #fff;">
-                  <i class="fa fa-plus fa-3x"></i>
-                </div>
-              </div>
-              </a>
-              <div>
-                <img src="/static/images/avatar5.png" class="avatar">
-              </div>
-              <div class="team-details">
-                <div class="container-fluid" style="padding-top: 80px;">
-                  <span class="name">Name</span><br>
-                  <span class="designation">Designation</span><br><br>
-                  <p>This a simple text</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> -->
       <section id="team" class="bg-light-gray">
         <div class="container">
           <div class="row">
             <div class="col-lg-12 text-center">
               <h2 class="section-heading">Our Amazing Team</h2>
-              <!-- <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3> -->
             </div>
           </div>
           <div class="row">
             <div class="col-sm-4">
               <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <img src="{% static 'images/pradeep.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
                 <h4>Pradeep</h4>
                 <p class="text-muted">Technology</p>
                 <ul class="list-inline social-buttons">
@@ -167,7 +36,7 @@
             </div>
             <div class="col-sm-4">
               <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <img src="{% static 'images/raj.jpg' %}" style="height:150px" class="img-responsive img-circle" alt="">
                 <h4>Raj</h4>
                 <p class="text-muted">Technology</p>
                 <ul class="list-inline social-buttons">
@@ -180,7 +49,7 @@
             </div>
             <div class="col-sm-4">
               <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <img src="{% static 'images/sowmya.jpeg' %}" style="height:150px" class="img-responsive img-circle" alt="">
                 <h4>Sowmya</h4>
                 <p class="text-muted">Sales</p>
                 <ul class="list-inline social-buttons">
@@ -193,9 +62,9 @@
                 </ul>
               </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-4 col-md-offset-4">
               <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
+                <img src="{% static 'images/deepika.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
                 <h4>Deepika</h4>
                 <p class="text-muted">Finance</p>
                 <ul class="list-inline social-buttons">
@@ -208,26 +77,6 @@
                 </ul>
               </div>
             </div>
-            <div class="col-sm-4">
-              <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                <h4>Santosh</h4>
-                <p class="text-muted">Admin</p>
-                <ul class="list-inline social-buttons">
-                  <!-- <li><a href="#"><i class="fa fa-twitter"></i></a> -->
-                  </li>
-                  <!-- <li><a href="#"><i class="fa fa-facebook"></i></a> -->
-                  </li>
-                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-sm-4 text-center">
-              <!-- <div class="team-member">
-                <a class="circleBtn" href="/team">More <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
-              </div> -->
-            </div>
           </div>
           <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center">
@@ -237,142 +86,12 @@
         </div>
       </section>
 
+
+      {% endblock %} {% block footer %}
+
+      {% include "footer.html" %}
+
     </div>
-
-    {% endblock %} {% block footer %}
-    <footer style="background-color: #eeeeee;">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
-          </div>
-          <div class="col-md-4">
-            <ul class="list-inline social-buttons">
-              <!-- <li><a href="#"><i class="fa fa-twitter"></i></a>
-                  </li> -->
-              <li><a href="#"><i class="fa fa-facebook"></i></a>
-              </li>
-              <li><a href="#"><i class="fa fa-linkedin"></i></a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <ul class="list-inline quicklinks">
-              <li><a href="#">Privacy Policy</a>
-              </li>
-              <li><a href="#">Terms of Use</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </footer>
-        <!-- </div> -->
-      <!-- Portfolio Modal 1 -->
-      <div class="portfolio-modal modal fade" id="person1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Name</h2>
-                  <p class="item-intro text-muted">Designation</p>
-                  <img class="img-responsive img-centered" src="/static/images/avatar.png" alt="">
-
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="portfolio-modal modal fade" id="person2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Name</h2>
-                  <p class="item-intro text-muted">Designation</p>
-                  <img class="img-responsive img-centered" src="/static/images/avatar04.png" alt="">
-
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="portfolio-modal modal fade" id="person3" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Name</h2>
-                  <p class="item-intro text-muted">Designation</p>
-                  <img class="img-responsive img-centered" src="/static/images/avatar2.png" alt="">
-
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="portfolio-modal modal fade" id="person4" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Name</h2>
-                  <p class="item-intro text-muted">Designation</p>
-                  <img class="img-responsive img-centered" src="/static/images/avatar5.png" alt="">
-
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-
-
-
-      <!-- Portfolio Modals -->
-
-    <!-- </div> -->
   </div>
 </div>
 
