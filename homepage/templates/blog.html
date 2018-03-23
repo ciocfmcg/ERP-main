@@ -2,11 +2,7 @@
 <title>CIOC</title>
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
-
-{% include "header.html" %}
-
-{% endblock %}
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
 <!-- Header -->
 {% block content %}
 <div ng-app="app" ng-controller="main">
@@ -27,99 +23,48 @@
   <!-- Services Section -->
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+
+      {% for a in data %}
       <div class="container-fluid">
         <section style="padding-top: 20px;padding-bottom: 30px;">
 
           <div class="row">
-            <div class="col-md-3 ">
-              <span style="font-size:30px;margin-left: 40px"><i class="fa fa-user-o"></i> User</span><br>
-              <span style="margin-  left: 40px;">12.30pm</span>
+            <div class="col-md-8 ">
+              <span style="font-size:30px;margin-left: 40px;margin-right: 10px"><i class="fa fa-user-o"></i>&nbsp; {{a.user}}</span><br><br>
+              <span style="margin-left: 40px;">{{a.date}}</span>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12 text-left" style="margin-left: 40px;">
-              <h2>Blog Heading</h2>
+            <div class="col-md-12 text-left" style="margin-left: 40px;margin-right: 10px">
+              <h2>{{a.title}}</h2>
             </div>
           </div>
-          <div class="container-fluid" style="margin-left:40px;padding:0px">
-            <p>Blogger is possibly the oldest blogging platform still actively running on the web, Google Blogger has been home to millions of bloggers for over 16 years now, and still maintains a quite stable market share in the content management platform
-              list. Out of all the known websites that run a content management system, Blogger is used by 1.9% of those websites, which comes out at being used on 0.9% of all known websites to man; thanks W3Techs. Some stick with Blogger because it’s
-              made by Google, and you can expect high security and quality standards, while others enjoy the easy to navigate blogging dashboard for getting content out quickly and painlessly. Blogging has been one of the most talked about topics in the
-              recent decade, and not just for individuals and creative writers who like to build their own communities on the net, small and big business owners have long come to the realization that blogging is a wonderful medium for generating traffic,
-              extra sales, free exposure, and generally for building community around the type of content that’s being published. The benefits of blogging easily outweigh the negatives for having to set one up, and actually having to maintain one. From
-              simple rewards like increase in search engine visibility and branding possibilities, to things like authority, and conversion rate increase — blogging has something to provide for everyone.</p>
+          <div class="container-fluid" style="margin-left:40px;margin-right: 10px;padding:0px">
+            {{a.header | safe}}
             <div class="row">
               <div class="col-lg-12 text-right">
-                <span>Read more...</span>
+                <span><a href = "/blog/{{a.title}}/ ">Read more...</a></span>
               </div>
             </div>
           </div>
         </section>
       </div>
-      <!-- Portfolio Grid Section -->
+      {% endfor %}
 
-      <div class="container-fluid" style="background-color: #f9fafc;">
-        <section style="padding-top: 20px;padding-bottom: 30px;">
+      <div class='pages' style='text-align:center'>
+        <div class='pagesbtn'>
+        {% if pages.currentpage != pages.first %}
+          <a href="/blog/">
+            <div class="btn btn-primary">First</div><a>
+          <a href="/blog/?page={{ pages.prev }}"><div class="btn btn-primary">Prev</div><a>
+        {% endif %}
+        {% if pages.currentpage != pages.last and pages.last > pages.first %}
+          <a href="/blog/?page={{ pages.next }}"><div class="btn btn-primary">Next</div><a>
+          <a href="/blog/?page={{ pages.last }}"><div class="btn btn-primary">Last</div><a>
+        {% endif %}
 
-          <div class="row">
-            <div class="col-md-3 ">
-              <span style="font-size:30px;margin-left: 40px"><i class="fa fa-user-o"></i> User</span><br>
-              <span style="margin-left: 40px;">12.30pm</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 text-left" style="margin-left: 40px;">
-              <h2>Blog Heading</h2>
-            </div>
-          </div>
-          <div class="container-fluid" style="margin-left:40px;padding:0px">
-            <p>Blogger is possibly the oldest blogging platform still actively running on the web, Google Blogger has been home to millions of bloggers for over 16 years now, and still maintains a quite stable market share in the content management platform
-              list. Out of all the known websites that run a content management system, Blogger is used by 1.9% of those websites, which comes out at being used on 0.9% of all known websites to man; thanks W3Techs. Some stick with Blogger because it’s
-              made by Google, and you can expect high security and quality standards, while others enjoy the easy to navigate blogging dashboard for getting content out quickly and painlessly. Blogging has been one of the most talked about topics in the
-              recent decade, and not just for individuals and creative writers who like to build their own communities on the net, small and big business owners have long come to the realization that blogging is a wonderful medium for generating traffic,
-              extra sales, free exposure, and generally for building community around the type of content that’s being published. The benefits of blogging easily outweigh the negatives for having to set one up, and actually having to maintain one. From
-              simple rewards like increase in search engine visibility and branding possibilities, to things like authority, and conversion rate increase — blogging has something to provide for everyone.</p>
-            <div class="row">
-              <div class="col-lg-12 text-right">
-                <span>Read more...</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-      <div class="container-fluid">
-        <section style="padding-top: 20px;padding-bottom: 30px;">
-
-          <div class="row">
-            <div class="col-md-3 ">
-              <span style="font-size:30px;margin-left: 40px"><i class="fa fa-user-o"></i> User</span><br>
-              <span style="margin-left: 40px;">12.30pm</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 text-left" style="margin-left: 40px;">
-              <h2>Blog Heading</h2>
-            </div>
-          </div>
-          <div class="container-fluid" style="margin-left:40px;padding:0px">
-            <p>Blogger is possibly the oldest blogging platform still actively running on the web, Google Blogger has been home to millions of bloggers for over 16 years now, and still maintains a quite stable market share in the content management platform
-              list. Out of all the known websites that run a content management system, Blogger is used by 1.9% of those websites, which comes out at being used on 0.9% of all known websites to man; thanks W3Techs. Some stick with Blogger because it’s
-              made by Google, and you can expect high security and quality standards, while others enjoy the easy to navigate blogging dashboard for getting content out quickly and painlessly. Blogging has been one of the most talked about topics in the
-              recent decade, and not just for individuals and creative writers who like to build their own communities on the net, small and big business owners have long come to the realization that blogging is a wonderful medium for generating traffic,
-              extra sales, free exposure, and generally for building community around the type of content that’s being published. The benefits of blogging easily outweigh the negatives for having to set one up, and actually having to maintain one. From
-              simple rewards like increase in search engine visibility and branding possibilities, to things like authority, and conversion rate increase — blogging has something to provide for everyone.</p>
-            <div class="row">
-              <div class="col-lg-12 text-right">
-                <span>Read more...</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-
-      {% endblock %} {% block footer %}
-      {% include "footer.html" %}
+        </div>
+      </div><br> {% endblock %} {% block footer %} {% include "footer.html" %}
     </div>
   </div>
 </div>
