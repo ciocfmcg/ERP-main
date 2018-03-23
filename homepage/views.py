@@ -23,7 +23,6 @@ def blogDetails(request, blogname):
     body = blogobj.source
     return render(request, 'blogdetails.html', {"home": False, 'user': us, 'header': header, 'title': title, 'date': date, 'blogId': blogId, 'body': body})
 
-
 def blog(request):
 
     blogObj = blogPost.objects.all()

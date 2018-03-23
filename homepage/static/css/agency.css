@@ -146,7 +146,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .btn-xl2 ,.btn-xl3 {
   padding: 15px 40px;
-
   font-size: 18px;
   font-weight: 700;
   color: #fff;
@@ -154,24 +153,22 @@ h1, h2, h3, h4, h5, h6 {
 .btn-xl2{
   border-radius: 50px;
   width:400px;margin-bottom: 40px;
-  background-color:#e53e0b
-
+  background-color:#234ba4;
+  border:2px solid #234ba4;
 }
 .btn-xl2:hover{
   background-color:transparent;
-  border:2px solid #e53e0b;
-color:#e53e0b;
+  color:#234ba4;
 }
 .btn-xl3{
-border-radius: 50px;
-width:400px;
-background-color:#53a309;
-
+  border-radius: 50px;
+  width:400px;
+  background-color:#d72e2e;
+  border:2px solid #d72e2e;
 }
 .btn-xl3:hover{
   background-color:transparent;
-  border:2px solid #53a309;
-color:#53a309;
+  color:#d72e2e;
 }
 .circleBtn{
   display:block;
@@ -670,6 +667,8 @@ section#contact .form-group {
   margin-bottom: 25px;
 }
 
+
+
 input:focus ~ .floating-label,
 input:not(:focus):valid ~ .floating-label{
   top: 6px;
@@ -691,6 +690,7 @@ input:not(:focus):valid ~ .floating-label{
   z-index: 1;
 
 }
+
 select:focus ~ .floating-label1,
 select:not(:focus):valid ~ .floating-label1{
   top: -30px;
@@ -711,10 +711,7 @@ select:not(:focus):valid ~ .floating-label1{
   white-space: nowrap;
   z-index: 1;
 }
-.new-user{
-  background: url('/static/images/background3.jpg') no-repeat top center/cover;
-  height: 550px;
-}
+
 #service{
   /*background: url('/static/images/newsheader.jpg') no-repeat top center/cover;*/
   height: 400px;
