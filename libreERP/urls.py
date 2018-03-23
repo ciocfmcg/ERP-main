@@ -6,10 +6,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from events.views import eventHome
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
-from homepage.views import blog,news,team, career ,policy ,terms ,refund , contacts , registration
+from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
-
+app_name="libreERP"
 urlpatterns = [
     url(r'^$', index , name ='root'),
     url(r"^ecommerce/", ecommerceHome , name = 'ecommerce'), # public  ecommerce app
@@ -29,7 +29,8 @@ urlpatterns = [
     url(r'^robots\.txt', include('robots.urls')),
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
-    url(r'^blog', blog , name ='blog'),
+    url(r'^blog/$', blog , name ='blog'),
+    url(r'^blog/(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'),
     url(r'^news', news , name ='news'),
     url(r'^team', team , name ='team'),
     url(r'^career', career , name ='career'),
