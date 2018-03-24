@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from PIM.models import blogPost
-
+from django.conf import settings as globalSettings
 
 def index(request):
-    return render(request, 'index.html', {"home": True})
+    return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 
 def blogDetails(request, blogname):
@@ -21,7 +21,7 @@ def blogDetails(request, blogname):
         count += 1
     date = blogobj.created
     body = blogobj.source
-    return render(request, 'blogdetails.html', {"home": False, 'user': us, 'header': header, 'title': title, 'date': date, 'blogId': blogId, 'body': body})
+    return render(request, 'blogdetails.html', {"home": False, 'user': us, 'header': header, 'title': title, 'date': date, 'blogId': blogId, 'body': body , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def blog(request):
 
@@ -52,28 +52,28 @@ def blog(request):
         # body = i.source
         data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId})
     data = data[(page-1)*pagesize:(page*pagesize)]
-    return render(request,"blog.html" , {"home" : False ,'data' : data ,'pages':pages})
+    return render(request,"blog.html" , {"home" : False ,'data' : data ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def news(request):
-    return render(request,"newssection.html" , {"home" : False})
+    return render(request,"newssection.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def team(request):
-    return render(request,"team.html" , {"home" : False})
+    return render(request,"team.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def career(request):
-    return render(request,"career.html" , {"home" : False})
+    return render(request,"career.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def policy(request):
-    return render(request,"policy.html" , {"home" : False})
+    return render(request,"policy.html" , {"home" : False , "brandName" : globalSettings.BRAND_NAME , "site" : globalSettings.SITE_ADDRESS , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def terms(request):
-    return render(request,"terms.html" , {"home" : False})
+    return render(request,"terms.html" , {"home" : False , "brandName" : globalSettings.BRAND_NAME  , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def refund(request):
-    return render(request,"refund.html" , {"home" : False})
+    return render(request,"refund.html" , {"home" : False , "brandName" : globalSettings.BRAND_NAME , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def contacts(request):
-    return render(request,"contacts.html" , {"home" : False})
+    return render(request,"contacts.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def registration(request):
-    return render(request,"registration.html" , {"home" : False})
+    return render(request,"registration.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})

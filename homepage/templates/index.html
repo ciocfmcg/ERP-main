@@ -12,7 +12,27 @@
   {% verbatim %}
   <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
     <header style="background-image: url({{mainBannerImages[bannerID]}});height:100vh;width:100%;">
-      <iframe class="ware" width="560" style="left:60px;bottom:90px;position:absolute;" height="315" src="https://www.youtube.com/embed/qh5ciVvYgP0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+      <div class="row" style="padding-top:200px;color:#323232;">
+        <p ng-if="typeIndex == $index" ng-repeat="t in typings" typed-effect text="t" blink="true" style="font-size:100px;"></p>
+      </div>
+
+      <div style="margin-top:50px;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
+        <i class="fa fa-play fa-2x"></i> <span style="font-size:25px;margin-left:10px;">See How it works</span>
+      </div>
+
+
+      <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <iframe width="100%" style="margin:0px;padding:0px;" height="500" src="https://www.youtube.com/embed/T4IkbcnaeOE" frameborder="0" allowfullscreen></iframe>
+
+        </div>
+      </div>
+
+
+
+      <!-- <iframe class="ware" width="560" style="left:60px;bottom:90px;position:absolute;" height="315" src="https://www.youtube.com/embed/qh5ciVvYgP0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
     </header>
   </div>
   <!--/chatbox-->
@@ -67,8 +87,8 @@
         <section id="features">
           <div class="row">
             <div class="col-lg-12 text-center">
-              <h2 class="section-heading">Services</h2>
-              <h3 class="section-subheading text-muted">As your technology partner we can help you more then you can imagine.</h3>
+              <h2 class="section-heading">Features</h2>
+              <h3 class="section-subheading text-muted">Completing the missing pieces in your education.</h3>
             </div>
           </div>
           <div class="row text-center">
@@ -77,24 +97,24 @@
                       <i class="fa fa-circle fa-stack-2x text-primary"></i>
                       <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
                   </span>
-              <h4 class="service-heading">IOT</h4>
-              <p class="text-muted">How about we take your data and services to all the devices you possibly think of be it for smart home to smart factory.</p>
+              <h4 class="service-heading">24x7 Help</h4>
+              <p class="text-muted">We know you already have schools and tutions classes scheduled but what if its 8PM in the night and you have some doubt in a question you are trying to solve. Will you wait till next morning or evening to talk to your school teacher or tution sir to get it sorted out. How about just loging into <strong>24tutors.com</strong> and connect to a credible and experienced tutor to discuss the doubt then and there.</p>
             </div>
             <div class="col-md-4">
               <span class="fa-stack fa-4x">
                       <i class="fa fa-circle fa-stack-2x text-primary"></i>
                       <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
                   </span>
-              <h4 class="service-heading">Web</h4>
-              <p class="text-muted">As the starting point for each business we take care of brining your business online. Got a food delivery or other ecommerce business idea ? we are here to help.</p>
+              <h4 class="service-heading">Daily scheduled tutions</h4>
+              <p class="text-muted">Getting help in your studies on daily basis is a challenge and expensive. Browse though our tutors list and schedule daily sessions with them</p>
             </div>
             <div class="col-md-4">
               <span class="fa-stack fa-4x">
                       <i class="fa fa-circle fa-stack-2x text-primary"></i>
                       <i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
                   </span>
-              <h4 class="service-heading">Desktop/Mobile</h4>
-              <p class="text-muted">When we say mobility we mean serious productivity on the go. Dont let your employee stick to the web or a desktop machine to get the job done. Given them ability to work on the fly.</p>
+              <h4 class="service-heading">Mock tests</h4>
+              <p class="text-muted"> Feeling done with the preperation and want to test yourself then select a subject and topic and we will provide you online tests where you can get solutions of each question as well after you complete the test.</p>
             </div>
           </div>
         </section>
@@ -211,110 +231,19 @@
        </div>
 
        <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
-       <div class="container" style="padding-left:0px;padding-right:0px;padding-top:0px;box-shadow: -12px 10px 50px 2px #d0d5dd;height:1000px;width: 1169px;">
-         <div class="container-fluid" style="padding-right: 0px;">
+       <div class="container text-center" style="padding-left:0px;padding-right:0px;padding-top:50px;box-shadow: -12px 10px 50px 2px #d0d5dd;">
+         <div class="row">
+           <div class="col-lg-12 ">
+             <h2 class="section-heading">How it works ?</h2>
+           </div>
          </div>
+
+
+         <img src="/static/images/flow.svg" style="width: 60%;">
        </div>
       </section>
       <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
 
-      <!-- </section> -->
-      <!-- Team Section -->
-      <!-- <section id="team" class="bg-light-gray"> -->
-        <!-- <div class="container">
-          <div class="row">
-            <div class="col-lg-12 text-center">
-              <h2 class="section-heading">Our Amazing Team</h2>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                <h4>Pradeep</h4>
-                <p class="text-muted">Technology</p>
-                <ul class="list-inline social-buttons">
-
-                  </li>
-
-                  </li>
-                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                <h4>Raj</h4>
-                <p class="text-muted">Technology</p>
-                <ul class="list-inline social-buttons">
-                  </li>
-                  </li>
-                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                <h4>Sowmya</h4>
-                <p class="text-muted">Sales</p>
-                <ul class="list-inline social-buttons">
-
-                  </li>
-
-                  </li>
-                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                <h4>Deepika</h4>
-                <p class="text-muted">Finance</p>
-                <ul class="list-inline social-buttons">
-
-                  </li>
-
-                  </li>
-                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="team-member">
-                <img src="{% static 'images/userIcon.png' %}" style="height:150px" class="img-responsive img-circle" alt="">
-                <h4>Santosh</h4>
-                <p class="text-muted">Admin</p>
-                <ul class="list-inline social-buttons">
-
-                  </li>
-
-                  </li>
-                  <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-sm-4 text-center">
-              <div class="team-member">
-
-                <a class="circleBtn" href="/team">More <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
-              <p class="large text-muted">We started turning our own ideas into reality of free and open source business platform in the form of LibreERP and LibreRPA then we thought why not help others too in their entrepreneurial journey</p>
-            </div>
-          </div>
-        </div> -->
-      <!-- </section> -->
 
       <!-- Contact Section -->
 

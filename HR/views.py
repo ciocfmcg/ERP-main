@@ -166,7 +166,7 @@ def loginView(request):
                 authStatus = {'status' : 'danger' , 'message' : 'Incorrect username or password.'}
                 statusCode = 401
 
-    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE}, status=statusCode)
+    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
 
 def registerView(request):
     if globalSettings.REGISTER_URL != 'register':

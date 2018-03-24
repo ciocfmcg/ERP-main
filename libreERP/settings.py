@@ -57,7 +57,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8']
+ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -68,9 +68,10 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'India'
+BRAND_NAME = '24Tutors.com'
 
-BRAND_LOGO = '/static/images/rackmint.svg'
+BRAND_LOGO = '/static/images/24_tutors_icon.svg'
+BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 

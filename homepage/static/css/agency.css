@@ -4,6 +4,49 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+ @-webkit-keyframes blink {
+     50% {
+         opacity: 0;
+     }
+ }
+
+ @-moz-keyframes blink {
+     50% {
+         opacity: 0;
+     }
+ }
+
+ @-o-keyframes blink {
+     50% {
+         opacity: 0;
+     }
+ }
+
+ @keyframes blink {
+     50% {
+         opacity: 0;
+     }
+ }
+
+ .blink {
+     -webkit-animation: blink 1s infinite;
+     -moz-animation: blink 1s infinite;
+     -o-animation: blink 1s infinite;
+     animation: blink 1s infinite;
+ }
+
+ .glassyButton{
+ 	border:solid 3px #3b3b3b;
+ 	border-radius:30px;
+ 	padding:6px;
+ 	color:#3b3b3b;
+ 	cursor:pointer;
+ }
+ .glassyButton:hover{
+ 	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;
+
+ }
+
  @media(max-width:1008px) {
    .imgOnBanner{
      width:100% !important;
