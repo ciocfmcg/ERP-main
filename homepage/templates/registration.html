@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}{% load socialaccount %}
 <title>CIOC</title>
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
@@ -10,7 +10,7 @@
 <!-- Header -->
 {% block content %}
 
-<div ng-app="app" ng-controller="main">
+<div ng-app="app" ng-controller="registration">
 
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
@@ -22,15 +22,15 @@
           </div>
         </div>
 
-        <div class="container-fluid" style="margin-top:15px">
+        <div class="container-fluid" style="margin-top:15px" ng-if="mode== 'main'">
 
           <div class="row text-center" style="margin-top: 30px;">
               <div class="row">
                 <div class="col-md-6 col-sm-6">
-                  <button type="submit" class="btn btn-block btn-xl2 pull-right" style="width:50%;"> <i class="fa fa-facebook"></i> Facebook</button>
+                  <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-block btn-xl2 pull-right" style="width:50%;"> <i class="fa fa-facebook"></i> Facebook</a>
                 </div>
                 <div class="col-md-6 col-sm-6">
-                  <button type="submit" class="btn btn-block btn-xl3" style="width:50%;"><i class="fa fa-google"></i>  Gmail</button>
+                  <a href="{% provider_login_url "google" method="oauth2" %}" class="btn btn-block btn-xl3" style="width:50%;"><i class="fa fa-google"></i>  Gmail</a>
                 </div>
               </div>
           </div>
@@ -42,54 +42,120 @@
         </div>
 
 
-        <div class="container" style="padding-left: 40px;padding-right: 40px;margin-top:40px;">
 
+        <div class="container" style="padding-left: 40px;padding-right: 40px;margin-top:40px;">
+          {% verbatim %}
           <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
-              <form name="sentMessage" action="/api/events/subscribe/" method="post">
-                {% csrf_token %}
-                  <div class="row" style="margin-bottom:15px;">
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
-                          <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
-                        </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
-                          <div class="form-group">
-                            <input type="text" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px;" required/>
-                            <span class="floating-label">First Name *</span>
+                  <div ng-if="mode == 'main'">
+                    <div class="row" style="margin-bottom:15px;">
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-1 col-sm-1 col-xs-1">
+                            <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11 col-sm-11 col-xs-11">
+                            <div class="form-group has-{{ validity.firstName != null && validity.firstName ? 'success':'danger'}}">
+                              <input ng-model="form.firstName" type="text" class="form-control floatInput" required/>
+                              <span class="floating-label">First Name *</span>
+                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.firstName.length ==0 || form.firstName == null || form.firstName == undefined) ">First name is required</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      </div>
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
-                          <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                         </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
-                          <div class="form-group">
-                            <input type="text" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px;" required/>
-                            <span class="floating-label">Last Name *</span>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-1 col-sm-1 col-xs-1">
+                            <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11 col-sm-11 col-xs-11">
+                            <div class="form-group has-{{ validity.lastName != null && validity.lastName ? 'success':'danger'}}">
+                              <input ng-model="form.lastName" type="text" class="form-control floatInput" required/>
+                              <span class="floating-label">Last Name *</span>
+                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.lastName.length ==0 || form.lastName == null || form.lastName == undefined) ">Last name is required</p>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div class="row" style="margin-bottom:15px;">
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-1 col-sm-1 col-xs-1">
+                            <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11 col-sm-11 col-xs-11">
+                            <div class="form-group">
+                              <input ng-model="form.email" type="text" class="form-control floatInput" required/>
+                              <span class="floating-label">Email *</span>
+                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.email.length ==0 || form.email == null || form.email == undefined) ">Email is required</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-1 col-sm-1 col-xs-1">
+                            <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11 col-sm-11 col-xs-11">
+                            <div class="form-group">
+                              <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)'  ng-model="form.mobile" type="text" class="form-control floatInput" required/>
+                              <span class="floating-label">Phone *</span>
+                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-bottom:15px;">
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-1 col-sm-1 col-xs-1">
+                            <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11 col-sm-11 col-xs-11">
+                            <div class="form-group">
+                              <input ng-model="form.password" type="password" class="form-control floatInput" required/>
+                              <span class="floating-label">Password *</span>
+                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.password.length ==0 || form.password == null || form.password == undefined) ">Password is required (minimum length is 6)</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-1 col-sm-1 col-xs-1">
+                            <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                          </div>
+                          <div class="col-md-11 col-sm-11 col-xs-11">
+                            <div class="form-group">
+                              <input ng-model="form.rePassword" type="password" class="form-control floatInput" required/>
+                              <span class="floating-label">Confirm Password *</span>
+                                <p class="help-text text-danger" ng-if="validityChecked == true && (form.rePassword.length ==0 || form.rePassword == null || form.rePassword == undefined || form.rePassword != form.password)">Confirm password does not match</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row" style="margin-top:50px;">
+                      <div class="col-md-1 col-sm-1 col-xs-1">
+                        <input type="checkbox" class="form-control pull-right" ng-model="form.agree">
+                      </div>
+                      <div class="col-md-11 col-sm-11 col-xs-11">
+                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by CIOC FMCG Pvt Ltd.</span>
+                      </div>
+                    </div>
+                    <div ng-if="validityChecked && !form.agree" class="row">
+                      <p class="help-text text-danger">Please agree to proceed</p>
+                    </div>
+
                   </div>
-                  <div class="row" style="margin-bottom:15px;">
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
-                          <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
-                        </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
-                          <div class="form-group">
-                            <input type="text" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px;" required/>
-                            <span class="floating-label">Email *</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
+
+                  <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
                     <div class="col-md-6">
                       <div class="row">
                         <div class="col-md-1 col-sm-1 col-xs-1">
@@ -97,50 +163,7 @@
                         </div>
                         <div class="col-md-11 col-sm-11 col-xs-11">
                           <div class="form-group">
-                            <input type="tel" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px" required/>
-                            <span class="floating-label">Phone *</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row" style="margin-bottom:15px;">
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
-                          <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
-                        </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
-                          <div class="form-group">
-                            <input type="password" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px;" required/>
-                            <span class="floating-label">Password *</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
-                          <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
-                        </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
-                          <div class="form-group">
-                            <input type="password" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px;" required/>
-                            <span class="floating-label">Confirm Password *</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row" style="margin-bottom:15px;">
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
-                          <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
-                        </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
-                          <div class="form-group">
-                            <input type="password" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px;" required/>
+                            <input ng-model="form.mobileOTP" type="password" class="form-control floatInput" required/>
                             <span class="floating-label">Mobile OTP *</span>
                           </div>
                         </div>
@@ -153,7 +176,7 @@
                         </div>
                         <div class="col-md-11 col-sm-11 col-xs-11">
                           <div class="form-group">
-                            <input type="password" class="form-control" style="border:1px solid #7b7e84;border-radius:0px;border-left:none;border-right:none;border-top:none !important;box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1);padding-bottom: 0px;margin-top: 30px;padding-left:0px;" required/>
+                            <input ng-model="form.emailOTP" type="password" class="form-control floatInput" required/>
                             <span class="floating-label">Email OTP *</span>
                           </div>
                         </div>
@@ -161,30 +184,20 @@
                     </div>
                   </div>
 
-                  <div class="row" style="margin-top:50px;">
-                    <div class="col-md-1 col-sm-1 col-xs-1">
-                      <input type="checkbox" class="form-control pull-right">
-                    </div>
-                    <div class="col-md-11 col-sm-11 col-xs-11">
-                      <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by CIOC FMCG Pvt Ltd.</span>
-                    </div>
+                  <div class="row text-center text-danger" ng-if="validityChecked2">
+                    <span>Invalid OTP , please check both the OTPs and verify again</span>
                   </div>
 
                   <div class="col-lg-12 text-center" style="margin-top:20px;">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button ng-if="mode=='main'" class="btn btn-primary" ng-click="getOTP()">Submit</button>
+                    <button ng-if="mode=='verify'" ng-click="verify()" class="btn btn-primary">Verify and Login</button>
                   </div>
-              </form>
             </div>
           </div>
+          {% endverbatim %}
         </div>
 
       </section>
-      <!-- Portfolio Grid Section -->
-      <!-- <section style="background: url('/static/images/bottom_shade.png') no-repeat top center/cover;max-height:150px;">
-      </section> -->
-
-
-
 
       {% endblock %} {% block footer %}
       {% include "footer.html" %}
@@ -205,5 +218,6 @@
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
 <script src="{% static 'js/app.homepage.js' %}"></script>
+<script src="{% static 'js/app.homepage.registration.js' %}"></script>
 
 {% endblock %}

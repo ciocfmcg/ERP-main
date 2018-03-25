@@ -3,6 +3,30 @@
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
+.ng-untouched + .form-control-feedback{
+  display: none;
+}
+
+.has-danger .form-control-feedback , .has-success .form-control-feedback{
+  display: default !important;
+}
+
+
+.has-danger{
+  color:rgb(227, 49, 25);
+}
+
+.floatInput{
+  border:1px solid #7b7e84;
+  border-radius:0px;
+  border-left:none;
+  border-right:none;
+  border-top:none !important;
+  box-shadow: inset 0 1px 1px rgba(251, 247, 247, 0.1) !important;
+  padding-bottom: 0px;
+  margin-top: 30px;
+  padding-left:0px;
+}
 
  @-webkit-keyframes blink {
      50% {
