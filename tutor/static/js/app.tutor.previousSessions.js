@@ -5,8 +5,8 @@ app.config(function($stateProvider){
     url: "/previousSessions",
     views: {
        "": {
-          templateUrl: '/static/ngTemplates/app.tutor.account.html',
-          controller : 'home.tutor.account',
+          templateUrl: '/static/ngTemplates/app.tutor.accoun.html',
+          controller : 'home.tutor.previousSession',
        }
     }
   })
@@ -15,7 +15,7 @@ app.config(function($stateProvider){
   console.log("Configured");
 });
 
-app.controller("home.tutor.account", function($scope , $state , $users ,  $stateParams , $http , Flash) {
+app.controller("home.tutor.previousSession", function($scope , $state , $users ,  $stateParams , $http , Flash) {
 
 
 });
