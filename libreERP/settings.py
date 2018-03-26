@@ -248,16 +248,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-EMAIL_HOST_SUFFIX = 'cioc.co.in'
+EMAIL_HOST_SUFFIX = '24tutors.com'
 
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_HOST_USER = 'pradeep@cioc.co.in'
-EMAIL_HOST_PASSWORD = 'janhvi@1'
+EMAIL_HOST = 'email.cioc.in'
+EMAIL_HOST_USER = 'do_not_reply@24tutors.com'
+EMAIL_HOST_PASSWORD = '51GX4]N1_0uw'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'ciocpky@gmail.com'
+DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 

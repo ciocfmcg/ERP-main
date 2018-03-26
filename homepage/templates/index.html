@@ -1,7 +1,10 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
-<title>CIOC</title>
+<title>24Tutors.com</title>
+<link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
+
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
+
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 {% include "header.html" %}
 
@@ -35,7 +38,8 @@
       </div>
 
 
-
+      <img src="/static/images/tutor/idea.gif" alt="" class="homeAnimations">
+      <!-- <img src="/static/images/tutor/science.gif" style="left:0px;position:absolute;" alt=""> -->
       <!-- <iframe class="ware" width="560" style="left:60px;bottom:90px;position:absolute;" height="315" src="https://www.youtube.com/embed/qh5ciVvYgP0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
     </header>
   </div>

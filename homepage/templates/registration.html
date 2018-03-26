@@ -17,7 +17,9 @@
       <section style="background-color:white">
         <div class="row">
           <div class="col-lg-12 text-center" style="margin-bottom:30px;">
-            <h2 class="section-heading" style="color: #a39c9c;margin-bottom:0px">Registration</h2>
+            {% verbatim %}
+            <h2 class="section-heading" style="color: #a39c9c;margin-bottom:0px">{{ mode != 'sendingOTP' ? 'Registration': 'Please wait, Sending OTP'}}</h2>
+            {% endverbatim %}
             <img src="/static/images/bottom-border.png" alt="">
           </div>
         </div>
@@ -47,6 +49,13 @@
           {% verbatim %}
           <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
+
+
+                  <div ng-if="mode == 'sendingOTP'" style="padding-top:100px;" class="text-center">
+                    <img src="/static/images/tutor/science.gif" alt="">
+                  </div>
+
+
                   <div ng-if="mode == 'main'">
                     <div class="row" style="margin-bottom:15px;">
                       <div class="col-md-6">
