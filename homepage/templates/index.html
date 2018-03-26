@@ -36,7 +36,7 @@
     </header>
   </div>
   <!--/chatbox-->
-  <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
+  <!-- <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
     <div class="row" style="border:1px solid #315f82;margin:0px;background-color: #174b6d;">
       <div class="col-md-10">
         <span ng-if="data.started" style="font-size:15px;color:white;"><i class="fa fa-user-o" ></i>{{name}}</span>
@@ -78,7 +78,7 @@
         <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paperclip"  style="cursor:pointer"></i></div>
 
     </div>
-  </div>
+  </div> -->
   {% endverbatim %}
   <!-- Services Section -->
   <div class="body">
@@ -122,113 +122,8 @@
     </div>
       <!-- Portfolio Grid Section -->
       <!-- <section id="portfolio" class="bg-light-gray" style="padding-left:0px;padding-right:0px;"> -->
-    <div class="container" style="padding-left:0px;padding-right:0px;">
-      <div class="container-fluid">
-        <div id="generic_price_table">
-         <div class="container-fluid">
-           <div class="row">
-             <div class="col-md-4">
-               <div class="generic_content active clearfix">
-                 <div class="generic_head_price clearfix">
-                    <div class="generic_head_content clearfix">
-                        <!-- <div class="head_bg"></div> -->
-                         <div class="headb"></div>
-                           <div class="head">
-                              <span>Basic</span>
-                           </div>
-                         </div>
-                         <div class="generic_price_tag clearfix">
-                           <span class="price">
-                             <span class="sign"> <i class="fa fa-inr"></i> </span>
-                             <span class="currency">2500</span>
-                             <!-- <span class="cent">.00</span> -->
-                             <span class="month">/Month</span>
-                           </span>
-                         </div>
-                       </div>
-                       <div class="generic_feature_list">
-                         <ul>
-                           <li><span>1</span> Account</li>
-                           <li><span>Upto 1000</span> Products</li>
-                           <li><span>Web Only</span></li>
-                           <li><span>5 Hours/Month</span> Support</li>
-                         </ul>
-                       </div>
-                       <div class="generic_feature_list" style="padding:10px">
-                         <button type="button" class="btn" style="background:#0066cc;color:white;">Buy Now</button>
-                       </div>
-                     </div>
-                   </div>
-                   <div class="col-md-4">
-                     <div class="generic_content active clearfix">
-                       <div class="generic_head_price clearfix">
-                         <div class="generic_head_content clearfix">
-                           <div class="head_bg"></div>
-                           <div class="head">
-                             <span>Standard</span>
-                           </div>
-                         </div>
-                         <div class="generic_price_tag clearfix">
-                           <span class="price">
-                             <span class="sign"><i class="fa fa-inr"></i></span>
-                             <span class="currency">3500</span>
-                             <!-- <span class="cent">.99</span> -->
-                             <span class="month">/Month</span>
-                           </span>
-                         </div>
-                       </div>
-                       <div class="generic_feature_list">
-                         <ul>
-                           <li><span>4</span> Accounts</li>
-                           <li><span>Upto 3000</span> Products</li>
-                           <li><span>Android app</span></li>
-                           <li><span>10 Hours/Month</span> Support</li>
-                         </ul>
-                       </div>
-                       <div class="generic_feature_list" style="padding:10px">
-                         <button type="button" class="btn btn-warning">Buy Now</button>
-                       </div>
-                     </div>
-                   </div>
-                   <div class="col-md-4">
-                     <div class="generic_content active clearfix">
-                       <div class="generic_head_price clearfix">
-                         <div class="generic_head_content clearfix">
-                           <div class="head_b"></div>
-                           <div class="head">
-                             <span>Premium</span>
-                           </div>
-                         </div>
-                         <div class="generic_price_tag clearfix">
-                           <span class="price">
-                             <span class="sign"><i class="fa fa-inr"></i></span>
-                             <span class="currency">4500</span>
-                             <!-- <span class="cent">.99</span> -->
-                             <span class="month">/Month</span>
-                           </span>
-                         </div>
-                       </div>
-                       <div class="generic_feature_list">
-                         <ul>
-                           <li><span>Unlimited</span> Accounts</li>
-                           <li><span>Unlimited</span> Products</li>
-                           <li><span>Android and iOS apps</span></li>
-                           <li><span>30 Hours/Month</span> Support</li>
-                         </ul>
-                       </div>
-                       <div class="generic_feature_list" style="padding:10px">
-                         <button type="button" class="btn btn-success">Buy Now</button>
-                       </div>
-                         <!-- div class="generic_price_btn clearfix">
-                           <a class="" href="">Sign up</a>
-                         </div> -->
-                     </div>
-                   </div>
-                </div>
-             </div>
-           </div>
-         </div>
-       </div>
+
+      {% include "tutorsPricing.html" %}
 
        <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
        <div class="container text-center" style="padding-left:0px;padding-right:0px;padding-top:50px;box-shadow: -12px 10px 50px 2px #d0d5dd;">

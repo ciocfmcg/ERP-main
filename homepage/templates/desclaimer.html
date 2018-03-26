@@ -1,0 +1,84 @@
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+<title>CIOC</title>
+{% endblock %} {% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+
+{% include "header.html" %}
+
+{% endblock %}
+<!-- Header -->
+{% block content %}
+<div ng-app="app" ng-controller="main">
+  {% verbatim %}
+
+  {% endverbatim %}
+  <!-- Services Section -->
+  <div class="body">
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+      <div class="container-fluid">
+        <section>
+          <div class="row text-center">
+            <h2>Desclaimer </h2>
+          </div>
+          <div class="container-fluid" style="margin-left:40px;padding:0px">
+            <p>THE COMPANY CONTENT, THE SITE, THE SERVICES AND EACH PORTION THEREOF ARE PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND EITHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT POSSIBLE PURSUANT TO APPLICABLE LAW, WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, WITH RESPECT TO THE SITE, THE COMPANY CONTENT, THE SERVICES AND EACH PORTION THEREOF, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT OR OTHER VIOLATION OF RIGHTS. WE DO NOT WARRANT OR MAKE ANY REPRESENTATIONS REGARDING THE USE, VALIDITY, ACCURACY, OR RELIABILITY OF, OR THE RESULTS OF THE USE OF, OR OTHERWISE RESPECTING, THE COMPANY CONTENT, THE SITE, THE SERVICES, EACH PORTION THEREOF OR ANY THIRD PARTY SITES.
+              <br><br>
+              UNDER NO CIRCUMSTANCES, INCLUDING, BUT NOT LIMITED TO, NEGLIGENCE, SHALL WE OR THIRD PARTIES BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES, INCLUDING, BUT NOT LIMITED TO, LOSS OF DATA OR PROFIT, ARISING OUT OF THE USE, OR THE INABILITY TO USE, THE COMPANY CONTENT, THE SITE, THE SERVICES OR ANY PORTION THEREOF, EVEN IF WE OR OUR AUTHORIZED REPRESENTATIVE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. IF YOUR USE OF THE SITE, THE COMPANY CONTENT, THE SERVICES OR ANY PORTION THEREOF RESULTS IN THE NEED FOR SERVICING, REPAIR OR CORRECTION OF EQUIPMENT OR DATE, YOU ASSUME ANY COSTS THEREOF. SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THE ABOVE LIMITATION OR EXCLUSION MAY NOT APPLY TO YOU. NEITHER WE, NOR THIRD PARTIES WARRANT THE ACCURACY OR COMPLETENESS OF THE INFORMATION, TEXT, GRAPHICS, LINKS OR OTHER ITEMS CONTAINED IN THE COMPANY CONTENT, THE SITE, THE SERVICES OR ANY PORTION THEREOF OR IN ANY REPORTS OF VERIFICATION SERVICES. YOU AGREE NOT TO HOLD US (OR OUR AGENTS, EMPLOYEES OR TUTORS) LIABLE FOR ANY INSTRUCTION, ADVICE OR SERVICES DELIVERED WHICH ORIGINATED THROUGH THE SITE, THROUGH ANY VERIFICATION SERVICE OR IN CONNECTION WITH THE COMPANY CONTENT, THE SERVICES OR ANY PORTION THEREOF.</p><br><br>
+
+          </div>
+
+
+          <div class="row text-center">
+            <h2>Copyrights and Intellectual Property </h2>
+          </div>
+          <div class="container-fluid" style="margin-left:40px;padding:0px">
+
+            <p>We respect the intellectual property of others, and we ask our users to do the same. If you believe that your work has been copied in a way that constitutes copyright infringement, or your intellectual property rights have been otherwise violated, please provide our Copyright Agent (identified below) a notice with the following information:</p>
+            <ul>
+              <li>
+                an electronic or physical signature of the person authorized to act on behalf of the owner of the copyright or other intellectual property interest;
+              </li>
+              <li>a description of the copyrighted work or other intellectual property that you claim has been infringed; c. a description of where the material that you claim is infringing is located on the site;</li>
+
+              <li>your address, telephone number, and email address;</li>
+              <li>a statement by you that you have a good faith belief that the disputed use is not authorized by the copyright owner, its agent, or the law;</li>
+              <li>a statement by you, made under penalty of perjury, that the above information in your notice to us is accurate and that you are the copyright or intellectual property owner or authorized to act on the copyright or intellectual property owner's behalf.</li>
+
+              <li>Our Copyright Agent for notice of claims of copyright or other intellectual property infringement can be reached at:
+                <p>
+                  <strong>Sowmya Narayan</strong> <br>
+                  CIOC FMCG Pvt Ltd.<br>
+                  4th Floor, Venkateshwara Heritage,Kudlu Hosa Road, Opp Sai Purna Premium Apartment,<br>
+                  Sai Meadows Kudlu,Bengaluru,<br>
+                  Karnataka 560068 <br>
+                  legal@cioc.in
+                </p>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      {% endblock %} {% block footer %}
+      {% include "footer.html" %}
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %} {% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
+
+<script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+
+{% endblock %}
