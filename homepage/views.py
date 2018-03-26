@@ -47,7 +47,7 @@ def blogDetails(request, blogname):
 def blog(request):
 
     blogObj = blogPost.objects.all()
-    pagesize = 1
+    pagesize = 6
     try:
         page = int(request.GET.get('page', 1))
     except ValueError as error:
