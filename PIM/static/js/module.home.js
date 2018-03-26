@@ -46,14 +46,17 @@ app.controller("controller.home.main", function($scope , $state) {
   $scope.modules = $scope.$parent.$parent.modules;
   $scope.dashboardAccess = false;
   $scope.homeMenuAccess = false;
-  for (var i = 0; i < $scope.modules.length; i++) {
-    if ($scope.modules[i].name == 'home'){
-      $scope.dashboardAccess = true;
-    }
-    if ($scope.modules[i].name.indexOf('home') != -1) {
-      $scope.homeMenuAccess = true;
+  if ($scope.modules != undefined) {
+    for (var i = 0; i < $scope.modules.length; i++) {
+      if ($scope.modules[i].name == 'home'){
+        $scope.dashboardAccess = true;
+      }
+      if ($scope.modules[i].name.indexOf('home') != -1) {
+        $scope.homeMenuAccess = true;
+      }
     }
   }
+
 })
 
 

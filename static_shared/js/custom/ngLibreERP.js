@@ -6,11 +6,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
     tabReplace: '    '
   });
 
-  $urlRouterProvider.otherwise('/home');
+  $urlRouterProvider.otherwise('/' + DEFAULT_ROUTE);
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
-
 
 });
 
@@ -32,6 +31,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
     };
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
+  $scope.serviceName = SERVICE_NAME;
   $permissions.module().
   success(function(response) {
     // console.log(response);
@@ -465,7 +465,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
 app.controller('controller.generic.menu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
-
+  console.log("generic menu ");
   var parts = $state.current.name.split('.');
   $scope.moduleName = parts[0];
   $scope.appName = parts[1];
@@ -480,6 +480,7 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
   $scope.rawApps = [];
 
   $scope.buildMenu = function(apps) {
+    console.log(apps);
     for (var i = 0; i < apps.length; i++) {
       var a = apps[i];
       var parts = a.name.split('.');
@@ -493,10 +494,15 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
   }
 
   var as = $permissions.apps();
+  console.log(as);
   if (typeof as.success == 'undefined') {
+
+    console.log("buildMenu");
+
     $scope.rawApps = as;
     $scope.buildMenu(as);
   } else {
+    console.log("buildMenu2");
     as.success(function(response) {
       $scope.buildMenu(response);
       $scope.rawApps = response;
@@ -533,6 +539,8 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
 
+  console.log("side menu controller loaded");
+
   $scope.user = $users.get('mySelf');
 
   $scope.fixedApps = [
@@ -555,6 +563,41 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
     });
   }
 
+  $scope.buildSingleModulelessApps = function(){
+    console.log("will build the menu");
+    console.log($scope.modules);
+    console.log($scope.rawApps);
+    if ($scope.modules.length == 0 && $scope.rawApps.length >0) {
+      $scope.apps = [];
+      $scope.fixedApps= []
+
+      for (var j = 0; j < $scope.rawApps.length; j++) {
+        var a = $scope.rawApps[j];
+        var parts = a.name.split('.');
+        a.state =  parts[parts.length - 1];
+        a.dispName = parts[parts.length - 1];
+        $scope.apps.push(a);
+      }
+    }
+  }
+
+  $scope.$watch('modules' , function(newValue , oldValue) {
+    $scope.buildSingleModulelessApps();
+  }, true)
+
+  $scope.$watch('rawApps' , function(newValue , oldValue) {
+    if (typeof $scope.rawApps.success == 'undefined') {
+      $scope.buildSingleModulelessApps();
+    } else {
+      $scope.rawApps.success(function(response) {
+        $scope.rawApps = response;
+        $scope.buildSingleModulelessApps();
+      });
+    };
+
+
+  }, true)
+
 
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams, options) {
     // if (toState.name == $scope.moduleName) {
@@ -564,10 +607,12 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
     if (typeof $scope.rawApps.success == 'undefined') {
       $scope.rawApps = $scope.rawApps;
       $scope.buildMenu();
+      $scope.buildSingleModulelessApps();
     } else {
       $scope.rawApps.success(function(response) {
         $scope.rawApps = response;
         $scope.buildMenu();
+        $scope.buildSingleModulelessApps();
       });
     };
   });
@@ -593,6 +638,10 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
 
   $scope.buildMenu = function() {
     $scope.apps = [];
+
+
+
+
     for (var i = 0; i < $scope.modules.length; i++) {
       if ($scope.modules[i].name == $scope.moduleName) {
         for (var j = 0; j < $scope.rawApps.length; j++) {

@@ -1,0 +1,42 @@
+<div class="modal-header">
+  Start a session with an expert
+</div>
+
+<div class="modal-body">
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-md-6">
+
+        <label>Subject {{form.subject == null}}</label> <br>
+        <select ng-model="form.subject" class="form-control">
+          <option ng-repeat="s in subjects" ng-value="s.pk">{{s.title}}</option>
+        </select>
+
+
+      </div>
+      <div class="col-md-6" ng-if="form.subject != null">
+        <label>Topic</label>
+        <select ng-model="form.topic" class="form-control">
+          <option ng-repeat="s in topics" ng-value="s.pk">{{s.title}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:20px;">
+      <div class="container-fluid">
+        <textarea class="form-control" rows="8" cols="80" placeholder="Type your question"></textarea>
+      </div>
+    </div>
+
+
+    <div class="row text-center" style="margin-top:40px;">
+      <button ng-click="start()" type="button" class="btn btn-default">
+        Start
+      </button>
+    </div>
+
+  </div>
+
+</div>

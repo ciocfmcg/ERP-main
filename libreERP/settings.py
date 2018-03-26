@@ -69,7 +69,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 #content delivery network for css and jss libraries
 # Application definition
 BRAND_NAME = '24Tutors.com'
-
+SERVICE_NAME = 'Online Tutoring anytime, anywhere'
 BRAND_LOGO = '/static/images/24_tutors_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 

@@ -51,7 +51,7 @@
 
     <div class="col-md-1 mainUIViewParent" style="width:87%;margin-left:13%;">
       <div ng-include="headerUrl"></div>
-      <div style="margin:0.5vh;margin-top:6.5vh;" class="mainUIView" ui-view ng-if="modules.length>0">
+      <div style="margin:0.5vh;margin-top:6.5vh;" class="mainUIView" ui-view>
 
         <style>
 
@@ -177,6 +177,8 @@
       var wampServer = '{{wampServer}}';
       var wampBindName = "{{user.username}}";
       var BRAND_LOGO = "{{BRAND_LOGO}}";
+      var SERVICE_NAME = "{{serviceName}}";
+      var DEFAULT_ROUTE = "{{defaultRoute}}";
     </script>
     <script src="{% static 'js/custom/wampProcessors.js' %}"></script>
     <script src="{% static 'js/custom/nativeJS.js' %}"></script>

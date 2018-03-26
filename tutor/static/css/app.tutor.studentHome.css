@@ -1,0 +1,23 @@
+.glassyButton{
+ border-radius:30px;
+ padding:6px;
+ cursor:pointer;
+}
+
+.glassyButtonBlue{
+  border:solid 3px #367ad4;
+  color:#367ad4;
+}
+
+.glassyButtonGrey{
+  border:solid 3px #3b3b3b;
+  color:#3b3b3b;
+}
+
+.glassyButtonGrey:hover{
+ background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;
+}
+
+.glassyButtonBlue:hover{
+ background: rgba(179, 197, 203, 0.2) none repeat scroll 0% 0%;
+}

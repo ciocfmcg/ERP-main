@@ -1,0 +1,123 @@
+<div class="shaddowed card bg-white " style="position:relative;min-height:100vh;">
+  <div class="container-fluid" style="padding:0px;">
+    <breadcrumb></breadcrumb>
+
+    <div class="col-md-6" style="border-right:solid 2px #eeeeee;min-height:70vh;">
+      <div class="row text-center">
+        <h3 class="text-center text-primary">Balance</h3>
+      </div>
+      <hr>
+      <div class="row text-center">
+        <div class="col-md-5 col-md-offset-1">
+          <div class="row text-center text-muted">
+            HOURS
+          </div>
+          <div class="row" style="margin-top:30px;">
+            <div class="col-md-6" style="padding-left:30px;padding-right:30px;">
+              <div class="card container-fluid text-muted" style="border-radius:10px;">
+                <span style="font-size:70px;">6</span>
+              </div>
+            </div>
+            <div class="col-md-6" style="padding-left:30px;padding-right:30px;">
+              <div class="card container-fluid text-muted" style="border-radius:10px;">
+                <span style="font-size:70px;">6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="container-fluid" style="padding-top:50px;">
+
+            <span style="font-size:70px;">:</span>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="row text-center text-muted">
+            MINUTES
+          </div>
+
+          <div class="row" style="margin-top:30px;">
+            <div class="col-md-6" style="padding-left:30px;padding-right:30px;">
+              <div class="card container-fluid text-muted" style="border-radius:10px;">
+                <span style="font-size:70px;">6</span>
+              </div>
+            </div>
+            <div class="col-md-6" style="padding-left:30px;padding-right:30px;">
+              <div class="card container-fluid text-muted" style="border-radius:10px;">
+                <span style="font-size:70px;">6</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row" style="padding-top:100px;">
+        <div class="text-center glassy glassyButton glassyButtonGrey col-md-4 col-md-offset-4" ng-click="startSession()">
+          <i class="fa fa-desktop fa-2x"></i> <span style="font-size:25px;margin-left:10px;">Start a session</span>
+        </div>
+      </div>
+
+      <div class="row" style="padding-top:100px;">
+        <div class="text-center glassy glassyButton glassyButtonBlue col-md-4 col-md-offset-4" ng-click="addHours()">
+          <i class="fa fa-plus fa-2x"></i> <span style="font-size:25px;margin-left:10px;">Add more time</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-6" style="padding:40px;padding-top:0px;">
+      <div class="row text-center">
+        <h3 class="text-center text-primary">Recent Sessions</h3>
+      </div>
+      <hr>
+
+      <div class="row" style="margin-top:20px;" ng-repeat="c in [0,1,2]">
+        <div class="container-fluid card" style="border-right:solid 4px #d2366d;padding:20px;">
+          <div class="row">
+            <div class="col-md-3">
+              <label>Subject</label> <br>
+              <span style="margin-top:20px;">Math</span>
+            </div>
+            <div class="col-md-3">
+              <label>Topic</label> <br>
+              <span style="margin-top:20px;">Calculus</span>
+            </div>
+            <div class="col-md-3">
+              <label>Session Time</label> <br>
+              <span style="margin-top:20px;">Calculus</span>
+            </div>
+            <div class="col-md-3">
+              <label>Duration</label> <br>
+              <span style="margin-top:20px;">40 Min 2 Sec</span>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Tutor</label> <br>
+              <span style="margin-top:20px;">Pradeep Yadav</span>
+            </div>
+            <div class="col-md-4">
+              <label>Rating</label> :
+              <span style="margin-top:20px;">4/5</span> <br>
+              <span class="fa fa-star" style="color:#d2366d;"></span>
+              <span class="fa fa-star" style="color:#d2366d;"></span>
+              <span class="fa fa-star" style="color:#d2366d;"></span>
+              <span class="fa fa-star"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row text-primary text-center" style="margin-top:30px;cursor:pointer;">
+        Show more
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
