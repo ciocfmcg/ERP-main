@@ -10,6 +10,8 @@ import random, string
 from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
 from django.contrib.auth import authenticate , login , logout
 from django.shortcuts import redirect , get_object_or_404
+from django.conf import settings as globalSettings
+from ERP.models import application, permission , module
 
 class RegistrationSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -33,6 +35,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
             u.set_password(d['password'])
             u.is_active = True
             u.save()
+
+            for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+                app = application.objects.get(name = a)
+                p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
+
             login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
             instance.delete()
             return instance

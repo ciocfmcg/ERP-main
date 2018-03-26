@@ -20,7 +20,7 @@ MESSAGE_TAGS = {
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEFAULT_APPS_ON_REGISTER = ['app.ecommerce' , 'app.ecommerce.orders' , 'app.ecommerce.offerings','app.ecommerce.earnings']
+DEFAULT_APPS_ON_REGISTER = ['app.tutor.account' , 'app.tutor.previousSessions' , 'app.tutor.studentHome']
 # the apps to which the user will be given access to upon registeration through public registeration site
 
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
