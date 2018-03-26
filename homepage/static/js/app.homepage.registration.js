@@ -23,6 +23,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       mobile : $scope.form.mobile,
       email : $scope.form.email,
     }
+    $scope.mode = 'sendingOTP';
     $http({method : 'POST' , url : '/api/homepage/registration/' , data : toSend}).
     then(function(response) {
 

@@ -72,6 +72,11 @@
  }
 
  @media(max-width:1008px) {
+
+   .homeAnimations{
+     display: none;
+   }
+
    .imgOnBanner{
      width:100% !important;
      height:35vh !important;

@@ -23,6 +23,11 @@
   <!-- Services Section -->
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+      {% if not data.all %}
+        <div class="row text-center">
+          <h3>No blog posts , Please visit again.</h3>
+        </div>
+      {% endif %}
 
       {% for a in data %}
       <div class="container-fluid">

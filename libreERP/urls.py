@@ -6,7 +6,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from events.views import eventHome
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
-from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration
+from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 app_name="libreERP"
@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^team', team , name ='team'),
     url(r'^career', career , name ='career'),
     url(r'^policy', policy , name ='policy'),
+    url(r'^desclaimer', desclaimer , name ='desclaimer'),
     url(r'^terms', terms , name ='terms'),
     url(r'^refund', refund , name ='refund'),
     url(r'^contacts', contacts , name ='contacts'),

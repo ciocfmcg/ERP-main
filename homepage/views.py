@@ -47,7 +47,7 @@ def blogDetails(request, blogname):
 def blog(request):
 
     blogObj = blogPost.objects.all()
-    pagesize = 1
+    pagesize = 6
     try:
         page = int(request.GET.get('page', 1))
     except ValueError as error:
@@ -95,6 +95,11 @@ def refund(request):
 
 def contacts(request):
     return render(request,"contacts.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
+
+def desclaimer(request):
+    return render(request,"desclaimer.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
 
 def registration(request):
     return render(request,"registration.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
