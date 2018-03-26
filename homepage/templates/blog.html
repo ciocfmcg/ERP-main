@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
 <!-- Header -->
 {% block content %}
-<div ng-app="app" ng-controller="main">
+<div>
   <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
     <header style="background: url('/static/images/blog_banner.jpg') no-repeat top center/cover;height:40vh;width:100%;">
       <!-- <header  style="background:rgb(29, 98, 180);height:100vh;"> -->
@@ -23,7 +23,7 @@
   <!-- Services Section -->
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
-      {% if not data.all %}
+      {% if dataLen == 0 %}
         <div class="row text-center">
           <h3>No blog posts , Please visit again.</h3>
         </div>

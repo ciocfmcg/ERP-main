@@ -73,7 +73,8 @@ def blog(request):
         # body = i.source
         data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId})
     data = data[(page-1)*pagesize:(page*pagesize)]
-    return render(request,"blog.html" , {"home" : False ,'data' : data ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
+    return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def news(request):
     return render(request,"newssection.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
