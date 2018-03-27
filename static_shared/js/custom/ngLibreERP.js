@@ -22,6 +22,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio) {
+  $scope.showMessaging = false;
   $scope.me = $users.get('mySelf');
   $scope.headerUrl = '/static/ngTemplates/header.html',
     $scope.sideMenu = '/static/ngTemplates/sideMenu.html',
@@ -32,10 +33,38 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
   $scope.serviceName = SERVICE_NAME;
-  $permissions.module().
-  success(function(response) {
-    // console.log(response);
-    $scope.modules = response;
+  $scope.modules = $permissions.module();
+
+  $scope.openAllNotifications = function() {
+
+    $aside.open({
+      templateUrl : '/static/ngTemplates/notification.aside.html'
+    })
+
+
+  }
+
+  if ($scope.modules.success != undefined) {
+    $scope.modules.success(function(response) {
+      // console.log(response);
+      $scope.modules = response;
+
+      if ($scope.modules.length > 0) {
+        $scope.showMessaging = true;
+      }
+
+      if ($scope.modules.length == 1) {
+        // console.log($state);
+        // console.log($state.current.name);
+        if ($state.current.name.split('.').length == 1) {
+          // $state.go($scope.modules[0].name);
+        }
+      }
+    });
+  }else{
+    if ($scope.modules.length > 0) {
+      $scope.showMessaging = true;
+    }
     if ($scope.modules.length == 1) {
       // console.log($state);
       // console.log($state.current.name);
@@ -43,8 +72,8 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
         // $state.go($scope.modules[0].name);
       }
     }
+  }
 
-  });
 
 
   $http({
@@ -264,6 +293,12 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       }
     }).result.then(postClose, postClose);
   }
+
+
+  // if (DEFAULT_ROUTE != 'home') {
+  // }else{
+    // $scope.showMessaging = true;
+  // }
 
   $scope.fetchNotifications = function(signal) {
     // By default the signal is undefined when the user logs in. In that case it fetches all the data.

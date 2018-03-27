@@ -112,7 +112,7 @@ class TopicViewSet(viewsets.ModelViewSet):
     serializer_class = TopicSerializer
     queryset = Topic.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title']
+    filter_fields = ['title' , 'subject']
 
 class PaperViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

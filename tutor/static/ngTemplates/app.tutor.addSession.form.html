@@ -4,29 +4,57 @@
 
 <div class="modal-body">
 
-  <div class="container-fluid">
+  <div class="container-fluid" ng-if="status == 'starting'">
+
+    <div class="row">
+      <img style="width:100%;" src="/static/images/calling.gif" alt="">
+    </div>
+
+    <div class="row text-center" style="margin-top:60px;">
+      <h3 class="text-primary">Connecting , Please wait...</h3>
+    </div>
+
+    <div class="row text-center" style="margin-top:60px;">
+      <button type="button" class="btn btn-danger" ng-click="cancel()">
+        Disconnect
+      </button>
+    </div>
+
+  </div>
+
+  <div class="container-fluid" ng-if="status == 'idle'">
 
     <div class="row">
       <div class="col-md-6">
 
-        <label>Subject {{form.subject == null}}</label> <br>
-        <select ng-model="form.subject" class="form-control">
-          <option ng-repeat="s in subjects" ng-value="s.pk">{{s.title}}</option>
-        </select>
+        <div class="form-group">
+          <label>Subject {{form.subject == null}}</label>
+          <select ng-model="form.subject" class="form-control">
+            <option ng-repeat="s in subjects" ng-value="s.pk">{{s.title}}</option>
+          </select>
+          <p ng-if="showErrors && form.subject == null" class="help-text text-danger">Please select a subject</p>
+        </div>
 
 
       </div>
       <div class="col-md-6" ng-if="form.subject != null">
-        <label>Topic</label>
-        <select ng-model="form.topic" class="form-control">
-          <option ng-repeat="s in topics" ng-value="s.pk">{{s.title}}</option>
-        </select>
+        <div class="form-group">
+          <label>Topic</label>
+          <select ng-model="form.topic" class="form-control">
+            <option ng-repeat="s in topics" ng-value="s.pk">{{s.title}}</option>
+          </select>
+          <p ng-if="showErrors && form.topic == null" class="help-text text-danger">Please select a topic</p>
+
+        </div>
       </div>
     </div>
 
     <div class="row" style="margin-top:20px;">
       <div class="container-fluid">
-        <textarea class="form-control" rows="8" cols="80" placeholder="Type your question"></textarea>
+        <textarea ng-model="form.question" class="form-control" rows="8" cols="80" placeholder="Type your question"></textarea>
+      </div><br>
+      <div class="row text-center">
+        <p ng-if="showErrors && (form.question == undefined || form.question.length == 0)" class="help-text text-danger">Tell us your question , this will help the tutor start thinking about the solution from start</p>
       </div>
     </div>
 

@@ -6,7 +6,7 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval)
   $scope.mainBannerImages = ['/static/images/main_banner.svg' ]
   $scope.bannerID = 0;
 
-  $scope.typings = ["Online tutoring" , "24x7 online help" , "CBSE Preperation" , "IIT JEE Preperation", "AIPMT Preperation" ]
+  $scope.typings = ["Online tutoring" , "24x7 online help" , "CBSE Preparation" , "IIT JEE Preparation", "AIPMT Preparation" ]
 
   $scope.typeIndex = 0;
 
