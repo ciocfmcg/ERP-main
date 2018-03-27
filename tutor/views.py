@@ -5,6 +5,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from url_filter.integrations.drf import DjangoFilterBackend
 from .models import *
 from HR.models import profile
 from django.contrib.auth.models import User
@@ -16,12 +17,12 @@ from .serializers import *
 class Tutor24UserView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        print 'enteredddddddddddddddddddddddd'
-        print request.user.tutors24Profile.pk
+        # print 'enteredddddddddddddddddddddddd'
+        # print request.user.tutors24Profile.pk
+        # print request.user.profile.pk
         tutorObj = Tutors24Profile.objects.get(id = request.user.tutors24Profile.pk)
         hrObj = profile.objects.get(id= request.user.profile.pk)
-        print request.user.profile.pk
-        print tutorObj,hrObj
+        # print tutorObj,hrObj
         hrData = {'mobile':hrObj.mobile,'gender':hrObj.gender,'hrPk' :hrObj.pk}
         tutorData = {'school':tutorObj.school ,'schoolName':tutorObj.schoolName ,'standard':tutorObj.standard ,'street':tutorObj.street ,'city':tutorObj.city ,'pinCode':tutorObj.pinCode ,'state':tutorObj.state ,'country':tutorObj.country ,'tutorPk': tutorObj.pk }
         toSend = {'hrObj' : hrData ,'tutorObj':tutorData}
@@ -32,3 +33,34 @@ class tutors24ProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Tutors24Profile.objects.all()
     serializer_class = Tutors24ProfileSerializer
+
+class tutors24SessionViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = tutors24SessionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['initialQuestion' ]
+
+    def get_queryset(self):
+        if 'mode' in self.request.GET:
+            if self.request.GET['mode'] == 'onlyComplete':
+                print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+                sessionObj = Session.objects.exclude(end__isnull = True)
+        else:
+            sessionObj = Session.objects.all()
+
+        return sessionObj
+
+class tutors24TransactionViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Transaction.objects.all()
+    serializer_class = tutors24TransactionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['ref_id' ]
+
+
+class tutors24MessageViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Message.objects.all()
+    serializer_class = tutors24MessageSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['session' ]

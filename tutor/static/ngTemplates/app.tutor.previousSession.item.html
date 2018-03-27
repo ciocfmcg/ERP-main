@@ -1,0 +1,53 @@
+<div class="col-md-6" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+
+  <div ng-controller="home.tutor.previousSession.details" class="container-fluid card" style="border-right:solid 4px #d2366d;padding:20px;min-height:20vh">
+    <div class="row">
+      <div class="col-md-3">
+        <label>Subject</label> <br>
+        <span style="margin-top:20px;">{{data.subject.title}}</span>
+      </div>
+      <div class="col-md-3">
+        <label>Topic</label> <br>
+        <span style="margin-top:20px;">{{data.topic.title}}</span>
+      </div>
+      <div class="col-md-3">
+        <label>Session Time</label> <br>
+        <span style="margin-top:20px;">{{data.start | date : 'dd-MMM-yyyy hh:mm a'}}</span>
+      </div>
+      <div class="col-md-3">
+        <label>Duration</label> <br>
+        <span style="margin-top:20px;" ng-init="a = getTimeDiff(data.start,data.end)">{{a}}</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <label>Tutor</label> <br>
+        <span style="margin-top:20px;">{{data.tutor | getName}}</span>
+      </div>
+      <div class="col-md-4">
+        <div class="row" ng-if="data.ratings != null">
+          <label>Rating</label> :
+          <span style="margin-top:20px;">{{data.ratings}}/5</span> <br>
+          <span class="fa fa-star" style="color:#d2366d;" ng-show="data.ratings >= 1"></span>
+          <span class="fa fa-star" style="color:#d2366d;" ng-show="data.ratings >= 2"></span>
+          <span class="fa fa-star" style="color:#d2366d;" ng-show="data.ratings >= 3"></span>
+          <span class="fa fa-star" style="color:#d2366d;" ng-show="data.ratings >= 4"></span>
+          <span class="fa fa-star" style="color:#d2366d;" ng-show="data.ratings == 5"></span>
+          <span class="fa fa-star" ng-show="data.ratings <= 4"></span>
+          <span class="fa fa-star" ng-show="data.ratings <= 3"></span>
+          <span class="fa fa-star" ng-show="data.ratings <= 2"></span>
+          <span class="fa fa-star" ng-show="data.ratings <= 1"></span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="row" style="margin-top:20px;margin-right:5px">
+
+          <span><strong><i class="fa fa-arrows-alt fa-lg pull-right" style="cursor:pointer;font-size:25px" ng-click="rowActionClicked('details')"></i> </strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

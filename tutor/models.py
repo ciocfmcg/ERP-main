@@ -5,11 +5,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from LMS.models import Subject,Topic
 from django.core.validators import MaxValueValidator, MinValueValidator
+from time import time
 
 # Create your models here.
 
 def getAttachmentPath(instance , filename ):
-    return 'tutor/doc/attachments/%s_%s' % (str(time()).replace('.', '_'), filename)
+    return 'tutor/attachments/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getMessageAttachmentPath(instance , filename ):
+    return 'tutor/msgAttachment/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 
 class Tutors24Profile(models.Model):
@@ -34,7 +37,7 @@ class Tutors24Profile(models.Model):
         ('11' , 'Class 11'),
         ('12' , 'Class 12'),
         ('13' , 'Entrence Exam Preparation'),
-        ('14' , 'B.tech'),
+        ('14' , 'Undergraduates Programs'),
 
     )
     USER_TYPE = (
@@ -64,7 +67,7 @@ class Session(models.Model):
     student = models.ForeignKey(User , related_name = 'studentSession' , null = False)
     tutor = models.ForeignKey(User , related_name = 'tutorSession' , null = False)
     start = models.DateTimeField(auto_now_add = True)
-    end = models.DateTimeField()
+    end = models.DateTimeField(null = True)
     attachments = models.FileField(upload_to = getAttachmentPath ,  null = True)
     initialQuestion = models.CharField(max_length=4000, null=False)
     subject = models.ForeignKey(Subject , related_name = 'sessionSubject' , null = False)
@@ -73,6 +76,7 @@ class Session(models.Model):
     idle = models.IntegerField(null= True )
     ratings = models.IntegerField(null=True,validators=[MaxValueValidator(5), MinValueValidator(1)])
     ratingComments = models.CharField(max_length = 1000 , null= True )
+    started = models.BooleanField(default=False)
 
 class Transaction (models.Model):
 
@@ -94,3 +98,13 @@ class Transaction (models.Model):
     value = models.PositiveIntegerField(null= True)
     promoCode = models.CharField(max_length=10, null= True)
     discount = models.FloatField(null= True)
+
+class Message(models.Model):
+
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    session = models.ForeignKey(Session , related_name = 'sessionMessage' , null = False)
+    sender = models.ForeignKey(User , related_name = 'userSession' , null = False)
+    time = models.DateTimeField(auto_now_add = True)
+    attachment = models.FileField(upload_to = getMessageAttachmentPath ,  null = True)
+    msg= models.CharField(max_length=300,null=True)
