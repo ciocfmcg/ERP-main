@@ -115,7 +115,7 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
 
         $scope.getTax = function() {
           var total = $scope.form.rate * $scope.form.minutes/60;
-          return (total- $scope.getDicount())*0.18;
+          return parseInt((total- $scope.getDicount())*0.18);
         }
 
         $scope.getTotal = function() {
