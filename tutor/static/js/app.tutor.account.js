@@ -17,6 +17,22 @@ app.config(function($stateProvider) {
 
 app.controller("home.tutor.account", function($scope, $state, $users, $stateParams, $http, Flash) {
 
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.tutors.transactions.html',
+  }, ];
+
+
+  $scope.config = {
+    views: views,
+    url: '/api/tutors/tutors24Transaction/',
+    searchField: 'ref_id',
+    deletable: true,
+    itemsNumPerView: [16, 32, 48],
+  }
+
     $scope.form = {
       gender: 'M',
       school: 'S',
@@ -59,7 +75,6 @@ app.controller("home.tutor.account", function($scope, $state, $users, $statePara
       'standard': f.standard,
       'school': f.school
     }
-    console.log(f.schoolName.length);
 
     if (f.schoolName.length >0) {
       tutors24Data.schoolName = f.schoolName;
@@ -107,7 +122,5 @@ app.controller("home.tutor.account", function($scope, $state, $users, $statePara
 
 
   }
-
-  console.log("function : ", $scope.saveTutorProfile);
 
 });

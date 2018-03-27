@@ -5,6 +5,7 @@ from rest_framework.exceptions import *
 from .models import *
 from PIM.serializers import *
 from HR.models import profile
+from LMS.models import Subject,Topic
 
 
 class Tutors24ProfileSerializer(serializers.ModelSerializer):
@@ -14,20 +15,51 @@ class Tutors24ProfileSerializer(serializers.ModelSerializer):
         read_only_fields=('user','balance' , 'typ')
 
     def update(self ,instance, validated_data):
-        print 'updatingggggggggggggggggggggggggggggg'
-        print validated_data
-        print self.context['request'].data['mobile'],self.context['request'].data['gender']
+        # print 'updatingggggggggggggggggggggggggggggg'
+        # print validated_data
+        # print self.context['request'].data['mobile'],self.context['request'].data['gender']
         for key in ['school','schoolName','standard','street','city','pinCode','state','country']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
         instance.save()
-        print self.context['request'].user.pk
+        # print self.context['request'].user.pk
         hrobj = profile.objects.get(user_id=self.context['request'].user.pk)
-        print hrobj.email
+        # print hrobj.email
         hrobj.mobile = self.context['request'].data['mobile']
         hrobj.gender = self.context['request'].data['gender']
         hrobj.save()
 
         return instance
+
+class SubjectLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ('pk' , 'title', )
+
+class TopicLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = ('pk' , 'title', )
+
+
+class tutors24SessionSerializer(serializers.ModelSerializer):
+    subject = SubjectLiteSerializer(many = False , read_only = True)
+    topic = TopicLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = Session
+        fields = ('pk','created','updated','student','tutor','start','end','attachments','initialQuestion','subject','topic','minutes' , 'idle','ratings','ratingComments','started')
+        # read_only_fields=('balance' , 'typ')
+
+
+class tutors24TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ('pk','created','updated','ref_id','mid','status','source','amount','txn_id','bank_refno','name','email' , 'mobile','Product_info','before','after','value','promoCode','discount')
+        # read_only_fields=('user','balance' , 'typ')
+
+class tutors24MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ('pk','created','updated','session','sender','msg','time','attachment')
