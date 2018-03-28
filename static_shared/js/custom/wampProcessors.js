@@ -1,6 +1,6 @@
 var connection = new autobahn.Connection({url: 'ws://'+ wampServer +':8080/ws', realm: 'default'});
 
-// "onopen" handler will fire when WAMP session has been established ..
+tutorOnline = true;
 connection.onopen = function (session) {
 
    console.log("session established!");
@@ -66,6 +66,127 @@ connection.onopen = function (session) {
       });
     }
   };
+
+  tutoringSubjects = [1];
+  tutoringTopics = [2];
+  tutorsOnline = [];
+
+  if (DEFAULT_ROUTE == 'tutorHome') {
+    processTutoringRequests = function(args) {
+
+      console.log("Raw args : " , args);
+      if (tutorOnline) {
+        console.log(args);
+
+        if (args[0].type == 'newSessionRequest') {
+          if (tutoringTopics.indexOf(args[0].topic) != -1 && tutoringSubjects.indexOf(args[0].subject) != -1 ) {
+
+            connection.session.publish('service.tutor.onlineResponse.' + args[0].id  , [{at : new Date() , tutorID : wampBindName , checked : false}], {}, {acknowledge: true});
+
+          }
+        }
+      }
+    }
+
+
+    session.subscribe('service.tutor.online', processTutoringRequests).then(
+      function (sub) {
+        console.log("subscribed to topic 'tutoring'");
+      },
+      function (err) {
+        console.log("failed to subscribed: " + err);
+      }
+    );
+
+    window.addEventListener("message", receiveMessage, false);
+
+    function receiveMessage(event)
+    {
+      console.log("will make", event.data);
+      if (event.data == 'makeTutorOnline') {
+        tutorOnline= true;
+      }else if (event.data == 'makeTutorOffiline') {
+        tutorOnline= false;
+      }
+    }
+
+
+    handleTutoringCall = function(args) {
+      // call recieved
+
+      console.log(args);
+
+      var scope = angular.element(document.getElementById('main')).scope();
+      console.log(scope);
+
+      if (typeof scope != 'undefined') {
+        scope.$apply(function() {
+          scope.tutoringCall(args[0]);
+        });
+      }
+
+
+    }
+
+
+    session.subscribe('service.tutoring.call.'+wampBindName, handleTutoringCall).then(
+      function (sub) {
+        console.log("subscribed to topic 'chatResonse'");
+      },
+      function (err) {
+        console.log("failed to subscribed: " + err);
+      }
+    );
+
+
+  }else if (DEFAULT_ROUTE == 'studentHome') {
+    // in response to student's request the tutors will share their availability
+    processTutorOnlineRequests = function(args) {
+      console.log("Tutor online response " , args);
+      tutorsOnline.push(args[0]);
+    }
+
+    session.subscribe('service.tutor.onlineResponse.' + wampBindName , processTutorOnlineRequests).then(
+      function (sub) {
+        console.log("subscribed to topic 'tutoring'");
+      },
+      function (err) {
+        console.log("failed to subscribed: " + err);
+      }
+    );
+
+
+
+
+
+    handleJoinSession = function(args) {
+
+      console.log("Will join the accepted session " , args);
+      var scope = angular.element(document.getElementById('newTutoringSession')).scope();
+      console.log(scope);
+
+      if (typeof scope != 'undefined') {
+        scope.$apply(function() {
+          scope.dismiss();
+        });
+      }
+
+      var url = '/tutoring/?session=' + args[0].sessionID;
+      var win = window.open(url, '_blank');
+      win.focus();
+    }
+
+    session.subscribe('service.tutoring.startSession.'+wampBindName, handleJoinSession).then(
+      function (sub) {
+        console.log("subscribed to topic 'chatResonse'");
+      },
+      function (err) {
+        console.log("failed to subscribed: " + err);
+      }
+    );
+  }
+
+
 
   session.subscribe('service.chat.'+wampBindName, chatResonse).then(
     function (sub) {

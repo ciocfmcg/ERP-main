@@ -13,15 +13,19 @@ app.config(function($stateProvider){
 
 });
 
-app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal) {
+app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal , $timeout) {
 
   $scope.form = {minutes1 : 0 , minutes2 : 0 , hours1 : 0, hours2 : 0}
+  $scope.me = $users.get('mySelf');
 
   $http({method : 'GET' , url : '/api/tutors/Tutor24User/' }).
   then(function(response) {
     $scope.profile = response.data;
-
-    $scope.profile.balance = 145;
+    $scope.profile.balance = response.data.tutorObj.balance;
+    if ($scope.profile.balance == null || $scope.profile.balance == undefined) {
+      return;
+    }
+    // $scope.profile.balance = 145;
     var minutes = $scope.profile.balance%60;
     var hours = parseInt($scope.profile.balance/60);
 
@@ -40,11 +44,23 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
 
 
   $scope.startSession = function() {
+
+    if ($scope.profile.tutorObj.standard == null ||$scope.profile.tutorObj.standard == undefined || $scope.profile.tutorObj.standard.length == 0) {
+      Flash.create('danger' , 'Your profile is not complete please complete the profile in Account page')
+      return;
+    }
+
+
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.tutor.addSession.form.html',
       size: 'md',
       backdrop : false,
-      controller: function($scope , $uibModalInstance ){
+      controller: function($scope , $uibModalInstance, $users ){
+
+        $scope.tutorsOnline = [];
+
+        $scope.me = $users.get('mySelf');
+
         $scope.form = {subject : null , topic : null , question : undefined}
         $scope.validity = {subject : false , topic : false , question : false}
         $scope.showErrors = false;
@@ -70,6 +86,56 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
           }
         }, true)
         $scope.status = 'idle';
+
+        $scope.wait = function wait(ms){
+           var start = new Date().getTime();
+           var end = start;
+           while(end < start + ms) {
+             end = new Date().getTime();
+          }
+        }
+
+        $scope.dismiss = function() {
+          $uibModalInstance.dismiss();
+        }
+
+        $scope.sendTutoringRequest = function(sessionID) {
+
+          connection.session.publish('service.tutor.online' , [{type : 'newSessionRequest', sessionID : 1 , subject: sessionID , topic : 2 , id : $scope.me.username}], {}, {acknowledge: true});
+
+
+          $timeout(function() {
+            $scope.tutorsOnline = tutorsOnline;
+
+            console.log($scope.tutorsOnline.length + " tutors found");
+
+            for (var i = 0; i < $scope.tutorsOnline.length; i++) {
+              if ($scope.tutorsOnline[i].checked ) {
+                continue
+              }
+
+              connection.session.publish('service.tutoring.call.' + $scope.tutorsOnline[i].tutorID , [{type : 'newSessionRequest', sessionID : 1 , id : $scope.me.username}], {}, {acknowledge: true});
+
+              console.log("Waiting start");
+              console.log("Waiting end");
+
+              $scope.tutorsOnline[i].checked = true;
+            }
+
+
+          }, 10000)
+
+          $timeout(function() {
+            $scope.status = 'noluck';
+          },20000);
+
+
+        }
+
+        $scope.tryAgain = function(){
+          $scope.status = 'idle';
+        };
+
         $scope.start = function() {
 
           console.log($scope.form);
@@ -91,12 +157,14 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
 
           $scope.status = 'starting';
 
-          console.log("startSessop");
 
+          $scope.sendTutoringRequest(1);
 
+          // $http({method : 'POST' , url : '/api/tutor/session/' , data : toSend}).
+          // then(function() {
+          //
+          // })
         }
-
-
       },
     })
   }

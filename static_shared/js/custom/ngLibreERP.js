@@ -22,6 +22,53 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio) {
+
+  $scope.tutoringCall = function(request) {
+    console.log("in controller, calling: " , request);
+
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/tutorCall.modal.html',
+      backdrop : false,
+      resolve : {
+        request : function() {
+          return request;
+        }
+      },
+      controller : function($scope, $interval , $uibModalInstance , request, $rootScope) {
+        $scope.request = request;
+
+        $scope.acceptCall = function() {
+          connection.session.publish('service.tutoring.startSession.' + $scope.request.id , [{type : 'accepted', sessionID : $scope.request.sessionID}], {}, {acknowledge: true});
+          window.postMessage('makeTutorOffiline' , '*');
+          $rootScope.$broadcast('makeTutorOffiline', {});
+          var url = '/tutoring/?session=' + $scope.request.sessionID;
+          var win = window.open(url, '_blank');
+          win.focus();
+          $uibModalInstance.dismiss();
+        }
+
+        $scope.timeLeft = 10;
+
+        $interval(function() {
+          $scope.timeLeft -=1;
+
+          if ($scope.timeLeft == 0) {
+            $uibModalInstance.dismiss();
+          }
+
+        },1000)
+
+      }
+    })
+
+
+
+  }
+
+
+
+
   $scope.showMessaging = false;
   $scope.me = $users.get('mySelf');
   $scope.headerUrl = '/static/ngTemplates/header.html',

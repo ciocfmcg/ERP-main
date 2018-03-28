@@ -24,7 +24,7 @@ class Tutor24UserView(APIView):
         hrObj = profile.objects.get(id= request.user.profile.pk)
         # print tutorObj,hrObj
         hrData = {'mobile':hrObj.mobile,'gender':hrObj.gender,'hrPk' :hrObj.pk}
-        tutorData = {'school':tutorObj.school ,'schoolName':tutorObj.schoolName ,'standard':tutorObj.standard ,'street':tutorObj.street ,'city':tutorObj.city ,'pinCode':tutorObj.pinCode ,'state':tutorObj.state ,'country':tutorObj.country ,'tutorPk': tutorObj.pk }
+        tutorData = {'school':tutorObj.school ,'schoolName':tutorObj.schoolName ,'standard':tutorObj.standard ,'street':tutorObj.street ,'city':tutorObj.city ,'pinCode':tutorObj.pinCode ,'state':tutorObj.state ,'country':tutorObj.country ,'tutorPk': tutorObj.pk , 'balance' : tutorObj.balance }
         toSend = {'hrObj' : hrData ,'tutorObj':tutorData}
         return Response(toSend,)
 
@@ -38,7 +38,7 @@ class tutors24SessionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = tutors24SessionSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['initialQuestion' ]
+    filter_fields = ['initialQuestion' , 'student' , 'tutor' ]
 
     def get_queryset(self):
         if 'mode' in self.request.GET:

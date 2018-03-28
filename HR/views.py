@@ -215,7 +215,16 @@ def home(request):
     for a in apps:
         if a.name == 'app.tutor.studentHome':
             defaultRoute = 'studentHome'
-            break
+
+    for a in apps:
+        if a.name == 'app.tutor.studentHome':
+            defaultRoute = 'studentHome'
+        if a.name == 'app.tutor.tutorHome':
+            defaultRoute = 'tutorHome'
+
+    if u.is_superuser:
+        defaultRoute = 'home'
+
 
     apps = apps.filter(~Q(name__startswith='configure.' )).filter(~Q(name='app.users')).filter(~Q(name__endswith='.public'))
     return render(request , 'ngBase.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'appsWithJs' : apps.filter(haveJs=True) \

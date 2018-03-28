@@ -32,7 +32,7 @@ class userDesignationSerializer(serializers.ModelSerializer):
 
         read_only_fields=('user',)
         def create(self , validated_data):
-        
+
             d = designation()
             d.user=User.objects.get(pk=self.context['request'].user)
             d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
@@ -102,6 +102,8 @@ class userAdminSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url' , 'username' , 'email' , 'first_name' , 'last_name' , 'is_staff' ,'is_active' )
     def create(self , validated_data):
+        print "In create"
+        print  self.context['request'].user.is_superuser
         if not self.context['request'].user.is_superuser:
             raise PermissionDenied(detail=None)
         user = User.objects.create(**validated_data)

@@ -38,6 +38,8 @@ console.log($scope.sessionDetails);
 
 app.controller("home.tutor.previousSession", function($scope , $state , $users ,  $stateParams , $http , Flash) {
 
+  $scope.me = $users.get('mySelf');
+
   $scope.data = {
     tableData: []
   };
@@ -56,7 +58,7 @@ app.controller("home.tutor.previousSession", function($scope , $state , $users ,
     searchField: 'initialQuestion',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
-    getParams : [{key : 'mode' , value : 'onlyComplete'}]
+    getParams : [{key : 'mode' , value : 'onlyComplete'}, {key : 'student' , value : $scope.me.pk}]
   }
 
 
