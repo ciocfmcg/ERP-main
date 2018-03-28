@@ -16,6 +16,7 @@ app.config(function($stateProvider){
 app.controller("home.tutor.tutorHome", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal) {
 
   console.log(connection);
+  $scope.me = $users.get('mySelf');
 
   $scope.online = true;
 
@@ -30,6 +31,19 @@ app.controller("home.tutor.tutorHome", function($scope , $state , $users ,  $sta
   $scope.$on('makeTutorOffiline', function(event, input) {
     $scope.online = false;
   });
+
+
+  $http({method : 'GET' , url : '/api/tutors/tutors24Session/?mode=onlyComplete&limit=3&tutor='+ $scope.me.pk}).
+  then(function(response) {
+    console.log('resssssssssssssssssss',response.data.results);
+    $scope.recentSession = response.data.results;
+
+  })
+
+  $scope.getTimeDiff = function(a,b){
+    var milisecondsDiff = new Date(b) - new Date(a)
+    return Math.floor(milisecondsDiff/(1000*60*60)).toLocaleString(undefined, {minimumIntegerDigits: 2}) + ":" + (Math.floor(milisecondsDiff/(1000*60))%60).toLocaleString(undefined, {minimumIntegerDigits: 2})  + ":" + (Math.floor(milisecondsDiff/1000)%60).toLocaleString(undefined, {minimumIntegerDigits: 2}) ;
+  }
 
 
   // connection.session.subscribe('service.tutor.list' , function(args) {

@@ -11,14 +11,14 @@ from LMS.models import Subject,Topic
 class Tutors24ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tutors24Profile
-        fields = ('pk','user','created','updated','school','schoolName','standard','street','city','pinCode','state','country','balance' , 'typ')
+        fields = ('pk','user','created','updated','school','schoolName','standard','street','city','pinCode','state','country','balance' , 'typ' ,'parentEmail' , 'parentMobile')
         read_only_fields=('user','balance' , 'typ')
 
     def update(self ,instance, validated_data):
         # print 'updatingggggggggggggggggggggggggggggg'
         # print validated_data
         # print self.context['request'].data['mobile'],self.context['request'].data['gender']
-        for key in ['school','schoolName','standard','street','city','pinCode','state','country']:
+        for key in ['school','schoolName','standard','street','city','pinCode','state','country' , 'parentEmail' , 'parentMobile']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

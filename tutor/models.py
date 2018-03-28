@@ -56,6 +56,8 @@ class Tutors24Profile(models.Model):
     country = models.CharField(max_length = 20 , null= True )
     balance = models.IntegerField(null= True )
     typ = models.CharField(choices = USER_TYPE , default = 'S' , max_length = 10 , null=True)
+    parentEmail = models.EmailField(null = True)
+    parentMobile = models.CharField(null = True , max_length = 14)
 
 User.tutors24Profile = property(lambda u : Tutors24Profile.objects.get_or_create(user = u)[0])
 

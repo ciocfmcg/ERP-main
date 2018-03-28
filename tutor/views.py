@@ -11,6 +11,8 @@ from HR.models import profile
 from django.contrib.auth.models import User
 from rest_framework import viewsets , permissions , serializers
 from .serializers import *
+from ERP.models import application
+from API.permissions import erp_permission
 
 # Create your views here.
 
@@ -18,13 +20,26 @@ class Tutor24UserView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         # print 'enteredddddddddddddddddddddddd'
-        # print request.user.tutors24Profile.pk
+        # print request.user.tutors24Profile.p
         # print request.user.profile.pk
+
+        a = application.objects.filter(name = 'app.tutor.tutorAccount')
+        p = erp_permission.objects.filter(user = request.user , app = a).count()
+
+        if p == 0:
+            # its a student
+            isTutor = False
+        else:
+            # its a tutor
+            isTutor = True
+
+
+
         tutorObj = Tutors24Profile.objects.get(id = request.user.tutors24Profile.pk)
         hrObj = profile.objects.get(id= request.user.profile.pk)
         # print tutorObj,hrObj
         hrData = {'mobile':hrObj.mobile,'gender':hrObj.gender,'hrPk' :hrObj.pk}
-        tutorData = {'school':tutorObj.school ,'schoolName':tutorObj.schoolName ,'standard':tutorObj.standard ,'street':tutorObj.street ,'city':tutorObj.city ,'pinCode':tutorObj.pinCode ,'state':tutorObj.state ,'country':tutorObj.country ,'tutorPk': tutorObj.pk , 'balance' : tutorObj.balance }
+        tutorData = {'school':tutorObj.school ,'schoolName':tutorObj.schoolName ,'standard':tutorObj.standard ,'street':tutorObj.street ,'city':tutorObj.city ,'pinCode':tutorObj.pinCode ,'state':tutorObj.state ,'country':tutorObj.country ,'tutorPk': tutorObj.pk , 'balance' : tutorObj.balance , 'parentEmail' : tutorObj.parentEmail , 'parentMobile' : tutorObj.parentMobile ,'isTutor' : isTutor}
         toSend = {'hrObj' : hrData ,'tutorObj':tutorData}
         return Response(toSend,)
 

@@ -1,12 +1,12 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('account', {
-      url: "/account",
+    .state('tutorAccount', {
+      url: "/tutorAccount",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.tutor.account.html',
-          controller: 'home.tutor.account',
+          templateUrl: '/static/ngTemplates/app.tutor.tutorAccount.html',
+          controller: 'home.tutor.tutorAccount',
         }
       }
     })
@@ -15,23 +15,8 @@ app.config(function($stateProvider) {
   console.log("Configured");
 });
 
-app.controller("home.tutor.account", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.tutor.tutorAccount", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  views = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.tutors.transactions.html',
-  }, ];
-
-
-  $scope.config = {
-    views: views,
-    url: '/api/tutors/tutors24Transaction/',
-    searchField: 'ref_id',
-    deletable: true,
-    itemsNumPerView: [16, 32, 48],
-  }
 
     $scope.form = {
       gender: 'M',
@@ -66,6 +51,7 @@ app.controller("home.tutor.account", function($scope, $state, $users, $statePara
     $scope.form.mobile = response.data.hrObj.mobile;
     $scope.form.parentEmail = response.data.tutorObj.parentEmail;
     $scope.form.parentMobile = response.data.tutorObj.parentMobile;
+    $scope.form.isTutor = response.data.tutorObj.isTutor;
   })
 
 
@@ -80,28 +66,28 @@ app.controller("home.tutor.account", function($scope, $state, $users, $statePara
       'school': f.school
     }
 
-    if (f.schoolName.length >0) {
+    if (f.schoolName != null && f.schoolName.length >0) {
       tutors24Data.schoolName = f.schoolName;
     }
     if (f.mobile != null) {
       tutors24Data.mobile = f.mobile;
     }
-    if (f.street.length >0) {
+    if (f.street != null && f.street.length >0) {
       tutors24Data.street = f.street;
     }
-    if (f.city.length >0) {
+    if (f.city != null && f.city.length >0) {
       tutors24Data.city = f.city;
     }
-    if (f.state.length >0) {
+    if (f.state != null && f.state.length >0) {
       tutors24Data.state = f.state;
     }
-    if (f.country.length >0) {
+    if (f.country != null && f.country.length >0) {
       tutors24Data.country = f.country;
     }
     if (f.pinCode != null) {
       tutors24Data.pinCode = f.pinCode;
     }
-    if (f.parentEmail.length >0) {
+    if (f.parentEmail != null && f.parentEmail.length >0) {
       tutors24Data.parentEmail = f.parentEmail;
     }
     if (f.parentMobile != null) {
