@@ -45,11 +45,11 @@ class CustomerViewSet(viewsets.ModelViewSet):
     filter_fields = ['name']
 
 class ProductViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.AllowAny, )
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
-    search_fields = ('name', 'serialNo', 'description')
+    search_fields = ('name', 'serialNo', 'description', 'serialId')
     # filter_fields = ['name']
     # filter_backends = (filters.SearchFilter,)
 
