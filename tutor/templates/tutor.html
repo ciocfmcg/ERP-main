@@ -1,0 +1,255 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" charset="utf-8">
+
+  <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+  <script src="{% static 'js/fabric.min.js' %}"></script>
+  <script src="{% static 'js/angular.min.js' %}"></script>
+  <script src="{% static 'js/autobahn.min.js' %}"></script>
+  <script src="{% static 'js/public.tutor.js' %}"></script>
+
+  <title>Tutor Home</title>
+
+</head>
+
+<body ng-controller="myCtrl1">
+  <nav class="navbar navbar-inverse" style="border: none;border-radius: 0px;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href=""><img src="{{brandLogoInverted}}" style="margin-top:-20px; max-width:400px;height:40px;margin-top:-10px;" height="60"></img></a>
+      </div>
+      <ul class="nav navbar-nav navbar-right ">
+        <li><a href="#"><i class="fa fa-sign-out " aria-hidden="true" style="font-size:20px;">End Session</i></a></li>
+      </ul>
+    </div>
+  </nav>
+{% verbatim %}
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9">
+
+
+        <div class="row">
+          <div class="col-md-7">
+
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+
+              <div class="btn-group dropdown" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="height:5vh;" ng-click="SetPen(); mode='line'">
+                <i title="Pencil" class="fa fa-pencil" aria-hidden="true" style=" font-size:3vh" ></i>
+              </button>
+                <ul class="dropdown-menu">
+                  <li><input type="range" min="1" max="20" ng-model="size" ng-change="canvas.freeDrawingBrush.width = size;"></li>
+                </ul>
+              </div>
+
+              <div class="btn-group dropdown" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="height:5vh;">
+                  <i title="Eraser" class="fa fa-eraser"  aria-hidden="true" style=" font-size:3vh"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a ng-click="EraserSize =10; SetEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
+                  <li><a ng-click="EraserSize=20; SetEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
+                  <li><a ng-click="EraserSize =30; SetEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
+                </ul>
+              </div>
+
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" style="height:5vh;" ng-click="mode= 'text'; canvas.isDrawingMode = false;">
+                  <i title="Text" class="fa fa-font" aria-hidden="true" style=" font-size:3vh" ></i>
+                </button>
+              </div>
+
+              <div class="btn-group" role="group">
+                <!-- <span class="btn btn-default btn-file">
+                  <input type="file" style="display:none"><i title="Delete" class="fa fa-file-image-o" aria-hidden="true" style=" font-size:3vh" ></i></input>
+                </span> -->
+                <input type="file" id="filePicker" style="display:none;">
+                <button type="button" class="btn btn-default" style="height:5vh;" ng-click="addFile()">
+                  <i class="fa fa-file-image-o" aria-hidden="true" style=" font-size:3vh" ></i>
+                </button>
+                <!-- <button type="button" class="btn btn-default" style="height:5vh;" ng-click="ClearAll()">
+                  <i title="Delete" class="fa fa-file-image-o" aria-hidden="true" style=" font-size:3vh" ></i>
+                </button> -->
+              </div>
+
+              <div class="btn-group dropdown" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="height:5vh;" ng-click="fabric.Object.prototype.selectable = false; canvas.isDrawingMode = false; canvas.selection = false;">
+                  <i title="Shapes" class="fa fa-clone dropdown-toggle" data-toggle="dropdown" aria-hidden="true" style=" font-size:3vh" ><span class="caret"></span></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li style="font-size:1.5vh;"><a ng-click="mode = 'rect'; canvas.isDrawingMode = false; ">Rectangle</a></li>
+                  <li style="font-size:1.5vh;"><a ng-click="mode = 'circle'; canvas.isDrawingMode = false;">Circle</a></li>
+                  <li style="font-size:1.5vh;"><a ng-click="mode = 'triangle'; canvas.isDrawingMode = false;">Triangle</a></li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- <div class="col-md-5">
+            <div class="btn-group btn-group-justified" role="group" aria-label="..." style="padding-top:10px;">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" ng-click="col='blue'; canvas.freeDrawingBrush.color='blue';"></button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-danger" ng-click="col='red'; canvas.freeDrawingBrush.color='red';"></button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success" ng-click="col='green'; canvas.freeDrawingBrush.color='green';"></button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-warning" ng-click="col='brown'; canvas.freeDrawingBrush.color='yellow';"></button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-basic" ng-click="col='brown'; canvas.freeDrawingBrush.color='black';"></button>
+              </div>
+            </div>
+          </div> -->
+
+
+          <div class="col-md-5">
+            <div id=colors>
+              <div class="col-md-1">
+                <button ng-click="col='blue'; canvas.freeDrawingBrush.color='blue';" style="width:3vh; height:3vh; border:0; background-color: blue;"></button>
+              </div>
+              <div class="col-md-1">
+                <button ng-click="col='red'; canvas.freeDrawingBrush.color='red';" style="width:3vh; height:3vh; border:0; background-color: red;"></button>
+              </div>
+              <div class="col-md-1">
+                <button ng-click="col='green'; canvas.freeDrawingBrush.color='green';" style="width:3vh; height:3vh; border:0; background-color: green;"></button>
+              </div>
+              <div class="col-md-1">
+                <button ng-click="col='pink'; canvas.freeDrawingBrush.color='yellow';" style="width:3vh; height:3vh; border:0; background-color: yellow;"></button>
+              </div>
+              <div class="col-md-1">
+                <button ng-click="col='black'; canvas.freeDrawingBrush.color='black';" style="width:3vh; height:3vh; border:0; background-color: black;"></button>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div id="canvasContainer" class="panel panel-default" style="overflow-y: auto; overflow-x:hidden; height:70vh; width:100%;">
+              <canvas id="tutorCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-md-5">
+              <button class="btn btn-default" type="button" name="button" ng-click="increasecanvas();">Expand</button>
+              <button class="btn btn-default" type="button" name="button" ng-click="sendAllData();">Send All Data</button>
+            </div>
+
+            <div class="col-md-2">
+              <div class="row">
+                <div class="col-md-6" >
+                  <span style="padding-top:10px; height: 20px; width: 20px; background-color: {{dataVariables.OnlineStatus?'green':'red'}}; border-radius: 50%; display: inline-block;"></span>
+                </div>
+                <div class="col-md-6" >
+                  <span style="font-size:20px;">Online</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-5">
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="col-md-3">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-6">
+                <img src="user.png" class="img-circle" alt="User Image" style="width:100px; height:100px;">
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h3>{{StudentName}}</h3>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <h5>Id:{{StudId}}</h5>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <h5>Average Rating:{{AverageRating}}</h5>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-body" style="overflow-y: auto; overflow-x:hidden; height:50vh;">
+                <div class="row" ng-repeat="m in messages">
+                  <div class="container-fluid {{m.sendByMe? 'pull-right': 'pull-left'}}">
+                    {{m.message}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- <div class="row">
+          <div class="col-md-12" style="border:1px solid red">
+            <form class="form-inline" ng-submit="EnterTutorMsg()">
+              <div class="form-group">
+                <input class="form-control" type="text" ng-model="tutorText" placeholder="Type your message here..." />
+                <button class="btn btn-primary" type="submit">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div> -->
+
+
+        <div class="form-group">
+          <form ng-submit="EnterTutorMsg()">
+            <div class="input-group">
+              <input class="form-control" type="text" ng-model="tutorText" placeholder="Type your message here..." />
+              <span class="input-group-btn" ><button class="btn btn-primary" type="submit">Submit</button></span>
+            </div>
+          </form>
+      </div>
+
+
+
+
+
+      </div>
+    </div>
+
+  </div>
+
+{% endverbatim %}
+</body>

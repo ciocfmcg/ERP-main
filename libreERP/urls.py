@@ -9,6 +9,9 @@ from HR.views import loginView , logoutView , home , registerView , tokenAuthent
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
+from tutor.views import studentHome , tutorHome
+
+
 app_name="libreERP"
 urlpatterns = [
     url(r'^$', index , name ='root'),
@@ -39,6 +42,8 @@ urlpatterns = [
     url(r'^terms', terms , name ='terms'),
     url(r'^refund', refund , name ='refund'),
     url(r'^contacts', contacts , name ='contacts'),
+    url(r'^studentHome', studentHome , name ='studentHome'),
+    url(r'^tutorHome', tutorHome , name ='tutorHome'),
 ]
 
 if settings.DEBUG:

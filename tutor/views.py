@@ -11,6 +11,7 @@ from HR.models import profile
 from django.contrib.auth.models import User
 from rest_framework import viewsets , permissions , serializers
 from .serializers import *
+from django.conf import settings as globalSettings
 
 # Create your views here.
 
@@ -64,3 +65,13 @@ class tutors24MessageViewSet(viewsets.ModelViewSet):
     serializer_class = tutors24MessageSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['session' ]
+
+
+
+def studentHome(request):
+    return render(request,"student.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
+
+
+def tutorHome(request):
+    return render(request,"tutor.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
