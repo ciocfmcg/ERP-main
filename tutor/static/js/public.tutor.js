@@ -1,4 +1,45 @@
 var app = angular.module('myApp', []);
+
+app.config(function($httpProvider) {
+
+  $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+  $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+  $httpProvider.defaults.withCredentials = true;
+
+});
+
+
+app.filter('timeAgo' , function(){
+  return function(input){
+    t = new Date(input);
+    var now = new Date();
+    var diff = Math.floor((now - t)/60000)
+    if (diff<60) {
+      return diff+' Mins';
+    }else if (diff>=60 && diff<60*24) {
+      return Math.floor(diff/60)+' Hrs';
+    }else if (diff>=60*24) {
+      return Math.floor(diff/(60*24))+' Days';
+    }
+  }
+})
+
+
+app.directive('ngEnter', function () {
+  return function (scope, element, attrs) {
+    element.bind("keydown keypress", function (event) {
+      if(event.which === 13) {
+        scope.$apply(function (){
+          scope.$eval(attrs.ngEnter);
+        });
+        event.preventDefault();
+      }
+    });
+  };
+});
+
+
+
 app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval) {
 
 
