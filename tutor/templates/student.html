@@ -14,7 +14,7 @@
   <script src="{% static 'js/autobahn.min.js' %}"></script>
   <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
   <script src="{% static 'js/public.student.js' %}"></script>
-  <title></title>
+  <title>Student Home</title>
 </head>
 
 <body ng-controller="myCtrl1">
@@ -30,7 +30,7 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right ">
-        <li><a style="cursor:pointer;"><i class="fa fa-sign-out " aria-hidden="true" style="font-size:20px;color:white;"></i></a></li>
+        <li><a style="cursor:pointer;"><i ng-click="showFeedbackForm();" class="fa fa-sign-out " aria-hidden="true" style="font-size:20px;color:white;"></i></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right ">
         <li>
@@ -52,7 +52,7 @@
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
 
               <div class="btn-group dropdown" role="group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="height:5vh;border: none;" ng-click="SetPen(); mode='line'">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="height:5vh;border: none;" ng-click="setPen(); mode='line'">
                 <i title="Pencil" class="fa fa-pencil" aria-hidden="true" style=" font-size:3vh" ></i>
               </button>
                 <ul class="dropdown-menu">
@@ -65,9 +65,9 @@
                   <i title="Eraser" class="fa fa-eraser"  aria-hidden="true" style=" font-size:3vh"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a ng-click="EraserSize =10; SetEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
-                  <li><a ng-click="EraserSize=20; SetEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
-                  <li><a ng-click="EraserSize =30; SetEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
+                  <li><a ng-click="EraserSize =10; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
+                  <li><a ng-click="EraserSize=20; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
+                  <li><a ng-click="EraserSize =30; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
                 </ul>
               </div>
 
@@ -120,10 +120,10 @@
           </div>
           <div class="col-md-2" style="padding-top:10px;">
             <div class="col-md-4">
-              <span style="padding-top:10px; height: 20px; width: 20px; background-color: {{dataVariables.OnlineStatus?'green':'red'}}; border-radius: 50%; display: inline-block;"></span>
+              <span style="padding-top:10px; height: 20px; width: 20px; background-color: {{dataVariables.onlineStatus?'green':'red'}}; border-radius: 50%; display: inline-block;"></span>
             </div>
             <div class="col-md-8">
-              <span style="margin-bottom:10px;margin-left:10px;">{{dataVariables.OnlineStatus?'Online':'Offline'}}</span>
+              <span style="margin-bottom:10px;margin-left:10px;">{{dataVariables.onlineStatus?'Online':'Offline'}}</span>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@
               <canvas id="tutorCanvas"></canvas>
             </div>
           </div>
-          <button ng-click="increasecanvas();" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px;" >+</button>
+          <button ng-click="increaseCanvas(); sendHeight = true;" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px;" >+</button>
         </div>
         <div class="row">
           <div class="col-md-12">

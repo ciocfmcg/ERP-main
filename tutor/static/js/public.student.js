@@ -9,27 +9,27 @@ app.config(function($httpProvider) {
 });
 
 
-app.filter('timeAgo' , function(){
-  return function(input){
+app.filter('timeAgo', function() {
+  return function(input) {
     t = new Date(input);
     var now = new Date();
-    var diff = Math.floor((now - t)/60000)
-    if (diff<60) {
-      return diff+' Mins';
-    }else if (diff>=60 && diff<60*24) {
-      return Math.floor(diff/60)+' Hrs';
-    }else if (diff>=60*24) {
-      return Math.floor(diff/(60*24))+' Days';
+    var diff = Math.floor((now - t) / 60000)
+    if (diff < 60) {
+      return diff + ' Mins';
+    } else if (diff >= 60 && diff < 60 * 24) {
+      return Math.floor(diff / 60) + ' Hrs';
+    } else if (diff >= 60 * 24) {
+      return Math.floor(diff / (60 * 24)) + ' Days';
     }
   }
 })
 
 
-app.directive('ngEnter', function () {
-  return function (scope, element, attrs) {
-    element.bind("keydown keypress", function (event) {
-      if(event.which === 13) {
-        scope.$apply(function (){
+app.directive('ngEnter', function() {
+  return function(scope, element, attrs) {
+    element.bind("keydown keypress", function(event) {
+      if (event.which === 13) {
+        scope.$apply(function() {
           scope.$eval(attrs.ngEnter);
         });
         event.preventDefault();
@@ -43,9 +43,12 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
 
   $scope.dp = '/static/images/userIcon.png';
 
-  $http({method : 'GET' , url : '/api/HR/users/?mode=mySelf&format=json'}).
+  $http({
+    method: 'GET',
+    url: '/api/HR/users/?mode=mySelf&format=json'
+  }).
   then(function(response) {
-    console.log(response);
+    console.log('resssssssssss', response);
     $scope.profile = response.data[0].profile;
     $scope.name = response.data[0].first_name + ' ' + response.data[0].last_name;
     if ($scope.profile.displayPicture != null) {
@@ -57,43 +60,49 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   $scope.data = {
     "objects": []
   };
-  $scope.TutorMsg = [];
-  $scope.StudMsg = [];
+  $scope.tutorMsg = [];
+  $scope.studMsg = [];
   $scope.messages = [];
-  $scope.TeacherName = 'Vikas Motla';
-  $scope.TeacherId = '22134';
-  $scope.AverageRating = 5;
-  $scope.HeightCount = 0;
+  $scope.teacherName = 'Vikas Motla';
+  $scope.teacherId = '22134';
+  $scope.averageRating = 5;
+  $scope.heightCount = 0;
 
 
   $scope.roomID = window.location.href.split('?session=')[1];
   // $scope.roomID = '123';
 
   $scope.calculateTime = function() {
-    $scope.timeMins = parseInt($scope.inSecs/60);
-    $scope.timeSecs =parseInt($scope.inSecs%60);
+    $scope.timeMins = parseInt($scope.inSecs / 60);
+    $scope.timeSecs = parseInt($scope.inSecs % 60);
 
-    console.log($scope.timeMins , $scope.timeSecs);
+    // console.log($scope.timeMins, $scope.timeSecs);
 
   }
 
 
-  $http({method : 'GET' , url : '/api/tutors/tutors24Session/'+ $scope.roomID +'/'}).
+  $http({
+    method: 'GET',
+    url: '/api/tutors/tutors24Session/' + $scope.roomID + '/'
+  }).
   then(function(response) {
     console.log(response.data);
 
-    $scope.sessionObj= response.data;
+    $scope.sessionObj = response.data;
     var start = new Date($scope.sessionObj.start);
     var now = new Date();
 
-    $scope.inSecs = (now.getTime()-start.getTime())/1000;
+    $scope.inSecs = (now.getTime() - start.getTime()) / 1000;
 
     $interval(function() {
       $scope.inSecs += 1;
       $scope.calculateTime();
-    },1000)
+    }, 1000)
 
-    $http({method: 'GET' , url : '/api/HR/userSearch/' + response.data.tutor + '/'}).
+    $http({
+      method: 'GET',
+      url: '/api/HR/userSearch/' + response.data.tutor + '/'
+    }).
     then(function(response) {
       $scope.teacher = response.data;
       if ($scope.teacher.profile.displayPicture == null) {
@@ -106,36 +115,40 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
 
 
   $scope.HeartBeat = 0;
-  $scope.OldTime = 0;
+  $scope.oldTime = 0;
+  $scope.endSessionTime = 0;
 
-  $scope.EndSessionTime = 0;
 
   $scope.dataVariables = {
-    IsEndSession: false,
-    NewMsg: 0,
-    OnlineStatus: false,
+    isEndSession: false,
+    newMsg: 0,
+    onlineStatus: false,
     disconnectModalOpen: false,
     isConnected: false,
-    sendData: true
+    sendData: true,
+    sendImage: false,
+    sendHeight : true
   };
+
+
 
 
   window.onfocus = function() {
-    $scope.dataVariables.isActive = true;
-    $scope.dataVariables.NewMsg = 0;
-    document.title = "24tutors.com";
+    $scope.dataVariables.isWindowActive = true;
+    $scope.dataVariables.newMsg = 0;
+    document.title = "Student Home";
   };
 
   window.onblur = function() {
-    $scope.dataVariables.isActive = false;
+    $scope.dataVariables.isWindowActive = false;
   };
 
   $interval(function() {
-    if (!$scope.dataVariables.isActive) {
-      console.log($scope.dataVariables.NewMsg);
-      if ($scope.dataVariables.NewMsg >= 1) {
+    if (!$scope.dataVariables.isWindowActive) {
+      console.log($scope.dataVariables.newMsg);
+      if ($scope.dataVariables.newMsg >= 1) {
         console.log('new message..');
-        document.title = $scope.dataVariables.NewMsg + ' New Message';
+        document.title = $scope.dataVariables.newMsg + ' New Message';
       }
     }
   }, 1000)
@@ -170,15 +183,24 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
       };
       $scope.redraw();
     } else if (args[0] == 'increaseHeight') {
-      console.log('incresing canvas height');
-      $scope.HeightCount = args[1];
-      $scope.increasecanvas();
+      // console.log('incresing canvas height');
+      $scope.heightCount = args[1];
+      $scope.dataVariables.sendHeight = false;
+      // console.log('increase canvas..');
+      $scope.increaseCanvas();
     } else if (args[0] == 'chatTeacher') {
-      $scope.MessageCame(args[1]);
+      $scope.messageCame(args[1], args[2]);
     } else if (args[0] == 'online') {
-      $scope.IsOnline(args[1]);
+      $scope.isOnline(args[1]);
       console.log('HearBeat', args[1]);
-    } else {
+    } else if (args[0] == 'sendAllData') {
+        $scope.sendAllData();
+    } else if (args[0] =='allData') {
+      $scope.data = args[1];
+      $scope.dataVariables.sendData = false;
+      $scope.redraw();
+    }
+     else {
       $scope.data['objects'].push(args[0]);
       $scope.dataVariables.sendData = false;
       $scope.redraw();
@@ -201,7 +223,15 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
       function(sub) {
         console.log("subscribed to", $scope.roomID);
 
+
+
         // just subscribed , then send a message to the other party to send all the data on canas to me
+        $scope.connection.session.publish($scope.roomID, ['sendAllData'], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
 
 
       },
@@ -213,44 +243,27 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   }
 
 
-  // $timeout(function() {
-  //   $scope.connection.session.publish($scope.roomID, [$scope.sdata], {}, {acknowledge: true}).
-  //   then(function (publication) {
-  //     console.log("Published");
-  //   });
-  // }, 5000)
-
-
   $scope.connection.open();
 
-
-
-  // $scope.openFeedback = function() {
-  //
-  //   console.log('ffffffffffffffeedback');
-  //   $scope.feedbackInfo = $uibModal.open({
-  //     template: '<div class="card-body text-center">' +
-  //       '<h3 style="padding:15px;">Message</h3>' +
-  //       '</div>' +
-  //       '<div class="container-fluid" style="padding-left:35px">' +
-  //       '<div><h4>Rate Your Tutor</h4></div>' +
-  //       '<div><button  class="btn btn-default" type="button" name="button">Submit</button></div>' +
-  //       '<div><h4></h4></div>' +
-  //       '</div>',
+  // $scope.showFeedback = function () {
+  //   console.log('show feedback...');
+  //   $rootScope.$emit('clicked', {
+  //     deal:'feedback'
   //   });
   // }
+
 
 
 
   $scope.openpopup = function() {
 
     console.log('open poppppppp');
-    // console.log($scope.dataVariables.IsEndSession);
+    // console.log($scope.dataVariables.isEndSession);
     console.log('Ismodal open..', $scope.dataVariables.disconnectModalOpen);
-    $scope.EndSessionTime++;
+    $scope.endSessionTime++;
 
-    if ($scope.EndSessionTime > 5) {
-      $scope.dataVariables.IsEndSession = true;
+    if ($scope.endSessionTime > 5) {
+      $scope.dataVariables.isEndSession = true;
       console.log('end this session....');
     }
 
@@ -289,64 +302,70 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
       }
     });
 
-    $scope.showFeedbackForm = function() {
-      $scope.feedBack = $uibModal.open({
-        templateUrl: '/static/ngTemplates/app.public.student.feedback.html',
-        resolve: {
-          roomID: function() {
-            return $scope.roomID;
-          }
-        },
-        backdrop: 'static',
-        controller: function($scope, roomID, $http) {
-          $scope.mode = 'feedback';
-          $scope.roomID = roomID;
-          $scope.form = {
-            rating: null,
-            feedbackText: ''
-          }
-          $scope.save = function() {
-            $http({
-              url: '/api/tutor/feedback/?id=' + $scope.roomID,
-              method: 'POST',
-              data: $scope.form
-            }).
-            then(function(response) {
-              $scope.mode = 'thankyou';
-            })
-          }
-        }
-      })
-    }
-    $scope.dataVariables.disconnectModalOpen = true;
 
+
+
+
+
+    $scope.dataVariables.disconnectModalOpen = true;
+  }
+
+  $scope.showFeedbackForm = function() {
+    $scope.feedBack = $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.public.student.feedback.html',
+      resolve: {
+        roomID: function() {
+          return $scope.roomID;
+        }
+      },
+      backdrop: 'static',
+      controller: function($scope,$rootScope , roomID, $http) {
+
+
+        $scope.mode = 'feedback';
+        $scope.roomID = roomID;
+        $scope.form = {
+          rating: null,
+          feedbackText: ''
+        }
+        $scope.save = function() {
+          $http({
+            url: '/api/tutor/feedback/?id=' + $scope.roomID,
+            method: 'POST',
+            data: $scope.form
+          }).
+          then(function(response) {
+            $scope.mode = 'thankyou';
+          })
+        }
+      }
+    })
   }
 
 
-  $scope.IsOnline = function(NewHeartBeatTime) {
-    $scope.OldTime = NewHeartBeatTime;
+  $scope.isOnline = function(NewHeartBeatTime) {
+    $scope.oldTime = NewHeartBeatTime;
   }
 
   $interval(function() {
-    $scope.NewTime = new Date().getTime();
-    if (($scope.NewTime - $scope.OldTime) <= 6000) {
-      $scope.dataVariables.OnlineStatus = true;
-      $scope.EndSessionTime = 0;
+    $scope.newTime = new Date().getTime();
+    if (($scope.newTime - $scope.oldTime) <= 6000) {
+      $scope.dataVariables.onlineStatus = true;
+      $scope.endSessionTime = 0;
       if ($scope.dataVariables.disconnectModalOpen) {
-        console.log('close modal.');
-
+        console.log('close modal.....');
         // broadcast
         $rootScope.$broadcast('tutorBackOnline', {});
-
         $scope.dataVariables.disconnectModalOpen = false;
       }
 
     } else {
-      $scope.dataVariables.OnlineStatus = false;
-      // console.log($scope.OnlineStatus);
+      $scope.dataVariables.onlineStatus = false;
+      // console.log($scope.onlineStatus);
       $scope.openpopup();
     }
   }, 10000);
+
 
   $interval(function() {
     $scope.connection.session.publish($scope.roomID, ['online', new Date().getTime()], {}, {
@@ -357,29 +376,30 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
     });
   }, 5000);
 
-  $scope.MessageCame = function(msgTutor) {
-    $scope.dataVariables.NewMsg++;
+  $scope.messageCame = function(timestamp, msgTutor) {
+    $scope.dataVariables.newMsg++;
     console.log('message from tutor', msgTutor);
-    $scope.TutorMsg.push(msgTutor);
-    console.log($scope.TutorMsg);
+    $scope.tutorMsg.push(msgTutor);
+    console.log($scope.tutorMsg);
     $scope.messages.push({
       'sendByMe': false,
-      'message': msgTutor
+      'message': msgTutor,
+      'created': timestamp
     });
-    console.log($scope.messages);
+    // console.log($scope.messages);
   }
 
   $scope.EnterStudentMsg = function() {
     console.log('ff', $scope.StudentText);
-    $scope.StudMsg.push($scope.StudentText);
+    $scope.studMsg.push($scope.StudentText);
     $scope.messages.push({
       'sendByMe': true,
       'message': $scope.StudentText,
-      'created' : new Date()
+      'created': new Date()
     });
     console.log('fffffffffffffff', $scope.messages);
-    console.log($scope.StudMsg);
-    $scope.connection.session.publish($scope.roomID, ['chatStudent', $scope.StudentText], {}, {
+    console.log($scope.studMsg);
+    $scope.connection.session.publish($scope.roomID, ['chatStudent', new Date(), $scope.StudentText], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -398,6 +418,26 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
       console.log("Published");
     });
   }
+
+  $scope.sendAllData = function() {
+    $scope.connection.session.publish($scope.roomID, ['allData', $scope.data], {}, {
+      acknowledge: true
+    }).
+    then(function(publication) {
+      console.log("Published");
+    });
+  }
+
+  $scope.sendDimensions = function() {
+    console.log($scope.heightCount);
+    $scope.connection.session.publish($scope.roomID, ['increaseHeight', $scope.heightCount], {}, {
+      acknowledge: true
+    }).
+    then(function(publication) {
+      console.log("Published");
+    });
+  }
+
 
   $scope.canvas = new fabric.Canvas('tutorCanvas', {
     selection: false
@@ -424,7 +464,6 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   $scope.EraserSize = 1;
   $scope.col = 'black';
   $scope.mode = null;
-  $scope.HeightCount = 0;
 
   $scope.startx;
   $scope.starty;
@@ -434,20 +473,24 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   fabric.Object.prototype.selectable = false;
   $scope.canvas.isDrawingMode = true;
 
-  $scope.increasecanvas = function() {
-    $scope.HeightCount = $scope.canvas.height + 150;
+  $scope.increaseCanvas = function() {
+    console.log('increasee.....');
+    $scope.heightCount = $scope.canvas.height + 150;
     console.log($scope.canvas.height);
-    $scope.canvas.setHeight($scope.HeightCount);
+    $scope.canvas.setHeight($scope.heightCount);
+    if ($scope.dataVariables.sendHeight) {
+      $scope.sendDimensions();
+    }
   }
 
-  $scope.SetPen = function() {
+  $scope.setPen = function() {
     $scope.canvas.isDrawingMode = true;
     $scope.canvas.freeDrawingBrush.color = $scope.col;
     $scope.canvas.freeDrawingBrush.width = $scope.size;
   }
 
 
-  $scope.SetEraser = function() {
+  $scope.setEraser = function() {
     $scope.mode = "eraser";
     $scope.isShape = false;
     $scope.canvas.isDrawingMode = true;
@@ -507,7 +550,8 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   });
 
   $scope.addImage = function(url) {
-
+    $scope.mode = 'image';
+    $scope.dataVariables.sendImage = false;
     console.log($scope.mode);
     fabric.Image.fromURL(url, function(Img) {
       Img.scaleToWidth(200);
@@ -581,6 +625,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
 
   $scope.canvas.on('object:moving', function(options) {
     if (options.target.type == "image") {
+      $scope.dataVariables.sendImage = false;
       for (var i = 0; i < $scope.data.objects.length; i++) {
         if ($scope.data.objects[i].timestamp == options.target.timestamp) {
           $scope.data.objects[i].top = options.target.top;
@@ -592,30 +637,28 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
     }
   })
 
-  // $scope.canvas.on('selection:cleared', function()
-  //   {
-  //      $scope.canvas.off('object:moving');
-  //    });
 
   $scope.canvas.on('mouse:down', function(options) {
+    $scope.dataVariables.sendImage = true;
     $scope.dataVariables.sendData = true;
     $scope.pointer = $scope.canvas.getPointer(options.e);
     $scope.startx = $scope.pointer.x;
     $scope.starty = $scope.pointer.y;
 
+
     console.log($scope.mode);
 
-    if ($scope.mode == "image") {
-      if (!options.target) {
-        //  $scope.canvas.off('object:moving');
-        for (var i = 0; i < $scope.data.objects.length; i++) {
-          if ($scope.data.objects[i].type == "image") {
-            $scope.data.objects[i].selectable = false;
-            $scope.data.objects[i].hoverCursor = 'default';
-          }
+    if (!options.target) {
+      //  $scope.canvas.off('object:moving');
+      for (var i = 0; i < $scope.data.objects.length; i++) {
+        if ($scope.data.objects[i].type == "image") {
+          $scope.data.objects[i].selectable = false;
+          $scope.data.objects[i].hoverCursor = 'default';
         }
       }
-    } else if ($scope.mode == "text") {
+    }
+
+    if ($scope.mode == "text") {
       $scope.newText = new fabric.IText('', {
         fontWeight: 'normal',
         fontFamily: 'Times New Roman',
@@ -642,7 +685,6 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   });
 
   $scope.canvas.on('mouse:up', function() {
-
     if ($scope.mode == "text") {
       $scope.canvas.on('text:editing:exited', function(e) {
         console.log("text:" + e.target.text);
@@ -774,19 +816,14 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
     $scope.canvas.loadFromJSON($scope.dataString, $scope.canvas.renderAll.bind($scope.canvas));
 
     if ($scope.dataVariables.isConnected) {
-      if ($scope.mode == 'image') {
-        return;
-      }
       if ($scope.dataVariables.sendData) {
+        if (!$scope.dataVariables.sendImage) {
+          console.log(' dont send imagre....');
+          return;
+        }
         $scope.sendData();
       }
-
     }
-
-
-    // console.log($scope.dataString);
-
-    // $scope.canvas.item($scope.canvas.size()-1).excludeFromExport = true;
   }
 
 });
