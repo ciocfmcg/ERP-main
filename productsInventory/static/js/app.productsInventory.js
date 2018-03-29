@@ -76,6 +76,12 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       ]
     };
 
+
+  var multiselectOptions = [{icon : 'fa fa-file' , text : 'Reordering Report' },
+    // {icon : 'fa fa-bar-chart-o' , text : 'Performance' },
+    // {icon : 'fa fa-envelope-o' , text : 'message' },
+  ];
+
   $scope.config = {
     views: views,
     url: '/api/POS/product/',
@@ -85,6 +91,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     options : options,
     filterSearch : true,
     // editable : true,
+    multiselectOptions : multiselectOptions,
     editorTemplate :  '/static/ngTemplates/app.productsInventory.product.modal.html',
   }
 

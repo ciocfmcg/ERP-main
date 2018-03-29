@@ -327,6 +327,104 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice,$htt
 
 })
 
+app.controller("controller.POS.productForm.modal" , function($scope, product ,$http, Flash) {
+  console.log(product);
+  $scope.$watch('product.productMeta' , function(newValue , oldValue) {
+    if (typeof newValue == 'object') {
+      $scope.showTaxCodeDetails = true;
+    }else {
+      $scope.showTaxCodeDetails = false;
+    }
+  })
+
+  $scope.searchTaxCode = function(c) {
+    return $http.get('/api/clientRelationships/productMeta/?description__contains='+c).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
+  if (product.pk != undefined) {
+    $scope.mode = 'edit';
+    $scope.product = product;
+  } else {
+    $scope.mode = 'new';
+    $scope.product = {
+      'name': '',
+      'productMeta': '',
+      'price': '',
+      'displayPicture': emptyFile,
+      'serialNo': '',
+      'description': '',
+      'inStock': 0,
+      'cost':0,
+      'logistics':0,
+      'serialId':'',
+      'reorderTrashold':0,
+      'pk': null
+    }
+  }
+
+  $scope.save = function() {
+    console.log('entered');
+    console.log($scope.product.productMeta);
+    console.log($scope.product.productMeta.pk);
+
+    var f = $scope.product;
+    var url = '/api/POS/product/';
+    if ($scope.mode == 'new') {
+      var method = 'POST';
+    } else {
+      var method = 'PATCH';
+      url += $scope.product.pk + '/';
+    }
+
+    var fd = new FormData();
+    if (f.displayPicture != emptyFile && typeof f.displayPicture != 'string' && f.displayPicture != null) {
+      fd.append('displayPicture', f.displayPicture)
+    }
+
+    if (f.name.length == 0) {
+      Flash.create('warning', 'Name can not be blank');
+      return;
+    }
+    fd.append('name', f.name);
+    fd.append('productMeta', f.productMeta.pk);
+    fd.append('price', f.price);
+    fd.append('serialNo', f.serialNo);
+    fd.append('description', f.description);
+    fd.append('inStock', f.inStock);
+    fd.append('cost', f.cost);
+    fd.append('logistics', f.logistics);
+    fd.append('serialId', f.serialId);
+    fd.append('reorderTrashold', f.reorderTrashold);
+
+
+    console.log(f.displayPicture);
+    console.log(fd);
+
+    $http({
+      method: method,
+      url: url,
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      $scope.product.pk = response.data.pk;
+      if ($scope.mode == 'new') {
+        $scope.product.pk = response.data.pk;
+        $scope.mode = 'edit';
+      }
+      Flash.create('success', 'Saved')
+    })
+  }
+
+
+});
+
 app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
   $scope.hover = false;
@@ -716,103 +814,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           }
         }
       },
-      controller: function($scope, product) {
-        console.log(product);
-        $scope.$watch('product.productMeta' , function(newValue , oldValue) {
-          if (typeof newValue == 'object') {
-            $scope.showTaxCodeDetails = true;
-          }else {
-            $scope.showTaxCodeDetails = false;
-          }
-        })
-
-        $scope.searchTaxCode = function(c) {
-          return $http.get('/api/clientRelationships/productMeta/?description__contains='+c).
-          then(function(response) {
-            return response.data;
-          })
-        }
-
-        if (product.pk != undefined) {
-          $scope.mode = 'edit';
-          $scope.product = product;
-        } else {
-          $scope.mode = 'new';
-          $scope.product = {
-            'name': '',
-            'productMeta': '',
-            'price': '',
-            'displayPicture': emptyFile,
-            'serialNo': '',
-            'description': '',
-            'inStock': 0,
-            'cost':0,
-            'logistics':0,
-            'serialId':'',
-            'reorderTrashold':0,
-            'pk': null
-          }
-        }
-
-        $scope.save = function() {
-          console.log('entered');
-          console.log($scope.product.productMeta);
-          console.log($scope.product.productMeta.pk);
-
-          var f = $scope.product;
-          var url = '/api/POS/product/';
-          if ($scope.mode == 'new') {
-            var method = 'POST';
-          } else {
-            var method = 'PATCH';
-            url += $scope.product.pk + '/';
-          }
-
-          var fd = new FormData();
-          if (f.displayPicture != emptyFile && typeof f.displayPicture != 'string') {
-            fd.append('displayPicture', f.displayPicture)
-          }
-
-          if (f.name.length == 0) {
-            Flash.create('warning', 'Name can not be blank');
-            return;
-          }
-          fd.append('name', f.name);
-          fd.append('productMeta', f.productMeta.pk);
-          fd.append('price', f.price);
-          fd.append('serialNo', f.serialNo);
-          fd.append('description', f.description);
-          fd.append('inStock', f.inStock);
-          fd.append('cost', f.cost);
-          fd.append('logistics', f.logistics);
-          fd.append('serialId', f.serialId);
-          fd.append('reorderTrashold', f.reorderTrashold);
-
-
-          console.log(f.displayPicture);
-          console.log(fd);
-
-          $http({
-            method: method,
-            url: url,
-            data: fd,
-            transformRequest: angular.identity,
-            headers: {
-              'Content-Type': undefined
-            }
-          }).
-          then(function(response) {
-            $scope.product.pk = response.data.pk;
-            if ($scope.mode == 'new') {
-              $scope.product.pk = response.data.pk;
-              $scope.mode = 'edit';
-            }
-            Flash.create('success', 'Saved')
-          })
-        }
-
-
-      },
+      controller: 'controller.POS.productForm.modal',
     }).result.then(function() {
 
     }, function() {
