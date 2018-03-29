@@ -42,6 +42,18 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
 
   })
 
+  $http({method : 'GET' , url : '/api/tutors/tutors24Session/?mode=onlyComplete&limit=3&student='+ $scope.me.pk}).
+  then(function(response) {
+    console.log('resssssssssssssssssss',response.data.results);
+    $scope.recentSession = response.data.results;
+
+  })
+
+  $scope.getTimeDiff = function(a,b){
+    var milisecondsDiff = new Date(b) - new Date(a)
+    return Math.floor(milisecondsDiff/(1000*60*60)).toLocaleString(undefined, {minimumIntegerDigits: 2}) + ":" + (Math.floor(milisecondsDiff/(1000*60))%60).toLocaleString(undefined, {minimumIntegerDigits: 2})  + ":" + (Math.floor(milisecondsDiff/1000)%60).toLocaleString(undefined, {minimumIntegerDigits: 2}) ;
+  }
+
 
   $scope.startSession = function() {
 
