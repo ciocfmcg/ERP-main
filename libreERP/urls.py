@@ -14,7 +14,7 @@ from tutor.views import studentHome , tutorHome
 
 app_name="libreERP"
 urlpatterns = [
-    url(r'^$', index , name ='root'),
+    url(r'^$', home , name ='root'),
     url(r"^ecommerce/", ecommerceHome , name = 'ecommerce'), # public  ecommerce app
     url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),
