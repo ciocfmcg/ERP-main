@@ -68,10 +68,12 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = '24Tutors.com'
-SERVICE_NAME = 'Online Tutoring anytime, anywhere'
-BRAND_LOGO = '/static/images/24_tutors_icon.svg'
-BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
+BRAND_NAME = 'momomerce.com'
+SERVICE_NAME = 'Inventory management simplified'
+BRAND_LOGO = '/static/images/mono_icon.svg'
+BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
+
+SHOW_COMMON_APPS = 'false'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 

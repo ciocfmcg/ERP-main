@@ -528,6 +528,17 @@ class InvoicePrint(APIView):
         if 'saveOnly' in request.GET:
             return Response(status=status.HTTP_200_OK)
         return response
+from excel_response import ExcelResponse
+class ReorderingReport(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request , format = None):
+        objs = Product.objects.all()
+
+        toInclude= []
+        for o in objs:
+            if o.inStock < o.reorderTrashold:
+                toInclude.append({"name" : o.name , "SKU": o.serialNo , "Stock" : o.inStock})
+        return ExcelResponse(toInclude)
 
 
 class BulkProductsCreationAPI(APIView):

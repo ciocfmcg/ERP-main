@@ -77,7 +77,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     };
 
 
-  var multiselectOptions = [{icon : 'fa fa-file' , text : 'Reordering Report' },
+  var multiselectOptions = [{icon : 'fa fa-file' , text : 'reorderingReport' },
     // {icon : 'fa fa-bar-chart-o' , text : 'Performance' },
     // {icon : 'fa fa-envelope-o' , text : 'message' },
   ];
@@ -98,8 +98,12 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
 
-    if (action == 'new') {
-      $scope.openProductForm();
+    if (action == 'reorderingReport') {
+
+      window.open( "/api/POS/reorderingReport", "_blank")
+
+
+      // $scope.openProductForm();
     } else if (action == 'Bulk') {
       $scope.openProductBulkForm();
     } else {

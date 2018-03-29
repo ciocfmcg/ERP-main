@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-  <div class="row" style="border-bottom:solid 2px #eeeeee;">
+  <div class="row" style="border-bottom:solid 2px #eeeeee;" ng-if="showCommonApps">
     <div class="container-fluid" >
       <div class="col-md-3 basicAppLink text-center" ng-repeat="a in fixedApps" ng-class="{active: $state.is(a.state)}" ng-click="$state.go(a.state)">
         <span>

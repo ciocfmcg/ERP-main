@@ -14,5 +14,5 @@ urlpatterns = [
     url(r'invoicePrint/$' , InvoicePrint.as_view() ),
     url(r'bulkProductsCreation/$' , BulkProductsCreationAPI.as_view() ),
     url(r'externalEmailOrders/$' , ExternalEmailOrders.as_view() ),
-
+    url(r'reorderingReport/$' , ReorderingReport.as_view() ),
 ]

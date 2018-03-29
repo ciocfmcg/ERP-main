@@ -211,7 +211,7 @@ def home(request):
         apps = getApps(u)
         modules = getModules(u)
 
-    defaultRoute = 'home'
+    defaultRoute = None
     for a in apps:
         if a.name == 'app.tutor.studentHome':
             defaultRoute = 'studentHome'
@@ -225,11 +225,13 @@ def home(request):
     if u.is_superuser:
         defaultRoute = 'home'
 
+    if defaultRoute is None and len(modules)>0:
+        defaultRoute = modules[0].name
 
     apps = apps.filter(~Q(name__startswith='configure.' )).filter(~Q(name='app.users')).filter(~Q(name__endswith='.public'))
     return render(request , 'ngBase.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'appsWithJs' : apps.filter(haveJs=True) \
     ,'appsWithCss' : apps.filter(haveCss=True) , 'modules' : modules , 'useCDN' : globalSettings.USE_CDN , 'BRAND_LOGO' : globalSettings.BRAND_LOGO \
-    ,'BRAND_NAME' :  globalSettings.BRAND_NAME, 'serviceName' : globalSettings.SERVICE_NAME , 'defaultRoute' : defaultRoute})
+    ,'BRAND_NAME' :  globalSettings.BRAND_NAME, 'serviceName' : globalSettings.SERVICE_NAME , 'defaultRoute' : defaultRoute , 'showCommonApps' : globalSettings.SHOW_COMMON_APPS})
 
 class userProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
