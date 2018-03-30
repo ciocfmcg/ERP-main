@@ -540,6 +540,12 @@ class ReorderingReport(APIView):
                 toInclude.append({"name" : o.name , "SKU": o.serialNo , "Stock" : o.inStock})
         return ExcelResponse(toInclude)
 
+class StockReport(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request , format = None):
+        objs = Product.objects.all()
+        return ExcelResponse(objs)
+
 
 class BulkProductsCreationAPI(APIView):
     renderer_classes = (JSONRenderer,)

@@ -211,22 +211,7 @@ def home(request):
         apps = getApps(u)
         modules = getModules(u)
 
-    defaultRoute = None
-    for a in apps:
-        if a.name == 'app.tutor.studentHome':
-            defaultRoute = 'studentHome'
-
-    for a in apps:
-        if a.name == 'app.tutor.studentHome':
-            defaultRoute = 'studentHome'
-        if a.name == 'app.tutor.tutorHome':
-            defaultRoute = 'tutorHome'
-
-    if u.is_superuser:
-        defaultRoute = 'home'
-
-    if defaultRoute is None and len(modules)>0:
-        defaultRoute = modules[0].name
+    defaultRoute = 'businessManagement/productsInventory'
 
     apps = apps.filter(~Q(name__startswith='configure.' )).filter(~Q(name='app.users')).filter(~Q(name__endswith='.public'))
     return render(request , 'ngBase.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'appsWithJs' : apps.filter(haveJs=True) \

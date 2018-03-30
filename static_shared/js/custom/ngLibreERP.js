@@ -619,7 +619,7 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
 });
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
-app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
+app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope , $timeout) {
 
   $scope.showCommonApps = SHOW_COMMON_APPS;
 
@@ -701,6 +701,9 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
     };
   });
 
+
+
+
   $scope.inExcludedApps = function(a) {
     var apps = ['app.mail' , 'app.calendar' , 'app.dashboard' , 'app.notes', 'app.users']
     for (var i = 0; i < apps.length; i++) {
@@ -743,6 +746,10 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
       }
     }
   }
+
+  $timeout(function() {
+    $scope.buildMenu();
+  },1000)
 
 
 

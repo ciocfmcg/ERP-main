@@ -295,4 +295,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'cioc.in'
+WAMP_SERVER = 'skinstore.monomerce.com'
