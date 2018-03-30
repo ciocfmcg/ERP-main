@@ -34,7 +34,7 @@ class MakePaytmPayment(APIView):
 
         data_dict = {
                     'MID':MERCHANT_ID,
-                    'ORDER_ID':order_id + '||_' + request.data['minutes'],
+                    'ORDER_ID':order_id + '||_' + str(request.data['minutes']),
                     'TXN_AMOUNT': 2,# str(request.data['grandTotal']),
                     'CUST_ID': request.user.pk,
                     'INDUSTRY_TYPE_ID':'Retail109',
@@ -42,7 +42,7 @@ class MakePaytmPayment(APIView):
                     'CHANNEL_ID':'WEB',
                     'MOBILE_NO': '9702438730',
                     'EMAIL': request.user.email,
-                    'CALLBACK_URL':'http://24tutors.com/api/ERP/paymentResponse/',
+                    'CALLBACK_URL':'http://24tutors.com/paymentResponse/',
             }
         param_dict = data_dict
         param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
@@ -51,7 +51,7 @@ class MakePaytmPayment(APIView):
 
 @csrf_exempt
 def PaymentResponse(request):
-    return redirect(globalSettings.PAYMENT_SUCCESS_REDIRECT)
+    # return redirect(globalSettings.PAYMENT_SUCCESS_REDIRECT)
     if request.method == "POST":
         MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
         data_dict = {}
