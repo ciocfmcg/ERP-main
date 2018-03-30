@@ -35,7 +35,7 @@ class MakePaytmPayment(APIView):
         data_dict = {
                     'MID':MERCHANT_ID,
                     'ORDER_ID':order_id + '||_' + str(request.data['minutes']),
-                    'TXN_AMOUNT': 2,# str(request.data['grandTotal']),
+                    'TXN_AMOUNT': str(request.data['grandTotal']),
                     'CUST_ID': request.user.pk,
                     'INDUSTRY_TYPE_ID':'Retail109',
                     'WEBSITE': 'WEBPROD',
@@ -270,7 +270,8 @@ class AccountAdapter(DefaultAccountAdapter):
         for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
             app = application.objects.get(name = a)
             p = permission.objects.create(app =  app, user = request.user , givenBy = User.objects.get(pk=1))
-
+        request.user.tutors24Profile.balance = 60
+        request.user.tutors24Profile.save()
         return globalSettings.ON_REGISTRATION_SUCCESS_REDIRECT
 
 def getModules(user , includeAll=False):
