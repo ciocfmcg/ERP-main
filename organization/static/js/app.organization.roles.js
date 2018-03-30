@@ -96,9 +96,7 @@ app.controller("workforceManagement.organization.roles.form", function($scope, $
   $scope.resetForm = function() {
     $scope.form = {
       'name': '',
-      'division': '',
-      'department': '',
-      'unit': '',
+      'division': ''
     }
   }
   if ($scope.tab != undefined) {
@@ -124,8 +122,6 @@ app.controller("workforceManagement.organization.roles.form", function($scope, $
 
     fd.append('name', f.name);
     // fd.append('departments', f.departments.pk);
-    fd.append('division', f.division.pk);
-    fd.append('unit', f.unit.pk);
     fd.append('department', f.department.pk);
 
     console.log(fd);

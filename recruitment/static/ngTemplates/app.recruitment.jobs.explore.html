@@ -1,0 +1,20 @@
+<div class="container-fluid" ng-controller="workforceManagement.recruitment.jobs.explore">
+  <div class="col-md-8">
+    <div class="row" style="padding:20px;padding-left:30px;">
+
+      <!-- <switch ng-model="form.approved" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approved :</span> -->
+    </div>{{expense}}
+    <div class="container-fluid" style="padding-top:20px;">
+      <strong>Job Type :</strong> {{jobDetails.jobtype}}
+      <hr>
+      <strong>Unit :</strong> {{jobDetails.unit.name}}
+      <hr>
+      <strong>Department:</strong> {{jobDetails.department.dept_name}}
+      <hr>
+      <strong>Position :</strong> {{jobDetails.role.name}}
+      <hr>
+      <strong>Skills Required :</strong> {{jobDetails.skill}}
+      <hr>
+    </div>
+  </div>
+</div>
