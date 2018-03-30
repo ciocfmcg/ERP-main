@@ -15,7 +15,7 @@ app.config(function($stateProvider){
 
 app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal , $timeout) {
   console.log($state.params);
-  if ($(location).attr('href').indexOf("mode=success")) {
+  if ($(location).attr('href').indexOf("mode=success") != -1) {
     Flash.create('success' , 'Payment successfull')
     $state.go('studentHome');
   }

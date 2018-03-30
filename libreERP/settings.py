@@ -295,7 +295,7 @@ REST_FRAMEWORK = {
 # WAMP_SERVER = 'pradeepyadav.net'
 WAMP_SERVER = 'cioc.in'
 
-PAYMENT_SUCCESS_REDIRECT ='http://localhost:8000/ERP/#/studentHome?mode=success'
+PAYMENT_SUCCESS_REDIRECT ='http://24tutors.com/ERP/#/studentHome?mode=success'
 
 PAYTM_MERCHANT_KEY = "pvB_a%zTlH81EA6p"
 PAYTM_MERCHANT_ID = "CIOCFM10126867273379"
