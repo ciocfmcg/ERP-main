@@ -171,7 +171,7 @@ connection.onopen = function (session) {
       }
 
       var url = '/studentHome/?session=' + args[0].sessionID;
-      window.location.href = window.location.host + url;
+      window.location = "http://" + window.location.host + url;
       // win.focus();
     }
 
