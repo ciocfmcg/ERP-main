@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='invoice',
             name='sheet',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to='finance.ExpenseSheet'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to='finance.ExpenseSheet'),
             preserve_default=False,
         ),
     ]

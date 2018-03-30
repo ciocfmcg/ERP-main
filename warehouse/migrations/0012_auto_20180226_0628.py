@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='invoice',
             name='contract',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to='warehouse.Contract'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to='warehouse.Contract'),
             preserve_default=False,
         ),
     ]
