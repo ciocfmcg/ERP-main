@@ -47,9 +47,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
 
 
-            u.tutors24Profile.balance = 60
-            u.tutors24Profile.save()
-
             login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
             instance.delete()
             return instance

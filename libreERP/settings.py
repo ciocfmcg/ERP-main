@@ -293,7 +293,7 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'cioc.in'
+WAMP_SERVER = 'wamp.cioc.in'
 
 PAYMENT_SUCCESS_REDIRECT ='http://24tutors.com/ERP/#/studentHome?mode=success'
 

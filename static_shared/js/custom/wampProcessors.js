@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'ws://'+ wampServer +':8080/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'wss://'+ wampServer +':443/ws', realm: 'default'});
 
 tutorOnline = true;
 connection.onopen = function (session) {
@@ -227,6 +227,6 @@ connection.onopen = function (session) {
   // fired when connection was lost (or could not be established)
   //
 connection.onclose = function (reason, details) {
-   console.log("Connection lost: " + reason);
+   console.log("Connection lost: " + reason + details);
 }
 connection.open();

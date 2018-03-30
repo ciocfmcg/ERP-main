@@ -270,8 +270,6 @@ class AccountAdapter(DefaultAccountAdapter):
         for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
             app = application.objects.get(name = a)
             p = permission.objects.create(app =  app, user = request.user , givenBy = User.objects.get(pk=1))
-        request.user.tutors24Profile.balance = 60
-        request.user.tutors24Profile.save()
         return globalSettings.ON_REGISTRATION_SUCCESS_REDIRECT
 
 def getModules(user , includeAll=False):
