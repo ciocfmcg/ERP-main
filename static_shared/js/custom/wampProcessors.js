@@ -171,8 +171,8 @@ connection.onopen = function (session) {
       }
 
       var url = '/studentHome/?session=' + args[0].sessionID;
-      var win = window.open(url, '_blank');
-      win.focus();
+      window.location.href = window.location.host + url;
+      // win.focus();
     }
 
     session.subscribe('service.tutoring.startSession.'+wampBindName, handleJoinSession).then(
