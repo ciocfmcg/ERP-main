@@ -267,6 +267,10 @@ class profileViewSet(viewsets.ModelViewSet):
 
 class AccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
+        for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+            app = application.objects.get(name = a)
+            p = permission.objects.create(app =  app, user = request.user , givenBy = User.objects.get(pk=1))
+
         return globalSettings.ON_REGISTRATION_SUCCESS_REDIRECT
 
 def getModules(user , includeAll=False):
