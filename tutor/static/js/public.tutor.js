@@ -219,7 +219,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
 
 
   $scope.connection = new autobahn.Connection({
-    url: 'wss://cioc.in:443/ws',
+    url: 'wss://wamp.cioc.in:443/ws',
     realm: 'default'
   });
 
