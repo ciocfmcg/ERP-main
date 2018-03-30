@@ -272,7 +272,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
 
 
   $scope.connection = new autobahn.Connection({
-    url: 'ws://cioc.in:8080/ws',
+    url: 'wss://cioc.in:443/ws',
     realm: 'default'
   });
 
