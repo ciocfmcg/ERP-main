@@ -52,6 +52,10 @@
         </div>
       </div>
 
+      <div class="row text-danger text-center" ng-if="profile.balance < 10"  style="padding-top:40px;">
+        <h3>Low Balance</h3>
+      </div>
+
       <div class="row" style="padding-top:100px;">
         <div class="text-center glassy glassyButton glassyButtonGrey col-md-6 col-md-offset-3" ng-click="startSession()">
           <i class="fa fa-desktop fa-2x"></i> <span style="font-size:25px;margin-left:10px;">Start a session</span>

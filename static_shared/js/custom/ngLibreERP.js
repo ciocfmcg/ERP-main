@@ -38,14 +38,19 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       controller : function($scope, $interval , $uibModalInstance , request, $rootScope) {
         $scope.request = request;
 
+        $scope.sound = ngAudio.load("/static/audio/tutor_incoming_call.mp3");
+        $scope.sound.play();
+
+
         $scope.acceptCall = function() {
           connection.session.publish('service.tutoring.startSession.' + $scope.request.id , [{type : 'accepted', sessionID : $scope.request.sessionID}], {}, {acknowledge: true});
           window.postMessage('makeTutorOffiline' , '*');
           $rootScope.$broadcast('makeTutorOffiline', {});
-          var url = '/tutoring/?session=' + $scope.request.sessionID;
+          var url = '/tutorHome/?session=' + $scope.request.sessionID;
           var win = window.open(url, '_blank');
           win.focus();
           $uibModalInstance.dismiss();
+          $scope.sound.stop();
         }
 
         $scope.timeLeft = 10;
@@ -55,6 +60,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
           if ($scope.timeLeft == 0) {
             $uibModalInstance.dismiss();
+            $scope.sound.stop();
           }
 
         },1000)

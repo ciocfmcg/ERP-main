@@ -14,6 +14,9 @@
   <script src="{% static 'js/autobahn.min.js' %}"></script>
   <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
   <script src="{% static 'js/public.student.js' %}"></script>
+  <script src="{% static 'js/angular.audio.min.js' %}"></script>
+  <script src="{% static 'js/ng-rating.js' %}"></script>
+  
   <title>Student Home</title>
 </head>
 
@@ -179,10 +182,11 @@
               <div class="row" ng-repeat="m in messages">
                 <div class="container-fluid {{m.sendByMe? 'pull-right': 'pull-left'}}" >
                   <div class="container-fluid text-right" style="border:solid 1px #eeeeee;padding:10px;">
-                    {{m.message}}
+                    <span ng-if="m.message.indexOf('http') == -1">{{m.message}}</span>
+                    <a target="_blank" ng-if="m.message.indexOf('http') != -1" href="{{m.message}}">{{m.message}}</a>
                   </div>
                   <div class="container-fluid text-right" style="color:#c7c7c7;font-size:10px;">
-                    {{m.created |timeAgo}}
+                    {{m.created |date:'hh:mm a'}}
                   </div>
                 </div>
               </div>
@@ -191,8 +195,10 @@
         </div>
 
         <div class="row" style="position:absolute;bottom:0px;padding:10px;width:100%;">
+          <input type="file" file-model="messageFile" style="display:none;" id="messageFile">
+
           <div class="input-group">
-            <span class="input-group-btn"><button class="btn btn-primary" type="submit"> <i class="fa fa-paperclip"></i> </button></span>
+            <span class="input-group-btn"><button class="btn btn-primary" ng-click="attachMessageFile()"> <i class="fa fa-paperclip"></i> </button></span>
             <input class="form-control" type="text" ng-enter="EnterStudentMsg()"  ng-model="StudentText" placeholder="Type your message here..." />
             <span class="input-group-btn"><button ng-click="EnterStudentMsg()" class="btn btn-primary">Submit</button></span>
           </div>

@@ -294,3 +294,18 @@ REST_FRAMEWORK = {
 
 # WAMP_SERVER = 'pradeepyadav.net'
 WAMP_SERVER = 'cioc.in'
+
+PAYMENT_SUCCESS_REDIRECT ='http://localhost:8000/ERP/#/studentHome?mode=success'
+
+PAYTM_MERCHANT_KEY = "pvB_a%zTlH81EA6p"
+PAYTM_MERCHANT_ID = "CIOCFM10126867273379"
+
+if DEBUG:
+    PAYTM_MERCHANT_KEY = "pvB_a%zTlH81EA6p"
+    PAYTM_MERCHANT_ID = "CIOCFM10126867273379"
+    '''
+    In sandbox enviornment you can use following wallet credentials to login and make payment.
+    Mobile Number : 7777777777
+    Password : Paytm12345
+    This test wallet is topped-up to a balance of 7000 Rs. every 5 minutes.
+    '''

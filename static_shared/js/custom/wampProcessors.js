@@ -79,11 +79,10 @@ connection.onopen = function (session) {
         console.log(args);
 
         if (args[0].type == 'newSessionRequest') {
-          if (tutoringTopics.indexOf(args[0].topic) != -1 && tutoringSubjects.indexOf(args[0].subject) != -1 ) {
-
-            connection.session.publish('service.tutor.onlineResponse.' + args[0].id  , [{at : new Date() , tutorID : wampBindName , checked : false}], {}, {acknowledge: true});
-
-          }
+          // if (tutoringTopics.indexOf(args[0].topic) != -1 && tutoringSubjects.indexOf(args[0].subject) != -1 ) {
+          //   connection.session.publish('service.tutor.onlineResponse.' + args[0].id  , [{at : new Date() , tutorID : wampBindName , checked : false}], {}, {acknowledge: true});
+          // }
+          connection.session.publish('service.tutor.onlineResponse.' + args[0].id  , [{at : new Date() , tutorID : wampBindName , checked : false}], {}, {acknowledge: true});
         }
       }
     }
@@ -171,7 +170,7 @@ connection.onopen = function (session) {
         });
       }
 
-      var url = '/tutoring/?session=' + args[0].sessionID;
+      var url = '/studentHome/?session=' + args[0].sessionID;
       var win = window.open(url, '_blank');
       win.focus();
     }

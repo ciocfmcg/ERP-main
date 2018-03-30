@@ -121,8 +121,16 @@
         </div>
       </div>
 
+      <form style="display:none;" action="https://securegw.paytm.in/theia/processTransaction" method="post">
+        <input type="text" name="{{key}}" value="{{value}}" ng-repeat="(key, value) in paymentParams">
+        <button type="submit" class="btn btn-default" id="paymentSubmit">
+        </button>
+      </form>
+
+
+
       <div class="row text-center" style="margin-top:30px;">
-        <button type="button" class="btn btn-success">
+        <button type="button" class="btn btn-success" ng-click="makePayment()">
           Pay
         </button>
       </div>

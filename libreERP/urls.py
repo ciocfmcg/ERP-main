@@ -10,7 +10,7 @@ from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,re
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 from tutor.views import studentHome , tutorHome
-
+from ERP.views import PaymentResponse
 
 app_name="libreERP"
 urlpatterns = [
@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^contacts', contacts , name ='contacts'),
     url(r'^studentHome', studentHome , name ='studentHome'),
     url(r'^tutorHome', tutorHome , name ='tutorHome'),
+    url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
 ]
 
 if settings.DEBUG:

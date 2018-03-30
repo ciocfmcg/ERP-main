@@ -43,6 +43,7 @@ class TopicLiteSerializer(serializers.ModelSerializer):
         model = Topic
         fields = ('pk' , 'title', )
 
+from django.core.exceptions import PermissionDenied
 
 class tutors24SessionSerializer(serializers.ModelSerializer):
     subject = SubjectLiteSerializer(many = False , read_only = True)
@@ -51,7 +52,30 @@ class tutors24SessionSerializer(serializers.ModelSerializer):
         model = Session
         fields = ('pk','created','updated','student','tutor','start','end','attachments','initialQuestion','subject','topic','minutes' , 'idle','ratings','ratingComments','started')
         # read_only_fields=('balance' , 'typ')
+    def create(self ,validated_data):
+        s = Session(**validated_data)
+        s.subject_id = self.context['request'].data['subject']
+        s.topic_id = self.context['request'].data['topic']
+        s.save()
+        return s
+    def update(self , instance , validated_data):
+        print instance.minutes
+        if instance.minutes != None:
+            raise PermissionDenied()
 
+        for key in ['minutes','rating','ratingComments','tutor']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+
+        if instance.minutes != None:
+            profile = self.context['request'].user.tutors24Profile
+            profile.balance -= instance.minutes
+            profile.save()
+        instance.save()
+
+        return instance
 
 class tutors24TransactionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,4 +86,4 @@ class tutors24TransactionSerializer(serializers.ModelSerializer):
 class tutors24MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ('pk','created','updated','session','sender','msg','time','attachment')
+        fields = ('pk','created','updated','session','sender','msg','attachment')
