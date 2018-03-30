@@ -405,6 +405,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
           }).
           then(function(response) {
             $scope.mode = 'thankyou';
+            window.location = "https://24tutors.com/ERP/#/studentHome"
           })
         }
       }
