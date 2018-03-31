@@ -33,7 +33,6 @@ urlpatterns = [
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
     url(r'^blog/$', blog , name ='blog'),
-    url(r'^blog/(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'),
     url(r'^news', news , name ='news'),
     url(r'^team', team , name ='team'),
     url(r'^career', career , name ='career'),
@@ -45,6 +44,7 @@ urlpatterns = [
     url(r'^studentHome', studentHome , name ='studentHome'),
     url(r'^tutorHome', tutorHome , name ='tutorHome'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
+    url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'),
 ]
 
 if settings.DEBUG:

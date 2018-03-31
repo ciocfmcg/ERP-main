@@ -28,6 +28,7 @@ def index(request):
 
 
 def blogDetails(request, blogname):
+    blogname = blogname.replace('-', ' ')
     blogobj = blogPost.objects.get(title=blogname)
     title = blogobj.title
     header = blogobj.header
@@ -46,7 +47,7 @@ def blogDetails(request, blogname):
 
 def blog(request):
 
-    blogObj = blogPost.objects.all()
+    blogObj = blogPost.objects.all().order_by('-created')
     pagesize = 6
     try:
         page = int(request.GET.get('page', 1))
@@ -71,7 +72,7 @@ def blog(request):
             us = j.first_name + ' ' + j.last_name
         date = i.created
         # body = i.source
-        data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId})
+        data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId , 'url' : title.replace(' ' , '-')})
     data = data[(page-1)*pagesize:(page*pagesize)]
 
     return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})

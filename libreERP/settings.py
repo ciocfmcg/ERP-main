@@ -65,13 +65,13 @@ LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once succe
 
 LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
 
-USE_CDN = False # when turned on the application will use the cndjs.com and other similar
+USE_CDN = True # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
 BRAND_NAME = '24Tutors.com'
 SERVICE_NAME = 'Online Tutoring anytime, anywhere'
 BRAND_LOGO = '/static/images/24_tutors_icon.svg'
-BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
+BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert_white.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -198,6 +198,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'libreERP.settings_context.global_settings',
             ],
         },
     },

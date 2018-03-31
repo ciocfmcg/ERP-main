@@ -1,15 +1,17 @@
 
-app.controller('main' , function($scope , $state , $http , $timeout , $interval){
+app.controller('main' , function($scope , $state , $http , $timeout , $interval, $sce){
   console.log("main loded");
   $scope.crmBannerID = 1;
 
-  $scope.mainBannerImages = ['/static/images/main_banner.svg' ]
+  $scope.mainBannerImages = [ ]
   $scope.bannerID = 0;
-
   $scope.typings = ["Online tutoring" , "24x7 online help" , "CBSE Preparation" , "IIT JEE Preparation", "AIPMT Preparation" ]
-
   $scope.typeIndex = 0;
+  $scope.videoLink = '';
 
+  $scope.setVideoLink = function() {
+    $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/JC-Dpwb-Sk8');
+  }
 
   $interval(function() {
 
