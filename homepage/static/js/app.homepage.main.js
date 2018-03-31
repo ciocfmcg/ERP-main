@@ -9,9 +9,7 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval,
   $scope.typeIndex = 0;
   $scope.videoLink = '';
 
-  $scope.setVideoLink = function() {
-    $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/JC-Dpwb-Sk8');
-  }
+  $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/JC-Dpwb-Sk8');
 
   $interval(function() {
 
