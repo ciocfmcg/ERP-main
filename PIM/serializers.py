@@ -136,8 +136,9 @@ class blogSerializer(serializers.ModelSerializer):
     class Meta:
         model = blogPost
         fields = ( 'pk' ,'public', 'source' , 'likes' , 'comments' , 'created' , 'sourceFormat' , 'users' , 'tags' , 'title' , 'header' , 'state' , 'contentType' , 'shortUrl' , 'ogimageUrl' , 'ogimage' , 'description', 'tagsCSV','section' , 'author')
-        read_only_fields = ('tags',)
+        read_only_fields = ('tags', 'users')
     def create(self , validated_data):
+        print "Saved1"
         b = blogPost(**validated_data)
         for key in ['source', 'sourceFormat', 'title' , 'header' , 'state']:
             try:
@@ -145,6 +146,7 @@ class blogSerializer(serializers.ModelSerializer):
             except:
                 pass
         b.save()
+        print "Saved"
         b.users.add(self.context['request'].user)
         for tag in self.context['request'].data['tags']:
             b.tags.add(blogCategory.objects.get(pk = tag))
