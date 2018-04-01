@@ -28,8 +28,7 @@ def index(request):
 
 
 def blogDetails(request, blogname):
-    blogname = blogname.replace('-', ' ')
-    blogobj = blogPost.objects.get(title=blogname)
+    blogobj = blogPost.objects.get(shortUrl=blogname)
     us = ''
     blogId = blogobj.pk
     count = 0
@@ -69,7 +68,7 @@ def blog(request):
             us = j.first_name + ' ' + j.last_name
         date = i.created
         # body = i.source
-        data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId , 'url' : title.replace(' ' , '-')})
+        data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId , 'url' : i.shortUrl })
     data = data[(page-1)*pagesize:(page*pagesize)]
 
     return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
