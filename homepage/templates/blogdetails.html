@@ -2,34 +2,34 @@
 
 <title>{{blogobj.title}}</title>
 
+<meta name="description" content="{{blogobj.description}}"/>
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
 <meta property="og:locale" content="en_US" />
 <meta property="og:type" content="article" />
+<meta property="og:title" content="{{blogobj.title}}" />
+<meta property="og:description" content="{{blogobj.description}}" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
 <meta property="og:site_name" content="24 Tutors" />
-<meta property="article:author" content="{{user}}" />
+<meta property="article:publisher" content="https://www.facebook.com/24tutorsIndia/" />
 {% for tag in tagsCSV %}
 <meta property="article:tag" content="{{tag}}" />{% endfor %}
 <meta property="article:section" content="{{blogobj.section}}" />
-<meta name="twitter:card" content="summary" />
 <meta property="article:published_time" content="{{blogobj.created.isoformat}}" />
 <meta property="article:modified_time" content="{{blogobj.created.isoformat}}" />
 <meta property="og:updated_time" content="{{blogobj.created.isoformat}}" />
-<meta property="og:image:width" content="6833" />
-<meta property="og:image:height" content="1750" />
-<meta name="description" content="{{blogobj.description}}"/>
-<meta property="og:description" content="{{blogobj.description}}" />
-<meta name="twitter:description" content="{{blogobj.description}}" />
-<link rel="canonical" href="{{ request.build_absolute_uri }}" />
-<meta property="og:url" content="{{ request.build_absolute_uri }}" />
-<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
-<meta property="article:publisher" content="https://www.facebook.com/24tutorsIndia/" />
-<meta name="twitter:title" content="{{blogobj.title}}" />
-<meta property="og:title" content="{{blogobj.title}}" />
-<meta property="og:image:secure_url" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
 <meta property="og:image" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
-<meta name="twitter:image" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
+<meta property="og:image:secure_url" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
+<meta property="og:image:width" content="{{blogobj.ogimage.width}}" />
+<meta property="og:image:height" content="{{blogobj.ogimage.height}}" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="{{blogobj.description}}" />
+<meta name="twitter:title" content="{{blogobj.title}}" />
 <meta name="twitter:site" content="@tutors_24" />
+<meta name="twitter:image" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
 <meta name="twitter:creator" content="@tutors_24" />
 
+<meta property="article:author" content="{{user}}" />
 
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
@@ -70,14 +70,8 @@
               </div>
             </div>
             <div class="container-fluid" style="padding:20px">
-              {{blogobj.header | safe}}
-              <div class="row">
-                <div class="col-lg-12 ">
-                  {{blogobj.body | safe}}
-                </div>
-              </div>
+              {{blogobj.source | safe}}
             </div>
-
             <div class="row text-center">
               <div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-width="900" data-numposts="5"></div>
             </div>

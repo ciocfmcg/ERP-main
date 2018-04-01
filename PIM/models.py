@@ -156,7 +156,7 @@ class blogPost(models.Model):
 
     shortUrl = models.CharField(max_length =100 , null = True)
     ogimageUrl = models.CharField(max_length =1000 , null = True)
-    ogimage = models.FileField( upload_to= getOGImageAttachment , null = True)
+    ogimage = models.ImageField( upload_to= getOGImageAttachment , null = True)
     description = models.CharField(max_length =1000 , null = True)
     tagsCSV = models.CharField(max_length =1000 , null = True) # comma seperated value
     section = models.CharField(max_length =100 , null = True)
