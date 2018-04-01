@@ -44,9 +44,10 @@ urlpatterns = [
     url(r'^studentHome', studentHome , name ='studentHome'),
     url(r'^tutorHome', tutorHome , name ='tutorHome'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
-    url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'),
 ]
 
 if settings.DEBUG:
     urlpatterns +=static(settings.STATIC_URL , document_root = settings.STATIC_ROOT)
     urlpatterns +=static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
+
+urlpatterns.append(url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'))
