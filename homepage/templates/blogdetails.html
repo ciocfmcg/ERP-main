@@ -1,5 +1,36 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
-<title>CIOC</title>
+
+<title>{{blogobj.title}}</title>
+
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="24 Tutors" />
+<meta property="article:author" content="{{user}}" />
+{% for tag in tagsCSV %}
+<meta property="article:tag" content="{{tag}}" />{% endfor %}
+<meta property="article:section" content="{{blogobj.section}}" />
+<meta name="twitter:card" content="summary" />
+<meta property="article:published_time" content="{{blogobj.created.isoformat}}" />
+<meta property="article:modified_time" content="{{blogobj.created.isoformat}}" />
+<meta property="og:updated_time" content="{{blogobj.created.isoformat}}" />
+<meta property="og:image:width" content="6833" />
+<meta property="og:image:height" content="1750" />
+<meta name="description" content="{{blogobj.description}}"/>
+<meta property="og:description" content="{{blogobj.description}}" />
+<meta name="twitter:description" content="{{blogobj.description}}" />
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+<meta property="article:publisher" content="https://www.facebook.com/24tutorsIndia/" />
+<meta name="twitter:title" content="{{blogobj.title}}" />
+<meta property="og:title" content="{{blogobj.title}}" />
+<meta property="og:image:secure_url" content="{{blogobj.ogimage}}" />
+<meta property="og:image" content="{{blogobj.ogimage}}" />
+<meta name="twitter:image" content="{{blogobj.ogimage}}" />
+<meta name="twitter:site" content="@tutors_24" />
+<meta name="twitter:creator" content="@tutors_24" />
+
+
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
@@ -29,8 +60,8 @@
 
             <div class="row" style="padding:20px">
               <div class="col-md-9 text-left">
-                <h2 style="font-size:19px;" class="text-primary">{{title}}</h2>
-                By {{user}} <span style="margin-left: 10px;"> | </span> <span style="margin-left: 10px;">{{date}}</span>
+                <h2 style="font-size:19px;" class="text-primary">{{blogobj.title}}</h2>
+                By {{user}} <span style="margin-left: 10px;"> | </span> <span style="margin-left: 10px;">{{blogobj.created}}</span>
               </div>
               <div class="col-md-3">
                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-primary pull-right" style="background:rgb(31, 116, 215);" target="_blank">
@@ -39,10 +70,10 @@
               </div>
             </div>
             <div class="container-fluid" style="padding:20px">
-              {{header | safe}}
+              {{blogobj.header | safe}}
               <div class="row">
                 <div class="col-lg-12 ">
-                  {{body | safe}}
+                  {{blogobj.body | safe}}
                 </div>
               </div>
             </div>

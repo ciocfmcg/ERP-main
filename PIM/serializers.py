@@ -135,17 +135,17 @@ class blogSerializer(serializers.ModelSerializer):
     tags = blogCategorySerializer(many = True , read_only = True)
     class Meta:
         model = blogPost
-        fields = ( 'pk' ,'public', 'source' , 'likes' , 'comments' , 'created' , 'sourceFormat' , 'users' , 'tags' , 'title' , 'header' , 'state' , 'contentType')
+        fields = ( 'pk' ,'public', 'source' , 'likes' , 'comments' , 'created' , 'sourceFormat' , 'users' , 'tags' , 'title' , 'header' , 'state' , 'contentType' , 'shortUrl' , 'ogimageUrl' , 'ogimage' , 'description', 'tagsCSV','section' , 'author')
         read_only_fields = ('tags',)
     def create(self , validated_data):
-        b = blogPost()
+        b = blogPost(**validated_data)
         for key in ['source', 'sourceFormat', 'title' , 'header' , 'state']:
             try:
                 setattr(b , key , validated_data[key])
             except:
                 pass
         b.save()
-        b.users.add (self.context['request'].user)
+        b.users.add(self.context['request'].user)
         for tag in self.context['request'].data['tags']:
             b.tags.add(blogCategory.objects.get(pk = tag))
         b.save()

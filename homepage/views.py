@@ -30,8 +30,6 @@ def index(request):
 def blogDetails(request, blogname):
     blogname = blogname.replace('-', ' ')
     blogobj = blogPost.objects.get(title=blogname)
-    title = blogobj.title
-    header = blogobj.header
     us = ''
     blogId = blogobj.pk
     count = 0
@@ -41,9 +39,8 @@ def blogDetails(request, blogname):
         else:
             us += ' , ' + j.first_name + ' ' + j.last_name
         count += 1
-    date = blogobj.created
-    body = blogobj.source
-    return render(request, 'blogdetails.html', {"home": False, 'user': us, 'header': header, 'title': title, 'date': date, 'blogId': blogId, 'body': body , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    blogobj.created = blogobj.created.replace(microsecond=0)
+    return render(request, 'blogdetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(',') , 'user': us, 'blogobj' : blogobj , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def blog(request):
 
