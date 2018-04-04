@@ -130,20 +130,24 @@ from ERP.models import application
 @receiver(post_save, sender=Product, dispatch_uid="server_post_save")
 def updateProductsStock(sender, instance, **kwargs):
 
-    for p in application.objects.get(name = 'app.productsInventory').permissions.all():
-        print "Sending to : " , p.user.username
-        requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
-            json={
-              'topic': 'service.dashboard.' + p.user.username,
-              'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
-            }
-        )
+    try:
 
-    for u in User.objects.filter(is_superuser=True):
-        print "Sending to : " , u.username
-        requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
-            json={
-              'topic': 'service.dashboard.' + u.username,
-              'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
-            }
-        )
+        for p in application.objects.get(name = 'app.productsInventory').permissions.all():
+            print "Sending to : " , p.user.username
+            requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
+                json={
+                  'topic': 'service.dashboard.' + p.user.username,
+                  'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
+                }
+            )
+
+        for u in User.objects.filter(is_superuser=True):
+            print "Sending to : " , u.username
+            requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
+                json={
+                  'topic': 'service.dashboard.' + u.username,
+                  'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
+                }
+            )
+    except:
+        pass

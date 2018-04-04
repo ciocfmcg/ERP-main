@@ -37,20 +37,21 @@ import re
 from rest_framework import filters
 
 
+
 class CustomerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = CustomerSerializer
     queryset = Customer.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_fields = ['name' ]
 
 class ProductViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.AllowAny, )
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
-    search_fields = ('name', 'serialNo', 'description')
-    # filter_fields = ['name']
+    search_fields = ('name', 'serialNo', 'description', 'serialId')
+    filter_fields = ['serialId']
     # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
@@ -78,20 +79,6 @@ styleH = styles['Heading1']
 
 settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
 
-
-class FullPageImage(Flowable):
-    def __init__(self , img):
-        Flowable.__init__(self)
-        self.image = img
-
-    def draw(self):
-        img = utils.ImageReader(self.image)
-
-        iw, ih = img.getSize()
-        aspect = ih / float(iw)
-        width, self.height = PAGE_SIZE
-        width -= 3.5*cm
-        self.canv.drawImage(os.path.join(BASE_DIR , self.image) , -1 *MARGIN_SIZE + 1.5*cm , -1* self.height + 5*cm , width, aspect*width)
 
 class expanseReportHead(Flowable):
 
@@ -361,9 +348,6 @@ def genInvoice(response , invoice, request):
     t._argW[6] = 1.6*cm
     t._argW[7] = 2*cm
 
-    #add some flowables
-
-
 
     story = []
 
@@ -394,26 +378,6 @@ def genInvoice(response , invoice, request):
     story.append(Paragraph(summryParaSrc , styleN))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
-
-    # if invoice.status in ['billed' , 'approved' , 'recieved']:
-    #     summryParaSrc = settingsFields.get(name = 'regulatoryDetails').value
-    #     story.append(Paragraph(summryParaSrc , styleN))
-    #
-    #     summryParaSrc = settingsFields.get(name = 'bankDetails').value
-    #     story.append(Paragraph(summryParaSrc , styleN))
-    #
-    #     tncPara = settingsFields.get(name = 'tncInvoice').value
-    #
-    # else:
-    # tncPara = settingsFields.get(name = 'tncQuotation').value
-    #
-    # story.append(Paragraph(tncPara , styleN))
-
-    # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
-    # for s in scans:
-    #     story.append(PageBreak())
-    #     story.append(FullPageImage(s))
-
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
