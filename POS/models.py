@@ -89,6 +89,14 @@ class Invoice(models.Model):
     paymentRefNum = models.PositiveIntegerField(default = 0)
     receivedDate = models.DateField(null=True)
 
+class ProductVerient(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey(Product , related_name='parentProducts')
+    sku = models.CharField(max_length=10000,null=True)
+    unitPerpack = models.PositiveIntegerField(default = 0)
+
+
 class ExternalOrdersQtyMap(models.Model):
     product = models.ForeignKey(Product , related_name='externalOrders')
     qty = models.PositiveIntegerField(default=1)

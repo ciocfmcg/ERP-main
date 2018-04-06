@@ -85,3 +85,15 @@ class InvoiceSerializer(serializers.ModelSerializer):
     #         instance.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
     #     instance.save()
     #     return instance
+
+class ProductVerientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductVerient
+        fields = ('pk','created','updated','sku','unitPerpack')
+        # read_only_fields = ( 'user' , )
+    def create(self , validated_data):
+        v = ProductVerient(**validated_data)
+        # v.parent = self.context['request'].parent
+        v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
+        v.save()
+        return v

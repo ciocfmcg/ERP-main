@@ -1,23 +1,17 @@
-
-
 <div class="modal-header">
   <span ng-if="mode == 'new'">Create a new Product</span>
   <span ng-if="mode == 'edit'">Edit product : {{product.name}}</span>
 </div>
-
 <div class="modal-body">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="form-group">
         <label>Name</label>
         <input type="text" class="form-control" ng-model="product.name">
       </div>
-
-
-
       <div class="form-group">
         <label>MRP</label>
-        <input type="tel" class="form-control"ng-model="product.price">
+        <input type="tel" class="form-control" ng-model="product.price">
       </div>
 
       <div class="form-group">
@@ -27,43 +21,28 @@
 
       <div class="form-group">
         <label>SKU</label>
-        <input type="tel" class="form-control"  ng-model="product.serialNo">
+        <input type="tel" class="form-control" ng-model="product.serialNo">
       </div>
       <div class="form-group">
         <label>In Stock.</label>
-        <input type="tel" class="form-control"  ng-model="product.inStock">
+        <input type="tel" class="form-control" ng-model="product.inStock">
       </div>
       <div class="form-group">
         <label>Cost</label>
         <input type="number" class="form-control" ng-model="product.cost">
       </div>
-      <!-- <div class="form-group">
-        <label>quantity</label>
-        <input type="number" class="form-control" ng-model="product.quantity">
-      </div> -->
-
     </div>
-    <div class="col-md-6">
-      <!-- <div class="form-group">
-        <label>itemType</label>
-          <select ng-model="product.itemType" class="form-control" >
-            <option value="product">product</option>
-            <option value="service">service</option>
-          </select>
-      </div> -->
+    <div class="col-md-4">
       <div class="form-group">
         <label>logistics</label>
         <input type="number" class="form-control" ng-model="product.logistics">
       </div>
-
       <div class="form-group">
         <label>Description</label>
         <textarea class="form-control custom-control" rows="3" ng-model="product.description"></textarea>
-
       </div>
       <div class="form-group">
         <label>Product Meta</label>
-        <!-- <input type="text" class="form-control" ng-model="product.productMeta"> -->
         <input type="text" class="form-control" ng-model="product.productMeta" uib-typeahead="meta as meta.description for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
         <span ng-if="showTaxCodeDetails"> <button type="button" class="btn btn-default btn-sm" ng-click="product.productMeta = ''">
           Edit <i class="fa fa-pencil"></i>
@@ -75,12 +54,38 @@
       </div>
       <div class="form-group">
         <label>Reorder Threshold</label>
-        <input type="number" class="form-control"    ng-model="product.reorderTrashold">
+        <input type="number" class="form-control" ng-model="product.reorderTrashold">
+      </div>
+    </div>
+    <div class="col-md-4" ng-if="product.pk">
+      <div class="form-group">
+        <label>Secondary SKU</label>
+        <input type="text" class="form-control" ng-model="productVerientForm.sku">
+      </div>
+      <div class="form-group">
+        <label>Units Perpack</label>
+        <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack">
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center" style="margin-top: 27px;">
+          <button type="button" class="btn btn-success" ng-click="saveUnits()">Save</button>
+        </div>
+      </div>
+      <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;" ng-repeat="data in productData">
+        <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
+          <div class="col-md-12">
+            <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/><br/>
+            <span><strong>Units Perpack:</strong>{{data.unitPerpack}}</span>
+            <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
+            <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
+              style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-12 text-center" style="margin-top: 27px;">
+    <div class="col-md-6 text-center" style="margin-top: 27px;">
       <button type="button" class="btn btn-success" ng-click="save()">Save</button>
     </div>
   </div>

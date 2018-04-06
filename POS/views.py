@@ -67,6 +67,12 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['customer' , 'id']
 
+class ProductVerientViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ProductVerientSerializer
+    queryset = ProductVerient.objects.all()
+
+
 
 
 
