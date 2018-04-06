@@ -96,6 +96,15 @@ class ProductVerient(models.Model):
     sku = models.CharField(max_length=10000,null=True)
     unitPerpack = models.PositiveIntegerField(default = 0)
 
+class ProductMetaList(models.Model):
+    user = models.ForeignKey(User ,null = False , related_name ="productMetaList")
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    description = models.CharField(max_length=10000,null=True)
+    code = models.PositiveIntegerField(default = 0)
+    taxRate = models.PositiveIntegerField(default = 0)
+    hsn = models.BooleanField(default = True)
+    sac = models.BooleanField(default = True)
 
 class ExternalOrdersQtyMap(models.Model):
     product = models.ForeignKey(Product , related_name='externalOrders')

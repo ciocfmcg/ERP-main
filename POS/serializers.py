@@ -97,3 +97,17 @@ class ProductVerientSerializer(serializers.ModelSerializer):
         v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
         v.save()
         return v
+
+class ProductMetaListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMetaList
+        fields = ('pk','created','updated','description','code','taxRate','hsn','sac')
+         # read_only_fields = ('user')
+
+    def create(self , validated_data):
+        r = ProductMetaList(**validated_data)
+        # r.ProductMetaList = self.context['request'].ProductMetaList
+        r.user = self.context['request'].user
+        # v.productMetaList = ProductMetaList.objects.get(pk=int(self.context['request'].data['ProductMetaList']))
+        r.save()
+        return r

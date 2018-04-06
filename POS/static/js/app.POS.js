@@ -334,7 +334,7 @@ app.controller('controller.POS.productConfigure.form', function($scope) {
 
 });
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {
 
   $scope.hover = false;
 
@@ -357,8 +357,11 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.data = {
     tableData: [],
     invoiceDataTable: [],
-    customerDataTable: []
+    customerDataTable: [],
+    // productMetatableData: []
   };
+
+
 
   var views = [{
     name: 'list',
@@ -441,7 +444,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       $scope.openProductForm();
     } else if (action == 'Bulk') {
       $scope.openProductBulkForm();
-    } else if (action == 'Configure') {
+    } else if (action == 'configure') {
       // $aside.open({
       //   templateUrl: '/static/ngTemplates/app.POS.productConfigureForm.html',
       //   placement: 'right',
@@ -914,19 +917,6 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   }
 
   $scope.openProductConfigureForm = function(idx) {
-
-
-    // $aside.open({
-    //   templateUrl: '/static/ngTemplates/app.POS.productConfigureForm.html',
-    //   placement: 'right',
-    //   size: 'xl',
-    //   backdrop: true,
-    //   resolve: {
-    //
-    //   },
-    //   controller: 'controller.POS.productConfigure.form'
-    // })
-
       $aside.open({
       templateUrl: '/static/ngTemplates/app.POS.productConfigureForm.html',
       placement: 'right',
@@ -936,34 +926,103 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
       },
       controller: function($scope, ) {
+        $scope.data = {
+          productMetatableData: []
+        };
 
-        $scope.bulkForm = {
-          xlFile: emptyFile,
-          success: false,
-          usrCount: 0
+
+        var views = [{
+          name: 'list',
+          icon: 'fa-th-large',
+          template: '/static/ngTemplates/genericTable/genericSearchList.html',
+          itemTemplate: '/static/ngTemplates/app.POS.productMeta.item.html',
+        }, ];
+
+        $scope.configProductMeta = {
+          views: views,
+          url: '/api/POS/productMetaList/',
+          searchField: 'name',
+          itemsNumPerView: [8, 16, 24],
         }
-        $scope.upload = function() {
-          if ($scope.bulkForm.xlFile == emptyFile) {
-            Flash.create('warning', 'No file selected')
-            return
-          }
-          console.log($scope.bulkForm.xlFile);
-          var fd = new FormData()
-          fd.append('xl', $scope.bulkForm.xlFile);
-          console.log('*************',fd);
-          $http({
-            method: 'POST',
-            url: '/api/POS/bulkProductsCreation/',
-            data: fd,
-            transformRequest: angular.identity,
-            headers: {
-              'Content-Type': undefined
+
+        $scope.tableActionProductMeta = function(target, action, mode) {
+          console.log($scope.data.productMetatableData);
+          for (var i = 0; i < $scope.data.productMetatableData.length; i++) {
+            if ($scope.data.productMetatableData[i].pk == parseInt(target)) {
+              if (action == 'edit') {
+                var title = 'ProductMeta :';
+                var appType = 'productMetaEdit';
+              }
+
+              $scope.addTab({
+                title: title + $scope.data.productMetatableData[i].pk,
+                cancel: true,
+                app: appType,
+                data: {
+                    pk: target,
+                    index:i
+                },
+                active: true
+              })
             }
+          }
+
+        }
+
+        $scope.tabs = [];
+        $scope.searchTabActive = true;
+
+        $scope.closeTab = function(index) {
+          $scope.tabs.splice(index, 1)
+        }
+
+        $scope.addTab = function(input) {
+          $scope.searchTabActive = false;
+          alreadyOpen = false;
+          for (var i = 0; i < $scope.tabs.length; i++) {
+            if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+              $scope.tabs[i].active = true;
+              alreadyOpen = true;
+            } else {
+              $scope.tabs[i].active = false;
+            }
+          }
+          if (!alreadyOpen) {
+            $scope.tabs.push(input)
+          }
+        }
+
+
+        $scope.configureForm = {
+          'description': '',
+          'code': '',
+          'taxRate': '',
+        }
+        $scope.saveproductMeta = function() {
+          var f = $scope.configureForm;
+          if ($scope.configureForm.pk == undefined) {
+            var method = 'POST';
+          } else {
+            var method = 'PATCH';
+            url += $scope.configureForm.pk + '/';
+          }
+          var toSend = {
+            description: f.description,
+            code: f.code,
+            taxRate: f.taxRate,
+            hsn : f.hsn,
+            sac : f.sac
+
+          }
+
+          $http({
+            method: method,
+            url: '/api/POS/productMetaList/',
+            data: toSend
           }).
           then(function(response) {
-            Flash.create('success', 'Created');
-            $scope.bulkForm.usrCount = response.data.count;
-            $scope.bulkForm.success = true;
+            $scope.configureForm.pk = response.data.pk;
+            Flash.create('success', 'Saved');
           })
 
         }

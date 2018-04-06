@@ -1,0 +1,18 @@
+<div class="col-md-3" style="padding-bottom:10px;padding-left:10px;padding-right:10px;">
+  <div class="container-fluid card" style="padding:30px;padding-top:0px;">
+    <div class="row">
+      <div class="row">
+        <div class="col-md-10">
+          <h3>{{data.description}}</h3>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div class="row" style="position:relative;">
+        <!-- Service Type:<strong>{{data.hsn}}</strong>  <br> -->
+        Tax Code:<strong>{{data.code}}</strong>  <br>
+        Tax Rate:<strong>{{data.taxRate}}</strong> <br>
+        <i class="  fa-3x {{data.submitted ? '': 'fa fa-pencil'}}"style="position:absolute;right:20px;bottom:-10px;cursor:pointer;" ng-click = "rowActionClicked('edit')"></i>
+    </div>
+  </div>
+</div>

@@ -72,6 +72,13 @@ class ProductVerientViewSet(viewsets.ModelViewSet):
     serializer_class = ProductVerientSerializer
     queryset = ProductVerient.objects.all()
 
+class ProductMetaListViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = ProductMetaListSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['description', 'code']
+    def get_queryset(self):
+        return ProductMetaList.objects.all()
 
 
 
