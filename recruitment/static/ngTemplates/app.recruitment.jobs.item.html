@@ -1,0 +1,13 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+  <div class="container-fluid card" style="padding-bottom:0px;">
+    <div class="row" style="border-bottom: 1px solid #dedede;padding-left: 20px;">
+          <strong> Job Type:</strong>{{data.jobtype}} <br>
+          <strong>Unit:</strong> {{data.unit.name}} <br>
+          <strong>Department:</strong> {{data.department.dept_name}}<br>
+        </div>
+    <div class="row container-fluid" style="padding-top:20px;height:70px;">
+          <i class="fa fa-pencil fa-2x pull-down" style="cursor:pointer;" ng-click = "rowActionClicked('edit')"></i>
+          <i class="fa fa-info-circle fa-2x text-primary pull-right" style="cursor:pointer;" ng-click="rowActionClicked('jobBrowse')" ></i>
+    </div>
+  </div>
+</div>
