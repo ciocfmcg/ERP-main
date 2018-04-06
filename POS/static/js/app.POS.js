@@ -1,5 +1,3 @@
-
-
 app.config(function($stateProvider) {
 
   $stateProvider
@@ -14,7 +12,7 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("controller.POS.invoice.form", function($scope, invoice,$http,Flash) {
+app.controller("controller.POS.invoice.form", function($scope, invoice, $http, Flash) {
 
   if (invoice.pk != undefined) {
     $scope.mode = 'edit';
@@ -35,69 +33,72 @@ app.controller("controller.POS.invoice.form", function($scope, invoice,$http,Fla
     }
   }
   $scope.addTableRow = function() {
-    $scope.form.products.push({data:"",quantity:1});
-    console.log( $scope.form.products);
+    $scope.form.products.push({
+      data: "",
+      quantity: 1
+    });
+    console.log($scope.form.products);
   }
   $scope.deleteTable = function(index) {
     $scope.form.products.splice(index, 1);
   };
 
   $scope.subTotal = function() {
-       var subTotal = 0;
-       angular.forEach($scope.form.products, function(item) {
-          if(item.data.productMeta != undefined){
-           subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price));
-         }
-       })
-       return subTotal.toFixed(2);
-   }
-   $scope.subTotalTax = function() {
-        var subTotalTax = 0;
-        angular.forEach($scope.form.products, function(item) {
-            if(item.data.productMeta != undefined){
-            subTotalTax += (item.data.productMeta.taxRate*item.data.price/100);
-          }
-        })
-        return subTotalTax.toFixed(2);
-    }
-    $scope.productSearch = function(query) {
-      console.log("called");
-      return $http.get('/api/POS/product/?name__contains=' + query).
-      then(function(response) {
-        return response.data;
-      })
-    }
-
-    $scope.saveInvoiceForm = function() {
-      console.log('************');
-      console.log($scope.invoice.duedate);
-      console.log($scope.form);
-      // console.log($scope.products.data.pk);
-
-      var f = $scope.form;
-      console.log(f);
-      console.log(f.products);
-      if (typeof $scope.invoice.duedate == 'object'){
-        var date=$scope.invoice.duedate.toJSON().split('T')[0];
-      }else {
-        var date=$scope.invoice.duedate
+    var subTotal = 0;
+    angular.forEach($scope.form.products, function(item) {
+      if (item.data.productMeta != undefined) {
+        subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
       }
-      var toSend = {
-        // invoicedate: date,
-        duedate :date,
-        products: JSON.stringify(f.products),
+    })
+    return subTotal.toFixed(2);
+  }
+  $scope.subTotalTax = function() {
+    var subTotalTax = 0;
+    angular.forEach($scope.form.products, function(item) {
+      if (item.data.productMeta != undefined) {
+        subTotalTax += (item.data.productMeta.taxRate * item.data.price / 100);
       }
+    })
+    return subTotalTax.toFixed(2);
+  }
+  $scope.productSearch = function(query) {
+    console.log("called");
+    return $http.get('/api/POS/product/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
 
-      $http({
-        method: 'PATCH',
-        url: '/api/POS/invoice/'+f.pk+'/',
-        data: toSend
-      }).
-      then(function(response) {
-        // $scope.form.pk = response.data.pk;
-        Flash.create('success', 'Saved');
-      })
+  $scope.saveInvoiceForm = function() {
+    console.log('************');
+    console.log($scope.invoice.duedate);
+    console.log($scope.form);
+    // console.log($scope.products.data.pk);
+
+    var f = $scope.form;
+    console.log(f);
+    console.log(f.products);
+    if (typeof $scope.invoice.duedate == 'object') {
+      var date = $scope.invoice.duedate.toJSON().split('T')[0];
+    } else {
+      var date = $scope.invoice.duedate
     }
+    var toSend = {
+      // invoicedate: date,
+      duedate: date,
+      products: JSON.stringify(f.products),
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/POS/invoice/' + f.pk + '/',
+      data: toSend
+    }).
+    then(function(response) {
+      // $scope.form.pk = response.data.pk;
+      Flash.create('success', 'Saved');
+    })
+  }
 
 
 })
@@ -110,7 +111,7 @@ app.controller("POS.invoice.item", function($scope) {
 
   if ($scope.$parent.$parent.$parent.customer != undefined) {
     $scope.showControls = false;
-  }else {
+  } else {
     $scope.showControls = true;
   }
 
@@ -134,10 +135,10 @@ app.controller("controller.POS.productinfo.form", function($scope, product) {
 
   // $scope.products=products;
 
-    $scope.labels = ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"];
+  $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40,50,30,44,55,66]
+    [65, 59, 80, 81, 56, 55, 40, 50, 30, 44, 55, 66]
 
   ];
   $scope.onClick = function(points, evt) {
@@ -239,7 +240,7 @@ app.controller("controller.POS.customer.form", function($scope, customer, $http,
 
 })
 
-app.controller("controller.POS.customerinfo.form", function($scope, customer,$http) {
+app.controller("controller.POS.customerinfo.form", function($scope, customer, $http) {
 
   if (customer.pk != undefined) {
     $scope.mode = 'edit';
@@ -254,10 +255,10 @@ app.controller("controller.POS.customerinfo.form", function($scope, customer,$ht
     }
   }
   console.log($scope.customer);
-  console.log("/api/POS/invoice/?customer="+$scope.customer.pk);
+  console.log("/api/POS/invoice/?customer=" + $scope.customer.pk);
   $http({
     method: "GET",
-    url: "/api/POS/invoice/?customer="+$scope.customer.pk,
+    url: "/api/POS/invoice/?customer=" + $scope.customer.pk,
   }).
   then(function(response) {
     $scope.invoices = response.data;
@@ -265,7 +266,7 @@ app.controller("controller.POS.customerinfo.form", function($scope, customer,$ht
 
 })
 
-app.controller("controller.POS.invoicesinfo.form", function($scope, invoice,$http,Flash) {
+app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $http, Flash) {
 
   if (invoice.pk != undefined) {
     $scope.mode = 'edit';
@@ -284,50 +285,56 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice,$htt
     }
   }
   $scope.subTotal = function() {
-       var subTotal = 0;
-       angular.forEach($scope.form.products, function(item) {
-          if(item.data != undefined){
-           subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price));
-         }
-       })
-       return subTotal.toFixed(2);
-   }
+    var subTotal = 0;
+    angular.forEach($scope.form.products, function(item) {
+      if (item.data != undefined) {
+        subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
+      }
+    })
+    return subTotal.toFixed(2);
+  }
 
-   $scope.modeofpayment = ["card", "netBanking", "cash","cheque"];
-   $scope.save = function() {
+  $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
+  $scope.save = function() {
 
-     var f = $scope.form;
-     console.log(f);
-     if (f.amountRecieved.length == 0) {
-       Flash.create('warning', 'Amount can not be left blank');
-       return;
-     }
+    var f = $scope.form;
+    console.log(f);
+    if (f.amountRecieved.length == 0) {
+      Flash.create('warning', 'Amount can not be left blank');
+      return;
+    }
 
-     console.log(f.amountRecieved);
-     console.log(f.modeOfPayment);
-     var toSend = {
-       amountRecieved: f.amountRecieved,
-       modeOfPayment: f.modeOfPayment,
-       paymentRefNum :f.paymentRefNum,
-       receivedDate:f.receivedDate.toJSON().split('T')[0]
-     }
-     console.log(toSend);
+    console.log(f.amountRecieved);
+    console.log(f.modeOfPayment);
+    var toSend = {
+      amountRecieved: f.amountRecieved,
+      modeOfPayment: f.modeOfPayment,
+      paymentRefNum: f.paymentRefNum,
+      receivedDate: f.receivedDate.toJSON().split('T')[0]
+    }
+    console.log(toSend);
 
 
 
-     $http({
-       method: 'PATCH',
-       url:'/api/POS/invoice/'+f.pk+'/',
-       data: toSend
-     }).
-     then(function(response) {
-         Flash.create('success', 'Saved');
-     })
-   }
+    $http({
+      method: 'PATCH',
+      url: '/api/POS/invoice/' + f.pk + '/',
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+    })
+  }
 
 })
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+app.controller('controller.POS.productConfigure.form', function($scope) {
+
+
+
+});
+
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {
 
   $scope.hover = false;
 
@@ -350,8 +357,11 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.data = {
     tableData: [],
     invoiceDataTable: [],
-    customerDataTable: []
+    customerDataTable: [],
+    // productMetatableData: []
   };
+
+
 
   var views = [{
     name: 'list',
@@ -361,7 +371,23 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   }, ];
 
 
+  var productmultiselectOptions = [{
+    icon: 'fa fa-plus',
+    text: 'configure'
+  } ,{
+    icon: 'fa fa-plus',
+    text: 'Bulk'
+  }, {
+    icon: 'fa fa-plus',
+    text: 'new'
+  },];
+
   var multiselectOptions = [{
+    icon: 'fa fa-plus',
+    text: 'new'
+  }, ];
+
+  var multiselectOptions = [ {
     icon: 'fa fa-plus',
     text: 'new'
   }, ];
@@ -371,7 +397,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     url: '/api/POS/product/',
     searchField: 'name',
     itemsNumPerView: [6, 12, 24],
-    multiselectOptions: multiselectOptions,
+    multiselectOptions: productmultiselectOptions,
   }
 
   var views = [{
@@ -416,6 +442,20 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
     if (action == 'new') {
       $scope.openProductForm();
+    } else if (action == 'Bulk') {
+      $scope.openProductBulkForm();
+    } else if (action == 'configure') {
+      // $aside.open({
+      //   templateUrl: '/static/ngTemplates/app.POS.productConfigureForm.html',
+      //   placement: 'right',
+      //   size: 'xl',
+      //   backdrop: true,
+      //   resolve: {
+      //
+      //   },
+      //   controller: 'controller.POS.productConfigure.form'
+      // })
+      $scope.openProductConfigureForm();
     } else {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -474,7 +514,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   }
 
 
-  $scope.mode='home';
+  $scope.mode = 'home';
   // $scope.mode = 'invoice'
   $scope.tabs = [];
   $scope.searchTabActive = true;
@@ -489,39 +529,40 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.form = {
       customer: '',
       invoiceDate: onlyDate,
-      totalTax:0,
-      grandTotal:0,
+      totalTax: 0,
+      grandTotal: 0,
       deuDate: onlyDate,
       products: [{
-        data: '',quantity:1
+        data: '',
+        quantity: 1
       }],
       // returnquater : 'jan-march'
     }
 
   }
 
-  $scope.returnquaters = ['jan-march' , 'april-june' , 'july-sep' , 'oct-dec']
+  $scope.returnquaters = ['jan-march', 'april-june', 'july-sep', 'oct-dec']
 
   $scope.resetForm();
 
   $scope.subTotal = function() {
-       var subTotal = 0;
-       angular.forEach($scope.form.products, function(item) {
-         if(item.data.productMeta != undefined){
-           subTotal += (item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price));
-         }
-       })
-       return subTotal.toFixed(2);
-   }
-   $scope.subTotalTax = function() {
-        var subTotalTax = 0;
-        angular.forEach($scope.form.products, function(item) {
-           if(item.data.productMeta != undefined){
-            subTotalTax += (item.data.productMeta.taxRate*item.data.price/100);
-          }
-        })
-        return subTotalTax.toFixed(2);
-    }
+    var subTotal = 0;
+    angular.forEach($scope.form.products, function(item) {
+      if (item.data.productMeta != undefined) {
+        subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
+      }
+    })
+    return subTotal.toFixed(2);
+  }
+  $scope.subTotalTax = function() {
+    var subTotalTax = 0;
+    angular.forEach($scope.form.products, function(item) {
+      if (item.data.productMeta != undefined) {
+        subTotalTax += (item.data.productMeta.taxRate * item.data.price / 100);
+      }
+    })
+    return subTotalTax.toFixed(2);
+  }
 
   console.log(onlyDate);
   $scope.customerNameSearch = function(query) {
@@ -568,7 +609,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.mode = 'invoice';
   }
   $scope.goHome = function() {
-    $rootScope.$broadcast('forceRefetch' , {});
+    $rootScope.$broadcast('forceRefetch', {});
     $scope.mode = 'home';
   }
 
@@ -600,9 +641,12 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       console.log(d);
     }, function(d) {
       console.log(d);
-      $rootScope.$broadcast('forceRefetch' , {});
+      $rootScope.$broadcast('forceRefetch', {});
       if ($scope.form.customer.pk != undefined) {
-        $http({method : 'GET' , url : '/api/POS/customer/' + $scope.form.customer.pk + '/'}).
+        $http({
+          method: 'GET',
+          url: '/api/POS/customer/' + $scope.form.customer.pk + '/'
+        }).
         then(function(response) {
           $scope.form.customer = response.data;
         })
@@ -641,7 +685,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     }).result.then(function() {
 
     }, function() {
-      $rootScope.$broadcast('forceRefetch' , {});
+      $rootScope.$broadcast('forceRefetch', {});
     });
 
 
@@ -703,7 +747,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.product.form.html',
-      size: 'md',
+      size: 'xl',
       backdrop: true,
       resolve: {
         product: function() {
@@ -718,16 +762,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       },
       controller: function($scope, product) {
         console.log(product);
-        $scope.$watch('product.productMeta' , function(newValue , oldValue) {
+        $scope.$watch('product.productMeta', function(newValue, oldValue) {
           if (typeof newValue == 'object') {
             $scope.showTaxCodeDetails = true;
-          }else {
+          } else {
             $scope.showTaxCodeDetails = false;
           }
         })
 
         $scope.searchTaxCode = function(c) {
-          return $http.get('/api/clientRelationships/productMeta/?description__contains='+c).
+          return $http.get('/api/clientRelationships/productMeta/?description__contains=' + c).
           then(function(response) {
             return response.data;
           })
@@ -736,6 +780,15 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         if (product.pk != undefined) {
           $scope.mode = 'edit';
           $scope.product = product;
+          $http({
+            method: 'GET',
+            url: '/api/POS/productVerient/?parent=' + $scope.product.pk
+          }).
+          then(function(response) {
+            $scope.productData = response.data;
+          })
+
+
         } else {
           $scope.mode = 'new';
           $scope.product = {
@@ -746,19 +799,15 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
             'serialNo': '',
             'description': '',
             'inStock': 0,
-            'cost':0,
-            'logistics':0,
-            'serialId':'',
-            'reorderTrashold':0,
+            'cost': 0,
+            'logistics': 0,
+            'serialId': '',
+            'reorderTrashold': 0,
             'pk': null
           }
         }
 
         $scope.save = function() {
-          console.log('entered');
-          console.log($scope.product.productMeta);
-          console.log($scope.product.productMeta.pk);
-
           var f = $scope.product;
           var url = '/api/POS/product/';
           if ($scope.mode == 'new') {
@@ -788,7 +837,6 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           fd.append('serialId', f.serialId);
           fd.append('reorderTrashold', f.reorderTrashold);
 
-
           console.log(f.displayPicture);
           console.log(fd);
 
@@ -810,6 +858,50 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
             Flash.create('success', 'Saved')
           })
         }
+        $scope.deleteProduct = function(pk, ind) {
+          $http({
+            method: 'DELETE',
+            url: '/api/POS/productVerient/' + pk + '/'
+          }).
+          then((function(ind) {
+            return function(response) {
+              $scope.productData.splice(ind, 1);
+              Flash.create('success', 'Deleted');
+            }
+          })(ind))
+
+        }
+
+        $scope.productVerientForm = {
+          'sku': '',
+          'unitPerpack': 1
+        }
+        $scope.productData = [];
+
+        $scope.saveUnits = function() {
+          console.log('aaaaaaaaaaaaa');
+          var f = $scope.productVerientForm;
+          var toSend = {
+            parent: $scope.product.pk,
+            sku: f.sku,
+            unitPerpack: f.unitPerpack
+          }
+
+          $http({
+            method: 'POST',
+            url: '/api/POS/productVerient/',
+            data: toSend
+          }).
+          then(function(response) {
+            $scope.productVerientForm.pk = response.data.pk;
+            $scope.productData.push(response.data);
+            Flash.create('success', 'Saved');
+          })
+        }
+
+
+
+
 
 
       },
@@ -820,7 +912,191 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     });
 
 
+
+
   }
+
+  $scope.openProductConfigureForm = function(idx) {
+      $aside.open({
+      templateUrl: '/static/ngTemplates/app.POS.productConfigureForm.html',
+      placement: 'right',
+      size: 'xl',
+      backdrop: true,
+      resolve: {
+
+      },
+      controller: function($scope, ) {
+        $scope.data = {
+          productMetatableData: []
+        };
+
+
+        var views = [{
+          name: 'list',
+          icon: 'fa-th-large',
+          template: '/static/ngTemplates/genericTable/genericSearchList.html',
+          itemTemplate: '/static/ngTemplates/app.POS.productMeta.item.html',
+        }, ];
+
+        $scope.configProductMeta = {
+          views: views,
+          url: '/api/POS/productMetaList/',
+          searchField: 'name',
+          itemsNumPerView: [8, 16, 24],
+        }
+
+        $scope.tableActionProductMeta = function(target, action, mode) {
+          console.log($scope.data.productMetatableData);
+          for (var i = 0; i < $scope.data.productMetatableData.length; i++) {
+            if ($scope.data.productMetatableData[i].pk == parseInt(target)) {
+              if (action == 'edit') {
+                var title = 'ProductMeta :';
+                var appType = 'productMetaEdit';
+              }
+
+              $scope.addTab({
+                title: title + $scope.data.productMetatableData[i].pk,
+                cancel: true,
+                app: appType,
+                data: {
+                    pk: target,
+                    index:i
+                },
+                active: true
+              })
+            }
+          }
+
+        }
+
+        $scope.tabs = [];
+        $scope.searchTabActive = true;
+
+        $scope.closeTab = function(index) {
+          $scope.tabs.splice(index, 1)
+        }
+
+        $scope.addTab = function(input) {
+          $scope.searchTabActive = false;
+          alreadyOpen = false;
+          for (var i = 0; i < $scope.tabs.length; i++) {
+            if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+              $scope.tabs[i].active = true;
+              alreadyOpen = true;
+            } else {
+              $scope.tabs[i].active = false;
+            }
+          }
+          if (!alreadyOpen) {
+            $scope.tabs.push(input)
+          }
+        }
+
+
+        $scope.configureForm = {
+          'description': '',
+          'code': '',
+          'taxRate': '',
+        }
+        $scope.saveproductMeta = function() {
+          var f = $scope.configureForm;
+          if ($scope.configureForm.pk == undefined) {
+            var method = 'POST';
+          } else {
+            var method = 'PATCH';
+            url += $scope.configureForm.pk + '/';
+          }
+          var toSend = {
+            description: f.description,
+            code: f.code,
+            taxRate: f.taxRate,
+            hsn : f.hsn,
+            sac : f.sac
+
+          }
+
+          $http({
+            method: method,
+            url: '/api/POS/productMetaList/',
+            data: toSend
+          }).
+          then(function(response) {
+            $scope.configureForm.pk = response.data.pk;
+            Flash.create('success', 'Saved');
+          })
+
+        }
+
+      },
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+
+
+}
+
+$scope.openProductBulkForm = function(idx) {
+
+
+  $uibModal.open({
+    templateUrl: '/static/ngTemplates/app.POS.product.bulkForm.html',
+    size: 'md',
+    backdrop: true,
+    // resolve: {
+    //   product: function() {
+    //
+    //     console.log($scope.products[idx]);
+    //     if (idx == undefined || idx == null) {
+    //       return {};
+    //     } else {
+    //       return $scope.products[idx];
+    //     }
+    //   }
+    // },
+    controller: function($scope, ) {
+
+      $scope.bulkForm = {
+        xlFile: emptyFile,
+        success: false,
+        usrCount: 0
+      }
+      $scope.upload = function() {
+        if ($scope.bulkForm.xlFile == emptyFile) {
+          Flash.create('warning', 'No file selected')
+          return
+        }
+        console.log($scope.bulkForm.xlFile);
+        var fd = new FormData()
+        fd.append('xl', $scope.bulkForm.xlFile);
+        console.log('*************',fd);
+        $http({
+          method: 'POST',
+          url: '/api/POS/bulkProductsCreation/',
+          data: fd,
+          transformRequest: angular.identity,
+          headers: {
+            'Content-Type': undefined
+          }
+        }).
+        then(function(response) {
+          Flash.create('success', 'Created');
+          $scope.bulkForm.usrCount = response.data.count;
+          $scope.bulkForm.success = true;
+        })
+
+      }
+
+    },
+  }).result.then(function() {
+
+  }, function() {
+
+  });
+
+
+}
 
 
   $scope.openInvoiceForm = function(idx) {
@@ -868,23 +1144,26 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
 
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"];
+  $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // $scope.series = ['Series A'];
   $scope.data = [
-    [65, 59, 80, 81, 56, 55, 50,60,71,66,77,44]
+    [65, 59, 80, 81, 56, 55, 50, 60, 71, 66, 77, 44]
 
   ];
   $scope.onClick = function(points, evt) {
     console.log(points, evt);
   };
 
-  $scope.labels2 = ["Sales","Products"];
+  $scope.labels2 = ["Sales", "Products"];
   $scope.data2 = [800, 500];
 
 
   $scope.addRow = function() {
-    $scope.form.products.push({data:"",quantity:1});
-    console.log( $scope.form.products);
+    $scope.form.products.push({
+      data: "",
+      quantity: 1
+    });
+    console.log($scope.form.products);
 
   }
 
@@ -898,9 +1177,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
     var f = $scope.form;
     console.log(f);
-    console.log('0000000000000',f.products);
+    console.log('0000000000000', f.products);
     for (var i = 0; i < f.products.length; i++) {
-      console.log(f.products[i].data.pk,f.products[i].quantity);
+      console.log(f.products[i].data.pk, f.products[i].quantity);
 
 
       var fd = new FormData();
@@ -910,11 +1189,11 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       fd.append('price', f.products[i].data.price);
       fd.append('serialNo', f.products[i].data.serialNo);
       fd.append('description', f.products[i].data.description);
-      fd.append('inStock', (f.products[i].data.inStock-f.products[i].quantity));
+      fd.append('inStock', (f.products[i].data.inStock - f.products[i].quantity));
       fd.append('cost', f.products[i].data.cost);
       fd.append('logistics', f.products[i].data.logistics);
 
-      var url = '/api/POS/product/'+f.products[i].data.pk+'/'
+      var url = '/api/POS/product/' + f.products[i].data.pk + '/'
       // console.log(sendData);
       $http({
         method: 'PATCH',
@@ -926,7 +1205,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         }
       }).
       then(function(response) {
-        console.log('789',response.data);
+        console.log('789', response.data);
       })
     }
     if (f.serialNumber.length == 0) {
@@ -953,8 +1232,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
       products: JSON.stringify(f.products),
       customer: f.customer.pk,
-      grandTotal : $scope.subTotal() ,
-      totalTax : $scope.subTotalTax()
+      grandTotal: $scope.subTotal(),
+      totalTax: $scope.subTotalTax()
     }
     // var returnquaterParts=toSend.returnquater.split('/');
     // toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[0]+'-'+returnquaterParts[1];

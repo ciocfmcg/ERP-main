@@ -125,16 +125,12 @@ class DepartmentsSerializer(serializers.ModelSerializer):
 
 class RolesSerializer(serializers.ModelSerializer):
     department = DepartmentsLiteSerializer(many = False , read_only = True)
-    division = DivisionLiteSerializer(many = False , read_only = True)
-    unit = UnitsLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Roles
-        fields = ('pk','name','division','unit','department')
+        fields = ('pk','name','department')
     def create(self , validated_data):
         d = Roles(**validated_data)
         d.department=Departments.objects.get(pk=self.context['request'].data['department'])
-        d.division=Division.objects.get(pk=self.context['request'].data['division'])
-        d.unit=Units.objects.get(pk=self.context['request'].data['unit'])
         d.save()
         return d
 

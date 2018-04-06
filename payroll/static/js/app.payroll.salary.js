@@ -64,34 +64,22 @@ app.controller("workforceManagement.salary.payslips.info", function($scope, $sta
 
   $scope.months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"]
   //
-  //   $scope.reportData = [];
-  //
-  //   $http({
-  //   method: 'GET',
-  //   url: '/api/payroll/report/?month='+$scope.data.month
-  // }).
-  // then(function(response) {
-  //   $scope.reportData = response.data;
-  //   console.log($scope.reportData);
-  //   // console.log($scope.checkin.pk);
-  // })
+    $scope.reportData = [];
 
-  // $scope.yearInView = $scope.data.joiningDate;
-
-})
-
-app.controller("workforceManagement.salary.payslipscard.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
-
-  // $scope.data = $scope.tab.data;
-
-  // }
-
-
-
+    $http({
+    method: 'GET',
+    url: '/api/payroll/payslip/?month='+$scope.data.month
+  }).
+  then(function(response) {
+    $scope.reportData = response.data;
+    console.log($scope.reportData);
+    // console.log($scope.checkin.pk);
+  })
 
 
 
 })
+
 
 app.controller("workforceManagement.salary.payroll.report", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
@@ -313,15 +301,15 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
 
   $scope.months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"]
 
+  // $scope.reportData = [];
+  // // if ($scope.report != undefined){
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/payroll/report/?month=' + $scope.months
+  // }).
+  // then(function(response) {
+  //   $scope.reportData = response.data;
 
-  // if ($scope.report != undefined){
-  $http({
-    method: 'GET',
-    url: '/api/payroll/report/?month=' + $scope.data
-  }).
-  then(function(response) {
-    $scope.reportData = response.data;
-    // $scope.reportData = [];
     // console.log('******************', response.data);
     // // $scope.reportData = response.data;
     // for (var i = 0; i < response.data.length; i++) {
@@ -330,7 +318,7 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
 
 
 
-  })
+  // })
 
 
 })

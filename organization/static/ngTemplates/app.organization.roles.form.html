@@ -9,16 +9,6 @@
   </div>
 
   <div class="form-group">
-    <label>Division</label>
-    <input uib-typeahead="division as division.name for division in divSearch($viewValue)" ng-model="form.division" type="text" class="form-control" placeholder="Select division">
-  </div>
-
-  <div class="form-group">
-    <label>Unit</label>
-    <input uib-typeahead="unit as unit.name for unit in unitSearch($viewValue)" ng-model="form.unit" type="text" class="form-control" placeholder="Select Unit">
-  </div>
-
-  <div class="form-group">
     <label>Department</label>
     <input uib-typeahead="department as department.dept_name for department in depSearch($viewValue)" ng-model="form.department" type="text" class="form-control" placeholder="Select department">
   </div>

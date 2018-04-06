@@ -89,6 +89,23 @@ class Invoice(models.Model):
     paymentRefNum = models.PositiveIntegerField(default = 0)
     receivedDate = models.DateField(null=True)
 
+class ProductVerient(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey(Product , related_name='parentProducts')
+    sku = models.CharField(max_length=10000,null=True)
+    unitPerpack = models.PositiveIntegerField(default = 0)
+
+class ProductMetaList(models.Model):
+    user = models.ForeignKey(User ,null = False , related_name ="productMetaList")
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    description = models.CharField(max_length=10000,null=True)
+    code = models.PositiveIntegerField(default = 0)
+    taxRate = models.PositiveIntegerField(default = 0)
+    hsn = models.BooleanField(default = True)
+    sac = models.BooleanField(default = True)
+
 class ExternalOrdersQtyMap(models.Model):
     product = models.ForeignKey(Product , related_name='externalOrders')
     qty = models.PositiveIntegerField(default=1)
@@ -130,20 +147,24 @@ from ERP.models import application
 @receiver(post_save, sender=Product, dispatch_uid="server_post_save")
 def updateProductsStock(sender, instance, **kwargs):
 
-    for p in application.objects.get(name = 'app.productsInventory').permissions.all():
-        print "Sending to : " , p.user.username
-        requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
-            json={
-              'topic': 'service.dashboard.' + p.user.username,
-              'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
-            }
-        )
+    try:
 
-    for u in User.objects.filter(is_superuser=True):
-        print "Sending to : " , u.username
-        requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
-            json={
-              'topic': 'service.dashboard.' + u.username,
-              'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
-            }
-        )
+        for p in application.objects.get(name = 'app.productsInventory').permissions.all():
+            print "Sending to : " , p.user.username
+            requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
+                json={
+                  'topic': 'service.dashboard.' + p.user.username,
+                  'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
+                }
+            )
+
+        for u in User.objects.filter(is_superuser=True):
+            print "Sending to : " , u.username
+            requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",
+                json={
+                  'topic': 'service.dashboard.' + u.username,
+                  'args': [{'type' : 'productsInventory' , 'action' : 'updated' , 'pk' : instance.pk , 'inStock'  : instance.inStock}]
+                }
+            )
+    except:
+        pass

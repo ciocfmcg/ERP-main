@@ -9,5 +9,5 @@ router.register(r'report' , payrollReportViewSet , base_name = 'report')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    # url(r'invoicePrint/$' , InvoicePrint.as_view() ),
+    url(r'getPayslip/$' , GetPayslip.as_view() ),
 ]

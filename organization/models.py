@@ -64,6 +64,4 @@ class Departments(models.Model):
 
 class Roles(models.Model):
     name = models.CharField(max_length = 200 , null = False)
-    division = models.ForeignKey(Division , null = True , related_name = "division")
-    unit = models.ForeignKey(Units , null = True , related_name = "unit")
     department = models.ForeignKey(Departments , null = True , related_name = "department")
