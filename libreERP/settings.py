@@ -42,7 +42,7 @@ LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
 
-LOGIN_TEMPLATE = 'loginCenter.html'
+LOGIN_TEMPLATE = 'login.html'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -70,7 +70,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = '24Tutors.com'
 
-BRAND_LOGO = '/static/images/24_tutors_icon.svg'
+BRAND_LOGO = '/static/images/cioc_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
