@@ -1,0 +1,50 @@
+<div>
+  <div class="modal-header bg-blue" style="height:7vh;">
+    <div class="container-fluid">
+      <h4>
+        <div class="row">
+          <div class="col-md-2 pull-right">
+            <span class="pull-right">
+              Create a Product Meta
+            </span>
+          </div>
+        </div>
+      </h4>
+    </div>
+  </div>
+  <div class="container-fluid" style="padding:10px">
+    <!-- <breadcrumb></breadcrumb> -->
+      <uib-tabset>
+        <uib-tab>
+          <uib-tab-heading>
+            New
+            <i class="fa fa-plus"></i>
+          </uib-tab-heading>
+          <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.POS.productMetaForm.html'">
+          </div>
+        </uib-tab>
+        <uib-tab active="searchTabActive">
+          <uib-tab-heading>
+            Browse
+            <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+            <generic-Table data="data.productMetatableData" config-Obj="{{configProductMeta}}" callback-Fn="tableActionProductMeta"></generic-Table>
+          </div>
+        </uib-tab>
+        <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+          <uib-tab-heading>
+            {{tab.title}}
+            <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+          </uib-tab-heading>
+          <div ng-if="tab.app == 'productMetaEdit'">
+              <div ng-include="'/static/ngTemplates/app.POS.productMetaForm.html'"></div>
+          </div>
+          <!-- <div ng-if="tab.app == 'expenseSheetBrowser'">
+            <div ng-include="'/static/ngTemplates/app.finance.expenseSheet.explore.html'"></div>
+          </div> -->
+
+        </uib-tab>
+      </uib-tabset>
+  </div>
+  </div>

@@ -1,12 +1,13 @@
-<div class="col-md-4 " style="margin-bottom:10px;" ng-controller="workforceManagement.salary.payroll.report">
+<div class="col-md-4 " style="margin-bottom:10px;" >
   <div class="card" style="padding:10px;min-height:150px;" ng-repeat="a in reportData">
-    <h4>{{a.user |  getName}}</h4>
-    <div>
-      <hr>
-      <div class="pull-left">
-        <span>{{months[a.month]}}</span>
+      <span class="pull-left" style="font-size:20px">{{a.user |  getName}}</span>
+      <div class="pull-right">
+        <!-- <span>{{months[a.month]}}</span> -->
+        <span style="color:green;" ng-if="a.deffered == false"><i class="fa fa-circle" aria-hidden="true"></i></span>
+        <span style="color:red;" ng-if="a.deffered == true"><i class="fa fa-circle" aria-hidden="true"></i></span>
+      </div><br><br><br><br>
+      <div class="pull-right">
+        <a style="cursor:pointer;" target="_blank" href="/api/payroll/getPayslip?payslip={{a.user}}"><i class="fa fa-download fa-3x text-right" ></i></a>
       </div>
-    </div>
-    <a style="position:absolute;right:20px;bottom:10px;cursor:pointer;" target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}"><i class="fa fa-download fa-3x" ></i></a>
   </div>
 </div>

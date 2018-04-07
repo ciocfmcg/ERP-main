@@ -149,7 +149,6 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
 
   $scope.openProductForm = function(idx) {
 
-
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.product.form.html',
       size: 'md',

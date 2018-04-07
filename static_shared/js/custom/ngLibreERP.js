@@ -628,10 +628,10 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
   $scope.user = $users.get('mySelf');
 
   $scope.fixedApps = [
-    {icon : 'home' , state : 'home'},
-    {icon : 'envelope-o' , state : 'home.mail'},
-    {icon : 'calendar' , state : 'home.calendar'},
-    {icon : 'sticky-note-o' , state : 'home.notes'},
+    // {icon : 'home' , state : 'home'},
+    // {icon : 'envelope-o' , state : 'home.mail'},
+    // {icon : 'calendar' , state : 'home.calendar'},
+    // {icon : 'sticky-note-o' , state : 'home.notes'},
   ]
 
   var parts = $state.current.name.split('.');
