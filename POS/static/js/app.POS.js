@@ -119,6 +119,51 @@ app.controller("POS.invoice.item", function($scope) {
 
 });
 
+
+app.controller("controller.POS.productMeta.form" , function($scope , $http ,Flash) {
+
+  if ($scope.tab == undefined) {
+    $scope.configureForm = {
+      'description': '',
+      'code': '',
+      'taxRate': '',
+      'typ' : 'HSN'
+    }
+  }else{
+    $scope.configureForm = $scope.tab.data.meta;
+  }
+
+
+  $scope.saveproductMeta = function() {
+    var f = $scope.configureForm;
+    if ($scope.configureForm.pk == undefined) {
+      var method = 'POST';
+    } else {
+      var method = 'PATCH';
+      url += $scope.configureForm.pk + '/';
+    }
+    var toSend = {
+      description: f.description,
+      code: f.code,
+      taxRate: f.taxRate,
+      hsn : f.hsn,
+      sac : f.sac
+
+    }
+
+    $http({
+      method: method,
+      url: '/api/clientRelationships/productMeta/',
+      data: toSend
+    }).
+    then(function(response) {
+      $scope.configureForm.pk = response.data.pk;
+      Flash.create('success', 'Saved');
+    })
+
+  }
+})
+
 app.controller("controller.POS.productinfo.form", function($scope, product) {
 
   if (product.pk != undefined) {
@@ -144,6 +189,48 @@ app.controller("controller.POS.productinfo.form", function($scope, product) {
   $scope.onClick = function(points, evt) {
     console.log(points, evt);
   };
+
+  $scope.data = {
+    productInfotableData: []
+  };
+  var views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.POS.inventoryLog.item.html',
+  }, ];
+
+  $scope.configProductInfo = {
+    views: views,
+    url: '/api/POS/inventoryLog/',
+    searchField: 'name',
+    itemsNumPerView: [8, 16, 24],
+    getParams : [{key : 'product' , value : product.pk}]
+  }
+
+  $scope.tableActionProductInfo = function(target, action, mode) {
+    console.log($scope.data.productInfotableData);
+    for (var i = 0; i < $scope.data.productInfotableData.length; i++) {
+      if ($scope.data.productInfotableData[i].pk == parseInt(target)) {
+        if (action == 'edit') {
+          var title = 'ProductMeta :';
+          var appType = 'productMetaEdit';
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.productInfotableData[i].pk,
+          cancel: true,
+          app: appType,
+          data: {
+              pk: target,
+              index:i
+          },
+          active: true
+        })
+      }
+    }
+
+  }
 
 
 })
@@ -348,6 +435,13 @@ app.controller("controller.POS.productForm.modal" , function($scope, product ,$h
   if (product.pk != undefined) {
     $scope.mode = 'edit';
     $scope.product = product;
+    $http({
+          method: 'GET',
+          url: '/api/POS/productVerient/?parent=' + $scope.product.pk
+        }).
+        then(function(response) {
+          $scope.productData = response.data;
+})
   } else {
     $scope.mode = 'new';
     $scope.product = {
@@ -422,6 +516,47 @@ app.controller("controller.POS.productForm.modal" , function($scope, product ,$h
       Flash.create('success', 'Saved')
     })
   }
+
+  $scope.deleteProduct = function(pk, ind) {
+          $http({
+            method: 'DELETE',
+            url: '/api/POS/productVerient/' + pk + '/'
+          }).
+          then((function(ind) {
+            return function(response) {
+              $scope.productData.splice(ind, 1);
+              Flash.create('success', 'Deleted');
+            }
+          })(ind))
+
+}
+
+$scope.productVerientForm = {
+      'sku': '',
+      'unitPerpack': 1
+    }
+    $scope.productData = [];
+
+    $scope.saveUnits = function() {
+      console.log('aaaaaaaaaaaaa');
+      var f = $scope.productVerientForm;
+      var toSend = {
+        parent: $scope.product.pk,
+        sku: f.sku,
+        unitPerpack: f.unitPerpack
+      }
+
+      $http({
+        method: 'POST',
+        url: '/api/POS/productVerient/',
+        data: toSend
+      }).
+      then(function(response) {
+        $scope.productVerientForm.pk = response.data.pk;
+        $scope.productData.push(response.data);
+        Flash.create('success', 'Saved');
+      })
+}
 
 
 });
@@ -762,7 +897,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.openProductInfo = function(idx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.productinfo.form.html',
-      size: 'md',
+      size: 'lg',
       backdrop: true,
       resolve: {
         product: function() {
@@ -873,7 +1008,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       resolve: {
 
       },
-      controller: function($scope, ) {
+      controller: function($scope) {
         $scope.data = {
           productMetatableData: []
         };
@@ -888,7 +1023,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
         $scope.configProductMeta = {
           views: views,
-          url: '/api/POS/productMetaList/',
+          url: '/api/clientRelationships/productMeta/',
           searchField: 'name',
           itemsNumPerView: [8, 16, 24],
         }
@@ -900,18 +1035,20 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
               if (action == 'edit') {
                 var title = 'ProductMeta :';
                 var appType = 'productMetaEdit';
+                $scope.addTab({
+                  title: title + $scope.data.productMetatableData[i].pk,
+                  cancel: true,
+                  app: appType,
+                  data: {
+                      pk: target,
+                      index:i,
+                      meta : $scope.data.productMetatableData[i]
+                  },
+                  active: true
+                })
               }
 
-              $scope.addTab({
-                title: title + $scope.data.productMetatableData[i].pk,
-                cancel: true,
-                app: appType,
-                data: {
-                    pk: target,
-                    index:i
-                },
-                active: true
-              })
+
             }
           }
 
@@ -941,36 +1078,64 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         }
 
 
-        $scope.configureForm = {
-          'description': '',
-          'code': '',
-          'taxRate': '',
+
+      },
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+
+
+  }
+
+  $scope.openProductBulkForm = function(idx) {
+
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.POS.product.bulkForm.html',
+      size: 'md',
+      backdrop: true,
+      // resolve: {
+      //   product: function() {
+      //
+      //     console.log($scope.products[idx]);
+      //     if (idx == undefined || idx == null) {
+      //       return {};
+      //     } else {
+      //       return $scope.products[idx];
+      //     }
+      //   }
+      // },
+      controller: function($scope, ) {
+
+        $scope.bulkForm = {
+          xlFile: emptyFile,
+          success: false,
+          usrCount: 0
         }
-        $scope.saveproductMeta = function() {
-          var f = $scope.configureForm;
-          if ($scope.configureForm.pk == undefined) {
-            var method = 'POST';
-          } else {
-            var method = 'PATCH';
-            url += $scope.configureForm.pk + '/';
+        $scope.upload = function() {
+          if ($scope.bulkForm.xlFile == emptyFile) {
+            Flash.create('warning', 'No file selected')
+            return
           }
-          var toSend = {
-            description: f.description,
-            code: f.code,
-            taxRate: f.taxRate,
-            hsn : f.hsn,
-            sac : f.sac
-
-          }
-
+          console.log($scope.bulkForm.xlFile);
+          var fd = new FormData()
+          fd.append('xl', $scope.bulkForm.xlFile);
+          console.log('*************',fd);
           $http({
-            method: method,
-            url: '/api/POS/productMetaList/',
-            data: toSend
+            method: 'POST',
+            url: '/api/POS/bulkProductsCreation/',
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
           }).
           then(function(response) {
-            $scope.configureForm.pk = response.data.pk;
-            Flash.create('success', 'Saved');
+            Flash.create('success', 'Created');
+            $scope.bulkForm.usrCount = response.data.count;
+            $scope.bulkForm.success = true;
           })
 
         }
@@ -983,68 +1148,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     });
 
 
-}
-
-$scope.openProductBulkForm = function(idx) {
-
-
-  $uibModal.open({
-    templateUrl: '/static/ngTemplates/app.POS.product.bulkForm.html',
-    size: 'md',
-    backdrop: true,
-    // resolve: {
-    //   product: function() {
-    //
-    //     console.log($scope.products[idx]);
-    //     if (idx == undefined || idx == null) {
-    //       return {};
-    //     } else {
-    //       return $scope.products[idx];
-    //     }
-    //   }
-    // },
-    controller: function($scope, ) {
-
-      $scope.bulkForm = {
-        xlFile: emptyFile,
-        success: false,
-        usrCount: 0
-      }
-      $scope.upload = function() {
-        if ($scope.bulkForm.xlFile == emptyFile) {
-          Flash.create('warning', 'No file selected')
-          return
-        }
-        console.log($scope.bulkForm.xlFile);
-        var fd = new FormData()
-        fd.append('xl', $scope.bulkForm.xlFile);
-        console.log('*************',fd);
-        $http({
-          method: 'POST',
-          url: '/api/POS/bulkProductsCreation/',
-          data: fd,
-          transformRequest: angular.identity,
-          headers: {
-            'Content-Type': undefined
-          }
-        }).
-        then(function(response) {
-          Flash.create('success', 'Created');
-          $scope.bulkForm.usrCount = response.data.count;
-          $scope.bulkForm.success = true;
-        })
-
-      }
-
-    },
-  }).result.then(function() {
-
-  }, function() {
-
-  });
-
-
-}
+  }
 
 
   $scope.openInvoiceForm = function(idx) {

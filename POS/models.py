@@ -53,6 +53,8 @@ class Product(models.Model):
     logistics = models.PositiveIntegerField(default = 0)
     serialId = models.CharField(max_length = 50, null=True)
     reorderTrashold = models.PositiveIntegerField(default = 0)
+    def __str__(self):
+        return self.name
 
 PAYMENT_CHOICES = (
     ('card' , 'card'),
@@ -86,7 +88,7 @@ class Invoice(models.Model):
     received = models.BooleanField(default = True)
     grandTotal = models.FloatField(null=False)
     totalTax = models.FloatField(null=False)
-    paymentRefNum = models.PositiveIntegerField(default = 0)
+    paymentRefNum = models.CharField(max_length=10000,null=True)
     receivedDate = models.DateField(null=True)
 
 class ProductVerient(models.Model):
@@ -96,15 +98,17 @@ class ProductVerient(models.Model):
     sku = models.CharField(max_length=10000,null=True)
     unitPerpack = models.PositiveIntegerField(default = 0)
 
-class ProductMetaList(models.Model):
-    user = models.ForeignKey(User ,null = False , related_name ="productMetaList")
-    created = models.DateTimeField(auto_now_add = True)
-    updated = models.DateTimeField(auto_now=True)
-    description = models.CharField(max_length=10000,null=True)
-    code = models.PositiveIntegerField(default = 0)
-    taxRate = models.PositiveIntegerField(default = 0)
-    hsn = models.BooleanField(default = True)
-    sac = models.BooleanField(default = True)
+# class ProductMetaList(models.Model):
+#     user = models.ForeignKey(User ,null = False , related_name ="productMetaList")
+#     created = models.DateTimeField(auto_now_add = True)
+#     updated = models.DateTimeField(auto_now=True)
+#     description = models.CharField(max_length=10000,null=True)
+#     code = models.PositiveIntegerField(default = 0)
+#     taxRate = models.PositiveIntegerField(default = 0)
+#     hsn = models.BooleanField(default = True)
+#     sac = models.BooleanField(default = True)
+
+
 
 class ExternalOrdersQtyMap(models.Model):
     product = models.ForeignKey(Product , related_name='externalOrders')
@@ -138,6 +142,22 @@ class ExternalOrders(models.Model):
     marketPlaceTax = models.FloatField(null= True)
     earnings = models.FloatField(null= True)
     buyerPincode = models.CharField(null= True , max_length = 7)
+
+TYPE_CHOICES = (
+    ('system','system'),
+    ('user','user')
+)
+
+class InventoryLog(models.Model):
+    user = models.ForeignKey(User ,null = True , related_name ="inventoryLog")
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    product = models.ForeignKey(Product , related_name='inventoryLogProduct')
+    typ = models.CharField(choices = TYPE_CHOICES , max_length = 10 , null = True)
+    before = models.PositiveIntegerField(default = 0)
+    after = models.PositiveIntegerField(default = 0)
+    externalOrder = models.ForeignKey(ExternalOrders ,null = True , related_name ="externalOrders")
+
 
 from django.db.models.signals import post_save , pre_delete
 from django.dispatch import receiver

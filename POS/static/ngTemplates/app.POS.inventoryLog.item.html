@@ -1,0 +1,44 @@
+<div class="col-md-6">
+  <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
+    <div class="row">
+      <div class="col-md-6 text-right">
+        <strong>Inventory Log Type:</strong>
+      </div>
+      <div class="col-md-6">
+        {{data.typ}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 text-right">
+        <strong>Before Stock :</strong>
+      </div>
+      <div class="col-md-6">
+        {{data.before}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 text-right">
+        <strong>After Stock :</strong>
+      </div>
+      <div class="col-md-6">
+        {{data.after}}
+      </div>
+    </div>
+    <div class="row" ng-if="data.typ == 'user'">
+      <div class="col-md-6 text-right">
+        <strong>User :</strong>
+      </div>
+      <div class="col-md-6" >
+        {{data.user | getName}}
+      </div>
+    </div>
+    <div class="row" ng-if="data.typ == 'system'">
+      <div class="col-md-6 text-right">
+        <strong>Order ID :</strong>
+      </div>
+      <div class="col-md-6" >
+        {{data.externalOrder.orderID}}({{data.externalOrder.marketPlace}})
+      </div>
+    </div>
+  </div>
+</div>

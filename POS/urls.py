@@ -8,7 +8,10 @@ router.register(r'customer' , CustomerViewSet , base_name = 'customer')
 router.register(r'product' , ProductViewSet , base_name = 'product')
 router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
 router.register(r'productVerient' , ProductVerientViewSet , base_name = 'productVerient')
-router.register(r'productMetaList' , ProductMetaListViewSet , base_name = 'productMetaList')
+router.register(r'externalOrders' , ExternalOrdersViewSet , base_name = 'externalOrders')
+router.register(r'inventoryLog' , InventoryLogViewSet , base_name = 'inventoryLog')
+router.register(r'externalOrdersQtyMap' , ExternalOrdersQtyMapViewSet , base_name = 'externalOrdersQtyMap')
+
 
 
 urlpatterns = [
