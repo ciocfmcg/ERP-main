@@ -83,26 +83,17 @@
             <td><input type="number" class="form-control-pos" ng-model="item.adHoc"></td>
             <td><input type="number" class="form-control-pos" ng-model="item.days"></td>
             <td>
-              <button type="button"
-                mwl-confirm
-                title="Confirm"
-                message="Are you sure?"
-                confirm-text="Yes <i class='fa fa-check'></i>"
-                cancel-text="No"
-                on-confirm="deffer($index)"
-                confirm-button-type="danger"
-                cancel-button-type="default"
-               class="btn btn-warning btn-sm"> <i class="fa fa-exclamation-triangle"></i> </button>
+              <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deffer($index)" confirm-button-type="danger" cancel-button-type="default" class="btn btn-warning btn-sm"> <i class="fa fa-exclamation-triangle"></i> </button>
               <button type="button" class="btn btn-success btn-sm" ng-click="saveIndividualPayslip(item.payslipID, $index)"> <i class="fa fa-floppy-o"></i> </button>
               <!-- <button type="button" class="btn btn-default btn-sm"> <i class="fa fa-info"></i> </button> -->
-              <button ng-click="openReportInfo($index)"type="button" class="btn btn-default btn-sm"><i class="fa fa-info"></i></button>
+              <button ng-click="openReportInfo($index)" type="button" class="btn btn-default btn-sm"><i class="fa fa-info"></i></button>
             </td>
           </tr>
         </table>
       </div>
     </div>
   </div>
-  <div class="row" style="padding:10px">
+  <!-- <div class="row" style="padding:10px">
     <div class="col-md-4">
       <div class="container-fluid">
         <div class="row">
@@ -115,10 +106,8 @@
             </div>
           </div>
         </div>
-
-
-      </div>
       </div>
     </div>
-  </div>
+  </div> -->
+</div>
 </div>

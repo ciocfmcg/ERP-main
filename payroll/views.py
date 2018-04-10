@@ -54,6 +54,8 @@ import calendar
 from forex_python.converter import CurrencyCodes
 from HR.models import payroll
 from django.contrib.auth.models import User
+from finance.models import ExpenseSheet
+from rest_framework.response import Response
 
 
 
@@ -148,3 +150,19 @@ class GetPayslip(APIView):
         response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
         payslip(response , p , q , request)
         return response
+
+class GetReimbursement(APIView):
+    renderer_classes = (JSONRenderer,)
+    # serializer_class = ExpenseSheetSerializer(data=request.data)
+
+    def get(self , request , format = None):
+        # expenseObj=ExpenseSheet.objects.all(user_id=request.GET['user'] , approved = 'Yes')
+
+        expenseObj=ExpenseSheet.objects.filter(user_id=request.GET['user'] , approved = 'Yes')
+        amt = 0
+        for i in expenseObj:
+            for j in i.invoices.all():
+                if j.approved:
+                    amt += j.amount
+        tosend = {'amount':amt}
+        return JsonResponse(tosend,status = status.HTTP_200_OK)

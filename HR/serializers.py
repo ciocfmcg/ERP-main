@@ -32,7 +32,7 @@ class userDesignationSerializer(serializers.ModelSerializer):
 
         read_only_fields=('user',)
         def create(self , validated_data):
-        
+
             d = designation()
             d.user=User.objects.get(pk=self.context['request'].user)
             d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
@@ -61,7 +61,7 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
 class payrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = payroll
-        fields = ('pk','user','created','updated','hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
+        fields = ('pk','user','created','updated','hra','special','lta','basic','taxSlab','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
 
     def update(self ,instance, validated_data):
         for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate']:

@@ -12,14 +12,11 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
 
 
 
-app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
+app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash, $users){
+  console.log($scope.tab.data);
+  $scope.user = $users.get($scope.tab.data.user);
 
-  $scope.user = $scope.tab.data;
-
-  $http({method : 'GET' , url : '/api/HR/payroll/' + $scope.tab.data.payroll.pk + '/'}).
-  then(function(response) {
-    $scope.form = response.data;
-  })
+  $scope.form = $scope.tab.data;
 
   $scope.save = function() {
     // make patch request
@@ -30,6 +27,7 @@ app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
       special : f.special,
       lta : f.lta,
       basic : f.basic,
+      taxSlab : f.taxSlab,
       adHoc : f.adHoc,
       policyNumber : f.policyNumber,
       provider : f.provider,
@@ -208,15 +206,23 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
           }
         })(target));
       } else if (action == 'editPayroll') {
-        u = $users.get(target)
-        $http.get('/api/HR/payroll/?user='+ u.username ).
-        success((function(target){
-          return function(data){
+        for (var i = 0; i < $scope.data.tableData.length; i++) {
+          if($scope.data.tableData[i].pk == target){
             u = $users.get(target)
+            $http.get('/api/HR/payroll/' + $scope.data.tableData[i].payroll.pk +'/' ).
+            success((function(target){
+              return function(response){
+                u = $users.get(target)
+                console.log("will add tab payroll : ");
+                console.log(response);
+                $scope.addTab({title : 'Edit payroll for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : response , active : true})
 
-            $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : data , active : true})
+                console.log($scope.tabs);
+
+              }
+            })(target));
           }
-        })(target));
+        }
       }
       // for the single select actions
     } else {
