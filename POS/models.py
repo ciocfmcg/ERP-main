@@ -130,7 +130,7 @@ class ExternalOrders(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     marketPlace = models.CharField(max_length = 50 , null = True)
-    orderID = models.CharField(max_length = 100 , null = True)
+    orderID = models.CharField(max_length = 100 , null = True , unique=True)
     products = models.ManyToManyField(ExternalOrdersQtyMap , blank = False)
     status = models.CharField(max_length = 10 , default = 'new' , choices = EXTERNAL_ORDER_STATUS_CHOICES)
     buyersPrice = models.FloatField(null= True)

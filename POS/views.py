@@ -461,7 +461,21 @@ class ExternalEmailOrders(APIView):
                 price = body[body.index(' price:')+7:].split('<br>')[0].replace('INR ' , '').strip()
 
 
+
                 orderID = body[body.index('Order ID:')+9:].split('<br>')[0].strip()
+
+                p = None
+                try:
+                    p = Product.objects.get(serialNo = sku)
+                except:
+                    try:
+                        ps = ProductVerient.object.get(sku = sku)
+                        p = ps.parent
+                    except:
+                        pass
+                finally:
+                    if p == None:
+                        return Response(status=status.HTTP_404_NOT_FOUND)
 
                 eo = ExternalOrders(marketPlace= 'amazon' , orderID = orderID , status = 'new' , buyersPrice = price )
 
@@ -470,10 +484,15 @@ class ExternalEmailOrders(APIView):
                 prodMap = ExternalOrdersQtyMap(product = p , qty = qty)
                 prodMap.save()
                 eo.products.add(prodMap)
+                il = InventoryLog(typ = 'system', product = p , before =  p.inStock , after = p.inStock - int(qty) , externalOrder = eo )
+                il.save()
+
+                p.inStock -= int(qty)
                 p.save()
 
-                p = Product.objects.get(serialNo = sku)
-                p.inStock -= int(qty)
+
+
+
 
 
                 print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
