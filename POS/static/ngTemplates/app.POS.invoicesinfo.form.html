@@ -85,14 +85,14 @@
             {{invoice.customer.city}}
           </div>
         </div>
-
-<!--
-        <span>Total Amount:{{invoice.grandTotal}}</span><br>
-        <span>Mode of Payment : {{invoice.modeOfPayment | humanize}}</span><br>
-        <span>Amount Recieved : {{invoice.amountRecieved}}</span><br>
-        <span>GSTIN : {{invoice.customer.gst}}</span><br>
-        <span>PAN NO. : {{invoice.customer.pan}}</span><br>
-        <span>Place of Supply : {{invoice.customer.city}}</span> -->
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong style="font-size:20px">Balance:</strong>
+          </div>
+          <div class="col-md-6" style="font-size:20px">
+            <i class="fa fa-inr"></i>{{(invoice.grandTotal)-(invoice.amountRecieved)}}
+          </div>
+        </div>
 
       </div>
           <div class="col-md-6">
@@ -109,7 +109,7 @@
             </div>
             <div class="form-group">
               <label>Reference Number</label>
-              <input type="number" class="form-control" ng-model="invoice.paymentRefNum">
+              <textarea type="text" class="form-control" ng-model="invoice.paymentRefNum"></textarea>
             </div>
             <div class="form-group">
               <label>Received Date</label>

@@ -71,16 +71,33 @@ class ProductVerientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ProductVerientSerializer
     queryset = ProductVerient.objects.all()
-
-class ProductMetaListViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated , )
-    serializer_class = ProductMetaListSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['description', 'code']
-    def get_queryset(self):
-        return ProductMetaList.objects.all()
+    filter_fields = ['parent']
 
+# class ProductMetaListViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated , )
+#     serializer_class = ProductMetaListSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['description', 'code']
+#     def get_queryset(self):
+#         return ProductMetaList.objects.all()
 
+class ExternalOrdersViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = ExternalOrdersSerializer
+    queryset = ExternalOrders.objects.all()
+
+class ExternalOrdersQtyMapViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = ExternalOrdersQtyMapSerializer
+    queryset = ExternalOrdersQtyMap.objects.all()
+
+class InventoryLogViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = InventoryLogSerializer
+    queryset = InventoryLog.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['product']
 
 
 themeColor = colors.HexColor('#227daa')

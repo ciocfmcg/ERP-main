@@ -1,18 +1,20 @@
-<div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
-      <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
-        <div class="col-md-8">
-          <span style="font-size: 18px;">{{data.name}}</span><br>
-          <span>Email:{{data.email}}</span><br>
+<div class="col-md-6">
+  <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
+    <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
+      <div class="col-md-8">
+        <span style="font-size: 18px;">{{data.name}}</span><br>
+        <span>Email:{{data.email}}</span><br>
 
-        </div>
-        <div class="col-md-3">
-          <span>Mobile:{{data.mobile}}</span><br>
-          <span>Company Name:{{data.company}}</span>
-        </div>
-        <div class="col-md-1 text-center" ng-if="hover">
-            <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('info')"></i></span>
-            <br><br>
-            <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('edit')"></i></span>
-        </div>
       </div>
+      <div class="col-md-3">
+        <span>Mobile:{{data.mobile}}</span><br>
+        <span>Company Name:{{data.company}}</span>
+      </div>
+      <div class="col-md-1 text-center" ng-if="hover">
+        <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('info')"></i></span>
+        <br><br>
+        <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('edit')"></i></span>
+      </div>
+    </div>
+  </div>
 </div>

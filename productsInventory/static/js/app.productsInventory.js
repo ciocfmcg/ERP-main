@@ -27,7 +27,7 @@ app.controller("businessManagement.productsInventory.edit", function($scope, $ht
     }
 
 
-    $http({method : 'PATCH' , url : '/api/POS/product/' + $scope.data.pk + '/' , data : { inStock : final }}).then(function(response) {
+    $http({method : 'PATCH' , url : '/api/POS/product/' + $scope.data.pk + '/' , data : { inStock : final , typ : "user" }}).then(function(response) {
       $scope.data.inStock = response.data.inStock;
       $scope.data.qty = 0;
       Flash.create('success' , 'Saved');
@@ -125,7 +125,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
   $scope.openProductInfo = function(idx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.productinfo.form.html',
-      size: 'md',
+      size: 'lg',
       backdrop: true,
       resolve: {
         product: function() {
@@ -143,15 +143,13 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       $rootScope.$broadcast('forceRefetch', {});
     });
 
-
-
   }
 
   $scope.openProductForm = function(idx) {
 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.product.form.html',
-      size: 'md',
+      size: 'xl',
       backdrop: true,
       resolve: {
         product: function() {
