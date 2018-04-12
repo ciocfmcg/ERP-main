@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ui.bootstrap']);
+var app = angular.module('myApp', ['ui.bootstrap', 'ngAudio', 'ngRating']);
 
 app.config(function($httpProvider) {
 
@@ -8,21 +8,23 @@ app.config(function($httpProvider) {
 
 });
 
+var emptyFile = new File([""], "");
 
-app.filter('timeAgo', function() {
-  return function(input) {
-    t = new Date(input);
-    var now = new Date();
-    var diff = Math.floor((now - t) / 60000)
-    if (diff < 60) {
-      return diff + ' Mins';
-    } else if (diff >= 60 && diff < 60 * 24) {
-      return Math.floor(diff / 60) + ' Hrs';
-    } else if (diff >= 60 * 24) {
-      return Math.floor(diff / (60 * 24)) + ' Days';
+app.directive('fileModel', ['$parse', function ($parse) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var model = $parse(attrs.fileModel);
+      var modelSetter = model.assign;
+
+      element.bind('change', function(){
+        scope.$apply(function(){
+          modelSetter(scope, element[0].files[0]);
+        });
+      });
     }
-  }
-})
+  };
+}]);
 
 
 app.directive('ngEnter', function() {
@@ -39,7 +41,48 @@ app.directive('ngEnter', function() {
 });
 
 
-app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $interval, $http) {
+app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $interval, $http , ngAudio) {
+
+  $scope.attachMessageFile = function() {
+    $('#messageFile').click()
+  }
+
+  $scope.sound = ngAudio.load("/static/audio/tutorWelcome_student.mp3");
+  $scope.sound.play();
+
+  $scope.messageFile = emptyFile;
+
+  $scope.$watch('messageFile' , function(newValue , oldValue) {
+    if(newValue != emptyFile){
+      var fd = new FormData();
+      fd.append('session' , $scope.roomID );
+      fd.append('sender' , $scope.pk );
+      fd.append('attachment' , $scope.messageFile );
+
+      $http({method : 'POST' , url : '/api/tutors/tutors24Message/' , data : fd, transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }}).
+      then(function(response) {
+
+
+        $scope.messages.push({
+          'sendByMe': true,
+          'message': response.data.attachment,
+          'created': new Date()
+        });
+
+        $scope.connection.session.publish($scope.roomID, ['chatStudent', new Date(), response.data.attachment], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Attachment dent");
+        });
+
+      })
+    };
+  })
+
 
   $scope.dp = '/static/images/userIcon.png';
 
@@ -50,6 +93,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   then(function(response) {
     console.log('resssssssssss', response);
     $scope.profile = response.data[0].profile;
+    $scope.pk = response.data[0].pk;
     $scope.name = response.data[0].first_name + ' ' + response.data[0].last_name;
     if ($scope.profile.displayPicture != null) {
       $scope.dp = $scope.profile.displayPicture;
@@ -81,36 +125,56 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   }
 
 
-  $http({
-    method: 'GET',
-    url: '/api/tutors/tutors24Session/' + $scope.roomID + '/'
-  }).
-  then(function(response) {
-    console.log(response.data);
-
-    $scope.sessionObj = response.data;
-    var start = new Date($scope.sessionObj.start);
-    var now = new Date();
-
-    $scope.inSecs = (now.getTime() - start.getTime()) / 1000;
-
-    $interval(function() {
-      $scope.inSecs += 1;
-      $scope.calculateTime();
-    }, 1000)
-
+  $timeout(function() {
     $http({
       method: 'GET',
-      url: '/api/HR/userSearch/' + response.data.tutor + '/'
+      url: '/api/tutors/tutors24Session/' + $scope.roomID + '/'
     }).
     then(function(response) {
-      $scope.teacher = response.data;
-      if ($scope.teacher.profile.displayPicture == null) {
-        $scope.teacher.profile.displayPicture = '/static/images/userIcon.png';
-      }
-    })
+      console.log(response.data);
 
-  })
+      if (response.data.minutes != null) {
+        $interval(function() {
+          alert('Your session already ended, Please close this window');
+          $scope.connection.close();
+        }, 3000);
+      }
+
+      if (!response.data.started) {
+        $http({method : 'PATCH' , url : '/api/tutors/tutors24Session/' + $scope.roomID + '/' , data : {started : true}}).then(function(response) {
+
+        })
+      }
+
+      $interval(function() {
+        $http({method : 'PATCH' , url : '/api/tutors/tutors24Session/' + $scope.roomID + '/' , data : {end : new Date()}}).then(function(response) {
+        })
+      }, 90000)
+
+      $scope.sessionObj = response.data;
+      var start = new Date($scope.sessionObj.start);
+      var now = new Date();
+
+      $scope.inSecs = (now.getTime() - start.getTime()) / 1000;
+
+      $interval(function() {
+        $scope.inSecs += 1;
+        $scope.calculateTime();
+      }, 1000)
+
+      $http({
+        method: 'GET',
+        url: '/api/HR/userSearch/' + response.data.tutor + '/'
+      }).
+      then(function(response) {
+        $scope.teacher = response.data;
+        if ($scope.teacher.profile.displayPicture == null) {
+          $scope.teacher.profile.displayPicture = '/static/images/userIcon.png';
+        }
+      })
+
+    })
+  }, 10000)
 
 
 
@@ -122,15 +186,13 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
   $scope.dataVariables = {
     isEndSession: false,
     newMsg: 0,
-    onlineStatus: false,
+    onlineStatus: true,
     disconnectModalOpen: false,
     isConnected: false,
     sendData: true,
     sendImage: false,
     sendHeight : true
   };
-
-
 
 
   window.onfocus = function() {
@@ -210,7 +272,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
 
 
   $scope.connection = new autobahn.Connection({
-    url: 'ws://cioc.in:8080/ws',
+    url: 'wss://wamp.cioc.in:443/ws',
     realm: 'default'
   });
 
@@ -316,26 +378,34 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
       resolve: {
         roomID: function() {
           return $scope.roomID;
+        },
+        mins: function() {
+          return $scope.timeMins;
         }
       },
       backdrop: 'static',
-      controller: function($scope,$rootScope , roomID, $http) {
+      controller: function($scope,$rootScope , roomID, $http , mins) {
 
 
         $scope.mode = 'feedback';
         $scope.roomID = roomID;
         $scope.form = {
-          rating: null,
+          rating: 1,
           feedbackText: ''
         }
         $scope.save = function() {
+
+          var toSend = $scope.form;
+          toSend.minutes =mins;
+
           $http({
-            url: '/api/tutor/feedback/?id=' + $scope.roomID,
-            method: 'POST',
-            data: $scope.form
+            url: '/api/tutors/tutors24Session/' + $scope.roomID + '/',
+            method: 'PATCH',
+            data: toSend
           }).
           then(function(response) {
             $scope.mode = 'thankyou';
+            window.location = "https://24tutors.com/ERP/#/studentHome"
           })
         }
       }
@@ -403,8 +473,17 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
       acknowledge: true
     }).
     then(function(publication) {
-      console.log("Published");
+
+
     });
+
+    var toSend= {
+      session : $scope.roomID,
+      msg : $scope.StudentText,
+      sender :$scope.pk,
+    }
+    $http({method : 'POST' , url : '/api/tutors/tutors24Message/' , data : toSend})
+
     $scope.StudentText = '';
   }
 

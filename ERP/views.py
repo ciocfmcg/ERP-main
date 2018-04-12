@@ -17,6 +17,80 @@ from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from gitweb.views import generateGitoliteConf
 import requests
+import libreERP.Checksum as Checksum
+from django.views.decorators.csrf import csrf_exempt
+import urllib
+
+
+class MakePaytmPayment(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        print request.data
+
+        MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
+        MERCHANT_ID = globalSettings.PAYTM_MERCHANT_ID
+        order_id = Checksum.__id_generator__() + str(request.user.pk)
+
+        data_dict = {
+                    'MID':MERCHANT_ID,
+                    'ORDER_ID':order_id + '||_' + str(request.data['minutes']),
+                    'TXN_AMOUNT': str(request.data['grandTotal']),
+                    'CUST_ID': request.user.pk,
+                    'INDUSTRY_TYPE_ID':'Retail109',
+                    'WEBSITE': 'WEBPROD',
+                    'CHANNEL_ID':'WEB',
+                    'MOBILE_NO': '9702438730',
+                    'EMAIL': request.user.email,
+                    'CALLBACK_URL':'http://24tutors.com/paymentResponse/',
+            }
+        param_dict = data_dict
+        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
+
+        return Response(param_dict, status = status.HTTP_200_OK)
+
+@csrf_exempt
+def PaymentResponse(request):
+    # return redirect(globalSettings.PAYMENT_SUCCESS_REDIRECT)
+    if request.method == "POST":
+        MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
+        data_dict = {}
+        for key in request.POST:
+            data_dict[key] = request.POST[key]
+
+        # ORDERID = KSXMK4
+        # TXNDATE = 2018-03-28 13:54:09.0
+        # STATUS = TXN_SUCCESS
+        # RESPCODE = 01
+        # BANKNAME = WALLET
+        # PAYMENTMODE = PPI
+        # BANKTXNID =
+        # TXNID = 20180328111212800110168500600013338
+        # MID = CIOCFM47179245218344
+        # CURRENCY = INR
+        # RESPMSG = Txn Success
+        # TXNAMOUNT = 10.00
+        # GATEWAYNAME = WALLET
+        profile = request.user.tutors24Profile
+        profile.balance += int(data_dict['ORDERID'].split('||_')[1])
+        profile.save()
+
+        chkSum = data_dict['CHECKSUMHASH']
+        verify = Checksum.verify_checksum(data_dict, MERCHANT_KEY, chkSum)
+        data_dict['CHECKSUMHASH'] = chkSum
+
+        query = '"MID":"%s","ORDERID":"%s","CHECKSUMHASH":"%s"'%( globalSettings.PAYTM_MERCHANT_ID  ,data_dict['ORDERID'], chkSum )
+
+        reqUrl = 'https://securegw.paytm.in/merchant-status/getTxnStatus?JsonData={'+ urllib.pathname2url(query) + '}'
+
+        data_dict['reqUrl'] = reqUrl
+
+        r = requests.get(reqUrl)
+        data_dict['confirmation_response'] = r.text
+        if verify and r.json()['STATUS'] == 'TXN_SUCCESS':
+            return redirect(globalSettings.PAYMENT_SUCCESS_REDIRECT)
+        else:
+            return HttpResponse("checksum verify failed")
 
 class SendSMSApi(APIView):
     renderer_classes = (JSONRenderer,)
@@ -193,6 +267,9 @@ class profileViewSet(viewsets.ModelViewSet):
 
 class AccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
+        for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+            app = application.objects.get(name = a)
+            p = permission.objects.create(app =  app, user = request.user , givenBy = User.objects.get(pk=1))
         return globalSettings.ON_REGISTRATION_SUCCESS_REDIRECT
 
 def getModules(user , includeAll=False):

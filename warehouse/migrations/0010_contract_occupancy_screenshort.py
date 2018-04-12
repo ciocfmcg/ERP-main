@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contract',
             name='occupancy_screenshort',
-            field=models.CharField(max_length=100000, null=True),
+            field=models.TextField(max_length=100000, null=True),
         ),
     ]

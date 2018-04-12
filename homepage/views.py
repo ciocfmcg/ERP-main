@@ -28,9 +28,7 @@ def index(request):
 
 
 def blogDetails(request, blogname):
-    blogobj = blogPost.objects.get(title=blogname)
-    title = blogobj.title
-    header = blogobj.header
+    blogobj = blogPost.objects.get(shortUrl=blogname)
     us = ''
     blogId = blogobj.pk
     count = 0
@@ -40,13 +38,12 @@ def blogDetails(request, blogname):
         else:
             us += ' , ' + j.first_name + ' ' + j.last_name
         count += 1
-    date = blogobj.created
-    body = blogobj.source
-    return render(request, 'blogdetails.html', {"home": False, 'user': us, 'header': header, 'title': title, 'date': date, 'blogId': blogId, 'body': body , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT, 'brandName' : globalSettings.BRAND_NAME})
+    blogobj.created = blogobj.created.replace(microsecond=0)
+    return render(request, 'blogdetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(',') , 'user': us, 'blogobj' : blogobj , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def blog(request):
 
-    blogObj = blogPost.objects.all()
+    blogObj = blogPost.objects.all().order_by('-created')
     pagesize = 6
     try:
         page = int(request.GET.get('page', 1))
@@ -71,7 +68,7 @@ def blog(request):
             us = j.first_name + ' ' + j.last_name
         date = i.created
         # body = i.source
-        data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId})
+        data.append({'user':us , 'header' : header , 'title' : title , 'date' : date , 'blogId' : blogId , 'url' : i.shortUrl })
     data = data[(page-1)*pagesize:(page*pagesize)]
 
     return render(request,"blog.html" , {"home" : False ,'data' : data, 'dataLen' : len(data) ,'pages':pages , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME})

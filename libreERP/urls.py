@@ -10,7 +10,7 @@ from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,re
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 from tutor.views import studentHome , tutorHome
-
+from ERP.views import PaymentResponse
 
 app_name="libreERP"
 urlpatterns = [
@@ -33,7 +33,6 @@ urlpatterns = [
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
     url(r'^blog/$', blog , name ='blog'),
-    url(r'^blog/(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'),
     url(r'^news', news , name ='news'),
     url(r'^team', team , name ='team'),
     url(r'^career', career , name ='career'),
@@ -44,8 +43,11 @@ urlpatterns = [
     url(r'^contacts', contacts , name ='contacts'),
     url(r'^studentHome', studentHome , name ='studentHome'),
     url(r'^tutorHome', tutorHome , name ='tutorHome'),
+    url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
 ]
 
 if settings.DEBUG:
     urlpatterns +=static(settings.STATIC_URL , document_root = settings.STATIC_ROOT)
     urlpatterns +=static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
+
+urlpatterns.append(url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'))

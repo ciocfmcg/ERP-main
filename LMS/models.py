@@ -27,6 +27,8 @@ def getVideoThumbnailPath(instance , filename ):
 def getChannelDPPath(instance , filename ):
     return 'lms/courseDP/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getSolutionVideoPath(instance , filename):
+    return 'lms/solution/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 
 PART_TYPE_CHOICES = (
@@ -107,6 +109,7 @@ class Question(models.Model):
     qtype = models.CharField(choices = QUESTION_TYPE_CHOICES , default = 'mcq' , null = False, max_length = 10)
     codeLang = models.CharField(choices = LANGUAGE_CHOICES , default = 'any' , null = False, max_length = 10)
     user = models.ForeignKey(User , null = False , related_name='questionsAuthored')
+    solutionVideo = models.FileField(null = True , upload_to=getSolutionVideoPath)
 
 class PaperQues(models.Model):
     created = models.DateTimeField(auto_now_add = True)

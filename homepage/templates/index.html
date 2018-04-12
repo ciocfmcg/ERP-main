@@ -1,88 +1,63 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
-<title>{{brandName}}</title>
+<title>Online live tutoring. Free 1-2-1 online classes. IIT JEE Preparation. School tutions online</title>
+
+<meta name="description" content="India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA"/>
+<link rel="canonical" href="https://24tutors.com/" />
+<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Online live tutoring. Free 1-2-1 online classes. IIT JEE Preparation. School tutions online" />
+<meta property="og:description" content="India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA" />
+<meta property="og:url" content="https://24tutors.com" />
+<meta property="og:site_name" content="24 Tutors" />
+<meta property="og:updated_time" content="2018-04-01T07:17:53+00:00" />
+<meta property="og:image" content="https://24tutors.com/static/images/seo_tutor_common.png" />
+<meta property="og:image:secure_url" content="https://24tutors.com/static/images/seo_tutor_common.png" />
+<meta property="og:image:width" content="1333" />
+<meta property="og:image:height" content="745" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="India's only 24x7 student helpline. Connect with the best tutors from IITs and NITs provide teaching for CBSE & ICSE, Maths & Science and competitive exams like  JEE Mains, JEE Advanced, IIT Foundation, Olympiads, NTSE, PSA" />
+<meta name="twitter:title" content="Online live tutoring. Free 1-2-1 online classes. IIT JEE Preparation. School tutions online" />
+<meta name="twitter:site" content="@tutors_24" />
+<meta name="twitter:image" content="https://24tutors.com/static/images/seo_tutor_common.png" />
+<meta name="twitter:creator" content="@tutors_24" />
+
+<meta property="article:author" content="24Tutors.com" />
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/animatecss/3.5.1/animate.min.css" charset="utf-8">
 
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+{% endblock %} {% block header %}
 {% include "header.html" %}
-
 {% endblock %}
 <!-- Header -->
 {% block content %}
 <div ng-app="app" ng-controller="main">
   {% verbatim %}
   <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
-    <header style="background-image: url({{mainBannerImages[bannerID]}});height:100vh;width:100%;">
-
-      <div class="row" style="padding-top:200px;color:#323232;">
+    <header style="background-image: url(/static/images/main_banner.svg);height:100vh;width:100%;">
+      <div class="row" style="padding-top:100px;color:#323232;">
         <p ng-if="typeIndex == $index" ng-repeat="t in typings" typed-effect text="t" blink="true" style="font-size:100px;"></p>
       </div>
 
-      <div style="margin-top:50px;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
-        <i class="fa fa-play fa-2x"></i> <span style="font-size:25px;margin-left:10px;">See How it works</span>
-      </div>
-
-
-      <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog" style="min-height:300px;">
-          <iframe width="100%" style="margin:0px;padding:0px;" height="340" src="https://www.youtube.com/embed/JC-Dpwb-Sk8" frameborder="0" allowfullscreen></iframe>
+      <div class="row text-center" style="position:relative;">
+        <img src="/static/images/crm/tutor.png" alt="24Tutors session demo" style="width:40%;">
+        <div style="position:absolute;top: 160px;background: #eeeeee;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4">
+          <i class="fa fa-play fa-2x"></i> <span style="font-size:25px;margin-left:10px;"></span>
         </div>
-      </div>
-
-
-      <img src="/static/images/tutor/idea.gif" alt="" class="homeAnimations">
-      <!-- <img src="/static/images/tutor/science.gif" style="left:0px;position:absolute;" alt=""> -->
-      <!-- <iframe class="ware" width="560" style="left:60px;bottom:90px;position:absolute;" height="315" src="https://www.youtube.com/embed/qh5ciVvYgP0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
-    </header>
-  </div>
-  <!--/chatbox-->
-  <!-- <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
-    <div class="row" style="border:1px solid #315f82;margin:0px;background-color: #174b6d;">
-      <div class="col-md-10">
-        <span ng-if="data.started" style="font-size:15px;color:white;"><i class="fa fa-user-o" ></i>{{name}}</span>
-        <span ng-if="!data.started" style="font-size:15px;color:white;cursor:pointer;" ng-click="data.minimized = false;"><i class="fa  fa-envelope" ></i> Chat with our support team</span>
-      </div>
-      <div class="col-md-2">
-        <i class="fa fa-angle-{{data.minimized ? 'up':'down'}} pull-right" style="color:white;margin-top:4px;cursor:pointer;" ng-click="data.minimized = !data.minimized"></i>
-      </div>
-    </div>
-    <div class="row" style="border:1px solid #174b6d;margin: 0px;padding:0px;background-color:#e1e5e8;">
-      <div class="container-fluid" ng-if="!data.started && !data.minimized" style="padding:20px;">
-        <form name="myForm">
-        <div class="form-group">
-          <label>Name</label>
-          <input type="text" name="name" class="form-control" ng-model="data.name" required>
-          <div ng-show="myForm.name.$error.required && myForm.name.$touched" class="text-danger">Required!</div>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" class="form-control" name="email" ng-model="data.email" required>
-          <div ng-show="myForm.email.$error.email" class="text-danger">Invalid email!</div>
-          <div ng-show="myForm.email.$error.required && myForm.email.$touched" class="text-danger">Required!</div>
-        </div>
-        <button ng-click="authentication()" type="button" class="btn btn-primary" >Start</button>
-      </form>
-      </div>
-      <div  ng-if="data.started" style="height:{{data.minimized? '0':'300' }}px; overflow-y:auto;" class="container-fluid">
-        <div class="row" ng-repeat="message in messages" style="padding:0px;">
-          <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};" >
-            <p style=>{{message.msg}}</p>
+        <div id="myModal" class="modal fade" role="dialog">
+          <div class="modal-dialog" style="min-height:300px;">
+            <iframe width="100%" style="margin:0px;padding:0px;" height="340" ng-if="videoLink != ''" ng-src="{{videoLink}}" frameborder="0" allowfullscreen></iframe>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row" style="border:1px solid #315f82;margin:0px;background-color:#e1e5e8;border-top:none;" ng-if="!data.minimized && data.started">
-      <div class="col-md-9" style="padding:0px;">
-        <input type="text" class="form-control" ng-model="data.msgText" placeholder="Message" style="border-radius:0px;"></div>
-        <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paper-plane-o" ng-click="send()" style="cursor:pointer"></i></div>
-        <div class="col-md-1" style="margin-top:10px;"><i class="fa fa-paperclip"  style="cursor:pointer"></i></div>
 
-    </div>
-  </div> -->
+
+    </header>
+  </div>
   {% endverbatim %}
-  <!-- Services Section -->
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
       <div class="container-fluid">
@@ -122,11 +97,7 @@
         </section>
       </div>
     </div>
-      <!-- Portfolio Grid Section -->
-      <!-- <section id="portfolio" class="bg-light-gray" style="padding-left:0px;padding-right:0px;"> -->
-
-      {% include "monomercePricing.html" %}
-
+      {% include "tutorsPricing.html" %}
        <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
        <div class="container text-center" style="padding-left:0px;padding-right:0px;padding-top:50px;box-shadow: -12px 10px 50px 2px #d0d5dd;">
          <div class="row">
@@ -134,35 +105,27 @@
              <h2 class="section-heading">How it works ?</h2>
            </div>
          </div>
-
-
          <img src="/static/images/flow.svg" style="width: 60%;">
        </div>
       </section>
       <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
-
-
-      <!-- Contact Section -->
-
       {% endblock %} {% block footer %}
-
       {% include "footer.html" %}
-
     </div>
   </div>
 </div>
 
+{% endblock %}{% block specific_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+  <!-- <script src="{% static 'js/classie.js' %}"></script> -->
+  <script src="{% static 'js/agency.js' %}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.17/angular-ui-router.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.4.9/angular-sanitize.min.js"></script>
+  <script src="{% static 'js/app.homepage.js' %}"></script>
+  <script src="{% static 'js/app.homepage.main.js' %}"></script>
 
 
 
-{% endblock %} {% block specific_js %}
-<script src="{% static 'js/jquery.easing.min.js' %}"></script>
-<script src="{% static 'js/classie.js' %}"></script>
-<script src="{% static 'js/agency.js' %}"></script>
-<script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
-<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
-<script src="{% static 'js/app.homepage.js' %}"></script>
-<script src="{% static 'js/app.homepage.main.js' %}"></script>
 
 {% endblock %}

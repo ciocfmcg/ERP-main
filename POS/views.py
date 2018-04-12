@@ -107,7 +107,7 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 
-settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+# settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
 
 
 class expanseReportHead(Flowable):
