@@ -58,7 +58,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8' , '24tutors.com']
+ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8' , 'monomerce.com']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -66,7 +66,7 @@ LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once succe
 
 LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
 
-USE_CDN = False # when turned on the application will use the cndjs.com and other similar
+USE_CDN = True # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
 BRAND_NAME = 'monomerce.com'
