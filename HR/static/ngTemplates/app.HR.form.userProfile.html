@@ -1,211 +1,419 @@
-<div class="container-fluid">
-  <div ng-show="page==1">
-    <div class="form-group">
-      <label for="empID">Employee ID</label>
-      <input type="number" class="form-control" ng-model="data.empID" id="empID" placeholder="Employee ID">
-    </div>
-
-    <div class="form-group">
-      <label>Date of Birth</label>
-      <div class="input-group" >
-        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.dateOfBirth" is-open="status.DOBOpened"  />
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="status.DOBOpened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+<div class="container-fluid" ng-controller="sudo.admin.editProfile" style="margin-top:20px;">
+  <div class="row">
+    <div class="col-md-3" style="overflow:hidden;">
+      <h3 class="text-muted" style="color:#eeeeee;font-size:40px;">
+        <span ng-if="page == 1">Basic
+          <i class="fa fa-user fa-5x"></i>
         </span>
+        <span ng-if="page == 2">Extra
+          <i class="fa fa-info fa-5x"></i>
+        </span>
+        <span ng-if="page == 3">Files
+          <i class="fa fa-files-o fa-5x"></i>
+        </span>
+      </h3>
+    </div>
+    <div class="col-md-6">
+      <ul class="pager">
+        <li class="previous" ng-click="prev()"><a href="">&larr; Previous</a></li>
+        <li class="next" ng-click="next()"><a href="">Next &rarr;</a></li>
+      </ul>
+      <div ng-show="page==1">
+        <div class="form-group">
+          <label for="empID">Employee ID</label>
+          <input type="number" class="form-control" ng-model="data.empID" id="empID" placeholder="Employee ID">
+        </div>
+        <div class="form-group">
+          <label style="margin-right:20px;">Prefix</label>
+          <label class="radio-inline"><input type="radio" name="prefix{{pk}}" ng-model="data.prefix" ng-value="'Smt'">Miss.</label>
+          <label class="radio-inline"><input type="radio" name="prefix{{pk}}" ng-model="data.prefix" ng-value="'Shri'">Mr.</label>
+          <label class="radio-inline"><input type="radio" name="prefix{{pk}}" ng-model="data.prefix" ng-value="'Dr'">Dr</label>
+        </div>
+        <div class="form-group">
+          <label style="margin-top:20px;">Gender</label>
+          <div class="row">
+            <div class="col-md-6 text-center">
+              <img src="/static/images/img_avatar_card.png" style="height:50px;height:50px;" class="img img-circle">
+              <br> Male
+              <br>
+              <input ng-model="data.gender" name="gender{{pk}}" type="radio" name="" ng-value="'M'">
+            </div>
+            <div class="col-md-6 text-center">
+              <img src="/static/images/img_avatar_card2.png" style="height:50px;height:50px;" class="img img-circle">
+              <br> Female
+              <br>
+              <input ng-model="data.gender" name="gender{{pk}}" type="radio" name="" ng-value="'F'">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label style="margin-right:20px;">Married ?</label>
+          <label class="radio-inline"><input type="radio" name="married{{pk}}" ng-model="data.married" ng-value="false">Single</label>
+          <label class="radio-inline"><input type="radio" name="married{{pk}}" ng-model="data.married" ng-value="true">Married</label>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.dateOfBirth" is-open="status.DOBOpened" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="status.DOBOpened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6" ng-if="data.married">
+            <div class="form-group">
+              <label>Date of Anniversary</label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.anivarsary" is-open="status.AVOpened" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="status.AVOpened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="padding:0px">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>localAddressStreet</label>
+                <input type="text" class="form-control" ng-model="data.localAddressStreet" placeholder="localAddressStreet">
+              </div>
+              <div class="form-group">
+                <label>localAddressCity</label>
+                <input type="text" class="form-control" ng-model="data.localAddressCity" placeholder="localAddressCity">
+              </div>
+              <div class="form-group">
+                <label>localAddressPin</label>
+                <input type="number" class="form-control" ng-model="data.localAddressPin" placeholder="localAddressPin">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>localAddressState</label>
+                <input type="text" class="form-control" ng-model="data.localAddressState" placeholder="localAddressState">
+              </div>
+              <div class="form-group">
+                <label>localAddressCountry</label>
+                <input type="text" class="form-control" ng-model="data.localAddressCountry" placeholder="localAddressCountry">
+              </div>
+            </div>
+          </div>
+          <div>
+            <label><input type="checkbox" value="checked" style="margin-top: -2px;" ng-model="data.sameAsLocal">&nbsp; Parmanent Address Same as Local Address</label>
+          </div>
+          <div class="row" ng-if="!data.sameAsLocal">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>permanentAddressStreet</label>
+                <input type="text" class="form-control" ng-model="data.permanentAddressStreet" placeholder="permanentAddressStreet">
+              </div>
+              <div class="form-group">
+                <label>permanentAddressCity</label>
+                <input type="text" class="form-control" ng-model="data.permanentAddressCity" placeholder="permanentAddressCity">
+              </div>
+              <div class="form-group">
+                <label>permanentAddressPin</label>
+                <input type="number" class="form-control" ng-model="data.permanentAddressPin" placeholder="permanentAddressPin">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>permanentAddressState</label>
+                <input type="text" class="form-control" ng-model="data.permanentAddressState" placeholder="permanentAddressState">
+              </div>
+              <div class="form-group">
+                <label>permanentAddressCountry</label>
+                <input type="text" class="form-control" ng-model="data.permanentAddressCountry" placeholder="permanentAddressCountry">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Blood Group</label>
+          <select class="form-control" ng-model="data.bloodGroup">
+            <option>A+</option>
+            <option>O+</option>
+            <option>B+</option>
+            <option>AB+</option>
+            <option>A-</option>
+            <option>O-</option>
+            <option>B-</option>
+            <option>A+</option>
+            <option>AB-</option>
+          </select>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Mobile</label>
+              <input type="text" class="form-control" ng-model="data.mobile" placeholder="Personal mobile">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Email</label>
+              <input class="form-control" type="email" ng-model="data.email">
+              <p class="help-text">All the payslips will be shared on this email ID</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Emergency Contact Name</label>
+              <input type="text" class="form-control" ng-model="data.emergencyName" placeholder="Emergency contact number">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Emergency Contact Number</label>
+              <input type="text" class="form-control" ng-model="data.emergencyNumber" placeholder="Emergency contact number">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-show="page==2">
+        <div class="form-group">
+          <label>Doctorate University</label>
+          <input type="text" class="form-control" ng-model="data.docUniversity" placeholder="">
+        </div>
+        <div class="form-group">
+          <label>Father's Name</label>
+          <input type="text" class="form-control" ng-model="data.fathersName" placeholder="">
+        </div>
+        <div class="form-group">
+          <label>Mother's Name</label>
+          <input type="text" class="form-control" ng-model="data.mothersName" placeholder="">
+        </div>
+        <div ng-if="data.married">
+          <div class="form-group">
+            <label ng-if="data.gender == 'M'">Wife's Name</label>
+            <label ng-if="data.gender == 'F'">Husbands's Name</label>
+            <input type="text" class="form-control" ng-model="data.wifesName" placeholder="">
+          </div>
+          <div class="form-group">
+            <label>Childrens names (Comma seperated values)</label>
+            <input type="text" class="form-control" ng-model="data.childCSV" placeholder="Enter child name seperated by a comma">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Note1</label>
+          <textarea type="text" rows="4" class="form-control" ng-model="data.note1" placeholder="note1"> </textarea>
+        </div>
+        <div class="form-group">
+          <label>Note2</label>
+          <textarea type="text" rows="4" class="form-control" ng-model="data.note2" placeholder="note2"> </textarea>
+        </div>
+        <div class="form-group">
+          <label>Note3</label>
+          <textarea type="text" rows="4" class="form-control" ng-model="data.note3" placeholder="note3"> </textarea>
+        </div>
+      </div>
+      <div ng-show="page==3">
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.TNCandBond | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.TNCandBond}}" target="_blank">{{data.TNCandBond.split('/')[data.TNCandBond.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>TNC and Bond:</label>
+              <input type="file" name="TNCandBond" file-model="files.TNCandBond">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.resume | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.resume}}" target="_blank">{{data.resume.split('/')[data.resume.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Resume:</label>
+              <input type="file" name="resume" file-model="files.resume">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.certificates | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.certificates}}" target="_blank">{{data.certificates.split('/')[data.certificates.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Certificates:</label>
+              <input type="file" name="certificates" file-model="files.certificates">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.transcripts | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.transcripts}}" target="_blank">{{data.transcripts.split('/')[data.transcripts.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Transcripts:</label>
+              <input type="file" name="transcripts" file-model="files.transcripts">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.otherDocs | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.otherDocs}}" target="_blank">{{data.otherDocs.split('/')[data.otherDocs.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Other Docs:</label>
+              <input type="file" name="OtherDocs" file-model="files.otherDocs">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.IDPhoto | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.IDPhoto}}" target="_blank">{{data.IDPhoto.split('/')[data.IDPhoto.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Aadhar Card:</label>
+              <input type="file" name="IDPhoto" file-model="files.IDPhoto">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.IDPhoto | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.IDPhoto}}" target="_blank">{{data.resignation.split('/')[data.resignation.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Resignation:</label>
+              <input type="file" name="resignation" file-model="files.resignation">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.vehicleRegistration | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.vehicleRegistration}}" target="_blank">{{data.vehicleRegistration.split('/')[data.vehicleRegistration.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Vehicle Registration:</label>
+              <input type="file" name="vehicleRegistration" file-model="files.vehicleRegistration">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.appointmentAcceptance | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.appointmentAcceptance}}" target="_blank">{{data.appointmentAcceptance.split('/')[data.appointmentAcceptance.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Appointment Acceptance:</label>
+              <input type="file" name="appointmentAcceptance" file-model="files.appointmentAcceptance">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.pan | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.pan}}" target="_blank">{{data.pan.split('/')[data.pan.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>PAN:</label>
+              <input type="file" name="pan" file-model="files.pan">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.drivingLicense | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.drivingLicense}}" target="_blank">{{data.drivingLicense.split('/')[data.drivingLicense.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Driving License:</label>
+              <input type="file" name="drivingLicense" file-model="files.drivingLicense">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.cheque | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.cheque}}" target="_blank">{{data.cheque.split('/')[data.cheque.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Cheque:</label>
+              <input type="file" name="cheque" file-model="files.cheque">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <i class="fa {{data.passbook | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-4">
+            <a ng-href="{{data.passbook}}" target="_blank">{{data.passbook.split('/')[data.passbook.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Passbook:</label>
+              <input type="file" name="passbook" file-model="files.passbook">
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-
-    <div class="form-group">
-      <label>Anivarsary</label>
-      <div class="input-group" >
-        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.anivarsary" is-open="status.aniversaryOpened"  />
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="status.aniversaryOpened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-        </span>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>permanentAddressStreet</label>
-      <input type="text" class="form-control" ng-model="data.permanentAddressStreet"  placeholder="permanentAddressStreet">
-    </div>
-
-    <div class="form-group">
-      <label>permanentAddressCity</label>
-      <input type="text" class="form-control" ng-model="data.permanentAddressCity" placeholder="permanentAddressCity">
-    </div>
-    <div class="form-group">
-      <label>permanentAddressPin</label>
-      <input type="number" class="form-control" ng-model="data.permanentAddressPin"  placeholder="permanentAddressPin">
-    </div>
-    <div class="form-group">
-      <label>permanentAddressState</label>
-      <input type="text" class="form-control" ng-model="data.permanentAddressState"  placeholder="permanentAddressState">
-    </div>
-    <div class="form-group">
-      <label>permanentAddressCountry</label>
-      <input type="text" class="form-control" ng-model="data.permanentAddressCountry" placeholder="permanentAddressCountry">
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <button ng-click="save()" type="button" class="btn btn-primary">
+        Save
+      </button>
     </div>
   </div>
-  <div ng-show="page==2">
-
-    <div class="form-group">
-      <label>localAddressStreet</label>
-      <input type="text" class="form-control" ng-model="data.localAddressStreet"  placeholder="localAddressStreet">
-    </div>
-
-    <div class="form-group">
-      <label>localAddressCity</label>
-      <input type="text" class="form-control" ng-model="data.localAddressCity" placeholder="localAddressCity">
-    </div>
-    <div class="form-group">
-      <label>localAddressPin</label>
-      <input type="number" class="form-control" ng-model="data.localAddressPin" placeholder="localAddressPin">
-    </div>
-    <div class="form-group">
-      <label>localAddressState</label>
-      <input type="text" class="form-control" ng-model="data.localAddressState" placeholder="localAddressState">
-    </div>
-    <div class="form-group">
-      <label>localAddressCountry</label>
-      <input type="text" class="form-control" ng-model="data.localAddressCountry" placeholder="localAddressCountry">
-    </div>
-
-    <div class="form-group">
-      <label>prefix</label>
-      <select class="form-control"  ng-model = "data.prefix">
-        <option value="NA"  >NA</option>
-        <option value="Mr" selected >Mr</option>
-        <option value="Mrs"  >Mrs</option>
-        <option value="Smt"  >Smt</option>
-        <option value="Shri"  >Shri</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-      <label>gender</label>
-      <select class="form-control" ng-model = "data.gender">
-         <option value="M" selected >Male</option>
-         <option value="F"  >Female</option>
-         <option value="O"  >Other</option>
-       </select>
-    </div>
-  </div>
-  <div ng-show="page==3">
-    <div class="form-group">
-      <label>email</label>
-      <input class="form-control" type="email" ng-model = "data.email">
-    </div>
-    <div class="form-group">
-      <label>email2</label>
-      <input class="form-control" type="email" ng-model = "data.email2">
-    </div>
-
-    <div class="form-group">
-      <label>mobile</label>
-      <input type="number" class="form-control" ng-model="data.mobile" placeholder="mobile">
-    </div>
-
-
-    <div class="form-group">
-      <label>emergency</label>
-      <input type="number" class="form-control" ng-model="data.emergency" placeholder="emergency">
-    </div>
-
-    <div class="form-group">
-      <label>tele</label>
-      <input type="number" class="form-control" ng-model="data.tele" placeholder="tele">
-    </div>
-    <div class="form-group">
-      <label>website</label>
-      <input type="url" class="form-control" ng-model="data.website" placeholder="website">
-    </div>
-    <div class="form-group">
-      <label>sign:</label>
-      <input type="file" name="sign" file-model="data.sign">
-    </div>
-    <div class="form-group">
-      <label>IDPhoto:</label>
-      <input type="file" name="IDPhoto" file-model="data.IDPhoto">
-    </div>
-
-  </div>
-
-  <div ng-show="page==4">
-    <div class="form-group">
-      <label>TNCandBond:</label>
-      <input type="file" name="TNCandBond" file-model="data.TNCandBond">
-    </div>
-
-    <div class="form-group">
-      <label>resume:</label>
-      <input type="file" name="resume" file-model="data.resume">
-    </div>
-
-    <div class="form-group">
-      <label>certificates:</label>
-      <input type="file" name="certificates" file-model="data.certificates">
-    </div>
-
-    <div class="form-group">
-      <label>transcripts:</label>
-      <input type="file" name="transcripts" file-model="data.transcripts">
-    </div>
-
-    <div class="form-group">
-      <label>OtherDocs:</label>
-      <input type="file" name="OtherDocs" file-model="data.OtherDocs">
-    </div>
-
-    <div class="form-group">
-      <label>almaMater</label>
-      <input type="text" class="form-control" ng-model="data.almaMater" placeholder="almaMater">
-    </div>
-    <div class="form-group">
-      <label>pgUniversity</label>
-      <input type="text" class="form-control" ng-model="data.pgUniversity" placeholder="pgUniversity">
-    </div>
-    <div class="form-group">
-      <label>docUniversity</label>
-      <input type="text" class="form-control" ng-model="data.docUniversity" placeholder="docUniversity">
-    </div>
-  </div>
-
-  <div ng-show="page==5">
-    <div class="form-group">
-      <label>fathersName</label>
-      <input type="text" class="form-control" ng-model="data.fathersName" placeholder="fathersName">
-    </div>
-
-    <div class="form-group">
-      <label>mothersName</label>
-      <input type="text" class="form-control" ng-model="data.mothersName" placeholder="mothersName">
-    </div>
-
-
-    <div class="form-group">
-      <label>WifesName</label>
-      <input type="text" class="form-control" ng-model="data.WifesName" placeholder="WifesName">
-    </div>
-
-    <div class="form-group">
-      <label>childCSV</label>
-      <input type="text" class="form-control" ng-model="data.childCSV" placeholder="Enter child name seperated by a comma">
-    </div>
-
-    <div class="form-group">
-      <label>note1</label>
-      <textarea type="text" rows="4" class="form-control" ng-model="data.note1" placeholder="note1"> </textarea>
-    </div>
-    <div class="form-group">
-      <label>note1</label>
-      <textarea type="text" rows="4" class="form-control" ng-model="data.note2" placeholder="note2"> </textarea>
-    </div>
-
-    <div class="form-group">
-      <label>note1</label>
-      <textarea type="text" rows="4" class="form-control" ng-model="data.note3" placeholder="note3"> </textarea>
-    </div>
-  </div>
-
 </div>

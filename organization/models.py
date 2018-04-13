@@ -46,6 +46,7 @@ class Units(models.Model):
     fax = models.PositiveIntegerField(null=True , default=0)
     contacts = models.ManyToManyField(User , related_name='unitsHeading' )
     division = models.ForeignKey(Division , null = True , related_name = "units")
+    parent = models.ForeignKey("self" , related_name="children" , null = True )
 
 
 

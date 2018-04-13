@@ -17,6 +17,25 @@ class DivisionViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
 
+class UnitLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, readOnly)
+
+    serializer_class = UnitLiteSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name' , 'parents', 'division']
+
+class UnitFullViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, readOnly)
+    queryset = Units.objects.all()
+    serializer_class = UnitFullSerializer
+
+class UnitSuperliteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, readOnly)
+    serializer_class = UnitSuperLiteSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name' , 'division']
+
+
 class UnitsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = UnitsSerializer
