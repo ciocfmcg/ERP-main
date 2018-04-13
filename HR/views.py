@@ -82,7 +82,7 @@ def tokenAuthentication(request):
         p = permission.objects.create(app =  app, user = user , givenBy = User.objects.get(pk=1))
     login(request , user)
     authStatus = {'status' : 'success' , 'message' : 'Account actived, please login.' }
-    return render(request , 'login.html' , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
+    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
 
 
 def generateOTP(request):
@@ -166,7 +166,7 @@ def loginView(request):
                 authStatus = {'status' : 'danger' , 'message' : 'Incorrect username or password.'}
                 statusCode = 401
 
-    return render(request , 'login.html' , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE}, status=statusCode)
+    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE}, status=statusCode)
 
 def registerView(request):
     if globalSettings.REGISTER_URL != 'register':
@@ -200,29 +200,6 @@ def logoutView(request):
 def root(request):
     return redirect(globalSettings.ROOT_APP)
 
-def blog(request):
-    return render(request,"blog.html")
-
-def news(request):
-    return render(request,"newssection.html")
-
-def team(request):
-    return render(request,"team.html")
-
-def career(request):
-    return render(request,"career.html")
-
-def policy(request):
-    return render(request,"policy.html")
-
-def terms(request):
-    return render(request,"terms.html")
-
-def refund(request):
-    return render(request,"refund.html")
-
-def contacts(request):
-    return render(request,"contacts.html")
 
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):

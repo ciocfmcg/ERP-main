@@ -1,0 +1,74 @@
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+<title>CIOC</title>
+{% endblock %} {% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+
+{% include "header.html" %}
+
+{% endblock %}
+<!-- Header -->
+{% block content %}
+<div ng-app="app" ng-controller="main">
+  <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
+    <header style="background: url('/static/images/blog_banner.jpg') no-repeat top center/cover;height:40vh;width:100%;">
+      <div class="container" style="overflow:hidden;">
+        <div style="text-align:center;">
+          <div class="intro-lead-in" style="font-size:100px;padding-right:53px;margin-top:45px;color:#0b5e8c;">Blogs</div>
+
+        </div>
+      </div>
+    </header>
+  </div>
+  <!-- Services Section -->
+  <div class="body">
+    <div class="container"  style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+
+        <div class="container-fluid">
+          <section style="padding-top: 20px;padding-bottom: 30px;">
+
+            <div class="row">
+              <div class="col-md-12">
+                <span style="font-size:30px;margin-left: 40px;margin-right: 10px"><i class="fa fa-user-o"></i>&nbsp; {{user}}</span><br><br>
+                <span style="margin-left: 40px;">{{date}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-left" style="margin-left: 40px;margin-right: 10px">
+                <h2>{{title}}</h2>
+              </div>
+            </div>
+            <div class="container-fluid" style="margin-left:40px;margin-right: 10px;padding:0px">
+              {{header | safe}}
+              <div class="row">
+                <div class="col-lg-12 ">
+                  {{body | safe}}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+
+
+      {% endblock %} {% block footer %}
+      {% include "footer.html" %}
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %} {% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
+
+<script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+
+{% endblock %}

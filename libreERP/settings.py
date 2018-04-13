@@ -42,6 +42,8 @@ LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
 
+LOGIN_TEMPLATE = 'loginCenter.html'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 

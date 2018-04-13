@@ -3,47 +3,7 @@
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
-<nav class="navbar navbar-default navbar-shrink bg-blue navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header page-scroll">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-      <a class="navbar-brand page-scroll" href="#page-top"><img src="/static/images/rackmint_invert.svg" style="margin-top:-25px;max-width:400px;" height="60"></a>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a class="page-scroll" href="#services">services</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#portfolio">Portfolio</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/team/">Team</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/contacts/">Contact</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/blog/">Blog</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/news/">News & Media</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/career/">Career</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="/login">Login</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+{% include "header.html" %}
 
 {% endblock %}
 <!-- Header -->
@@ -104,7 +64,7 @@
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
       <div class="container-fluid">
-        <section id="services">
+        <section id="features">
           <div class="row">
             <div class="col-lg-12 text-center">
               <h2 class="section-heading">Services</h2>
@@ -142,166 +102,116 @@
     </div>
       <!-- Portfolio Grid Section -->
       <!-- <section id="portfolio" class="bg-light-gray" style="padding-left:0px;padding-right:0px;"> -->
-        <!-- <div class="row">
-          <div class="col-lg-12 text-center">
-            <h2 class="section-heading">Portfolio/Products</h2>
-            <h3 class="section-subheading text-muted">We already have a lot you can use right away.</h3>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fa fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img src="{% static 'images/portfolio/erp.png' %}" class="img-responsive" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>LibreERP</h4>
-              <p class="text-muted">Free and Open source ERP Platform</p>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fa fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img src="{% static 'images/portfolio/rpa.jpg' %}" class="img-responsive" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>LibreRPA</h4>
-              <p class="text-muted">A platform for business process automation</p>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fa fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img src="{% static 'images/portfolio/assist.jpg' %}" class="img-responsive" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>LibreAssist</h4>
-              <p class="text-muted">A chat bot like Siri</p>
-            </div>
-          </div>
-        </div> -->
-        <div class="container" style="padding-left:0px;padding-right:0px;">
-    <div class="container-fluid">
-      <div id="generic_price_table">
-       <div class="container-fluid">
-         <div class="row">
-           <div class="col-md-4">
-             <div class="generic_content active clearfix">
-               <div class="generic_head_price clearfix">
-                  <div class="generic_head_content clearfix">
-                      <!-- <div class="head_bg"></div> -->
-                       <div class="headb"></div>
-                         <div class="head">
-                            <span>Standard</span>
+    <div class="container" style="padding-left:0px;padding-right:0px;">
+      <div class="container-fluid">
+        <div id="generic_price_table">
+         <div class="container-fluid">
+           <div class="row">
+             <div class="col-md-4">
+               <div class="generic_content active clearfix">
+                 <div class="generic_head_price clearfix">
+                    <div class="generic_head_content clearfix">
+                        <!-- <div class="head_bg"></div> -->
+                         <div class="headb"></div>
+                           <div class="head">
+                              <span>Standard</span>
+                           </div>
+                         </div>
+                         <div class="generic_price_tag clearfix">
+                           <span class="price">
+                             <span class="sign">$</span>
+                             <span class="currency">299</span>
+                             <span class="cent">.99</span>
+                             <span class="month">/MON</span>
+                           </span>
                          </div>
                        </div>
-                       <div class="generic_price_tag clearfix">
-                         <span class="price">
-                           <span class="sign">$</span>
-                           <span class="currency">299</span>
-                           <span class="cent">.99</span>
-                           <span class="month">/MON</span>
-                         </span>
+                       <div class="generic_feature_list">
+                         <ul>
+                           <li><span>2GB</span> Bandwidth</li>
+                           <li><span>150GB</span> Storage</li>
+                           <li><span>12</span> Accounts</li>
+                           <li><span>7</span> Host Domain</li>
+                           <li><span>24/7</span> Support</li>
+                         </ul>
+                       </div>
+                       <div class="generic_feature_list" style="padding:10px">
+                         <button type="button" class="btn" style="background:#0066cc;color:white;">Buy Now</button>
                        </div>
                      </div>
-                     <div class="generic_feature_list">
-                       <ul>
-                         <li><span>2GB</span> Bandwidth</li>
-                         <li><span>150GB</span> Storage</li>
-                         <li><span>12</span> Accounts</li>
-                         <li><span>7</span> Host Domain</li>
-                         <li><span>24/7</span> Support</li>
-                       </ul>
-                     </div>
-                     <div class="generic_feature_list" style="padding:10px">
-                       <button type="button" class="btn btn-primary">Buy Now</button>
-                     </div>
                    </div>
-                 </div>
-                 <div class="col-md-4">
-                   <div class="generic_content active clearfix">
-                     <div class="generic_head_price clearfix">
-                       <div class="generic_head_content clearfix">
-                         <div class="head_bg"></div>
-                         <div class="head">
-                           <span>Standard</span>
+                   <div class="col-md-4">
+                     <div class="generic_content active clearfix">
+                       <div class="generic_head_price clearfix">
+                         <div class="generic_head_content clearfix">
+                           <div class="head_bg"></div>
+                           <div class="head">
+                             <span>Standard</span>
+                           </div>
+                         </div>
+                         <div class="generic_price_tag clearfix">
+                           <span class="price">
+                             <span class="sign">$</span>
+                             <span class="currency">299</span>
+                             <span class="cent">.99</span>
+                             <span class="month">/MON</span>
+                           </span>
                          </div>
                        </div>
-                       <div class="generic_price_tag clearfix">
-                         <span class="price">
-                           <span class="sign">$</span>
-                           <span class="currency">299</span>
-                           <span class="cent">.99</span>
-                           <span class="month">/MON</span>
-                         </span>
+                       <div class="generic_feature_list">
+                         <ul>
+                           <li><span>2GB</span> Bandwidth</li>
+                            <li><span>150GB</span> Storage</li>
+                            <li><span>12</span> Accounts</li>
+                            <li><span>7</span> Host Domain</li>
+                            <li><span>24/7</span> Support</li>
+                         </ul>
+                       </div>
+                       <div class="generic_feature_list" style="padding:10px">
+                         <button type="button" class="btn btn-warning">Buy Now</button>
                        </div>
                      </div>
-                     <div class="generic_feature_list">
-                       <ul>
-                         <li><span>2GB</span> Bandwidth</li>
-                          <li><span>150GB</span> Storage</li>
-                          <li><span>12</span> Accounts</li>
-                          <li><span>7</span> Host Domain</li>
-                          <li><span>24/7</span> Support</li>
-                       </ul>
-                     </div>
-                     <div class="generic_feature_list" style="padding:10px">
-                       <button type="button" class="btn btn-warning">Buy Now</button>
-                     </div>
                    </div>
-                 </div>
-                 <div class="col-md-4">
-                   <div class="generic_content active clearfix">
-                     <div class="generic_head_price clearfix">
-                       <div class="generic_head_content clearfix">
-                         <div class="head_b"></div>
-                         <div class="head">
-                           <span>Standard</span>
+                   <div class="col-md-4">
+                     <div class="generic_content active clearfix">
+                       <div class="generic_head_price clearfix">
+                         <div class="generic_head_content clearfix">
+                           <div class="head_b"></div>
+                           <div class="head">
+                             <span>Standard</span>
+                           </div>
+                         </div>
+                         <div class="generic_price_tag clearfix">
+                           <span class="price">
+                             <span class="sign">$</span>
+                             <span class="currency">299</span>
+                             <span class="cent">.99</span>
+                             <span class="month">/MON</span>
+                           </span>
                          </div>
                        </div>
-                       <div class="generic_price_tag clearfix">
-                         <span class="price">
-                           <span class="sign">$</span>
-                           <span class="currency">299</span>
-                           <span class="cent">.99</span>
-                           <span class="month">/MON</span>
-                         </span>
+                       <div class="generic_feature_list">
+                         <ul>
+                           <li><span></span> Bandwidth</li>
+                           <li><span></span> Storage</li>
+                           <li><span></span> Accounts</li>
+                           <li><span></span> Host Domain</li>
+                           <li><span>24/7</span> Support</li>
+                         </ul>
                        </div>
+                       <div class="generic_feature_list" style="padding:10px">
+                         <button type="button" class="btn btn-success">Buy Now</button>
+                       </div>
+                         <!-- div class="generic_price_btn clearfix">
+                           <a class="" href="">Sign up</a>
+                         </div> -->
                      </div>
-                     <div class="generic_feature_list">
-                       <ul>
-                         <li><span></span> Bandwidth</li>
-                         <li><span></span> Storage</li>
-                         <li><span></span> Accounts</li>
-                         <li><span></span> Host Domain</li>
-                         <li><span>24/7</span> Support</li>
-                       </ul>
-                     </div>
-                     <div class="generic_feature_list" style="padding:10px">
-                       <button type="button" class="btn btn-success">Buy Now</button>
-                     </div>
-                       <!-- div class="generic_price_btn clearfix">
-                         <a class="" href="">Sign up</a>
-                       </div> -->
                    </div>
-                 </div>
-              </div>
+                </div>
+             </div>
            </div>
          </div>
        </div>
-     </div>
 
        <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
        <div class="container" style="padding-left:0px;padding-right:0px;padding-top:0px;box-shadow: -12px 10px 50px 2px #d0d5dd;height:1000px;width: 1169px;">
@@ -412,206 +322,9 @@
       <!-- Contact Section -->
 
       {% endblock %} {% block footer %}
-      <footer style="background-color: #eeeeee;">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 text-left">
-              <span class="copyright">Copyright &copy; CIOC FMCG Pvt Ltd 2017</span>
-            </div>
-            <div class="col-md-6 text-right">
-              <ul class="list-inline quicklinks">
-                <li><a href="/policy/">Privacy Policy</a>
-                </li>
-                <li><a href="/terms/">Terms of Use</a>
-                </li>
-                <li><a href="/refund/">Refund and Cancellation Policy </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 text-center">
-              <ul class="list-inline social-buttons">
-                <li class="facebook"><a href="#"><i class="fa fa-facebook"></i></a>
-                </li>
-                <li class="linkedin"><a href="#"><i class="fa fa-linkedin"></i></a>
-                </li>
-                <li class="instagram"><a href="#"><i class="fa fa-instagram"></i></a>
-                </li>
-                <li class="youtube"><a href="#"><i class="fa fa-youtube-play"></i></a>
-                </li>
-                <li class="google"><a href="#"><i class="fa fa-google-plus"></i></a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
 
-      <!-- Portfolio Modals -->
-      <!-- Use the modals below to showcase details about your portfolio projects! -->
+      {% include "footer.html" %}
 
-      <!-- Portfolio Modal 1 -->
-      <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>ERP</h2>
-                  <p class="item-intro text-muted">An open source and free platform.</p>
-                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/erp.png' %}" alt="">
-                  <p>Minimize your business expenditure by switching to LibreERP. Once deployed it gives you project management , HR, Business management and many more modules along with their mobile apps.</p>
-                  <p>
-                    <strong>Want to try it out?</strong>You can download the source at <a href="https://github.com/pkyad/libreERP-main">github.com</a>, or you can contact us by sending an email to info@cioc.co.in</p>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Portfolio Modal 2 -->
-      <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <h2>RPA</h2>
-                  <p class="item-intro text-muted">Automate web apps and citrix applications with this free RPA platform.</p>
-                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/rpa.jpg' %}" alt="">
-                  <p>Contact us for a demo by sending an email to info@cioc.co.in</p>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Portfolio Modal 3 -->
-      <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Assist</h2>
-                  <p class="item-intro text-muted">24X7 online information desk on your website powered by LibreAssist, an open source chatbot platform with advance NLP capabilities.</p>
-                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/assist.jpg' %}" alt="">
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Portfolio Modal 4 -->
-      <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Project Name</h2>
-                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/golden-preview.png' %}" alt="">
-                  <p>Start Bootstrap's Agency theme is based on Golden, a free PSD website template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Golden is a modern and clean one page web template that was made exclusively for
-                    Best PSD Freebies. This template has a great portfolio, timeline, and meet your team sections that can be easily modified to fit your needs.</p>
-                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/golden-free-one-page-web-template/">FreebiesXpress.com</a>.</p>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Portfolio Modal 5 -->
-      <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Project Name</h2>
-                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/escape-preview.png' %}" alt="">
-                  <p>Escape is a free PSD web template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Escape is a one page web template that was designed with agencies in mind. This template is ideal for those looking for a simple
-                    one page solution to describe your business and offer your services.</p>
-                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/escape-one-page-psd-web-template/">FreebiesXpress.com</a>.</p>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Portfolio Modal 6 -->
-      <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl">
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2>Project Name</h2>
-                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                  <img class="img-responsive img-centered" src="{% static 'images/portfolio/dreams-preview.png' %}" alt="">
-                  <p>Dreams is a free PSD web template built by <a href="https://www.behance.net/MathavanJaya">Mathavan Jaya</a>. Dreams is a modern one page web template designed for almost any purpose. It’s a beautiful template that’s designed with the
-                    Bootstrap framework in mind.</p>
-                  <p>You can download the PSD template in this portfolio sample item at <a href="http://freebiesxpress.com/gallery/dreams-free-one-page-web-template/">FreebiesXpress.com</a>.</p>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
