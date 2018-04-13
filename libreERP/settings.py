@@ -36,8 +36,9 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
+LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpg'
 
+SHOW_COMMON_APPS = False
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
@@ -68,10 +69,10 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = '24Tutors.com'
-SERVICE_NAME = 'Online Tutoring anytime, anywhere'
-BRAND_LOGO = '/static/images/24_tutors_icon.svg'
-BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert_white.svg'
+BRAND_NAME = 'monomerce.com'
+SERVICE_NAME = 'Inventory, Sales and Ecommerce'
+BRAND_LOGO = '/static/images/mono_icon.svg'
+BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 

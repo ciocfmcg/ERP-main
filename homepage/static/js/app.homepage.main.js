@@ -5,11 +5,11 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval,
 
   $scope.mainBannerImages = [ ]
   $scope.bannerID = 0;
-  $scope.typings = ["Online tutoring" , "24x7 online help" , "CBSE Preparation" , "IIT JEE Preparation", "AIPMT Preparation" ]
+  $scope.typings = ["Realtime inventory" , "Snapdeal, Amazon, flipkart and more integrated" ]
   $scope.typeIndex = 0;
   $scope.videoLink = '';
 
-  $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/JC-Dpwb-Sk8');
+  $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/pLW1ar-Wkxk');
 
   $interval(function() {
 
