@@ -102,8 +102,12 @@ def desclaimer(request):
 def registration(request):
     return render(request,"registration.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME})
 
-
 class RegistrationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = RegistrationSerializer
     queryset = Registration.objects.all()
+
+class EnquiryAndContactsViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = EnquiryAndContactsSerializer
+    queryset = EnquiryAndContacts.objects.all()

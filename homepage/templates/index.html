@@ -42,8 +42,8 @@
         <p ng-if="typeIndex == $index" ng-repeat="t in typings" typed-effect text="t" blink="true" style="font-size:70px;"></p>
       </div>
 
-      <div class="row text-center" style="position:relative;">
-        <img src="/static/images/crm/monomerce.png" alt="24Tutors session demo" style="width:40%;">
+      <div class="row text-center" style="position: absolute;top: 300px;">
+        <img src="/static/images/crm/monomerce.png" alt="monomerce session" style="width:40%;">
         <div style="position:absolute;top: 160px;background: #eeeeee;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4">
           <i class="fa fa-play fa-2x"></i> <span style="font-size:25px;margin-left:10px;"></span>
         </div>
@@ -124,6 +124,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.4.9/angular-sanitize.min.js"></script>
   <script src="{% static 'js/app.homepage.js' %}"></script>
   <script src="{% static 'js/app.homepage.main.js' %}"></script>
+  <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
 
 
 

@@ -16,6 +16,12 @@ import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 
+class EnquiryAndContactsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnquiryAndContacts
+        fields = ('pk', 'created' , 'name' , 'mobile' , 'email' , 'notes')
+
+
 class RegistrationSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:

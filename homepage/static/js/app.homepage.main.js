@@ -1,5 +1,5 @@
 
-app.controller('main' , function($scope , $state , $http , $timeout , $interval, $sce){
+app.controller('main' , function($scope , $state , $http , $timeout , $interval, $sce , $uibModal){
   console.log("main loded");
   $scope.crmBannerID = 1;
 
@@ -10,6 +10,30 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval,
   $scope.videoLink = '';
 
   $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/pLW1ar-Wkxk');
+
+  $scope.buy = function(typ) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.inquiry.html',
+      size: 'lg',
+      resolve : {
+
+      },
+      controller: function($scope, $http){
+
+        $scope.form = {name: '' , email : '' , mobile : '' , company : '' , checkValidity : false};
+        $scope.mode = 'form';
+
+        $scope.enquire= function() {
+          $scope.form.checkValidity = true;
+
+          $http({method : 'POST' , url : '/api/homepage/enquireOrContact/' , data : $scope.form}).
+          then(function(response) {
+            $scope.mode = 'thankyou'
+          })
+        }
+      },
+    })
+  }
 
   $interval(function() {
 
