@@ -39,12 +39,12 @@
   <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
     <header style="background-image: url(/static/images/main_banner_mono.svg);height:100vh;width:100%;">
       <div class="row" style="padding-top:100px;color:#323232;">
-        <p ng-if="typeIndex == $index" ng-repeat="t in typings" typed-effect text="t" blink="true" style="font-size:70px;"></p>
+        <p ng-if="typeIndex == $index" ng-repeat="t in typings" typed-effect text="t" blink="true" class="textsize"></p>
       </div>
 
       <div class="row text-center" style="position: absolute;top: 300px;">
-        <img src="/static/images/crm/monomerce.png" alt="monomerce session" style="width:40%;">
-        <div style="position:absolute;top: 160px;background: #eeeeee;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4">
+        <img src="/static/images/crm/monomerce.png" alt="monomerce session" class="imageicon">
+        <div style="position:absolute;background: #eeeeee;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-2 col-md-offset-5 col-xs-4 col-xs-offset-4 imageheight">
           <i class="fa fa-play fa-2x"></i> <span style="font-size:25px;margin-left:10px;"></span>
         </div>
         <div id="myModal" class="modal fade" role="dialog">
