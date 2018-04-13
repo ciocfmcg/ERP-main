@@ -77,8 +77,8 @@ class Subscription(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default = True)
     name = models.CharField(max_length = 100 , null = False)
-    email = models.EmailField(null = False)
-    phone = models.PositiveIntegerField(null = False)
+    email = models.CharField(null = False , max_length = 100)
+    phone = models.CharField(null = False, max_length = 100)
     comments = models.TextField(null = True)
     event = models.ForeignKey(Event , null = True, related_name='subscriptions')
     def __str__(self):
