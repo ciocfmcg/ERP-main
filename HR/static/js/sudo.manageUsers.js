@@ -102,7 +102,7 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
 app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
   $scope.page = 1;
-  $scope.maxPage = 5;
+  $scope.maxPage = 3;
   console.log($scope.tab);
 
   $scope.data = $scope.tab.data;
