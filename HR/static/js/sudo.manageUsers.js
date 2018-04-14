@@ -59,6 +59,8 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
       ifscCode: f.ifscCode,
       bankName: f.bankName,
       deboarded: f.deboarded,
+      PFUan:f.PFUan,
+      pan:f.pan,
 
 
     }
@@ -68,9 +70,17 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
     }else {
       dataToSend.joiningDate = f.joiningDate
     }
+
+    if (typeof f.lastWorkingDate == 'object') {
+      dataToSend.lastWorkingDate = f.lastWorkingDate.toJSON().split('T')[0]
+    }else {
+      dataToSend.lastWorkingDate = f.lastWorkingDate
+    }
+
     if (f.lastWorkingDate != null) {
       dataToSend.lastWorkingDate = f.lastWorkingDate.toJSON().split('T')[0]
     }
+
 
     $http({
       method: 'PATCH',

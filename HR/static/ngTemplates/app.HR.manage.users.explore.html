@@ -342,6 +342,14 @@
         </div>
         <div class="row">
           <div class="col-md-6 text-right">
+            <strong>PFUan:</strong>
+          </div>
+          <div class="col-md-6">
+            <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.PFUan}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
             <strong>Al:</strong>
           </div>
           <div class="col-md-6">
@@ -380,7 +388,14 @@
             {{payroll.lastWorkingDate}}
           </div>
         </div>
-
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Pan No.:</strong>
+          </div>
+          <div class="col-md-6">
+          {{payroll.pan}}
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-6 text-right">
             <strong>Account Number:</strong>
@@ -403,6 +418,24 @@
           </div>
           <div class="col-md-6">
             {{payroll.bankName}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Saturday Off:</strong>
+          </div>
+          <div class="col-md-6">
+            <!-- <span ng-if="payroll.off == 'true'">YES</span> -->
+            <!-- <span ng-if="payroll.off == 'false'">NO</span> -->
+            {{payroll.off? 'YES':'NO'}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <strong>Notice Period Recovery:</strong>
+          </div>
+          <div class="col-md-6">
+            {{payroll.noticePeriodRecovery? 'YES':'NO'}}
           </div>
         </div>
       </div>
