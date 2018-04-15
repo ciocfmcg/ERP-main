@@ -29,7 +29,15 @@ from .serializers import *
 from subprocess import Popen, PIPE
 import os
 
+class SectionViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = SectionSerializer
+    queryset = Section.objects.all()
 
+class BookViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()
 
 class QPartViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

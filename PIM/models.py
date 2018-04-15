@@ -132,6 +132,8 @@ class blogPost(models.Model):
         ('tutorial' , 'tutorial'),
         ('whitepaper' , 'whitepaper'),
         ('product' , 'product'),
+        ('book' , 'book'),
+        ('question' , 'question'),
     )
     public = models.BooleanField(default = False)
     title = models.CharField(max_length = 500 , null=True)
@@ -144,7 +146,7 @@ class blogPost(models.Model):
     source = models.TextField(max_length = 40000 , null = True)
     tags = models.ManyToManyField(blogCategory , related_name = 'articles' , blank = True)
     contentType = models.CharField(max_length = 15 , choices = CONTENT_TYPE_CHOICE , default = 'article')
-
+    contentFK = models.PositiveIntegerField(null = True) # in case of book or question this will store the ID for the same
     # url
     #
     # og image
@@ -154,7 +156,7 @@ class blogPost(models.Model):
     # section
     # author
 
-    shortUrl = models.CharField(max_length =100 , null = True)
+    shortUrl = models.CharField(max_length =100 , null = True, unique = True)
     ogimageUrl = models.CharField(max_length =1000 , null = True)
     ogimage = models.ImageField( upload_to= getOGImageAttachment , null = True)
     description = models.CharField(max_length =1000 , null = True)

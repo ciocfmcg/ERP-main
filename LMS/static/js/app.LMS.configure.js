@@ -111,7 +111,7 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
 
 
   $scope.subjectSearch = function(query) {
-    return $http.get( '/api/LMS/subject' +'?title__contains=' + query).
+    return $http.get( '/api/LMS/subject/?title__contains=' + query).
     then(function(response){
       return response.data;
     })

@@ -8,6 +8,12 @@
       <div class="row text-center" ng-click="mode='topic'" style="{{mode == 'topic' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
         Topic
       </div>
+      <div class="row text-center" ng-click="mode='book'" style="{{mode == 'book' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
+        Book
+      </div>
+      <div class="row text-center" ng-click="mode='section'" style="{{mode == 'section' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
+        Section
+      </div>
     </div>
     <div class="col-md-5">
 
@@ -15,9 +21,14 @@
         <label>Subject</label>
         <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as subject.title for subject in subjectSearch($viewValue)">
       </div>
+
       <div class="form-group">
         <label>Title</label>
         <input ng-model="form.title" type="text" class="form-control">
+      </div>
+      <div class="form-group" ng-if="mode == 'book'">
+        <label>Subject</label>
+        <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as subject.title for subject in subjectSearch($viewValue)">
       </div>
 
       <div class="form-group">
@@ -28,6 +39,36 @@
       <div class="form-group" ng-if="mode == 'subject'">
         <label>Display Pic</label>
         <input file-model="form.dp" type="file" >
+      </div>
+
+      <div class="form-group" ng-if="mode == 'book'">
+        <label>Display Pic</label>
+        <input file-model="form.dp" type="file" >
+      </div>
+
+      <div class="form-group" ng-if="mode == 'book'">
+        <label>Author</label>
+        <input ng-model="form.author" type="text" class="form-control" >
+      </div>
+
+      <div class="form-group" ng-if="mode == 'book'">
+        <label>ISSN</label>
+        <input ng-model="form.ISSN" type="text" class="form-control">
+      </div>
+
+      <div class="form-group" ng-if="mode == 'book'">
+        <label>Volume</label>
+        <input ng-model="form.Volume" type="text" class="form-control">
+      </div>
+
+      <div class="form-group" ng-if="mode == 'book'">
+        <label>Version</label>
+        <input ng-model="form.version" type="text"class="form-control" >
+      </div>
+
+      <div class="form-group" ng-if="mode == 'book'">
+        <label>License</label>
+        <input ng-model="form.license" type="text" class="form-control">
       </div>
 
       <div class="form-group" ng-if="mode == 'subject'">

@@ -6,6 +6,15 @@ from .models import *
 import random, string
 
 
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('pk' , 'title' , 'shortUrl', 'subject', 'description', 'dp', 'author', 'ISSN'  , 'volume', 'version', 'license')
+
+class SectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ('pk' , 'title' , 'book')
 
 class QPartSerializer(serializers.ModelSerializer):
     class Meta:

@@ -6,6 +6,29 @@
     <h4 ng-if="mode == 'edit'">Edit question</h4>
 
     <div class="row">
+      <div class="form-group">
+        <label style="margin-top:20px;">Type</label>
+
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <img src="/static/images/BooksStack.png" style="height:50px;height:50px;" class="img img-circle">
+            <br>
+            Book
+            <br>
+            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" name="" ng-value="'book'">
+          </div>
+          <div class="col-md-6 text-center">
+            <img src="/static/images/questionbanks.png" style="height:50px;height:50px;" class="img img-circle">
+            <br>
+            Question Bank
+            <br>
+            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" name="" ng-value="'bank'">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-if="form.typ == 'bank'">
       <div class="col-md-6">
         <div class="form-group">
           <label>Subject</label>
@@ -16,6 +39,21 @@
         <div class="form-group">
           <label>Topic</label>
           <input type="text" class="form-control" ng-model="form.topic" uib-typeahead="topic as topic.title for topic in topicSearch($viewValue)">
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-if="form.typ == 'book'">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Book</label>
+          <input type="text" class="form-control" ng-model="form.book" uib-typeahead="book as book.title for book in bookSearch($viewValue)">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Section</label>
+          <input type="text" class="form-control" ng-model="form.section" uib-typeahead="section as section.title for section in sectionSearch($viewValue)">
         </div>
       </div>
     </div>

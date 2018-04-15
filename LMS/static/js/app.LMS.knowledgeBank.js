@@ -96,19 +96,20 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
   console.log($scope.tab);
 
   $scope.subjectSearch = function(query) {
-    return $http.get( '/api/LMS/subject' +'?title__contains=' + query).
+    return $http.get( '/api/LMS/subject/?title__contains=' + query).
     then(function(response){
       return response.data;
     })
   };
 
   $scope.topicSearch = function(query) {
-    return $http.get( '/api/LMS/topic' +'?title__contains=' + query).
+    return $http.get( '/api/LMS/topic/?title__contains=' + query).
     then(function(response){
       return response.data;
     })
   };
 
+  // subject  :'' , topic : ''
 
   $scope.fetchQuestion = function(pk) {
 
@@ -125,7 +126,7 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       $scope.form.subject = response.data.topic.subject;
 
       $scope.mode = 'edit';
-      
+
     })
 
 
@@ -149,11 +150,36 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     })(indx))
   }
 
+  $scope.bookSearch = function(query) {
+    return $http.get( '/api/LMS/book/?title__contains=' + query).
+    then(function(response){
+      return response.data;
+    })
+  };
+
+  $scope.sectionSearch = function(query) {
+    return $http.get( '/api/LMS/section/?title__contains=' + query).
+    then(function(response){
+      return response.data;
+    })
+  };
+
+
 
   $scope.resetForm = function() {
+    if ($scope.form != undefined) {
+      var subject = $scope.form.subject;
+      var topic = $scope.form.topic;
+    }else{
+      var subject = '';
+      var topic = '';
+    }
 
     $scope.mode = 'new';
-    $scope.form = {ques : '' , quesParts : [], quesPartTxt : '' , textMode : false , quesPartFile : emptyFile , optionsParts : [], optionTxt : '' , optionFile : emptyFile   , textModeOption : false , subject  :'' , topic : '' , level : 'easy' ,qtype : 'mcq'}
+    $scope.form = {ques : '' , quesParts : [], quesPartTxt : '' , textMode : false , quesPartFile : emptyFile , optionsParts : [], optionTxt : '' , optionFile : emptyFile   , textModeOption : false , level : 'easy' ,qtype : 'mcq'}
+
+    $scope.form.subject = subject;
+    $scope.form.topic = topic;
 
   }
 

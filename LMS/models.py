@@ -31,6 +31,10 @@ def getSolutionVideoPath(instance , filename):
     return 'lms/solution/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 
+
+
+
+
 PART_TYPE_CHOICES = (
     ('text' , 'text'),
     ('image' , 'image'),
@@ -61,6 +65,29 @@ class Topic(models.Model):
     subject = models.ForeignKey(Subject , null = False , related_name='topics')
     title = models.CharField(max_length = 30 , null = False)
     description = models.TextField(max_length=2000 , null = False)
+
+
+class Book(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    title = models.CharField(max_length = 100 , null = False)
+    shortUrl = models.CharField(max_length = 100 , null = True)
+    subject = models.ForeignKey(Subject , null = False , related_name='books')
+    description = models.TextField(max_length=2000 , null = True)
+    dp = models.FileField(upload_to = getCourseDPAttachmentPath , null = True)
+    author = models.CharField(max_length = 100 , null = True)
+    ISSN = models.CharField(max_length = 100 , null = True)
+    volume = models.CharField(max_length = 100 , null = True)
+    version = models.CharField(max_length = 100 , null = True)
+    license = models.CharField(max_length = 100 , null = True)
+
+
+
+class Section(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
+    title = models.CharField(max_length = 100 , null = False)
+    book = models.ForeignKey(Book , null = False , related_name='sections')
 
 
 
@@ -104,6 +131,7 @@ class Question(models.Model):
     status = models.CharField(choices = QUESTION_STATUS_CHOICES , default = 'submitted' , max_length = 20)
     archived = models.BooleanField(default = False)
     topic = models.ForeignKey(Topic , null = True , related_name='questions')
+    bookSection = models.ForeignKey(Section , null = True , related_name='questions')
     level = models.CharField(null=True , choices= QUESTION_LEVEL_CHOICES , max_length = 15)
     marks = models.PositiveIntegerField(null=True)
     qtype = models.CharField(choices = QUESTION_TYPE_CHOICES , default = 'mcq' , null = False, max_length = 10)
