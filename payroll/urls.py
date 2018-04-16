@@ -10,4 +10,5 @@ router.register(r'report' , payrollReportViewSet , base_name = 'report')
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'getPayslip/$' , GetPayslip.as_view() ),
+    url(r'getReimbursement/$' ,GetReimbursement.as_view()  )
 ]

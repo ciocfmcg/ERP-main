@@ -29,7 +29,6 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
 
   $scope.data = $scope.tab.data;
 
-  // $scope.yearInView = $scope.data.joiningDate;
   $scope.yearInView = 2014;
 
   $scope.joiningDate = new Date('2014-04-02');
@@ -133,11 +132,20 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
       for (var i = 0; i < response.data.length; i++) {
         response.data[i].adHoc = 0;
         response.data[i].reimbursement = 0;
+
+        $http({method : 'GET' , url : '/api/payroll/getReimbursement/?user=' + response.data[i].user }).
+        then((function(i) {
+          return function(response) {
+            $scope.report.payslips[i].reimbursement = response.data.amount;
+          }
+        })(i))
+
+
         // response.data[i].totalTDS = $scope.totalTDS;
         response.data[i].days = $scope.daysInMonth;
         response.data[i].saved = false;
         response.data[i].amount = ((response.data[i].hra + response.data[i].special + response.data[i].lta + response.data[i].basic + response.data[i].adHoc) / 12).toFixed(2);
-        response.data[i].tds = ((((response.data[i].hra + response.data[i].special + response.data[i].lta + response.data[i].basic + response.data[i].adHoc) / 12) + response.data[i].adHoc) * 0.1).toFixed(2);
+        response.data[i].tds = (((( response.data[i].special + response.data[i].basic + response.data[i].adHoc) / 12) + response.data[i].adHoc) * (response.data[i].taxSlab)/100).toFixed(2);
         response.data[i].totalPayable = (((((response.data[i].hra + response.data[i].special + response.data[i].lta + response.data[i].basic + response.data[i].adHoc) / 12) + response.data[i].adHoc) * 0.9) + response.data[i].reimbursement).toFixed(2);
 
         $scope.report.payslips.push(response.data[i]);
@@ -459,7 +467,7 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
     }
 
   }
-
+// /api/finance/expenseSummary/?user=67
 
   $scope.tabs = [];
   $scope.searchTabActive = true;

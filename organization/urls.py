@@ -6,6 +6,9 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'divisions' , DivisionViewSet , base_name = 'division')
 router.register(r'units' , UnitsViewSet , base_name = 'units')
+router.register(r'unitLite' , UnitLiteViewSet , base_name = 'unitLite')
+router.register(r'unitFull' , UnitFullViewSet , base_name = 'unitFull')
+router.register(r'unitSuperLite' , UnitSuperliteViewSet , base_name = 'unitSuperLite')
 router.register(r'departments' , DepartmentsViewSet , base_name = 'departments')
 router.register(r'roles' , RolesViewSet , base_name = 'roles')
 urlpatterns = [

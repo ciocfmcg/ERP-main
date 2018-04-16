@@ -23,10 +23,10 @@ class DivisionLiteSerializer(serializers.ModelSerializer):
         model = Division
         fields = ('pk' , 'name' ,'website', 'logo')
 
-class UnitsLiteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Units
-        fields = ('pk' , 'name')
+# class UnitsLiteSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Units
+#         fields = ('pk' , 'name')
 
 
 class DivisionSerializer(serializers.ModelSerializer):
@@ -43,19 +43,59 @@ class DivisionSerializer(serializers.ModelSerializer):
 
         return d
 
-class UnitsSerializer(serializers.ModelSerializer):
-    division = DivisionLiteSerializer(many = False , read_only = True)
+class RecursiveField(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
+class UnitSuperLiteSerializer(serializers.ModelSerializer):
+    children = RecursiveField(many=True)
+    station_count = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    responsible = serializers.SerializerMethodField()
     class Meta:
         model = Units
-        fields = ('pk' , 'name','address','pincode','l1','l2','mobile','telephone','contacts','fax','division' )
+        fields = ( 'pk' , 'pincode' , 'children', 'l1', 'name' , 'station_count' , 'responsible' , 'division')
+
+class UnitLiteSerializer(serializers.ModelSerializer):
+    child_count = serializers.SerializerMethodField()
+    division = UnitSuperLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = Units
+        fields = ( 'pk' , 'pincode' , 'parent', 'l1', 'name', 'child_count', 'l2' , 'mobile' , 'telephone','fax', 'division')
+    def get_child_count(self, obj):
+        return Units.objects.filter(parent__in = [obj.pk]).count()
+
+class UnitFullSerializer(serializers.ModelSerializer):
+    parent = UnitLiteSerializer(read_only = True, many = True)
+    children = UnitLiteSerializer(many = True , read_only = True)
+    class Meta:
+        model = Units
+        fields = ( 'pk' , 'name' , 'parent', 'pincode' , 'l1' , 'l2' , 'mobile','telephone','fax', 'children', 'division')
+
+class UnitsSerializer(serializers.ModelSerializer):
+    division = DivisionLiteSerializer(many = False , read_only = True)
+    child_count = serializers.SerializerMethodField()
+    parent = UnitLiteSerializer(many = True , read_only = False)
+    class Meta:
+        model = Units
+        fields = ('pk' , 'name','address','pincode','l1','l2','mobile','telephone','contacts','fax','division','parent', 'child_count')
         read_only_fields=('contacts',)
     def create(self , validated_data):
+        print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
         d = Units(**validated_data)
         d.division=Division.objects.get(pk=self.context['request'].data['division'])
+        # d.units=Units.objects.get(pk=self.context['request'].data['units'])
+        if 'parent' in self.context['request'].data:
+            d.parent = Units.objects.get(id=self.context['request'].data['parent'])
+            # d.save()
+            # for i in self.context['request'].data['parent']:
+            #     d.parent.add(Units.objects.get(pk = i))
         d.save()
 
         for i in self.context['request'].data['contacts']:
             d.contacts.add(User.objects.get(pk = i))
+
 
         return d
 
@@ -71,11 +111,13 @@ class UnitsSerializer(serializers.ModelSerializer):
                 instance.contacts.add(User.objects.get(pk = i))
         instance.save()
         return instance
+    def get_child_count(self, obj):
+        return Units.objects.filter(parent__in = [obj.pk]).count()
 
 
 
 class DepartmentsSerializer(serializers.ModelSerializer):
-    units = UnitsLiteSerializer(many = True , read_only = False)
+    units = UnitLiteSerializer(many = True , read_only = False)
     class Meta:
         model = Departments
         fields = ('pk','dept_name','mobile','telephone','fax','contacts','units','picture')

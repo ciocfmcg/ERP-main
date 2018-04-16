@@ -80,10 +80,16 @@ class Transaction(models.Model):
     def __unicode__(self):
         return '<from : %s > , <to : %s > , <amount : %s> , < user : %s>' %(self.fromAcc , self.toAcc , self.ammount , self.user.username)
 
+APPROVAL_CHOICES = (
+    ('Yes' , 'Yes'),
+    ('No' , 'No'),
+    ('Pending' , 'Pending')
+)
+
 class ExpenseSheet(models.Model):
     user = models.ForeignKey(User , related_name='expenseGeneratedOrSubmitted' , null = False)
     created = models.DateTimeField(auto_now_add=True)
-    approved = models.CharField(default= 'Yes', max_length = 30 , null = True)
+    approved = models.CharField(default = 'No' ,max_length = 5 ,choices = APPROVAL_CHOICES)
     approvalMatrix = models.PositiveSmallIntegerField(default=1)
     approvalStage = models.PositiveSmallIntegerField(default=0)
     dispensed = models.BooleanField(default = False)

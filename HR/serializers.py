@@ -10,7 +10,7 @@ class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:
         model = profile
-        fields = ('displayPicture' , 'prefix' )
+        fields = ('displayPicture' , 'prefix' ,'pk' )
 
 class userSearchSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -32,7 +32,7 @@ class userDesignationSerializer(serializers.ModelSerializer):
 
         read_only_fields=('user',)
         def create(self , validated_data):
-        
+
             d = designation()
             d.user=User.objects.get(pk=self.context['request'].user)
             d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
@@ -45,23 +45,40 @@ class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:
         model = profile
-        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' )
+        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email')
         read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' , )
 
 class userProfileAdminModeSerializer(serializers.ModelSerializer):
     """ Only admin """
     class Meta:
         model = profile
-        fields = ( 'pk', 'empID', 'dateOfBirth' , 'anivarsary' , 'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry',
-        'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry' , 'prefix', 'gender' , 'email', 'email2', 'mobile' , 'emergency' , 'tele' , 'website',
-        'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV',
-        'note1' , 'note2' , 'note3')
+        fields = ( 'pk','empID', 'married', 'dateOfBirth' , 'anivarsary' , 'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
+        'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry', 'prefix', 'gender' , 'email', 'mobile' , 'emergency' , 'website',
+        'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV', 'resignation','vehicleRegistration', 'appointmentAcceptance','pan', 'drivingLicense','cheque','passbook',
+        'note1' , 'note2' , 'note3', 'bloodGroup')
+    def update(self , instance , validated_data):
+        u = self.context['request'].user
+        if not u.is_staff:
+            raise PermissionDenied()
 
+        for key in ['empID','married', 'dateOfBirth' , 'anivarsary' ,'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
+        'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry', 'prefix', 'gender' , 'email', 'mobile' , 'emergency' , 'website',
+        'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV', 'resignation','vehicleRegistration', 'appointmentAcceptance','pan', 'drivingLicense','cheque','passbook',
+        'note1' , 'note2' , 'note3', 'bloodGroup']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+
+        instance.save()
+        # instance.user.email = validated_data['email']
+        instance.user.save()
+        return instance
 
 class payrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = payroll
-        fields = ('pk','user','created','updated','hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
+        fields = ('pk','user','created','updated','hra','special','lta','basic','taxSlab','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
 
     def update(self ,instance, validated_data):
         for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate']:

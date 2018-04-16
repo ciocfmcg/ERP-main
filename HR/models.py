@@ -26,6 +26,20 @@ def getTranscriptsPath(instance , filename ):
     return 'HR/doc/Transcripts/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 def getOtherDocsPath(instance , filename ):
     return 'HR/doc/Others/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+def getResignationDocsPath(instance , filename):
+    return 'HR/doc/resignation/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getVehicleRegDocsPath(instance , filename):
+    return 'HR/doc/vehicleRegistration/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getAppointmentAcceptanceDocsPath(instance , filename):
+    return 'HR/doc/appointmentAcceptance/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getPANDocsPath(instance , filename):
+    return 'HR/doc/pan/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getDrivingLicenseDocsPath(instance , filename):
+    return 'HR/doc/drivingLicense/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getChequeDocsPath(instance , filename):
+    return 'HR/doc/cheque/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getPassbookDocsPath(instance , filename):
+    return 'HR/doc/passbook/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 class Document(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -57,60 +71,61 @@ class profile(models.Model):
     user = models.OneToOneField(User)
     PREFIX_CHOICES = (
         ('NA' , 'NA'),
-        ('Mr' , 'Mr'),
-        ('Mrs' , 'Mrs'),
+        ('Kumar' , 'Kumar'),
+        ('Kumari' , 'Kumari'),
         ('Smt' , 'Smt'),
         ('Shri' ,'Shri'),
+        ('Dr' ,'Dr'),
     )
     GENDER_CHOICES = (
         ('M' , 'Male'),
         ('F' , 'Female'),
         ('O' , 'Other'),
     )
-
     empID = models.PositiveIntegerField(unique = True , null = True)
     displayPicture = models.ImageField(upload_to = getDisplayPicturePath)
     dateOfBirth = models.DateField( null= True )
     anivarsary = models.DateField( null= True )
+    married = models.BooleanField(default = False)
     permanentAddressStreet = models.TextField(max_length = 100 , null= True , blank=True)
     permanentAddressCity = models.CharField(max_length = 15 , null= True , blank=True)
     permanentAddressPin = models.IntegerField(null= True ,  blank=True)
     permanentAddressState = models.CharField(max_length = 20 , null= True , blank=True)
     permanentAddressCountry = models.CharField(max_length = 20 , null= True , blank=True)
-
+    sameAsLocal = models.BooleanField(default = False)
     localAddressStreet = models.TextField(max_length = 100 , null= True )
     localAddressCity = models.CharField(max_length = 15 , null= True )
     localAddressPin = models.IntegerField(null= True )
     localAddressState = models.CharField(max_length = 20 , null= True )
     localAddressCountry = models.CharField(max_length = 20 , null= True )
-
     prefix = models.CharField(choices = PREFIX_CHOICES , default = 'NA' , max_length = 4)
     gender = models.CharField(choices = GENDER_CHOICES , default = 'M' , max_length = 6)
-
     email = models.EmailField(max_length = 50)
-    email2 = models.EmailField(max_length = 50, blank = True)
-
     mobile = models.CharField(null = True , max_length = 14)
-    emergency = models.PositiveIntegerField(null = True)
-    tele = models.PositiveIntegerField(null = True , blank = True)
+    emergency = models.CharField(null = True , max_length = 100) # supposed to be a "name:number" format
     website = models.URLField(max_length = 100 , null = True , blank = True)
-
-    sign = models.ImageField(upload_to = getSignaturesPath ,  null = True)
-    IDPhoto = models.ImageField(upload_to = getDisplayPicturePath ,  null = True)
+    sign = models.FileField(upload_to = getSignaturesPath ,  null = True)
+    IDPhoto = models.FileField(upload_to = getDisplayPicturePath ,  null = True) # aadhar
     TNCandBond = models.FileField(upload_to = getTNCandBondPath ,  null = True)
     resume = models.FileField(upload_to = getResumePath ,  null = True)
     certificates = models.FileField(upload_to = getCertificatesPath ,  null = True)
     transcripts = models.FileField(upload_to = getTranscriptsPath ,  null = True)
     otherDocs = models.FileField(upload_to = getOtherDocsPath ,  null = True , blank = True)
+    resignation = models.FileField(upload_to = getResignationDocsPath ,  null = True , blank = True)
+    vehicleRegistration = models.FileField(upload_to = getVehicleRegDocsPath ,  null = True , blank = True)
+    appointmentAcceptance = models.FileField(upload_to = getAppointmentAcceptanceDocsPath ,  null = True , blank = True)
+    pan = models.FileField(upload_to = getPANDocsPath ,  null = True , blank = True)
+    drivingLicense = models.FileField(upload_to = getDrivingLicenseDocsPath ,  null = True , blank = True)
+    cheque = models.FileField(upload_to = getChequeDocsPath ,  null = True , blank = True)
+    passbook = models.FileField(upload_to = getPassbookDocsPath ,  null = True , blank = True)
+    bloodGroup = models.CharField(max_length = 20 , null = True)
     almaMater = models.CharField(max_length = 100 , null = True)
     pgUniversity = models.CharField(max_length = 100 , null = True , blank = True)
     docUniversity = models.CharField(max_length = 100 , null = True , blank = True)
-
     fathersName = models.CharField(max_length = 100 , null = True)
     mothersName = models.CharField(max_length = 100 , null = True)
     wifesName = models.CharField(max_length = 100 , null = True , blank = True)
     childCSV = models.CharField(max_length = 100 , null = True , blank = True)
-
     note1 = models.TextField(max_length = 500 , null = True , blank = True)
     note2 = models.TextField(max_length = 500 , null = True , blank = True)
     note3 = models.TextField(max_length = 500 , null = True , blank = True)
@@ -171,6 +186,7 @@ class payroll(models.Model):
     special = models.PositiveIntegerField(null = True)
     lta = models.PositiveIntegerField(null = True)
     basic = models.PositiveIntegerField(null = True)
+    taxSlab = models.PositiveIntegerField(default=10)
     adHoc = models.PositiveIntegerField(null = True)
     policyNumber = models.CharField(null = True , max_length = 50)
     provider = models.CharField(max_length = 30 , null = True)

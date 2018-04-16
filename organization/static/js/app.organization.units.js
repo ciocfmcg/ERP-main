@@ -123,6 +123,27 @@ app.controller("workforceManagement.organization.unit.info", function($scope, $s
 app.controller("workforceManagement.organization.units.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
+
+  $scope.unitsSearch = function(query) {
+    // console.log('************',query);
+    return $http.get('/api/organization/units/?name__contains=' + query).
+    then(function(response) {
+      console.log('@', response.data);
+      return response.data;
+    })
+  };
+  // $scope.units = [];
+  // $scope.unititems = function() {
+  //   console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.form.parent);
+  //   $scope.units.push($scope.form.parent)
+  //   $scope.form.parent = [];
+  // }
+  //
+  // $scope.deleteitem = function(index) {
+  //   $scope.units.splice(index, 1);
+  // }
+
+
   console.log($scope.tab);
 
   $scope.resetForm = function() {
@@ -136,15 +157,17 @@ app.controller("workforceManagement.organization.units.form", function($scope, $
       'contacts': [],
       'l1': '',
       'l2': '',
-      'division': ''
+      'division': '',
+      'parent': '',
     }
   }
 
 
-
+  $scope.units = [];
   if ($scope.tab != undefined) {
     $scope.mode = 'edit';
     $scope.form = $scope.tab.data.unit;
+    $scope.units = $scope.form.units;
   } else {
     $scope.mode = 'new';
     $scope.resetForm();
@@ -157,53 +180,20 @@ app.controller("workforceManagement.organization.units.form", function($scope, $
     var f = $scope.form;
     var url = '/api/organization/units/';
 
+    // var parent = []
+    // for (var i = 0; i < $scope.form.parent.length; i++) {
+    //   parent.push($scope.form.parent[i].pk);
+    // }
+    console.log($scope.form.parent);
+    console.log($scope.form);
+    // for (var i = 0; i < $scope.units.length; i++) {
+    //   $scope.form.units.push($scope.units[i].pk)
+    // }
 
 
-    if (f.name.length == 0) {
-      Flash.create('warning', 'Name can not be blank');
-      return;
 
-    }
-    if (f.division.length == 0) {
-      Flash.create('warning', 'Division can not be blank');
-      return;
 
-    }
-    if (f.address.length == 0) {
-      Flash.create('warning', 'Address can not be blank');
-      return;
 
-    }
-    if (f.pincode.length == 0) {
-      Flash.create('warning', 'Pincode can not be blank');
-      return;
-
-    }
-    if (f.l1.length == 0) {
-      Flash.create('warning', 'L1 can not be blank');
-      return;
-
-    }
-    if (f.l2.length == 0) {
-      Flash.create('warning', 'L2 can not be blank');
-      return;
-
-    }
-    if (f.mobile.length == 0) {
-      Flash.create('warning', 'Mobile can not be blank');
-      return;
-
-    }
-    if (f.telephone.length == 0) {
-      Flash.create('warning', 'Telephone can not be blank');
-      return;
-
-    }
-    if (f.fax.length == 0) {
-      Flash.create('warning', 'FAX can not be blank');
-      return;
-
-    }
 
     // console.log('*',$scope.form.unit);
 
@@ -218,19 +208,14 @@ app.controller("workforceManagement.organization.units.form", function($scope, $
       l2: f.l2,
       contacts: f.contacts,
       division: f.division.pk,
+      parent:f.parent.pk
     }
 
-
-    // fd.append('name', f.name);
-    // fd.append('address', f.address);
-    // fd.append('pincode', f.pincode);
-    // fd.append('mobile', f.mobile);
-    // fd.append('telephone', f.telephone);
-    // fd.append('fax', f.fax);
-    // fd.append('l1', f.l1);
-    // fd.append('l2', f.l2);
-    // fd.append('contacts', f.contacts);
-
+    // if (division != null) {
+    //   toSend.division = division.pk;
+    // } else {
+    //   toSend.parent = parent;
+    // }
 
 
     if ($scope.mode == 'new') {
