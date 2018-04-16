@@ -45,12 +45,33 @@ from django.http import JsonResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import StringIO
+
 # from scripts.knnocr.captchaSolver import main as toolFn
 # from scripts.pdfReader.main import processDoc as toolFn
 # Create your views here.
 # from scripts.kpmgPDFExtract.kpmgMain import main as kpmg
 # from scripts.pdfEditor.markings import *
+
+from scripts.PDFReader.reader2 import getBasicDetails
+
 from shutil import copyfile
+
+class COIAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        # fil = StringIO.StringIO()
+        # getBasicDetails(request.data['file'])
+        # print dir(fil)
+        toReturn= []
+        for tr in getBasicDetails(request.data['file']):
+            toReturn.append(str(tr))
+
+
+        return Response({"data" : toReturn}, status=status.HTTP_200_OK)
 
 class ApiAccountPublicApi(APIView):
     renderer_classes = (JSONRenderer,)

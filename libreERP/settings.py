@@ -68,9 +68,9 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'Monomerce'
+BRAND_NAME = 'CIOC'
 
-BRAND_LOGO = '/static/images/mono_icon.svg'
+BRAND_LOGO = '/static/images/cioc_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"

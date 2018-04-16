@@ -1,0 +1,21 @@
+<breadcrumb></breadcrumb>
+<div class="container-fluid">
+
+  <div class="form-group">
+    <label>File</label>
+    <input type="file" file-model="form.file">
+  </div>
+
+  <button ng-click="process()" type="button" class="btn btn-default">
+    Process
+  </button>
+
+  <div ng-if="result">
+    <strong>Name : </strong> {{result[0]}} <br>
+    <strong>Email : </strong> {{result[1]}} <br>
+    <strong>Fax : </strong> {{result[2]}} <br>
+    <strong>OCCURRENCE : </strong> {{result[3]}} <br>
+  </div>
+
+
+</div>

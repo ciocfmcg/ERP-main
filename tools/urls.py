@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'apiAccountPublic/$' , ApiAccountPublicApi.as_view()),
     url(r'nlpGetPara/$' , NLPGetParaByTitle.as_view()),
     url(r'externalFileCache/$' , FileCacheAPI.as_view()),
+    url(r'COI/$' , COIAPI.as_view()),
 ]
