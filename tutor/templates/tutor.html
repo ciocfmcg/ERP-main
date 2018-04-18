@@ -30,7 +30,7 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right ">
-        <li><a style="cursor:pointer;"><i class="fa fa-sign-out " ng-click="showFeedbackForm();" aria-hidden="true" style="font-size:20px;color:white;"></i></a></li>
+        <li><a style="cursor:pointer;"><i class="fa fa-sign-out " ng-click="showFeedbackForm(); endThisSession();" aria-hidden="true" style="font-size:20px;color:white;"></i></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right ">
         <li>
@@ -65,14 +65,14 @@
                   <i title="Eraser" class="fa fa-eraser"  aria-hidden="true" style=" font-size:3vh"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a ng-click="EraserSize =10; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
-                  <li><a ng-click="EraserSize=20; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
-                  <li><a ng-click="EraserSize =30; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
+                  <li><a ng-click="eraserSize =10; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
+                  <li><a ng-click="eraserSize=20; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
+                  <li><a ng-click="eraserSize =30; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
                 </ul>
               </div>
 
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="mode= 'text'; canvas.isDrawingMode = false;">
+                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="mode= 'i-text'; canvas.isDrawingMode = false;">
                   <i title="Text" class="fa fa-font" aria-hidden="true" style=" font-size:3vh" ></i>
                 </button>
               </div>
@@ -94,6 +94,11 @@
                   <li style="font-size:1.5vh;"><a ng-click="mode = 'circle'; canvas.isDrawingMode = false;">Circle</a></li>
                   <li style="font-size:1.5vh;"><a ng-click="mode = 'triangle'; canvas.isDrawingMode = false;">Triangle</a></li>
                 </ul>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="changeGrid();">
+                  <i class="fa fa-th" aria-hidden="true" style=" font-size:3vh"></i>
+                </button>
               </div>
 
             </div>
@@ -134,7 +139,7 @@
               <canvas id="tutorCanvas"></canvas>
             </div>
           </div>
-          <button ng-click="increaseCanvas(); sendHeight =true;" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px;" >+</button>
+          <button ng-click="dataVariables.sendHeight = true; increaseCanvas();" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px;" >+</button>
         </div>
         <div class="row">
           <div class="col-md-12">

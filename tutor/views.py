@@ -81,6 +81,11 @@ class tutors24MessageViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['session' ]
 
+class tutors24ImageViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = SessionImage.objects.all()
+    serializer_class = tutors24ImageSerializer
+
 
 
 def studentHome(request):

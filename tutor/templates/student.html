@@ -68,26 +68,25 @@
                   <i title="Eraser" class="fa fa-eraser"  aria-hidden="true" style=" font-size:3vh"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a ng-click="EraserSize =10; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
-                  <li><a ng-click="EraserSize=20; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
-                  <li><a ng-click="EraserSize =30; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
+                  <li><a ng-click="eraserSize =10; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:5px;" ></i></a></li>
+                  <li><a ng-click="eraserSize=20; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:10px;" ></i></a></li>
+                  <li><a ng-click="eraserSize =30; setEraser();"><i class="fa fa-eraser" aria-hidden="true" style="font-size:15px;" ></i></a></li>
                 </ul>
               </div>
 
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="mode= 'text'; canvas.isDrawingMode = false;">
+                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="mode= 'i-text'; canvas.isDrawingMode = false;">
                   <i title="Text" class="fa fa-font" aria-hidden="true" style=" font-size:3vh" ></i>
                 </button>
               </div>
 
               <div class="btn-group" role="group">
-                <input type="file" id="filePicker" style="display:none;">
-                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="addFile()">
+                <input type="file" id="filePicker" style="display:none;" file-model="form.image" >
+                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="addFile()" >
                   <i class="fa fa-file-image-o" aria-hidden="true" style=" font-size:3vh" ></i>
                 </button>
 
               </div>
-
               <div class="btn-group dropdown" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="height:5vh;border: none;" ng-click="fabric.Object.prototype.selectable = false; canvas.isDrawingMode = false; canvas.selection = false;">
                   <i title="Shapes" class="fa fa-clone dropdown-toggle" data-toggle="dropdown" aria-hidden="true" style=" font-size:3vh" ><span class="caret"></span></i>
@@ -97,6 +96,11 @@
                   <li style="font-size:1.5vh;"><a ng-click="mode = 'circle'; canvas.isDrawingMode = false;">Circle</a></li>
                   <li style="font-size:1.5vh;"><a ng-click="mode = 'triangle'; canvas.isDrawingMode = false;">Triangle</a></li>
                 </ul>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" style="height:5vh;border: none;" ng-click="changeGrid();">
+                  <i class="fa fa-th" aria-hidden="true" style=" font-size:3vh"></i>
+                </button>
               </div>
 
             </div>
@@ -137,7 +141,7 @@
               <canvas id="tutorCanvas"></canvas>
             </div>
           </div>
-          <button ng-click="increaseCanvas(); sendHeight = true;" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px;" >+</button>
+          <button ng-click="dataVariables.sendHeight = true; increaseCanvas();" class="btn btn-primary btn-sm " style="position:fixed;bottom:0px;left:0px;" >+</button>
         </div>
         <div class="row">
           <div class="col-md-12">
@@ -199,8 +203,8 @@
 
           <div class="input-group">
             <span class="input-group-btn"><button class="btn btn-primary" ng-click="attachMessageFile()"> <i class="fa fa-paperclip"></i> </button></span>
-            <input class="form-control" type="text" ng-enter="EnterStudentMsg()"  ng-model="StudentText" placeholder="Type your message here..." />
-            <span class="input-group-btn"><button ng-click="EnterStudentMsg()" class="btn btn-primary">Submit</button></span>
+            <input class="form-control" type="text" ng-enter="enterStudentMsg()"  ng-model="studentText" placeholder="Type your message here..." />
+            <span class="input-group-btn"><button ng-click="enterStudentMsg()" class="btn btn-primary">Submit</button></span>
           </div>
         </div>
 

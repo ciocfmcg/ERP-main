@@ -6,6 +6,7 @@ from .models import *
 from PIM.serializers import *
 from HR.models import profile
 from LMS.models import Subject,Topic
+from PIL import Image
 
 
 class Tutors24ProfileSerializer(serializers.ModelSerializer):
@@ -87,3 +88,39 @@ class tutors24MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ('pk','created','updated','session','sender','msg','attachment')
+
+class tutors24ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SessionImage
+        fields = ('pk' , 'image')
+    def create(self , validated_data):
+        s=SessionImage(**validated_data)
+        # s.sessionID=Session.objects.get(pk=self.context['request'].data['sessionID'])
+        s.save()
+
+        # print 'pathhhhh', s.image.path
+
+        MAX_SIZE = 520
+        image = Image.open(s.image.path)
+        print 'iiiiiiiimmmmmmmmaaaaaageee',image.size;
+        original_size = max(image.size[0], image.size[1])
+        if original_size >= MAX_SIZE:
+            print s.image.path
+            if (image.size[0] > image.size[1]):
+                resized_width = MAX_SIZE
+                resized_height = int(round((MAX_SIZE/float(image.size[0]))*image.size[1]))
+            else:
+                resized_height = MAX_SIZE
+                resized_width = int(round((MAX_SIZE/float(image.size[1]))*image.size[0]))
+
+            image = image.resize((resized_width, resized_height), Image.ANTIALIAS)
+        extension = s.image.path.split('.')[-1]
+        newPath = s.image.path.replace('.' + extension , '_scaled.' + extension)
+        image.save(newPath ,quality=50,optimize=True)
+        return s
+
+        # else:
+        #     extension = s.image.path.split('.')[-1]
+        #     newPath = s.image.path.replace('.' + extension , '_scaled.' + extension)
+        #     image.save(newPath ,quality=50,optimize=True)
+        #     return s
