@@ -29,7 +29,19 @@ from .serializers import *
 from subprocess import Popen, PIPE
 import os
 
+class SectionViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = SectionSerializer
+    queryset = Section.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title' , 'book']
 
+class BookViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
 
 class QPartViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

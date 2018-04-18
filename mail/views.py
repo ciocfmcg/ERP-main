@@ -125,6 +125,7 @@ def mailBoxView(request):
     """
 
     EMAIL_ACCOUNT = str("%s@%s" %(request.user.username , globalSettings.EMAIL_HOST_SUFFIX))
+    EMAIL_ACCOUNT = "do_not_reply@24tutors.com"
     EMAIL_PASSWORD = str(request.user.mailAccount.get().passKey)
 
     EMAIL_FOLDER = str(request.GET['folder'])
@@ -142,8 +143,14 @@ def mailBoxView(request):
     except imaplib.IMAP4.error:
         print "LOGIN FAILED!!! "
 
+    EMAIL_FOLDER = EMAIL_FOLDER.replace('INBOX' , 'Inbox').replace('+', '')
 
-    rv, data = M.select(EMAIL_FOLDER)
+    if '.' in EMAIL_FOLDER:
+        EMAIL_FOLDER = EMAIL_FOLDER.replace('Inbox' , 'INBOX')
+
+
+    print "EMAIL_FOLDER  : ", EMAIL_FOLDER
+    rv, data = M.select('INBOX.Sent')
     if rv == 'OK':
         rv, data = M.uid('SEARCH', None, '(' + query + ')')
         # rv, data = M.sort('REVERSE DATE', 'UTF-8' , "ALL")
@@ -169,6 +176,7 @@ def mailBoxView(request):
 
 def getMailBody(M , id , mode):
     rv, data = M.uid('FETCH', id, '(RFC822)')
+    print data
     if rv == 'OK':
         attachments = list();
         msg = email.message_from_string(data[0][1])
@@ -202,9 +210,15 @@ def emailView(request):
     # if request.user.username != 'pradeep':
     #     raise PermissionDenied()
     EMAIL_FOLDER = str(request.GET['folder'])
+
+    if EMAIL_FOLDER == 'INBOX':
+        EMAIL_FOLDER = 'Inbox'
+
+
     uid = int(request.GET['uid'])
 
     EMAIL_ACCOUNT = str("%s@%s" %(request.user.username , globalSettings.EMAIL_HOST_SUFFIX))
+    EMAIL_ACCOUNT = "do_not_reply@24tutors.com"
     EMAIL_PASSWORD = str(request.user.mailAccount.get().passKey)
 
     M = imaplib.IMAP4_SSL(globalSettings.EMAIL_HOST)
@@ -213,7 +227,8 @@ def emailView(request):
     except imaplib.IMAP4.error:
         print "LOGIN FAILED!!! "
 
-    rv, data = M.select(EMAIL_FOLDER)
+    print "EMAIL_FOLDER : " , EMAIL_FOLDER
+    rv, data = M.select("Inbox")
     if rv == 'OK':
         if request.method=='GET':
             body , attachments = getMailBody(M, uid , request.GET['mode'])
@@ -257,8 +272,9 @@ def foldersDetailsView(request):
     """
 
     EMAIL_ACCOUNT = str("%s@%s" %(request.user.username , globalSettings.EMAIL_HOST_SUFFIX))
+    EMAIL_ACCOUNT = "do_not_reply@24tutors.com"
     EMAIL_PASSWORD = str(request.user.mailAccount.get().passKey)
-
+    print "EMAIL_ACCOUNT : " , EMAIL_ACCOUNT , " EMAIL_PASSWORD : " , EMAIL_PASSWORD
     M = imaplib.IMAP4_SSL(globalSettings.EMAIL_HOST)
     try:
         rv, data = M.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
@@ -279,6 +295,7 @@ def mailAttachmentView(request):
     uid = int(request.GET['uid'])
 
     EMAIL_ACCOUNT = str("%s@%s" %(request.user.username , globalSettings.EMAIL_HOST_SUFFIX))
+    EMAIL_ACCOUNT = "do_not_reply@24tutors.com"
     EMAIL_PASSWORD = str(request.user.mailAccount.get().passKey)
 
     M = imaplib.IMAP4_SSL(globalSettings.EMAIL_HOST)

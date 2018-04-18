@@ -1,0 +1,63 @@
+<div class="container-fluid"  ng-controller="projectManagement.LMS.configure.form">
+
+  <div class="row" style="padding-top:20px">
+
+    <div class="col-md-11">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="col-md-11">
+                <label>Title : </label> {{bookDetails.title}} <br>
+                <label>Subject : </label> {{bookDetails.subject.title}} <br>
+                <label>Volume : </label> {{bookDetails.volume}} <br>
+                <label>Description : </label> {{bookDetails.description}} <br>
+                <label><i class="fa fa-user"></i> Author : </label> {{bookDetails.author}} <br>
+                <label><i class="fa fa-barcode "></i> ISSN : </label> {{bookDetails.ISSN}} <br>
+                <label>version : </label> {{bookDetails.version}} <br>
+                <label>license : </label> {{bookDetails.license}} <br>
+                <label>shortUrl : </label> {{bookDetails.shortUrl}} <br>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <img style="width: 200px;height:200px;" class="img" ng-src="{{bookDetails.dp}}" ng-if="bookDetails.dp != null">
+            </div>
+          </div>
+          <hr>
+          <div class="row" style="padding-left:20px">
+            <div class="row">
+              <button type="button" name="button" class="btn btn-primary" ng-click="blogPopup(bookDetails.pk)">{{blogType=='new'?'Create Link To Blog':'Update Link To Blog'}}</button>
+            </div>
+            <br>
+            <div class="row" ng-if="blogType=='edit'">
+              <div class="col-md-8">
+                <label>URL suffix : </label> {{blogData.shortUrl}} <br>
+                <label>Description : </label> {{blogData.description}} <br>
+                <label>Tags : </label> {{blogData.tagsCSV}} <br>
+                <label>Section : </label> {{blogData.section}} <br>
+                <label>Author : </label> {{blogData.author}} <br>
+              </div>
+              <div class="col-md-4">
+                <img style="width: 100px;height:100px;" class="img" ng-src="{{blogData.ogimage}}" ng-if="blogData.ogimage != null">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <h3 style="text-align:center">Sections </h3> <hr>
+          </div>
+          <div class="row" ng-repeat = " s in form.sections">
+            <div class="col-md-11">
+              <div class="well well-sm">
+                {{s.title}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

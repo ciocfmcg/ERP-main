@@ -1,5 +1,7 @@
 parseMailboxStatus = function(raw){
-  name = raw[0].match(/"(.*?)"/)[1];
+  console.log(raw);
+  // name = raw[0].match(/"(.*?)"/)[1];
+  name = raw[0].split('(')[0];
   onServer = name;
   if (name.indexOf('/') != -1) {
     name = name.split('/')[1];
@@ -65,7 +67,7 @@ app.controller('controller.mail' , function($scope , $http , $timeout , $users ,
     };
     $scope.emails = [];
     var url = '/api/mail/mailbox/' ;
-    var dataToSend = {folder : $scope.folderSelected , page : $scope.page , query : query}
+    var dataToSend = {folder : $scope.folderSelected.replace('+' , '') , page : $scope.page , query : query}
     $http({method : 'GET' , url : url , params : dataToSend}).
     then(function(response){
       for (var i = 0; i < response.data.length; i++) {
@@ -367,7 +369,7 @@ app.controller('controller.mail' , function($scope , $http , $timeout , $users ,
     // $state.go('home.mail' , {folder : to} )
     // $stateParams.folder = to.split('/')[1];
     $scope.page = 0;
-    $scope.folderSelected = to;
+    $scope.folderSelected = to.replace('+', '');
     $scope.getMailbox();
   }
 

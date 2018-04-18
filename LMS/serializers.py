@@ -5,23 +5,22 @@ from rest_framework.exceptions import *
 from .models import *
 import random, string
 
-
-
-class QPartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = QPart
-        fields = ('pk' , 'mode' , 'txt', 'image' )
-
-
+# class TopicLiteSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Topic
+#         fields = ('pk' , 'created' , 'title' , 'description' )
 
 class SubjectSerializer(serializers.ModelSerializer):
     topic_count = serializers.SerializerMethodField()
+    # topic = serializers.SerializerMethodField()
     class Meta:
         model = Subject
         fields = ('pk' , 'created' , 'title', 'level' , 'description' , 'dp' , 'topic_count')
 
     def get_topic_count(self, obj):
         return obj.topics.all().count()
+    # def get_topic(self, obj):
+    #     return obj.topics.all()
 
 class TopicSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(many = False , read_only = True)
@@ -38,6 +37,30 @@ class TopicSerializer(serializers.ModelSerializer):
         return t
 
 
+class SectionSerializer(serializers.ModelSerializer):
+    # book = BookSerializer(many = False , read_only = True)
+    class Meta:
+        model = Section
+        fields = ('pk' , 'title' , 'book','sequence')
+
+
+class BookSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(many = False , read_only = True)
+    sections = SectionSerializer(many = True , read_only = True)
+    class Meta:
+        model = Book
+        fields = ('pk' , 'title' , 'shortUrl', 'subject', 'description', 'dp', 'author', 'ISSN'  , 'volume', 'version', 'license' ,'sections' )
+
+    def create(self , validated_data):
+        b = Book(**validated_data)
+        b.subject = Subject.objects.get(pk = self.context['request'].data['subject'])
+        b.save()
+        return b
+
+class QPartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QPart
+        fields = ('pk' , 'mode' , 'txt', 'image' )
 
 class SubjectLiteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,20 +73,37 @@ class TopicLiteSerializer(serializers.ModelSerializer):
         model = Topic
         fields = ('pk', 'title' , 'subject' )
 
+class BookLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('pk'  , 'title')
+
+class SectionLiteSerializer(serializers.ModelSerializer):
+    book = BookLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = Section
+        fields = ('pk', 'title' , 'book' )
 
 class QuestionSerializer(serializers.ModelSerializer):
     quesParts = QPartSerializer(many = True , read_only = True)
     optionsParts = QPartSerializer(many = True , read_only = True)
     topic = TopicLiteSerializer(many = False , read_only = True)
+    bookSection = SectionLiteSerializer(many = False , read_only = True)
 
     class Meta:
         model = Question
-        fields = ('pk' , 'created' , 'updated', 'ques' , 'quesParts' , 'optionsParts' , 'solutionParts' , 'status', 'archived' , 'topic', 'level' , 'marks' , 'qtype' , 'codeLang' , 'user')
+        fields = ('pk' , 'created' , 'updated', 'ques' , 'quesParts' , 'optionsParts' , 'solutionParts' , 'status', 'archived' , 'topic', 'level' , 'marks' , 'qtype' , 'codeLang' , 'user' , 'typ','bookSection')
         read_only_fields = ('archived', 'approved', 'reviewed', 'forReview' , 'user')
 
     def create(self , validated_data):
+        print '*****************'
+        print validated_data,self.context['request'].data
         q = Question(**validated_data)
         q.user = self.context['request'].user
+        if 'topic' in self.context['request'].data:
+            q.topic = Topic.objects.get(pk=self.context['request'].data['topic'])
+        if 'bookSection' in self.context['request'].data:
+            q.bookSection = Section.objects.get(pk=self.context['request'].data['bookSection'])
         q.save()
         return q
 

@@ -1,0 +1,64 @@
+<div class="row" style="margin-top:20px;margin-left:10px">
+  <div class="col-md-11" style="padding-left:35px">
+    <h3 align="center"><b>SEO related data </b></h3><br>
+    <div class="row">
+      <div class="form-group">
+        <label>Tags :</label>
+        <tags-input ng-model="blogForm.tags" add-on-paste="true" add-From-Autocomplete-Only="true" display-property="title">
+          <auto-complete source="loadTags($query)" load-on-down-arrow="true"></auto-complete>
+        </tags-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label>URL suffix</label>
+        <input type="text" class="form-control" ng-model="blogForm.shortUrl">
+        <p class="help-block">It will be <span class="text-primary">jee-tips-and-tricks</span> for url : <span class="text-primary">https://24tutors.com/jee-tips-and-tricks</span> </p>
+      </div>
+
+      <div class="form-group">
+        <label>OG Image</label>
+        <input type="file" file-model="blogForm.ogimage">
+      </div>
+      <div class="row text-center">
+        OR
+      </div>
+      <div class="form-group">
+        <label>OG Image url</label>
+        <input type="text" class="form-control" ng-model="blogForm.ogimageUrl">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" class="form-control" ng-model="blogForm.description">
+      </div>
+
+      <div class="form-group">
+        <label>Tags</label>
+        <input type="text" class="form-control" ng-model="blogForm.tagsCSV">
+        <p class="help-block">Comma seperated tags</p>
+      </div>
+      <div class="form-group">
+        <label>Section</label>
+        <input type="text" class="form-control" ng-model="blogForm.section">
+        <p class="help-block">Like calculus for an article on Maths</p>
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" class="form-control" ng-model="blogForm.author">
+      </div>
+    </div>
+
+    <div class="row">
+      <button type="button" class="btn btn-primary" ng-click="saveBlog()">
+        Save
+      </button>
+      <button type="button" class="btn btn-default pull-right" ng-click="cancelBlog()">
+        Cancel
+      </button>
+    </div>
+
+    <br>
+  </div>
+</div>

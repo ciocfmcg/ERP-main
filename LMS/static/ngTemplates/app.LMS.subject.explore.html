@@ -1,0 +1,41 @@
+<div class="container-fluid"  ng-controller="projectManagement.LMS.configure.form">
+
+  <div class="row" style="padding-top:20px">
+
+    <div class="col-md-11">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-11">
+              <label>Title : </label> {{form.title}} <br>
+              <label>Level : </label> {{form.level}} <br>
+              <label>Description : </label> {{form.description}} <br>
+              <label>Total : </label> {{form.topic_count}} Topics<br>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-5">
+              <img style="width: 300px;height:300px;" class="img" ng-src="{{form.dp}}" ng-if="form.dp != null">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <h4 style="text-align:center">Topics </h4> <hr>
+          </div>
+          <div class="row" ng-repeat = " t in form.topicList">
+            <div class="col-md-11">
+              <div class="well well-sm">
+                <label>Title : </label> {{t.title}} <br>
+                <label>Description : </label> {{t.description}} <br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
