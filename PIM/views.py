@@ -87,7 +87,7 @@ class blogViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = blogSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title' , 'state']
+    filter_fields = ['title' , 'state', 'contentType', 'header']
     def get_queryset(self):
         if 'state' not in self.request.GET and 'tags' not in self.request.GET and 'user' not in self.request.GET:
             return blogPost.objects.filter( users__in=[self.request.user,])

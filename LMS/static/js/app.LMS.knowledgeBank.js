@@ -103,7 +103,21 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
   };
 
   $scope.topicSearch = function(query) {
-    return $http.get( '/api/LMS/topic/?title__contains=' + query).
+    return $http.get( '/api/LMS/topic/?title__contains=' + query +'&&subject='+ $scope.form.subject.pk).
+    then(function(response){
+      return response.data;
+    })
+  };
+
+  $scope.bookSearch = function(query) {
+    return $http.get( '/api/LMS/book/?title__contains=' + query).
+    then(function(response){
+      return response.data;
+    })
+  };
+
+  $scope.sectionSearch = function(query) {
+    return $http.get( '/api/LMS/section/?title__contains=' + query +'&&book='+ $scope.form.book.pk).
     then(function(response){
       return response.data;
     })
@@ -119,11 +133,17 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       $scope.form.quesPartTxt = '';
       $scope.form.textMode = false;
       $scope.form.quesPartFile = emptyFile;
-
       $scope.form.optionTxt = '';
       $scope.form.textModeOption = false;
       $scope.form.optionFile= emptyFile;
-      $scope.form.subject = response.data.topic.subject;
+      if (response.data.topic != null ) {
+        $scope.form.subject = response.data.topic.subject;
+        $scope.form.topic = response.data.topic;
+      }
+      if (response.data.bookSection != null) {
+        $scope.form.book = response.data.bookSection.book;
+        $scope.form.section = response.data.bookSection;
+      }
 
       $scope.mode = 'edit';
 
@@ -150,36 +170,28 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     })(indx))
   }
 
-  $scope.bookSearch = function(query) {
-    return $http.get( '/api/LMS/book/?title__contains=' + query).
-    then(function(response){
-      return response.data;
-    })
-  };
-
-  $scope.sectionSearch = function(query) {
-    return $http.get( '/api/LMS/section/?title__contains=' + query).
-    then(function(response){
-      return response.data;
-    })
-  };
-
 
 
   $scope.resetForm = function() {
     if ($scope.form != undefined) {
       var subject = $scope.form.subject;
       var topic = $scope.form.topic;
+      var book = $scope.form.book;
+      var section = $scope.form.section
     }else{
       var subject = '';
       var topic = '';
+      var book = '';
+      var section = '';
     }
 
     $scope.mode = 'new';
-    $scope.form = {ques : '' , quesParts : [], quesPartTxt : '' , textMode : false , quesPartFile : emptyFile , optionsParts : [], optionTxt : '' , optionFile : emptyFile   , textModeOption : false , level : 'easy' ,qtype : 'mcq'}
+    $scope.form = {ques : '' , quesParts : [], quesPartTxt : '' , textMode : false , quesPartFile : emptyFile , optionsParts : [], optionTxt : '' , optionFile : emptyFile   , textModeOption : false , level : 'easy' ,qtype : 'mcq' , typ : ''}
 
     $scope.form.subject = subject;
     $scope.form.topic = topic;
+    $scope.form.book = book;
+    $scope.form.section = section
 
   }
 
@@ -190,27 +202,49 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
   }
 
   // $scope.form.ques = " Is it true that \\(x^n + y^n = z^n\\) if \\(x,y,z\\) and \\(n\\) are positive integers?. Explain.";
-
+  console.log('QQQQQQQQQQ',$scope.form);
   $scope.saveQuestion = function() {
 
-    if (!$scope.form.subject.pk) {
-      Flash.create('warning', 'Please select a subject');
+    if ($scope.form.typ.length == 0) {
+      Flash.create('warning', 'Please select a Type');
       return;
+    }else {
+      if ($scope.form.typ == 'book') {
+        if ($scope.form.section.length>0 && !$scope.form.section.pk) {
+          Flash.create('warning', 'Please select a valid Section');
+          return;
+        }
+      }else {
+        if ($scope.form.topic.length > 0 && !$scope.form.topic.pk) {
+          Flash.create('warning', 'Please select a valid topic');
+          return;
+        }
+      }
     }
 
-    if (!$scope.form.topic.pk) {
-      Flash.create('warning', 'Please select a topic');
+    if ($scope.form.ques.length == 0) {
+      Flash.create('warning', 'Please Write Some Question');
       return;
     }
 
     var f = $scope.form;
-
+    console.log(f);
     var toSend = {
       ques : f.ques,
-      topic : f.topic.pk,
-      ques : f.ques,
+      typ : f.typ,
       level : f.level,
       qtype : f.qtype
+    }
+    if ($scope.form.typ == 'book') {
+      if ($scope.form.section.pk) {
+        console.log('book');
+        toSend.bookSection = f.section.pk
+      }
+    }else {
+      if ($scope.form.topic.pk) {
+        console.log('bank');
+        toSend.topic = f.topic.pk
+      }
     }
 
     var url = '/api/LMS/question/';

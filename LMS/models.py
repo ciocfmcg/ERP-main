@@ -87,6 +87,7 @@ class Section(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     title = models.CharField(max_length = 100 , null = False)
+    sequence = models.PositiveIntegerField(null = True)
     book = models.ForeignKey(Book , null = False , related_name='sections')
 
 
@@ -138,6 +139,7 @@ class Question(models.Model):
     codeLang = models.CharField(choices = LANGUAGE_CHOICES , default = 'any' , null = False, max_length = 10)
     user = models.ForeignKey(User , null = False , related_name='questionsAuthored')
     solutionVideo = models.FileField(null = True , upload_to=getSolutionVideoPath)
+    typ = models.CharField(max_length = 7 , null = True)
 
 class PaperQues(models.Model):
     created = models.DateTimeField(auto_now_add = True)

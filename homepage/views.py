@@ -28,6 +28,7 @@ def index(request):
 
 
 def blogDetails(request, blogname):
+    print '*****************',blogname
     blogobj = blogPost.objects.get(shortUrl=blogname)
     us = ''
     blogId = blogobj.pk
@@ -43,7 +44,7 @@ def blogDetails(request, blogname):
 
 def blog(request):
 
-    blogObj = blogPost.objects.all().order_by('-created')
+    blogObj = blogPost.objects.filter(contentType='article').order_by('-created')
     pagesize = 6
     try:
         page = int(request.GET.get('page', 1))

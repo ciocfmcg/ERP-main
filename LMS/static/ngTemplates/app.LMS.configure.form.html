@@ -2,76 +2,52 @@
 
   <div class="row">
     <div class="col-md-1" style="border-right:solid 2px #eeeeee;padding-top:30px;min-height:50vh;">
-      <div class="row text-center" ng-click="mode='subject'" style="{{mode == 'subject' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
+      <div class="row text-center" ng-click="mode='subject'" style="{{mode == 'subject' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;" ng-show="subjectShow">
         Subject
       </div>
-      <div class="row text-center" ng-click="mode='topic'" style="{{mode == 'topic' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
+      <div class="row text-center" ng-click="mode='topic'" style="{{mode == 'topic' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;" ng-show="topicShow">
         Topic
       </div>
-      <div class="row text-center" ng-click="mode='book'" style="{{mode == 'book' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
+      <div class="row text-center" ng-click="mode='book'" style="{{mode == 'book' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;" ng-show="bookShow">
         Book
       </div>
-      <div class="row text-center" ng-click="mode='section'" style="{{mode == 'section' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
+      <!-- <div class="row text-center" ng-click="mode='section'" style="{{mode == 'section' ? 'background:#eeeeee;': ''}}padding:20px;cursor:pointer;">
         Section
-      </div>
+      </div> -->
     </div>
-    <div class="col-md-5">
-
-      <div class="form-group" ng-if="mode == 'topic'">
+    <div class="col-md-5" ng-if="mode == 'topic'">
+      <div class="form-group" >
         <label>Subject</label>
         <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as subject.title for subject in subjectSearch($viewValue)">
       </div>
-
       <div class="form-group">
         <label>Title</label>
         <input ng-model="form.title" type="text" class="form-control">
       </div>
-      <div class="form-group" ng-if="mode == 'book'">
-        <label>Subject</label>
-        <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as subject.title for subject in subjectSearch($viewValue)">
-      </div>
-
       <div class="form-group">
         <label>Description</label>
         <textarea ng-model="form.description" name="name" class="form-control" rows="8" cols="80"></textarea>
       </div>
 
-      <div class="form-group" ng-if="mode == 'subject'">
+      <button type="button" class="btn btn-primary" ng-click="save()">
+        Save
+      </button>
+    </div>
+
+    <div class="col-md-5" ng-if="mode == 'subject'">
+      <div class="form-group">
+        <label>Title</label>
+        <input ng-model="form.title" type="text" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea ng-model="form.description" name="name" class="form-control" rows="8" cols="80"></textarea>
+      </div>
+      <div class="form-group">
         <label>Display Pic</label>
         <input file-model="form.dp" type="file" >
       </div>
-
-      <div class="form-group" ng-if="mode == 'book'">
-        <label>Display Pic</label>
-        <input file-model="form.dp" type="file" >
-      </div>
-
-      <div class="form-group" ng-if="mode == 'book'">
-        <label>Author</label>
-        <input ng-model="form.author" type="text" class="form-control" >
-      </div>
-
-      <div class="form-group" ng-if="mode == 'book'">
-        <label>ISSN</label>
-        <input ng-model="form.ISSN" type="text" class="form-control">
-      </div>
-
-      <div class="form-group" ng-if="mode == 'book'">
-        <label>Volume</label>
-        <input ng-model="form.Volume" type="text" class="form-control">
-      </div>
-
-      <div class="form-group" ng-if="mode == 'book'">
-        <label>Version</label>
-        <input ng-model="form.version" type="text"class="form-control" >
-      </div>
-
-      <div class="form-group" ng-if="mode == 'book'">
-        <label>License</label>
-        <input ng-model="form.license" type="text" class="form-control">
-      </div>
-
-      <div class="form-group" ng-if="mode == 'subject'">
+      <div class="form-group">
         <label>Level</label>
         <input type="number" class="form-control" ng-model="form.level">
       </div>
@@ -79,8 +55,102 @@
       <button type="button" class="btn btn-primary" ng-click="save()">
         Save
       </button>
-
     </div>
+    <div class="col-md-5" ng-if="mode == 'book' && hideBook == 'no'">
+      <div class="form-group">
+        <label>Title</label>
+        <input ng-model="form.title" type="text" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" class="form-control" ng-model="form.subject" uib-typeahead="subject as subject.title for subject in subjectSearch($viewValue)">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea ng-model="form.description" name="name" class="form-control" rows="8" cols="80"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Display Pic</label>
+        <input file-model="form.dp" type="file" >
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input ng-model="form.author" type="text" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label>ISSN</label>
+        <input ng-model="form.ISSN" type="text" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Volume</label>
+        <input ng-model="form.volume" type="text" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Version</label>
+        <input ng-model="form.version" type="text"class="form-control" >
+      </div>
+      <div class="form-group">
+        <label>License</label>
+        <input ng-model="form.license" type="text" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Short Url</label>
+        <input ng-model="form.shortUrl" type="text" class="form-control">
+      </div>
+
+      <button type="button" class="btn btn-primary" ng-click="save()">
+        Save
+      </button>
+    </div>
+
+    <div class="col-md-11" ng-if="mode == 'book' && hideBook == 'yes'">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-11">
+              <label>Title : </label> {{bookDetails.title}} <br>
+              <label>Subject : </label> {{bookDetails.subject.title}} <br>
+              <label>Volume : </label> {{bookDetails.volume}} <br>
+              <label>Description : </label> {{bookDetails.description}} <br>
+              <label><i class="fa fa-user"></i> Author : </label> {{bookDetails.author}} <br>
+              <label><i class="fa fa-barcode "></i> ISSN : </label> {{bookDetails.ISSN}} <br>
+              <label>version : </label> {{bookDetails.version}} <br>
+              <label>license : </label> {{bookDetails.license}} <br>
+              <label>shortUrl : </label> {{bookDetails.shortUrl}} <br>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-5">
+              <img style="width: 300px;height:300px;" class="img" ng-src="{{bookDetails.dp}}" ng-if="bookDetails.dp != null">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <h3 style="text-align:center">Sections </h3> <hr> <button type = "button" class="btn btn-primary btn-sm" ng-click="addSection(0,'top')"> <i class="fa fa-plus"></i> Add </button>
+          </div>
+          <div class="row" ng-repeat = " s in form.sections">
+            <div class="col-md-11">
+              <div class="well well-sm">
+                {{s.title}}
+              </div>
+              <div class="row" style="cursor:pointer;padding-top:-20px;padding-bottom:20px;padding-right:30px;padding-left:20px">
+                <button type = "button" class="btn btn-primary btn-sm" ng-click="addSection($index,'bottom')"> <i class="fa fa-plus"></i> Add </button>
+                <i class="fa fa-arrow-down pull-right" ng-click="secMove($index,'down')"></i>
+                <i class="fa fa-arrow-up pull-right" ng-click="secMove($index,'up')"></i>
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-show="secArr" style="padding-top:40px;padding-left:20px">
+            <button type="button" class="btn btn-success btn-lg" ng-click="saveSecSeq()">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>

@@ -20,8 +20,8 @@ router.register(r'quesPaper' , PaperQuesViewSet , base_name ='quesPaper')
 router.register(r'channel' , ChannelViewSet , base_name ='channel')
 router.register(r'video' , VideoViewSet , base_name ='video')
 router.register(r'feedback' , FeedbackViewSet , base_name ='feedback')
-router.register(r'book' , BookViewSet , base_name ='feedback')
-router.register(r'section' , SectionViewSet , base_name ='feedback')
+router.register(r'book' , BookViewSet , base_name ='book')
+router.register(r'section' , SectionViewSet , base_name ='section')
 
 
 urlpatterns = [
