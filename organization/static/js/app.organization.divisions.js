@@ -142,41 +142,6 @@ app.controller("workforceManagement.organization.division.form", function($scope
       fd.append('logo', f.logo)
     }
 
-    if (f.name.length == 0) {
-      Flash.create('warning', 'Name can not be blank');
-      return;
-
-    }
-    if (f.website.length == 0) {
-      Flash.create('warning', 'Website can not be blank');
-      return;
-
-    }
-    if (f.gstin.length == 0) {
-      Flash.create('warning', 'GSTIN can not be blank');
-      return;
-
-    }
-    if (f.pan.length == 0) {
-      Flash.create('warning', 'PAN can not be blank');
-      return;
-
-    }
-    if (f.cin.length == 0) {
-      Flash.create('warning', 'CIN can not be blank');
-      return;
-
-    }
-    if (f.l1.length == 0) {
-      Flash.create('warning', 'L1 can not be blank');
-      return;
-
-    }
-    if (f.l2.length == 0) {
-      Flash.create('warning', 'L2 can not be blank');
-      return;
-
-    }
     fd.append('name', f.name);
     fd.append('website', f.website);
     fd.append('contacts', f.contacts);

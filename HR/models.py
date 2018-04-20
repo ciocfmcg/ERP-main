@@ -7,6 +7,7 @@ from allauth.socialaccount.signals import social_account_added
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.contrib import admin
+from organization.models import Division,Unit,Departments,Role
 
 
 
@@ -144,35 +145,16 @@ class rank(models.Model):
     created = models.DateTimeField(auto_now_add = True)
 
 class designation(models.Model):
-    # DOMAIN_CHOICES = (
-    #     ('Not selected..' , 'Not selected..'),
-    #     ('Automotive' , 'Automotive'),
-    #     ('Service' , 'Service'),
-    #     ('University' , 'University'),
-    #     ('FMCG' , 'FMCG'),
-    #     ('Power' , 'Power'),
-    #     ('Pharmaceuticals' , 'Pharmaceuticals'),
-    #     ('Manufacturing' , 'Manufacturing'),
-    #     ('Tele Communications' , 'Tele Communications'),
-    # )
-    # UNIT_TYPE_CHOICE = (
-    #     ('Not selected..' , 'Not selected..'),
-    #     ('Research and Development' , 'Research and Development'),
-    #     ('Operations' , 'Operations'),
-    #     ('Management' , 'Management'),
-    # )
-    #
-    # """ One more field can be user here
-    # """
     user = models.OneToOneField(User)
-    # unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
-    # domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
-    # unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty
-    # department = models.CharField(max_length = 30 , null = True)
-    # rank = models.ForeignKey( rank , null = True )
     reportingTo = models.ForeignKey(User , related_name = "managing" , null=True)
     primaryApprover = models.ForeignKey(User, related_name = "approving" , null=True)
     secondaryApprover = models.ForeignKey(User , related_name = "alsoApproving" , null=True)
+    division = models.ForeignKey(Division , null = True , related_name = "designations")
+    unit = models.ForeignKey(Unit , null = True , related_name = "designations")
+    department = models.ForeignKey(Departments , null = True , related_name = "designations")
+    role = models.ForeignKey(Role , null = True , related_name = "designations")
+
+
 
 User.designation = property(lambda u : designation.objects.get_or_create(user = u)[0])
 

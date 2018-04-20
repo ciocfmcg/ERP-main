@@ -28,7 +28,7 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
 
   $scope.config = {
     views: views,
-    url: '/api/organization/roles/',
+    url: '/api/organization/role/',
     searchField: 'name',
     itemsNumPerView: [16, 32, 48],
   }
@@ -113,7 +113,7 @@ app.controller("workforceManagement.organization.roles.form", function($scope, $
     console.log('entered');
     var f = $scope.form;
     console.log('kjhkhjkjkl', typeof f.emp_photo);
-    var url = '/api/organization/roles/';
+    var url = '/api/organization/role/';
 
     var fd = new FormData();
     if (f.emp_photo != emptyFile && typeof f.emp_photo != 'string') {
@@ -166,7 +166,7 @@ app.controller("workforceManagement.organization.roles.form", function($scope, $
 
   $scope.unitSearch = function(query) {
     // console.log('************',query);
-    return $http.get('/api/organization/units/?division__name__contains=' + $scope.form.division.name + '&&name_contains=' + query).
+    return $http.get('/api/organization/unit/?division__name__contains=' + $scope.form.division.name + '&&name_contains=' + query).
     then(function(response) {
       console.log('@', response.data)
       return response.data;

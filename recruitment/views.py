@@ -10,9 +10,9 @@ from .models import *
 # Create your views here.
 
 
-class JobsViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = JobsSerializer
-    queryset = Jobs.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['jobtype']
+# class JobsViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated, )
+#     serializer_class = JobsSerializer
+#     queryset = Jobs.objects.all()
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['jobtype']

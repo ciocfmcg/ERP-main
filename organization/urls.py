@@ -5,12 +5,13 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'divisions' , DivisionViewSet , base_name = 'division')
-router.register(r'units' , UnitsViewSet , base_name = 'units')
+router.register(r'unit' , UnitViewSet , base_name = 'unit')
 router.register(r'unitLite' , UnitLiteViewSet , base_name = 'unitLite')
+router.register(r'firstLevelUnit' , FirstLevelUnitViewSet , base_name = 'firstLevelUnit')
 router.register(r'unitFull' , UnitFullViewSet , base_name = 'unitFull')
 router.register(r'unitSuperLite' , UnitSuperliteViewSet , base_name = 'unitSuperLite')
 router.register(r'departments' , DepartmentsViewSet , base_name = 'departments')
-router.register(r'roles' , RolesViewSet , base_name = 'roles')
+router.register(r'role' , RoleViewSet , base_name = 'role')
 urlpatterns = [
      url(r'^', include(router.urls)),
  ]

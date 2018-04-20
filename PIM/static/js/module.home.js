@@ -29,6 +29,11 @@ app.config(function($stateProvider ){
     templateUrl: '/static/ngTemplates/app.home.blog.html',
     controller: 'controller.home.blog'
   })
+  .state('home.profile', {
+    url: "/profile/:id?action",
+    templateUrl: '/static/ngTemplates/app.home.profile.html',
+    controller: 'controller.home.profile'
+  })
   .state('home.calendar', {
     url: "/calendar",
     templateUrl: '/static/ngTemplates/app.home.calendar.html',
@@ -38,6 +43,11 @@ app.config(function($stateProvider ){
     url: "/notes",
     templateUrl: '/static/ngTemplates/app.home.notes.html',
     controller: 'controller.home.notes'
+  })
+  .state('home.myWork', {
+    url: "/myWork",
+    templateUrl: '/static/ngTemplates/app.home.myWork.html',
+    controller: 'controller.home.myWork'
   })
 
 });

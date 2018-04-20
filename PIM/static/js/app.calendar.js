@@ -53,7 +53,8 @@ app.controller("controller.home.calendar", function($scope , $http ,$aside, $sta
     templates = {
       meeting : '/static/ngTemplates/app.home.calendar.form.meeting.html' ,
       reminder : '/static/ngTemplates/app.home.calendar.form.reminder.html' ,
-      todo : '/static/ngTemplates/app.home.calendar.form.todo.html'
+      todo : '/static/ngTemplates/app.home.calendar.form.todo.html',
+      leave : '/static/ngTemplates/app.home.calendar.form.leave.html'
     };
     input = {formTitle : typeof index == 'undefined'? 'Create' : 'Edit' , template : templates , items : $scope.data.items , editor: index};
     position = 'left';

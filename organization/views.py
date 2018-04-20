@@ -26,7 +26,7 @@ class UnitLiteViewSet(viewsets.ModelViewSet):
 
 class UnitFullViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, readOnly)
-    queryset = Units.objects.all()
+    queryset = Unit.objects.all()
     serializer_class = UnitFullSerializer
 
 class UnitSuperliteViewSet(viewsets.ModelViewSet):
@@ -34,14 +34,22 @@ class UnitSuperliteViewSet(viewsets.ModelViewSet):
     serializer_class = UnitSuperLiteSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name' , 'division']
+    queryset = Unit.objects.all()
 
 
-class UnitsViewSet(viewsets.ModelViewSet):
+class UnitViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = UnitsSerializer
-    queryset = Units.objects.all()
+    serializer_class = UnitSerializer
+    queryset = Unit.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name','division']
+
+class FirstLevelUnitViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = UnitLiteSerializer
+    queryset = Unit.objects.filter(parent=None)
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['division']
 
 class DepartmentsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -50,9 +58,9 @@ class DepartmentsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['dept_name']
 
-class RolesViewSet(viewsets.ModelViewSet):
+class RoleViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = RolesSerializer
-    queryset = Roles.objects.all()
+    serializer_class = RoleSerializer
+    queryset = Role.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']

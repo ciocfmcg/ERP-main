@@ -25,22 +25,37 @@ class rankSerializer(serializers.ModelSerializer):
         model = rank
         fields = ( 'title' , 'category' )
 
-class userDesignationSerializer(serializers.ModelSerializer):
+class DesignationSerializer(serializers.ModelSerializer):
     class Meta:
         model = designation
-        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
+        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover','division','unit','department','role')
 
         read_only_fields=('user',)
-        def create(self , validated_data):
-
-            d = designation()
-            d.user=User.objects.get(pk=self.context['request'].user)
-            d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
-            d.primaryApprover=User.objects.get(pk=self.context['request'].data['primaryApprover'])
-            d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
-            d.save()
-            return d
+        # def create(self , validated_data):
+        #
+        #     d = designation()
+        #     d.user=User.objects.get(pk=self.context['request'].user)
+        #     d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
+        #     d.primaryApprover=User.objects.get(pk=self.context['request'].data['primaryApprover'])
+        #     d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
+        #     # d.division=Division.objects.get(pk=self.context['request'].data['division'])
+        #     # d.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
+        #     # d.department=Department.objects.get(pk=self.context['request'].data['department'])
+        #     # d.role=Role.objects.get(pk=self.context['request'].data['role'])
+        #     d.save()
+        #     return d
         #  'unitType' , 'domain' , 'rank' , 'unit' , 'department' ,
+
+    def update(self ,instance, validated_data):
+        for key in ['pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover','division','unit','department','role']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        return instance
+
+
 class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:

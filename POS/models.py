@@ -5,10 +5,19 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
+from ERP.models import service
 from time import time
 
 def getPOSProductUploadPath(instance,filename):
     return "POS/displayPictures/%s_%s_%s"% (str(time()).replace('.','_'),instance.user.username,filename)
+
+class VendorProfile(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    service = models.ForeignKey(service)
+    
+
+
 
 class Customer(models.Model):
     user = models.ForeignKey(User , related_name = 'posContacts' , null = False) # the user created it

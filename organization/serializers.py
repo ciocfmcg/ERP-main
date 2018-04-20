@@ -43,6 +43,8 @@ class DivisionSerializer(serializers.ModelSerializer):
 
         return d
 
+
+
 class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
         serializer = self.parent.parent.__class__(value, context=self.context)
@@ -54,40 +56,40 @@ class UnitSuperLiteSerializer(serializers.ModelSerializer):
     # name = serializers.SerializerMethodField()
     # responsible = serializers.SerializerMethodField()
     class Meta:
-        model = Units
-        fields = ( 'pk' , 'pincode' , 'children', 'name' )
+        model = Unit
+        fields = ( 'pk' , 'children', 'name' )
 
 class UnitLiteSerializer(serializers.ModelSerializer):
     child_count = serializers.SerializerMethodField()
     # division = UnitSuperLiteSerializer(many = False , read_only = True)
     class Meta:
-        model = Units
-        fields = ( 'pk' , 'pincode' , 'parent', 'l1', 'name', 'child_count', 'l2' , 'mobile' , 'telephone','fax', )
+        model = Unit
+        fields = ( 'pk' , 'pincode' , 'parent', 'l1', 'name', 'child_count', 'l2' , 'mobile' ,'division', 'telephone','fax', )
     def get_child_count(self, obj):
-        return Units.objects.filter(parent__in = [obj.pk]).count()
+        return Unit.objects.filter(parent__in = [obj.pk]).count()
 
 class UnitFullSerializer(serializers.ModelSerializer):
     # parent = UnitLiteSerializer(read_only = True, many = True)
     children = UnitSuperLiteSerializer(many = True , read_only = True)
     class Meta:
-        model = Units
+        model = Unit
         fields = ( 'pk' , 'name' , 'pincode' , 'l1' , 'l2' , 'mobile','telephone','fax', 'children', 'division')
 
-class UnitsSerializer(serializers.ModelSerializer):
+class UnitSerializer(serializers.ModelSerializer):
     division = DivisionLiteSerializer(many = False , read_only = True)
     # child_count = serializers.SerializerMethodField()
     parent = UnitLiteSerializer(many = False , read_only = True)
     class Meta:
-        model = Units
+        model = Unit
         fields = ('pk' , 'name','address','pincode','l1','l2','mobile','telephone','contacts','fax','division','parent', )
         read_only_fields=('contacts','parent')
     def create(self , validated_data):
         print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-        d = Units(**validated_data)
+        d = Unit(**validated_data)
         d.division=Division.objects.get(pk=self.context['request'].data['division'])
         # d.units=Units.objects.get(pk=self.context['request'].data['units'])
         if 'parent' in self.context['request'].data:
-            d.parent = Units.objects.get(id=self.context['request'].data['parent'])
+            d.parent = Unit.objects.get(id=self.context['request'].data['parent'])
             # d.save()
             # for i in self.context['request'].data['parent']:
             #     d.parent.add(Units.objects.get(pk = i))
@@ -112,24 +114,24 @@ class UnitsSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     def get_child_count(self, obj):
-        return Units.objects.filter(parent__in = [obj.pk]).count()
+        return Unit.objects.filter(parent__in = [obj.pk]).count()
 
 
 
 class DepartmentsSerializer(serializers.ModelSerializer):
-    units = UnitLiteSerializer(many = True , read_only = False)
+    unit = UnitLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Departments
-        fields = ('pk','dept_name','mobile','telephone','fax','contacts','units','picture')
-        read_only_fields=('contacts','units')
+        fields = ('pk','dept_name','mobile','telephone','fax','contacts','unit','picture')
+        read_only_fields=('contacts','unit')
     def create(self , validated_data):
 
         print '3333333333333333333333',self.context['request'].data
         # a=self.context['request'].data['units'].split(',')
         # for i in a:
         #     print i,type(i)
-        print validated_data
-        del validated_data['units']
+        # print validated_data
+        # del validated_data['unit']
         d = Departments(**validated_data)
         # d.units=Units.objects.get(pk=self.context['request'].data['units'])
         d.save()
@@ -139,15 +141,15 @@ class DepartmentsSerializer(serializers.ModelSerializer):
         for i in str(self.context['request'].data['contacts']).split(','):
             d.contacts.add(User.objects.get(pk = i))
             print 'endddddddddddddddddddddddd'
-        for i in self.context['request'].data['units'].split(','):
-            print '%%%%%%%%%%%%%%%%%%%%%',self.context['request'].data['units']
+        for i in self.context['request'].data['unit'].split(','):
+            print '%%%%%%%%%%%%%%%%%%%%%',self.context['request'].data['unit']
             print i,type(i)
-            d.units.add(Units.objects.get(pk = i))
+            d.unit.add(Unit.objects.get(pk = i))
             print '@@@@@@@@@@@@@@@@@',validated_data
         return d
 
     def update(self ,instance, validated_data):
-        for key in ['dept_name','mobile','telephone','fax','picture','contacts','units']:
+        for key in ['dept_name','mobile','telephone','fax','picture','contacts','unit']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -157,21 +159,21 @@ class DepartmentsSerializer(serializers.ModelSerializer):
             a=self.context['request'].data['contacts'].split(',')
             for i in a:
                 instance.contacts.add(User.objects.get(pk = i))
-        if 'units' in self.context['request'].data:
-            b=self.context['request'].data['units'].split(',')
+        if 'unit' in self.context['request'].data:
+            b=self.context['request'].data['unit'].split(',')
             for i in b:
-                instance.units.add(Units.objects.get(pk = i))
+                instance.unit.add(Unit.objects.get(pk = i))
         instance.save()
         return instance
 
 
-class RolesSerializer(serializers.ModelSerializer):
+class RoleSerializer(serializers.ModelSerializer):
     department = DepartmentsLiteSerializer(many = False , read_only = True)
     class Meta:
-        model = Roles
+        model = Role
         fields = ('pk','name','department')
     def create(self , validated_data):
-        d = Roles(**validated_data)
+        d = Role(**validated_data)
         d.department=Departments.objects.get(pk=self.context['request'].data['department'])
         d.save()
         return d
@@ -186,7 +188,7 @@ class RolesSerializer(serializers.ModelSerializer):
                 pass
         instance.department=Departments.objects.get(pk=self.context['request'].data['department'])
         instance.division=Division.objects.get(pk=self.context['request'].data['division'])
-        instance.unit=Units.objects.get(pk=self.context['request'].data['unit'])
+        instance.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
         if 'contacts' in self.context['request'].data:
             a=self.context['request'].data['contacts'].split(',')
             for i in a:

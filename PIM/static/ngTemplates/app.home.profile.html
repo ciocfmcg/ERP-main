@@ -1,0 +1,464 @@
+<div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
+  <breadcrumb></breadcrumb>
+
+  <div class="container-fluid" style="padding:20px;">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:70vh;">
+      <div class="row">
+        <div class="container-fluid text-center">
+          <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
+
+          <span class="text-muted" style="font-size:18px;">{{data.pk | getName }}</span> <br><br>
+          <!-- {{profile.designation.rank.title}}<br> -->
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:20px;">
+
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <label># Employee ID : </label> <br>
+          </div>
+          <div class="col-md-7">
+            <span>{{data.empID}}</span> <br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <label><i class="fa fa-envelope-o"></i> Official : </label> <br>
+          </div>
+          <div class="col-md-7">
+            <span>{{data.email}}</span> <br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <label><i class="fa fa-envelope-o"></i> Personal : </label><br>
+          </div>
+          <div class="col-md-7">
+            <span>{{data.email}}<span ng-if="!data.email" class="text-danger">NA</span></span> <br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <label><i class="fa fa-phone"></i> Mobile : </label><br>
+          </div>
+          <div class="col-md-7">
+            <span>{{data.mobile}}</span> <br>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:20px;">
+        <label>Reporting Manager</label> <br>
+        <div class="container-fluid ">
+          <div class="col-md-3">
+            <img ng-src="{{designation.reportingTo | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
+          </div>
+          <div class="col-md-9">
+            <span>{{designation.reportingTo | getName}}</span> <br>
+            <span class="text-muted">#{{designation.reportingTo}}</span> <br>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:20px;">
+        <label>Primary Manager</label> <br>
+        <div class="container-fluid ">
+          <div class="col-md-3">
+            <img ng-src="{{designation.primaryApprover | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
+          </div>
+          <div class="col-md-9">
+            <span>{{designation.primaryApprover | getName}}</span> <br>
+            <span class="text-muted">#{{designation.primaryApprover}}</span> <br>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:20px;">
+        <label>Secondary Manager</label> <br>
+        <div class="container-fluid ">
+          <div class="col-md-3">
+            <img ng-src="{{designation.secondaryApprover | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
+          </div>
+          <div class="col-md-9">
+            <span>{{designation.secondaryApprover | getName}}</span> <br>
+            <span class="text-muted">#{{designation.secondaryApprover}}</span> <br>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-6">
+      <div class="container-fluid">
+        <div class="row" style="padding:20px;">
+          <div class="row">
+            <div class="col-md-3 text-right">
+              <label>Local Address :</label> <br>
+              <i class="fa fa-map-marker fa-3x pull-right" style="color:#eeeeee;"></i>
+            </div>
+            <div class="col-md-9">
+              <span>{{data.localAddressStreet}}<span ng-if="!data.localAddressStreet" class="text-danger">NA</span></span><br>
+              <span>{{data.localAddressCity}}<span ng-if="!data.localAddressCity" class="text-danger">NA</span></span><br>
+              <span>{{data.localAddressPin}}<span ng-if="!data.localAddressPin" class="text-danger">NA</span></span><br>
+              <span>{{data.localAddressState}}<span ng-if="!data.localAddressState" class="text-danger">NA</span></span><br>
+              <span>{{data.localAddressCountry}}<span ng-if="!data.localAddressCountry" class="text-danger">NA</span></span><br>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="padding:20px;">
+          <div class="row">
+            <div class="col-md-3 text-right">
+              <label>Permanent Address :</label> <br>
+              <i class="fa fa-map-marker fa-3x" style="color:#eeeeee;"></i>
+            </div>
+            <div class="col-md-9">
+              <span>{{data.permanentAddressStreet}}<span ng-if="!data.permanentAddressStreet" class="text-danger">NA</span></span><br>
+              <span>{{data.permanentAddressCity}}<span ng-if="!data.permanentAddressCity" class="text-danger">NA</span></span><br>
+              <span>{{data.permanentAddressPin}}<span ng-if="!data.permanentAddressPin" class="text-danger">NA</span></span><br>
+              <span>{{data.permanentAddressState}}<span ng-if="!data.permanentAddressState" class="text-danger">NA</span></span><br>
+              <span>{{data.permanentAddressCountry}}<span ng-if="!data.permanentAddressCountry" class="text-danger">NA</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="padding:20px;">
+          <div class="row">
+            <div class="col-md-3 text-right">
+              <label>Father's name :</label>
+            </div>
+            <div class="col-md-9">
+              {{data.fathersName}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 text-right">
+              <label>Mother's name :</label>
+            </div>
+            <div class="col-md-9">
+              {{data.mothersName}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 text-right">
+              <label>Date of birth :</label>
+            </div>
+            <div class="col-md-9">
+              {{data.dateOfBirth | date:'yyyy-MM-dd'}}
+            </div>
+          </div>
+
+          <div class="row" ng-if="data.wifesName">
+            <div class="col-md-3 text-right">
+              <label>Spouse Name :</label>
+            </div>
+            <div class="col-md-9">
+              {{data.wifesName}}
+            </div>
+          </div>
+          <div class="row" ng-if="data.TNCandBond">
+            <div class="col-md-3 text-right">
+              <label>TNC and Bond:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.TNCandBond | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.TNCandBond}}" target="_blank">{{data.TNCandBond.split('/')[data.TNCandBond.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.resume">
+            <div class="col-md-3 text-right">
+              <label>Resume:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.resume | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.resume}}" target="_blank">{{data.resume.split('/')[data.resume.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.certificates">
+            <div class="col-md-3 text-right">
+              <label>Certificates:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.certificates | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.certificates}}"  target="_blank">{{data.certificates.split('/')[data.certificates.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.otherDocs">
+            <div class="col-md-3 text-right">
+              <label>Other Docs:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.otherDocs | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.otherDocs}}"   target="_blank">{{data.otherDocs.split('/')[data.otherDocs.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.transcripts">
+            <div class="col-md-3 text-right">
+              <label>Transcripts:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.transcripts | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.transcripts}}"   target="_blank">{{data.transcripts.split('/')[data.transcripts.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.IDPhoto">
+            <div class="col-md-3 text-right">
+              <label>Aadhar Card:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.IDPhoto | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.IDPhoto}}" target="_blank">{{data.IDPhoto.split('/')[data.IDPhoto.split('/').length-1]   }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.resignation">
+            <div class="col-md-3 text-right">
+              <label>Resignation:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.resignation | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.resignation}}"   target="_blank">{{data.resignation.split('/')[data.resignation.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.vehicleRegistration">
+            <div class="col-md-3 text-right">
+              <label>Vehicle Registration:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.vehicleRegistration | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.vehicleRegistration}}"   target="_blank">{{data.vehicleRegistration.split('/')[data.vehicleRegistration.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.appointmentAcceptance">
+            <div class="col-md-3 text-right">
+              <label>Appointment Acceptance:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.appointmentAcceptance | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.appointmentAcceptance}}"   target="_blank">{{data.appointmentAcceptance.split('/')[data.appointmentAcceptance.split('/').length-1]   }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.pan">
+            <div class="col-md-3 text-right">
+              <label>PAN:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.pan | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.pan}}" target="_blank">{{data.pan.split('/')[data.pan.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.drivingLicense">
+            <div class="col-md-3 text-right">
+              <label>Driving License:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.drivingLicense | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.drivingLicense}}"  target="_blank">{{data.drivingLicense.split('/')[data.drivingLicense.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.cheque">
+            <div class="col-md-3 text-right">
+              <label>Cheque:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.cheque | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.cheque}}" target="_blank">{{data.cheque.split('/')[data.cheque.split('/').length-1] }}</a>
+            </div>
+          </div>
+          <div class="row" ng-if="data.passbook">
+            <div class="col-md-3 text-right">
+              <label>Passbook:</label>
+            </div>
+            <div class="col-md-9">
+              <i class="fa {{data.passbook | fileTypeIcon}} fa-2x"></i>
+              <a ng-href="{{data.passbook}}" target="_blank">{{data.passbook.split('/')[data.passbook.split('/').length-1] }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="row" style="margin-top:20px;">
+        <label>Work locations</label> <br> <br>
+        <div class="row">
+          <div class="container-fluid card" style="margin-bottom:20px;">
+            <label>Division</label> : {{designation.division.name}}<br>
+            <label>Unit</label> : {{designation.unit.name}} <br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="row" style="margin-top:20px;">
+        <label>Payroll Details of {{data.pk | getName}}</label> <br> <br>
+        <div class="row">
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>HRA:</strong>
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.hra}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Special:</strong>
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.special}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>LTA:</strong>
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.lta}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Basic:</strong>
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.basic}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>AdHOC:</strong>
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.adHoc}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Policy Number:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.policyNumber}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Provider:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.provider}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Amount:</strong>
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.amount}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>PFUan:</strong>
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-inr" aria-hidden="true"></i> {{payroll.PFUan}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Al:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.al}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>ML:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.ml}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>AdHOC Leaves:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.adHocLeaves}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Joinning Date:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.joiningDate}}
+            </div>
+          </div>
+          <div class="row" ng-if="payroll.lastWorkingDate">
+            <div class="col-md-6 text-right">
+              <strong>Last Working Date:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.lastWorkingDate}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Pan No.:</strong>
+            </div>
+            <div class="col-md-6">
+            {{payroll.pan}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Account Number:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.accountNumber}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>IFSC code:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.ifscCode}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Bank Details:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.bankName}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Saturday Off:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.off? 'YES':'NO'}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">
+              <strong>Notice Period Recovery:</strong>
+            </div>
+            <div class="col-md-6">
+              {{payroll.noticePeriodRecovery? 'YES':'NO'}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+</div>

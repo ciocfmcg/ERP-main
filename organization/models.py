@@ -35,7 +35,7 @@ class Division(models.Model):
 
 
 
-class Units(models.Model):
+class Unit(models.Model):
     name = models.CharField(max_length = 200 , null = False)
     address = models.CharField(max_length = 400 , null = False)
     pincode = models.PositiveIntegerField(null=False)
@@ -59,10 +59,10 @@ class Departments(models.Model):
     contacts = models.ManyToManyField(User , related_name='departmentsHeading' )
     # units = models.ForeignKey(Units , null = True , related_name = "departments")
     picture = models.FileField(upload_to = getDepartmentsLogoAttachmentPath , null = True)
-    units = models.ManyToManyField(Units , related_name='departmentsUnits' )
+    unit = models.ManyToManyField(Unit , related_name='departmentsUnits' )
 
 
 
-class Roles(models.Model):
+class Role(models.Model):
     name = models.CharField(max_length = 200 , null = False)
     department = models.ForeignKey(Departments , null = True , related_name = "department")

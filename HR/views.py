@@ -228,7 +228,9 @@ class userProfileAdminModeViewSet(viewsets.ModelViewSet):
 class userDesignationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = designation.objects.all()
-    serializer_class = userDesignationSerializer
+    serializer_class = DesignationSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user']
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)

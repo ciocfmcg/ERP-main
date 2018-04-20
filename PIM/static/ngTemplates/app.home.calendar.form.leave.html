@@ -1,0 +1,82 @@
+<form ng-submit="saveLeaves()">
+  <div class="container-fluid" style="padding:20px">
+    <div class="row" style="padding:10px">
+      <div class="col-md-10">
+        <div class="card" style="padding:0px;min-height:100px">
+          <div class="row">
+            <div class="col-md-10">
+              <div id="careerservice">
+                <!-- <img src="/static/images/medical.jpg"> -->
+              </div>
+            </div>
+            <div class="col-md-2" style="padding-top:40px">
+              <span style="font-size:30px">ML</span><br>
+              <span style="font-size:20px">5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center" style="padding-top:45px;">
+        <input type="radio"  value="'ml'">
+      </div>
+    </div>
+    <div class="row" style="padding:10px">
+      <div class="col-md-10">
+        <div class="card" style="padding:0px;min-height:100px">
+          <div class="row">
+            <div class="col-md-10">
+              <div id="careerservices">
+                <!-- <img src="/static/images/medical.jpg"> -->
+              </div>
+            </div>
+            <div class="col-md-2" style="padding-top:40px">
+              <span style="font-size:30px">AL</span><br>
+              <span style="font-size:20px">6</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center" style="padding-top:45px;">
+        <input type="radio"  value="'ml'">
+      </div>
+    </div>
+    <div class="row padded10px">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>From</label>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>To</label>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="row padded10px">
+      <div class="form-group">
+        <label class="control-label col-sm-3" for="agenda">Reason:</label>
+        <div class="col-md-9">
+          <textarea type="text" rows="3"  value="" class="form-control " required ng-model="data.text"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row padded10px">
+      <div class="form-group">
+        <label class="control-label col-sm-3" for="agenda">Balance:</label>
+        <div class="col-md-9">
+          {{balance}}
+        </div>
+      </div>
+    </div>
+    <div class= "form-group container-fluid">
+      <div class="btn-group">
+        <button type="submit" class="btn btn-primary">{{editMode ? 'Save':'Submit'}}</button>
+        <a ng-click="resetForm()" class="btn btn-default">Reset</a>
+      </div>
+    </div>
+
+  </div>
+
+<form>

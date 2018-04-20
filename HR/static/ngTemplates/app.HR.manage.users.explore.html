@@ -45,28 +45,41 @@
       </div>
     </div>
 
-    <div class="row" style="margin-top:20px;" ng-if="profile.designation.reportingTo">
+    <div class="row" style="margin-top:20px;">
       <label>Reporting Manager</label> <br>
       <div class="container-fluid ">
         <div class="col-md-3">
-          <img ng-src="{{profile.designation.reportingTo | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
+          <img ng-src="{{designation.reportingTo | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
         </div>
         <div class="col-md-9">
-          <span>{{profile.designation.reportingTo | getName}}</span> <br>
-          <span class="text-muted">#{{profile.designation.reportingTo | getID}}</span> <br>
+          <span>{{designation.reportingTo | getName}}</span> <br>
+          <span class="text-muted">#{{designation.reportingTo}}</span> <br>
         </div>
       </div>
     </div>
 
-    <div class="row" style="margin-top:20px;" ng-if="profile.designation.secondaryApprover">
+    <div class="row" style="margin-top:20px;">
+      <label>Primary Manager</label> <br>
+      <div class="container-fluid ">
+        <div class="col-md-3">
+          <img ng-src="{{designation.primaryApprover | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
+        </div>
+        <div class="col-md-9">
+          <span>{{designation.primaryApprover | getName}}</span> <br>
+          <span class="text-muted">#{{designation.primaryApprover}}</span> <br>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:20px;">
       <label>Secondary Manager</label> <br>
       <div class="container-fluid ">
         <div class="col-md-3">
-          <img ng-src="{{profile.designation.secondaryApprover | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
+          <img ng-src="{{designation.secondaryApprover | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
         </div>
         <div class="col-md-9">
-          <span>{{profile.designation.secondaryApprover | getName}}</span> <br>
-          <span class="text-muted">#{{profile.designation.secondaryApprover | getID}}</span> <br>
+          <span>{{designation.secondaryApprover | getName}}</span> <br>
+          <span class="text-muted">#{{designation.secondaryApprover}}</span> <br>
         </div>
       </div>
     </div>
@@ -264,10 +277,10 @@
   <div class="col-md-3">
     <div class="row" style="margin-top:20px;">
       <label>Work locations</label> <br> <br>
-      <div class="row" ng-repeat="u in profile.designation.unitsObj">
+      <div class="row">
         <div class="container-fluid card" style="margin-bottom:20px;">
-          <label>Division</label> : {{u.division.name.split('(')[0]}}<br>
-          <label>Unit</label> : {{u.name}} ({{u.city}}) <br>
+          <label>Division</label> : {{designation.division.name}}<br>
+          <label>Unit</label> : {{designation.unit.name}} <br>
         </div>
       </div>
     </div>
@@ -425,8 +438,6 @@
             <strong>Saturday Off:</strong>
           </div>
           <div class="col-md-6">
-            <!-- <span ng-if="payroll.off == 'true'">YES</span> -->
-            <!-- <span ng-if="payroll.off == 'false'">NO</span> -->
             {{payroll.off? 'YES':'NO'}}
           </div>
         </div>

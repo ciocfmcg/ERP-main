@@ -1,16 +1,56 @@
 <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
-  <!-- <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-wrench fa-5x "></i>
-    <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for Organization</h3>
-  </p> -->
+    <div class="row" style="background:#eeeeee;margin:0px;margin-top: -20px;padding:20px;">
+      <div class="container-fluid">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label></label>
+            <select class="form-control">
+            <option ng-repeat="d in divisions" ng-click="selectDivision($index)">{{d.name}}</option>
+          </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <strong>Name :</strong>
+              </div>
+              <div class="col-md-6">
+                {{form.division.name}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <strong>Website :</strong>
+              </div>
+              <div class="col-md-6">
+                <span class="text-primary">
+                {{form.division.website}}
+              </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"style="padding-top:20px;">
+        {{firstLevelHQs.length }} Head Quaters
+      </div>
+      <div class="col-md-2" style="padding-top:20px;">
+        <div class="btn-group">
+           <button tabindex="-1" data-toggle="dropdown" class="btn dropdown-toggle btn-default">
+              First level Units <span class="caret"></span>
+           </button>
+           <ul class="dropdown-menu">
+             <li ng-repeat="o in firstLevelHQs" ng-click="openHQ(firstLevelHQs[$index].pk)"><a href="">{{o.name}}</a></li>
+           </ul>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div id="chart-container"></div>
+    </div>
 
-  <div class="container-fluid">
-
-    <input type="text" class="form-control"  placeholder="enter the name to search">
   </div>
-</div>
 </div>

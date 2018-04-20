@@ -23,10 +23,10 @@ JOB_TYPE_CHOICES = (
         ('Intern' , 'Intern')
 )
 
-class Jobs(models.Model):
-    jobtype = models.CharField(max_length = 15 , choices = JOB_TYPE_CHOICES  , default = 'Intern' )
-    unit = models.ForeignKey(Units , null = True , related_name = "unit_a")
-    department = models.ForeignKey(Departments , null = True , related_name = "department_a")
-    role = models.ForeignKey(Roles , null = True , related_name = "position_a")
-    contacts = models.ManyToManyField(User , related_name='jobHeading' )
-    skill = models.CharField(max_length = 200 , null = False)
+# class Jobs(models.Model):
+#     jobtype = models.CharField(max_length = 15 , choices = JOB_TYPE_CHOICES  , default = 'Intern' )
+#     unit = models.ForeignKey(Unit , null = True , related_name = "unit_a")
+#     department = models.ForeignKey(Departments , null = True , related_name = "department_a")
+#     role = models.ForeignKey(Role , null = True , related_name = "position_a")
+#     contacts = models.ManyToManyField(User , related_name='jobHeading' )
+#     skill = models.CharField(max_length = 200 , null = False)

@@ -124,6 +124,7 @@ INSTALLED_APPS = (
 	'logistic',# logistics
 	'assets',# assets
 	'productsInventory',# inventory for POS products
+	'myWork',# my work list
 )
 
 
