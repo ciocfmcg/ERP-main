@@ -990,8 +990,8 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
       }
     }).
     then(function(response) {
-
-      console.log(response.data.image);
+      var imgUrl = response.data.image;
+      var scaledImage = imgUrl.replace("."  + imgUrl.split('.').pop()  , '_scaled.' + imgUrl.split('.').pop());
       var scaledImage = response.data.image.replace(".", '_scaled.');
       $scope.addImage(scaledImage);
     })
@@ -1478,7 +1478,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $interval, $uib
   $scope.redraw = function() {
     // $rootScope.dataString = JSON.stringify($scope.data);
 
-  
+
     $scope.canvas.clear();
 
     if ($scope.gridType == 'plain') {
