@@ -269,7 +269,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
     }).
     then(function(response) {
       var imgUrl = response.data.image;
-      var scaledImage = imgUrl.replace("."  + imgUrl.split('.').pop()  , '_scaled.' + imgUrl.split('.').pop());
+      var scaledImage = imgUrl;//  imgUrl.replace("."  + imgUrl.split('.').pop()  , '_scaled.' + imgUrl.split('.').pop());
       $scope.addImage(scaledImage);
 
     })
