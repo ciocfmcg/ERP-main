@@ -1161,7 +1161,7 @@ app.controller('myCtrl1', function($scope, $rootScope, $timeout, $uibModal, $int
         }).
         then(function(response) {
 
-          var scaledImage = response.data.image.replace(".", '_scaled.');
+          var scaledImage = response.data.image;//.replace(".", '_scaled.');
           $scope.addImage(scaledImage);
         })
 
