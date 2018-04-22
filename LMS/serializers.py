@@ -87,12 +87,13 @@ class SectionLiteSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     quesParts = QPartSerializer(many = True , read_only = True)
     optionsParts = QPartSerializer(many = True , read_only = True)
+    solutionParts = QPartSerializer(many = True , read_only = True)
     topic = TopicLiteSerializer(many = False , read_only = True)
     bookSection = SectionLiteSerializer(many = False , read_only = True)
 
     class Meta:
         model = Question
-        fields = ('pk' , 'created' , 'updated', 'ques' , 'quesParts' , 'optionsParts' , 'solutionParts' , 'status', 'archived' , 'topic', 'level' , 'marks' , 'qtype' , 'codeLang' , 'user' , 'typ','bookSection')
+        fields = ('pk' , 'created' , 'updated', 'ques' , 'quesParts' , 'optionsParts' , 'solutionParts' , 'status', 'archived' , 'topic', 'level' , 'marks' , 'qtype' , 'codeLang' , 'user' , 'typ','bookSection', 'solutionVideoLink' , 'objectiveAnswer' , 'solutionVideo', 'solutionParts')
         read_only_fields = ('archived', 'approved', 'reviewed', 'forReview' , 'user')
 
     def create(self , validated_data):
@@ -114,10 +115,19 @@ class QuestionSerializer(serializers.ModelSerializer):
         if 'qOptionToAdd' in self.context['request'].data:
             instance.optionsParts.add(QPart.objects.get(pk = self.context['request'].data['qOptionToAdd'] ))
 
+        if 'qSolutionToAdd' in self.context['request'].data:
+            instance.solutionParts.add(QPart.objects.get(pk = self.context['request'].data['qSolutionToAdd'] ))
+
         if 'ques' in validated_data:
             instance.ques = validated_data.pop('ques')
             instance.level = validated_data.pop('level')
+            instance.objectiveAnswer = validated_data.pop('objectiveAnswer')
             instance.qtype = validated_data.pop('qtype')
+            instance.solutionVideoLink = validated_data.pop('solutionVideoLink')
+
+        if 'solutionVideo' in validated_data:
+            instance.solutionVideo = validated_data.pop('solutionVideo')
+
         if 'topic' in validated_data:
             instance.topic_id = self.context['request'].data['topic']
 

@@ -139,6 +139,8 @@ class Question(models.Model):
     codeLang = models.CharField(choices = LANGUAGE_CHOICES , default = 'any' , null = False, max_length = 10)
     user = models.ForeignKey(User , null = False , related_name='questionsAuthored')
     solutionVideo = models.FileField(null = True , upload_to=getSolutionVideoPath)
+    solutionVideoLink = models.CharField(null = True , max_length = 500)
+    objectiveAnswer = models.CharField(null = True , max_length = 50)
     typ = models.CharField(max_length = 7 , null = True)
 
 class PaperQues(models.Model):

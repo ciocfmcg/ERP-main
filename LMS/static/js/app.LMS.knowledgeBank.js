@@ -136,6 +136,10 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       $scope.form.optionTxt = '';
       $scope.form.textModeOption = false;
       $scope.form.optionFile= emptyFile;
+      $scope.form.answer= response.data.objectiveAnswer;
+      $scope.form.solutionVideoPath = response.data.solutionVideo;
+      $scope.form.solutionVideo = emptyFile;
+
       if (response.data.topic != null ) {
         $scope.form.subject = response.data.topic.subject;
         $scope.form.topic = response.data.topic;
@@ -170,6 +174,15 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     })(indx))
   }
 
+  $scope.removeSolution= function(indx) {
+    $http({method : 'DELETE' , url : '/api/LMS/qPart/' + $scope.form.solutionParts[indx].pk + '/' }).
+    then((function(indx) {
+      return function(response) {
+        $scope.form.solutionParts.splice(indx , 1);
+      }
+    })(indx))
+  }
+
 
 
   $scope.resetForm = function() {
@@ -186,7 +199,7 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     }
 
     $scope.mode = 'new';
-    $scope.form = {ques : '' , quesParts : [], quesPartTxt : '' , textMode : false , quesPartFile : emptyFile , optionsParts : [], optionTxt : '' , optionFile : emptyFile   , textModeOption : false , level : 'easy' ,qtype : 'mcq' , typ : ''}
+    $scope.form = {ques : '' , quesParts : [], quesPartTxt : '' , textMode : false , quesPartFile : emptyFile , optionsParts : [], optionTxt : '' , optionFile : emptyFile   , textModeOption : false , level : 'easy' ,qtype : 'mcq' , typ : '' , solutionParts : [] , answer : '' , solutionVideo : emptyFile , solutionVideoPath : ''}
 
     $scope.form.subject = subject;
     $scope.form.topic = topic;
@@ -233,7 +246,9 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       ques : f.ques,
       typ : f.typ,
       level : f.level,
-      qtype : f.qtype
+      qtype : f.qtype,
+      objectiveAnswer: f.answer,
+      solutionVideoLink: f.solutionVideoLink,
     }
     if ($scope.form.typ == 'book') {
       if ($scope.form.section.pk) {
@@ -257,8 +272,48 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
 
     $http({method : method , url : url , data : toSend}).
     then(function(response) {
+      if ($scope.form.solutionVideo == emptyFile || $scope.form.solutionVideo == null || typeof $scope.form.solutionVideo == 'string') {
+        return;
+      }
+
+
       $scope.mode = 'edit';
+      Flash.create('success' , 'Saved');
       $scope.form.pk = response.data.pk;
+
+      var fd = new FormData();
+      fd.append('solutionVideo' , $scope.form.solutionVideo);
+
+      var url = '/api/LMS/question/';
+      if (!$scope.form.pk) {
+        var method = 'POST';
+      }else {
+        var method = 'PATCH';
+        url += $scope.form.pk + '/'
+      }
+
+      $http({
+        method: method,
+        url: url,
+        data: fd,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).
+      then(function(response) {
+        Flash.create('success' , 'Saved');
+        $scope.form.solutionVideoPath = response.data.solutionVideo;
+      })
+
+
+
+
+
+
+
+
+
     })
   }
 
@@ -298,6 +353,45 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       })(response))
     })
 
+  }
+
+
+  $scope.addSolution = function() {
+
+    var toSend = new FormData();
+
+    if ($scope.form.textModeSolution) {
+      if ($scope.form.solutionTxt == '') {
+        return;
+      }
+      toSend.append('txt' , $scope.form.solutionTxt);
+      toSend.append('mode' , 'text');
+    }else {
+      toSend.append('image' , $scope.form.solutionFile);
+      toSend.append('mode' , 'image');
+    }
+
+    $http({
+      method: 'POST',
+      url: '/api/LMS/qPart/',
+      data: toSend,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+
+      $http({method : 'PATCH' , url : '/api/LMS/question/' + $scope.form.pk + '/' , data : {qSolutionToAdd : response.data.pk}}).
+      then((function(response) {
+        return function(res) {
+          Flash.create('success', 'Saved');
+          $scope.form.solutionParts.push(response.data);
+          $scope.form.solutionTxt = '';
+          $scope.form.solutionFile = emptyFile;
+        }
+      })(response))
+    })
   }
 
 

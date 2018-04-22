@@ -150,8 +150,47 @@
         </div>
       </div>
 
-    </div>
 
+      <div>
+        <hr>
+        <div class="form-group">
+          <label>Solution</label>
+          <div class="row">
+            <div class="col-md-3">
+              Image <switch ng-model="form.textModeSolution" class="green"></switch><span style="margin-left:10px;">Text</span>
+            </div>
+            <div class="col-md-7">
+              <input ng-if="!form.textModeSolution" type="file" file-model="form.solutionFile">
+              <textarea ng-if="form.textModeSolution" class="form-control" rows="4" cols="80" ng-model="form.solutionTxt"></textarea>
+            </div>
+
+            <div class="col-md-2">
+              <button type="button" class="btn btn-default btn-block" ng-click="addSolution()">
+                Add <i class="fa fa-plus"></i>
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+
+      <div class="form-group" ng-if="form.qtype != 'code' && form.qtype != 'upload' && form.qtype != 'string'">
+        <label>Answer</label>
+        <input type="text" class="form-control" ng-model="form.answer">
+      </div>
+      <div class="form-group">
+        <label>Solution Video Link</label>
+        <input type="text" class="form-control" ng-model="form.solutionVideoLink">
+      </div>
+      <label>OR</label>
+      <div class="form-group">
+        <label>Solution Video Video</label>
+        <input type="file" file-model="form.solutionVideo">
+        <p class="help-block">{{form.solutionVideoPath}}</p>
+      </div>
+
+    </div>
 
   </div>
   <div class="col-md-6">
@@ -181,11 +220,18 @@
           </div>
         </div>
       </div>
-
     </div>
-
+    <hr>
+    Solution
+    <div ng-repeat="o in form.solutionParts" class="row" style="margin-top:20px;">
+      <div class="container-fluid"> <button type="button" class="btn btn-danger btn-sm" ng-click="removeSolution($index)">
+        Delete
+        </button>
+        <span mathjax-bind="o.txt" ng-if="o.mode == 'text'"></span>
+        <img ng-src="{{o.image}}" style="width:90%;" ng-if="o.mode == 'image'">
+      </div>
+    </div>
     <!-- {{form}} -->
-
   </div>
 
 </div>
