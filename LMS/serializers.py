@@ -116,9 +116,10 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         if 'ques' in validated_data:
             instance.ques = validated_data.pop('ques')
-            instance.topic_id = self.context['request'].data['topic']
             instance.level = validated_data.pop('level')
             instance.qtype = validated_data.pop('qtype')
+        if 'topic' in validated_data:
+            instance.topic_id = self.context['request'].data['topic']
 
 
         if instance.qtype not in ['mcq' , 'mcc']:
