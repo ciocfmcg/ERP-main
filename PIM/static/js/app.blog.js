@@ -220,7 +220,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
     skin: 'lightgray',
     theme : 'modern',
     height : 640,
-    toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link | style-p style-h1 style-h2 style-h3',
+    toolbar : 'saveBtn publishBtn cancelBtn | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link | style-p style-h1 style-h2 style-h3 | addImage',
     setup: function (editor ) {
 
       [ 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(name){
@@ -238,6 +238,15 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
              }
          })
       });
+
+      editor.addButton('addImage' , {
+        text: 'Add Image',
+        icon: false,
+        onclick: function(evt) {
+          console.log($scope.editor);
+          console.log(evt);
+        }
+      })
 
       editor.addButton( 'publishBtn', {
         text: 'Publish',
@@ -259,7 +268,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
           fd.append('sourceFormat' ,'html');
           fd.append('state' ,'published');
           fd.append('tags' , tags);
-          
+
           if ($scope.editor.ogimage ==emptyFile && ($scope.editor.ogimageUrl == '' || $scope.editor.ogimageUrl == undefined)) {
             Flash.create('danger' , 'Either the OG image file OR og image url is required')
             return;
