@@ -9,7 +9,7 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval,
   $scope.typeIndex = 0;
   $scope.videoLink = '';
 
-  $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/pLW1ar-Wkxk');
+  $scope.videoLink = $sce.trustAsResourceUrl('https://www.youtube.com/embed/7V6rliZPyCE');
 
   $scope.buy = function(typ) {
     $uibModal.open({
