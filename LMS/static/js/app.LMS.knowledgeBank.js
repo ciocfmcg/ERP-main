@@ -247,9 +247,14 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       typ : f.typ,
       level : f.level,
       qtype : f.qtype,
-      objectiveAnswer: f.answer,
-      solutionVideoLink: f.solutionVideoLink,
+
     }
+
+    if ( f.answer.length >0) {
+      toSend.objectiveAnswer= f.answer;
+    }
+
+
     if ($scope.form.typ == 'book') {
       if ($scope.form.section.pk) {
         console.log('book');
@@ -272,15 +277,17 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
 
     $http({method : method , url : url , data : toSend}).
     then(function(response) {
-      if ($scope.form.solutionVideo == emptyFile || $scope.form.solutionVideo == null || typeof $scope.form.solutionVideo == 'string') {
-        return;
-      }
+
 
 
       $scope.mode = 'edit';
       Flash.create('success' , 'Saved');
       $scope.form.pk = response.data.pk;
 
+
+      if ($scope.form.solutionVideo == emptyFile || $scope.form.solutionVideo == null || typeof $scope.form.solutionVideo == 'string') {
+        return;
+      }
       var fd = new FormData();
       fd.append('solutionVideo' , $scope.form.solutionVideo);
 

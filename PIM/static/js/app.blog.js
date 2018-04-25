@@ -1,4 +1,4 @@
-app.controller("controller.home.blog", function($scope , $state , $users ,  $stateParams , $http , Flash) {
+app.controller("controller.home.blog", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal) {
   $scope.me = $users.get('mySelf');
   $scope.editor = {source : '' , tags : [] , title : '' , header : '' , mode : 'header' , shortUrl : '', ogimage : emptyFile , ogimageUrl : '' , description : '', tagsCSV : '' ,section : '' , author : ''};
   $scope.filter = {text : '' , tags :[] , month : new Date() , state : 'published' , user : 'all'};
@@ -243,8 +243,37 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
         text: 'Add Image',
         icon: false,
         onclick: function(evt) {
-          console.log($scope.editor);
-          console.log(evt);
+          console.log(editor);
+
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.blog.modal.html',
+            size: 'sm',
+            backdrop : true,
+            controller: function($scope , $http , $uibModalInstance){
+              $scope.form = {file : emptyFile , alt : ''}
+
+              $scope.add = function() {
+                var fd = new FormData();
+                fd.append('file' , $scope.form.file);
+                $http({method : 'POST' , url : '/api/PIM/blogImages/' , data : fd,transformRequest: angular.identity,
+                headers: {
+                  'Content-Type': undefined
+                }}).
+                then(function(response) {
+
+                  $uibModalInstance.dismiss({file : response.data , alt : $scope.form.alt})
+                })
+              }
+            },
+          }).result.then(function () {
+
+          }, function (d) {
+            editor.editorCommands.execCommand('mceInsertContent', false, '<br><img alt="'+ d.alt + '" height="42" width="42" src="' + d.file + '"/>')
+
+          });
+
+
+
         }
       })
 

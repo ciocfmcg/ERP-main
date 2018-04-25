@@ -22,4 +22,5 @@ router.register(r'chatMessageBetween' , chatMessageBetweenViewSet, base_name = '
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'blogImages/$' , BlogImagesAPI.as_view() ),
 ]
