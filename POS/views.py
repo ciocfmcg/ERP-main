@@ -67,6 +67,35 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['customer' , 'id']
 
+
+class VendorServicesViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = VendorServicesSerializer
+    queryset = VendorServices.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['vendor']
+
+class VendorProfileViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = VendorProfileSerializer
+    queryset = VendorProfile.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['pk']
+
+class VendorServicesLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = VendorServicesLiteSerializer
+    queryset = VendorServices.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['product']
+
+class PurchaseOrderViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = PurchaseOrderSerializer
+    queryset = PurchaseOrder.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['service']
+
 class ProductVerientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ProductVerientSerializer
@@ -529,10 +558,18 @@ class ReorderingReport(APIView):
         objs = Product.objects.all()
 
         toInclude= []
+        toIncludeExtended = []
         for o in objs:
             if o.inStock < o.reorderTrashold:
                 toInclude.append({"name" : o.name , "SKU": o.serialNo , "Stock" : o.inStock})
-        return ExcelResponse(toInclude)
+                toIncludeExtended.append({ "pk" : o.pk, "name" : o.name , "SKU": o.serialNo , "Stock" : o.inStock})
+
+        if 'onlyData' in request.GET:
+            return  Response(toIncludeExtended , status=status.HTTP_200_OK)
+        else:
+            return ExcelResponse(toInclude)
+
+
 
 class StockReport(APIView):
     permission_classes = (permissions.IsAuthenticated,)

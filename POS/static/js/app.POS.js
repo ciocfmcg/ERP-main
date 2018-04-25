@@ -120,16 +120,16 @@ app.controller("POS.invoice.item", function($scope) {
 });
 
 
-app.controller("controller.POS.productMeta.form" , function($scope , $http ,Flash) {
+app.controller("controller.POS.productMeta.form", function($scope, $http, Flash) {
 
   if ($scope.tab == undefined) {
     $scope.configureForm = {
       'description': '',
       'code': '',
       'taxRate': '',
-      'typ' : 'HSN'
+      'typ': 'HSN'
     }
-  }else{
+  } else {
     $scope.configureForm = $scope.tab.data.meta;
   }
 
@@ -146,8 +146,8 @@ app.controller("controller.POS.productMeta.form" , function($scope , $http ,Flas
       description: f.description,
       code: f.code,
       taxRate: f.taxRate,
-      hsn : f.hsn,
-      sac : f.sac
+      hsn: f.hsn,
+      sac: f.sac
 
     }
 
@@ -205,7 +205,10 @@ app.controller("controller.POS.productinfo.form", function($scope, product) {
     url: '/api/POS/inventoryLog/',
     searchField: 'name',
     itemsNumPerView: [8, 16, 24],
-    getParams : [{key : 'product' , value : product.pk}]
+    getParams: [{
+      key: 'product',
+      value: product.pk
+    }]
   }
 
   $scope.tableActionProductInfo = function(target, action, mode) {
@@ -222,8 +225,8 @@ app.controller("controller.POS.productinfo.form", function($scope, product) {
           cancel: true,
           app: appType,
           data: {
-              pk: target,
-              index:i
+            pk: target,
+            index: i
           },
           active: true
         })
@@ -415,18 +418,18 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 
 })
 
-app.controller("controller.POS.productForm.modal" , function($scope, product ,$http, Flash) {
+app.controller("controller.POS.productForm.modal", function($scope, product, $http, Flash) {
   console.log(product);
-  $scope.$watch('product.productMeta' , function(newValue , oldValue) {
+  $scope.$watch('product.productMeta', function(newValue, oldValue) {
     if (typeof newValue == 'object') {
       $scope.showTaxCodeDetails = true;
-    }else {
+    } else {
       $scope.showTaxCodeDetails = false;
     }
   })
 
   $scope.searchTaxCode = function(c) {
-    return $http.get('/api/clientRelationships/productMeta/?description__contains='+c).
+    return $http.get('/api/clientRelationships/productMeta/?description__contains=' + c).
     then(function(response) {
       return response.data;
     })
@@ -436,12 +439,12 @@ app.controller("controller.POS.productForm.modal" , function($scope, product ,$h
     $scope.mode = 'edit';
     $scope.product = product;
     $http({
-          method: 'GET',
-          url: '/api/POS/productVerient/?parent=' + $scope.product.pk
-        }).
-        then(function(response) {
-          $scope.productData = response.data;
-})
+      method: 'GET',
+      url: '/api/POS/productVerient/?parent=' + $scope.product.pk
+    }).
+    then(function(response) {
+      $scope.productData = response.data;
+    })
   } else {
     $scope.mode = 'new';
     $scope.product = {
@@ -452,10 +455,10 @@ app.controller("controller.POS.productForm.modal" , function($scope, product ,$h
       'serialNo': '',
       'description': '',
       'inStock': 0,
-      'cost':0,
-      'logistics':0,
-      'serialId':'',
-      'reorderTrashold':0,
+      'cost': 0,
+      'logistics': 0,
+      'serialId': '',
+      'reorderTrashold': 0,
       'pk': null
     }
   }
@@ -518,45 +521,45 @@ app.controller("controller.POS.productForm.modal" , function($scope, product ,$h
   }
 
   $scope.deleteProduct = function(pk, ind) {
-          $http({
-            method: 'DELETE',
-            url: '/api/POS/productVerient/' + pk + '/'
-          }).
-          then((function(ind) {
-            return function(response) {
-              $scope.productData.splice(ind, 1);
-              Flash.create('success', 'Deleted');
-            }
-          })(ind))
-
-}
-
-$scope.productVerientForm = {
-      'sku': '',
-      'unitPerpack': 1
-    }
-    $scope.productData = [];
-
-    $scope.saveUnits = function() {
-      console.log('aaaaaaaaaaaaa');
-      var f = $scope.productVerientForm;
-      var toSend = {
-        parent: $scope.product.pk,
-        sku: f.sku,
-        unitPerpack: f.unitPerpack
+    $http({
+      method: 'DELETE',
+      url: '/api/POS/productVerient/' + pk + '/'
+    }).
+    then((function(ind) {
+      return function(response) {
+        $scope.productData.splice(ind, 1);
+        Flash.create('success', 'Deleted');
       }
+    })(ind))
 
-      $http({
-        method: 'POST',
-        url: '/api/POS/productVerient/',
-        data: toSend
-      }).
-      then(function(response) {
-        $scope.productVerientForm.pk = response.data.pk;
-        $scope.productData.push(response.data);
-        Flash.create('success', 'Saved');
-      })
-}
+  }
+
+  $scope.productVerientForm = {
+    'sku': '',
+    'unitPerpack': 1
+  }
+  $scope.productData = [];
+
+  $scope.saveUnits = function() {
+    console.log('aaaaaaaaaaaaa');
+    var f = $scope.productVerientForm;
+    var toSend = {
+      parent: $scope.product.pk,
+      sku: f.sku,
+      unitPerpack: f.unitPerpack
+    }
+
+    $http({
+      method: 'POST',
+      url: '/api/POS/productVerient/',
+      data: toSend
+    }).
+    then(function(response) {
+      $scope.productVerientForm.pk = response.data.pk;
+      $scope.productData.push(response.data);
+      Flash.create('success', 'Saved');
+    })
+  }
 
 
 });
@@ -601,20 +604,20 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   var productmultiselectOptions = [{
     icon: 'fa fa-plus',
     text: 'configure'
-  } ,{
+  }, {
     icon: 'fa fa-plus',
     text: 'Bulk'
   }, {
     icon: 'fa fa-plus',
     text: 'new'
-  },];
+  }, ];
 
   var multiselectOptions = [{
     icon: 'fa fa-plus',
     text: 'new'
   }, ];
 
-  var multiselectOptions = [ {
+  var multiselectOptions = [{
     icon: 'fa fa-plus',
     text: 'new'
   }, ];
@@ -1000,7 +1003,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   }
 
   $scope.openProductConfigureForm = function(idx) {
-      $aside.open({
+    $aside.open({
       templateUrl: '/static/ngTemplates/app.POS.productConfigureForm.html',
       placement: 'right',
       size: 'xl',
@@ -1040,9 +1043,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
                   cancel: true,
                   app: appType,
                   data: {
-                      pk: target,
-                      index:i,
-                      meta : $scope.data.productMetatableData[i]
+                    pk: target,
+                    index: i,
+                    meta: $scope.data.productMetatableData[i]
                   },
                   active: true
                 })
@@ -1122,7 +1125,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           console.log($scope.bulkForm.xlFile);
           var fd = new FormData()
           fd.append('xl', $scope.bulkForm.xlFile);
-          console.log('*************',fd);
+          console.log('*************', fd);
           $http({
             method: 'POST',
             url: '/api/POS/bulkProductsCreation/',

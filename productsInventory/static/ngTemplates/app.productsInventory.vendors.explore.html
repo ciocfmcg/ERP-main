@@ -1,0 +1,138 @@
+<div class="container-fluid" ng-controller="businessManagement.productsInventory.vendors.explore">
+  <div class="row" style="margin-top:30px">
+    <div class="col-md-3">
+      <h3>vendor Details</h3>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Service For:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.name}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Service cin:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.cin}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Service tin:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.tin}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Service city:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.city}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Service city:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.state}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Service city:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.pincode}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Service city:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.country}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Customer Name:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.contactPersonName}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Customer Number:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.contactPersonNumber}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>Payment Term:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.paymentTerm}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9" style="border-left:1px solid #eeeeee;min-height:60vh">
+        <div class="container-fluid">
+          <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+            <tr style="background-color: #eeeeee;height: 96px;">
+              <th>#</th>
+              <th>Item Description</th>
+              <th>Item Rate (Rupees)</th>
+              <th>Fullfillment Time (Time)</th>
+              <th>Logistic (Cost)</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="item in products">
+              <td>{{$index + 1}}</td>
+              <td>
+                <input type="text" class="form-control-pos" ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
+              </td>
+              <td>
+                <input type="float" class="form-control-pos" ng-model="item.rate">
+              </td>
+              <td>
+                <input type="number" class="form-control-pos" ng-model="item.fulfilmentTime">
+              </td>
+              <td>
+                <input type="number" class="form-control-pos" ng-model="item.logistics">
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="container-fluid" style="padding:0px;">
+                  <button style="background-color:white;border:none;" ng-click="addTableRow()"><i class="fa fa-plus" aria-hidden="true"  style="cursor:pointer"></i>
+                      </button>
+                </div>
+              </td>
+              <td style="border:none;"></td>
+              <td style="border:none;"></td>
+              <td style="border:none;"></td>
+              <td style="border:none;"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="row">
+          <div class="container-fluid">
+            <div class="col-md-12 text-center" style="margin-top: 27px;">
+              <button type="button" class="btn btn-success" ng-click="saveVenderServiceForm()">Save</button>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

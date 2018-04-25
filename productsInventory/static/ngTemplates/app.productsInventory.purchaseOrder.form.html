@@ -1,0 +1,54 @@
+<div class="row" style="margin: 10px;">
+  <div class="col-md-2">
+    <button type="button" ng-click="savePo()" class="btn btn-success">save</button>
+  </div>
+  <div class="col-md-2 text-right">
+    <button type="button" class="btn btn-success" ng-click="create()">Generated</button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="container-fluid card" style="margin: 10px;" ng-repeat="item in pages">
+      <div class="row" style="height:7vh;cursor:pointer" ng-click="openVendor(item.pk,$index)">
+        <div class="col-md-6">
+          <h5>Name :{{item.name}}</h5>
+        </div>
+        <div class="col-md-6 text-right">
+          <span>Stock: {{item.Stock}}</span> <br>
+          <span>Sku: {{item.SKU}}</span>
+        </div>
+      </div>
+      <div class="row" ng-if="item.selectedData.pk" style="border-top:1px solid #d2d3d6;padding:10px">
+        <div class="col-md-8">
+          <span>{{item.selectedData.vendor.service.name}}</span>
+        </div>
+        <div class="col-md-4">
+          <span>Quantity:</span>
+          <input type="number" ng-model="a.qty" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <ul class="pager">
+        <li class="previous {{startPage == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+        <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6" ng-if="openVendor">
+    <div class="container-fluid card" style="margin: 10px;" ng-repeat=" a in vendor">
+      <div class="row" style="height:7vh;">
+        <div class="col-md-6">
+          <h5>Name :{{a.vendor.service.name}}</h5>
+        </div>
+        <div class="col-md-4 text-right">
+          <span>Rate: {{a.rate}}</span>
+        </div>
+        <div class="col-md-2 text-right">
+          <span style="font-size:30px;cursor:pointer;color:{{a.select?'#77e030':'#e0452a'}}" ng-click="selectVendor(a.pk,$index)"><i class="fa fa-check-circle"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

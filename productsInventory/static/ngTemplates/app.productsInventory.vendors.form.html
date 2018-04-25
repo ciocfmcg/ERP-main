@@ -1,0 +1,28 @@
+<div class="container-fluid" ng-controller="businessManagement.productsInventory.vendors.form">
+  <div class="col-md-6">
+    <div class="form-group" style="padding-top: 19px;">
+      <label>Service</label>
+      <input type="text" class="form-control" ng-model="form.service" uib-typeahead="p as p.name for p in serviceSearch($viewValue)" placeholder="Search For Service">
+    </div>
+    <div class="form-group">
+      <label>Contact Name</label>
+      <input type="text" class="form-control" ng-model="form.contactPersonName" placeholder="enter name">
+    </div>
+    <div class="form-group">
+      <label>Contact Name Number</label>
+      <input type="text " class="form-control" ng-model="form.contactPersonNumber" placeholder="enter Number">
+    </div>
+    <div class="form-group">
+      <label>Contract Documents</label>
+      <input type="file" file-model="form.contactDoc">
+    </div>
+    <div class="form-group">
+      <label>Payment Term</label>
+      <input type="text " class="form-control" ng-model="form.paymentTerm" placeholder="enter Payment Term">
+    </div>
+    <button type="button" class="btn btn-primary" ng-click="save()">
+      Save
+    </button>
+  </div>
+</div>
+</div>

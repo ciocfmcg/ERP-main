@@ -7,9 +7,18 @@ app.config(function($stateProvider) {
       url: "/productsInventory",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.productsInventory.default.html',
-          controller: 'businessManagement.productsInventory.default',
-        }
+          templateUrl: '/static/ngTemplates/genericAppBase.html',
+
+        },
+        "menu@businessManagement.productsInventory": {
+           templateUrl: '/static/ngTemplates/genericMenu.html',
+           controller : 'controller.generic.menu',
+         },
+         "@businessManagement.productsInventory": {
+           templateUrl: '/static/ngTemplates/app.productsInventory.default.html',
+           controller: 'businessManagement.productsInventory.default',
+           // controller : 'projectManagement.LMS.default',
+         }
       }
     })
 });
@@ -41,7 +50,7 @@ app.controller("businessManagement.productsInventory.edit", function($scope, $ht
 
 });
 
-app.controller("businessManagement.productsInventory.default", function($scope, $http, Flash , $uibModal , $rootScope) {
+app.controller("businessManagement.productsInventory.default", function($scope, $http, Flash , $uibModal , $rootScope,$state) {
 
   // $http({method : 'GET' , url : '/api/POS/product/'})
 
@@ -77,9 +86,9 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     };
 
 
-  var multiselectOptions = [{icon : 'fa fa-file' , text : 'stockReport' },
-    {icon : 'fa fa-file' , text : 'reorderingReport' },
-    // {icon : 'fa fa-envelope-o' , text : 'message' },
+  var multiselectOptions = [{icon : 'fa fa-shopping-cart' , text : 'Reorder' },{icon : 'fa fa-file' , text : 'stockReport' },
+    {icon : 'fa fa-file' , text : 'reorderingReport' }
+
   ];
 
   $scope.config = {
@@ -104,7 +113,9 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       // $scope.openProductForm();
     } else if (action == 'stockReport') {
       window.open( "/api/POS/stockReport", "_blank")
-    } else {
+    } else if (action == 'Reorder') {
+      $state.go('businessManagement.productsInventory.purchaseOrder')
+    }else {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)) {
           if (action == 'editMaster') {

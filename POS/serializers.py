@@ -12,6 +12,8 @@ import os
 from django.conf import settings as globalSettings
 from clientRelationships.models import ProductMeta
 from clientRelationships.serializers import ProductMetaSerializer
+from ERP.models import service
+
 
 
 
@@ -93,6 +95,50 @@ class InvoiceSerializer(serializers.ModelSerializer):
     #         instance.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
     #     instance.save()
     #     return instance
+
+class VendorProfileSerializer(serializers.ModelSerializer):
+    service = serviceSerializer(many = False , read_only = True)
+    class Meta:
+        model = VendorProfile
+        fields = ('pk','created','updated','service','contactDoc','paymentTerm','contactPersonName','contactPersonNumber')
+    def create(self , validated_data):
+        p = VendorProfile(**validated_data)
+        p.service = service.objects.get(pk=self.context['request'].data['service'])
+        p.save()
+        return p
+
+class PurchaseOrderSerializer(serializers.ModelSerializer):
+    service = serviceSerializer(many = False , read_only = True)
+    class Meta:
+        model = PurchaseOrder
+        fields = ('pk','service','item','rate','qty')
+    def create(self , validated_data):
+        p = PurchaseOrder(**validated_data)
+        p.service = service.objects.get(pk=self.context['request'].data['service'])
+        p.save()
+        return p
+
+class VendorServicesSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(many = False , read_only = True)
+    class Meta:
+        model = VendorServices
+        fields = ('pk','vendor','product','rate','fulfilmentTime','logistics')
+        read_only_fields = ( 'vendor' , 'product')
+    def create(self , validated_data):
+        p = VendorServices(**validated_data)
+        p.vendor = VendorProfile.objects.get(pk=self.context['request'].data['vendor'])
+        p.product = Product.objects.get(pk=self.context['request'].data['product'])
+        p.save()
+        return p
+
+class VendorServicesLiteSerializer(serializers.ModelSerializer):
+    service = serviceSerializer(many = False , read_only = True)
+    vendor = VendorProfileSerializer(many = False , read_only = True)
+    # product = ProductSerializer(many = False , read_only = True)
+    class Meta:
+        model = VendorServices
+        fields = ('pk','vendor','product','rate','fulfilmentTime','logistics','service','select')
+
 
 class ProductVerientSerializer(serializers.ModelSerializer):
     class Meta:

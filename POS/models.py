@@ -4,11 +4,19 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from ERP.models import service
 # Create your models here.
 from time import time
 
 def getPOSProductUploadPath(instance,filename):
     return "POS/displayPictures/%s_%s_%s"% (str(time()).replace('.','_'),instance.user.username,filename)
+
+def getContractDoc(instance,filename):
+    return "POS/contactDoc/%s_%s"% (str(time()).replace('.','_'),filename)
+
+
+
+
 
 class Customer(models.Model):
     user = models.ForeignKey(User , related_name = 'posContacts' , null = False) # the user created it
@@ -109,6 +117,30 @@ class ProductVerient(models.Model):
 #     sac = models.BooleanField(default = True)
 
 
+class VendorProfile(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    service = models.ForeignKey(service,related_name = 'services' , null = True)
+    contactDoc = models.FileField(null = True , upload_to = getContractDoc)
+    paymentTerm = models.PositiveIntegerField(default = 0)
+    contactPersonName = models.CharField(max_length = 100 , null = False)
+    contactPersonNumber = models.CharField(max_length = 100 , null = False)
+
+class VendorServices(models.Model):
+    vendor = models.ForeignKey(VendorProfile,related_name = 'vendors' , null = True)
+    product = models.ForeignKey(Product , related_name='vendorsProduct')
+    rate = models.PositiveIntegerField(default = 0)
+    fulfilmentTime = models.PositiveIntegerField(default = 0)
+    logistics = models.PositiveIntegerField(default = 0)
+    select = models.BooleanField(default = False)
+
+class PurchaseOrder(models.Model):
+    item = models.CharField(max_length = 100 , null = False)
+    service = models.ForeignKey(service,related_name = 'purchaseServices' , null = True)
+    rate = models.PositiveIntegerField(default = 0)
+    qty = models.PositiveIntegerField(default = 0)
+
+
 
 class ExternalOrdersQtyMap(models.Model):
     product = models.ForeignKey(Product , related_name='externalOrders')
@@ -142,6 +174,9 @@ class ExternalOrders(models.Model):
     marketPlaceTax = models.FloatField(null= True)
     earnings = models.FloatField(null= True)
     buyerPincode = models.CharField(null= True , max_length = 7)
+
+
+
 
 TYPE_CHOICES = (
     ('system','system'),
