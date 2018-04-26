@@ -3,9 +3,11 @@
   <div class="container-fluid card" style="padding-bottom:10px;padding-top:15px">
     <!-- {{data.ques}}  -->
     <span mathjax-bind="data.ques"></span><br><br>
-    <label>Type :</label> {{data.qtype}} <br>
-    <label>Subject :</label> {{data.topic.subject.title}} <br>
-    <label>Topic :</label> {{data.topic.title}} <br> <br>
-    <i class="fa fa-pencil fa-lg" style="cursor:pointer;" ng-click="rowActionClicked('edit')"></i>
+    <label>Type :</label>{{data.qtype}} <br>
+    <span ng-if="data.topic.subject.title"><label>Subject :</label>{{data.topic.subject.title}} <br></span>
+    <span ng-if="data.topic.title"><label>Topic :</label>{{data.topic.title}} <br> <br></span>
+    <span ng-if="data.bookSection.book.title"><label>Book :</label>{{data.bookSection.book.title}} <br></span>
+    <span ng-if="data.bookSection.title"><label>Section :</label>{{data.bookSection.title}} <br> <br></span>
+    <i class="fa fa-pencil" style="cursor:pointer;" ng-click="rowActionClicked('edit')"></i>
   </div>
 </div>

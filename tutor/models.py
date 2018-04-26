@@ -13,6 +13,8 @@ def getAttachmentPath(instance , filename ):
     return 'tutor/attachments/%s_%s' % (str(time()).replace('.', '_'), filename)
 def getMessageAttachmentPath(instance , filename ):
     return 'tutor/msgAttachment/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getImageUploadPath(instance , filename ):
+    return 'tutor/imageAttachment/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 
 class Tutors24Profile(models.Model):
@@ -109,3 +111,6 @@ class Message(models.Model):
     sender = models.ForeignKey(User , related_name = 'userSession' , null = False)
     attachment = models.FileField(upload_to = getMessageAttachmentPath ,  null = True)
     msg= models.CharField(max_length=300,null=True)
+
+class SessionImage(models.Model):
+    image = models.ImageField(null = False , upload_to = getImageUploadPath)
