@@ -283,6 +283,8 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     if (f.answer.length > 0) {
       toSend.objectiveAnswer= f.answer;
     }
+
+
     if ($scope.form.typ == 'book') {
       if ($scope.form.section.pk) {
         console.log('book');
@@ -305,7 +307,8 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
 
     $http({method : method , url : url , data : toSend}).
     then(function(response) {
-            
+
+
       $scope.mode = 'edit';
       Flash.create('success' , 'Saved');
       $scope.form.pk = response.data.pk;

@@ -5,6 +5,26 @@ from .serializers import *
 from API.permissions import *
 from models import *
 import json
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from django.core.files.storage import default_storage
+
+class BlogImagesAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        print dir(request.data['file'])
+        print request.data['file'].name
+
+
+        filename = request.data['file'].name
+        file_obj = request.data['file']
+
+        with default_storage.open('blogs/'+filename, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+
+        return Response( '/media/blogs/'  + filename,  status=status.HTTP_200_OK)
 
 class settingsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner, )

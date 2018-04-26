@@ -121,9 +121,11 @@ class QuestionSerializer(serializers.ModelSerializer):
         if 'ques' in validated_data:
             instance.ques = validated_data.pop('ques')
             instance.level = validated_data.pop('level')
-            instance.objectiveAnswer = validated_data.pop('objectiveAnswer')
             instance.qtype = validated_data.pop('qtype')
-            instance.solutionVideoLink = validated_data.pop('solutionVideoLink')
+            if 'objectiveAnswer' in validated_data:
+                instance.objectiveAnswer = validated_data.pop('objectiveAnswer')
+            if 'solutionVideoLink' in validated_data:
+                instance.solutionVideoLink = validated_data.pop('solutionVideoLink')
 
         if 'solutionVideo' in validated_data:
             instance.solutionVideo = validated_data.pop('solutionVideo')
