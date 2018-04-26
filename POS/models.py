@@ -132,7 +132,6 @@ class VendorServices(models.Model):
     rate = models.PositiveIntegerField(default = 0)
     fulfilmentTime = models.PositiveIntegerField(default = 0)
     logistics = models.PositiveIntegerField(default = 0)
-    select = models.BooleanField(default = False)
 
 PURCHASE_ORDER_STATUS_CHOICES = (
     ('create','create'),

@@ -135,10 +135,9 @@ class VendorServicesSerializer(serializers.ModelSerializer):
 class VendorServicesLiteSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)
     vendor = VendorProfileSerializer(many = False , read_only = True)
-    # product = ProductSerializer(many = False , read_only = True)
     class Meta:
         model = VendorServices
-        fields = ('pk','vendor','product','rate','fulfilmentTime','logistics','service','select')
+        fields = ('pk','vendor','product','rate','fulfilmentTime','logistics','service')
 
 
 class ProductVerientSerializer(serializers.ModelSerializer):

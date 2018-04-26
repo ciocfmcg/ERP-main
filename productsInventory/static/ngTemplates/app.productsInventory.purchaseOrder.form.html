@@ -1,16 +1,22 @@
 <div class="row" style="margin: 10px;">
   <div class="col-md-2">
-    <button type="button" ng-click="savePo()" class="btn btn-success">save</button>
+    <button type="button" ng-click="save()" class="btn btn-success">save</button>
   </div>
-  <div class="col-md-2 text-right">
+  <div class="col-md-2">
     <button type="button" class="btn btn-success" ng-click="create()">Generated</button>
   </div>
+
+  <div class="col-md-4">
+    <strong>Total Value : </strong> {{getTotal()}} INR
+  </div>
+
+
 </div>
 
 <div class="row">
   <div class="col-md-6">
-    <div class="container-fluid card" style="margin: 10px;" ng-repeat="item in pages">
-      <div class="row" style="height:7vh;cursor:pointer" ng-click="openVendor(item.pk,$index)">
+    <div class="container-fluid card" style="margin: 10px;{{item.pk == productInView.pk ? 'border-left:solid 5px #1f93e7' : ''}}" ng-repeat="item in productsToOrder" ng-click="showVendorOptions(item)" ng-if="$index <= pageNo*10 + 9 && $index >= pageNo*10">
+      <div class="row" style="height:7vh;cursor:pointer" >
         <div class="col-md-6">
           <h5>Name :{{item.name}}</h5>
         </div>
@@ -19,9 +25,12 @@
           <span>Sku: {{item.SKU}}</span>
         </div>
       </div>
-      <div class="row" ng-if="item.selectedData.pk" style="border-top:1px solid #d2d3d6;padding:10px">
+      <div class="row" ng-if="item.vendor" style="border-top:1px solid #d2d3d6;padding:10px">
         <div class="col-md-8">
-          <span>{{item.selectedData.vendor.service.name}}</span>
+          <span>{{item.vendor.vendor.service.name}}</span> <br>
+          <span>@ {{item.vendor.rate}} INR per item</span> <br>
+          <span><strong>Total : </strong> {{item.vendor.rate * item.qty}} INR</span> <br>
+
         </div>
         <div class="col-md-4">
           <span>Quantity:</span>
@@ -30,23 +39,23 @@
       </div>
     </div>
     <div class="container-fluid">
-      <ul class="pager">
-        <li class="previous {{startPage == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
-        <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+      <ul class="pager">{{pageNo}}{{maxPage}}
+        <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+        <li class="next {{pageNo == maxPage? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
       </ul>
     </div>
   </div>
-  <div class="col-md-6" ng-if="openVendor">
-    <div class="container-fluid card" style="margin: 10px;" ng-repeat=" a in vendor">
+  <div class="col-md-6">
+    <div class="container-fluid card" style="margin: 10px;" ng-repeat=" a in vendors">
       <div class="row" style="height:7vh;">
         <div class="col-md-6">
-          <h5>Name :{{a.vendor.service.name}}</h5>
+          <h5>Name :{{a.vendor.service.name}} {{a.vendor.service.pk}}</h5>
         </div>
         <div class="col-md-4 text-right">
           <span>Rate: {{a.rate}}</span>
         </div>
         <div class="col-md-2 text-right">
-          <span style="font-size:30px;cursor:pointer;color:{{a.select?'#77e030':'#e0452a'}}" ng-click="selectVendor(a.pk,$index)"><i class="fa fa-check-circle"></i></span>
+          <span style="font-size:30px;cursor:pointer;color:{{a.pk == productInView.vendor.pk  ?'#77e030':'#e0452a'}}" ng-click="selectVendor(a)"><i class="fa fa-check-circle"></i></span>
         </div>
       </div>
     </div>
