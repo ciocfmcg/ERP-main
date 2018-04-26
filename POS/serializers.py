@@ -111,10 +111,11 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)
     class Meta:
         model = PurchaseOrder
-        fields = ('pk','service','item','rate','qty')
+        fields = ('pk','user','created','updated','status','products','totalamount','service')
     def create(self , validated_data):
         p = PurchaseOrder(**validated_data)
-        p.service = service.objects.get(pk=self.context['request'].data['service'])
+        p.user = self.context['request'].user
+        # p.service = service.objects.get(pk=self.context['request'].data['service'])
         p.save()
         return p
 

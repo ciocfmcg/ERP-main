@@ -562,7 +562,7 @@ class ReorderingReport(APIView):
         for o in objs:
             if o.inStock < o.reorderTrashold:
                 toInclude.append({"name" : o.name , "SKU": o.serialNo , "Stock" : o.inStock})
-                toIncludeExtended.append({ "pk" : o.pk, "name" : o.name , "SKU": o.serialNo , "Stock" : o.inStock})
+                toIncludeExtended.append({ "pk" : o.pk, "name" : o.name , "SKU": o.serialNo , "Stock" : o.inStock,"reorderTrashold" : o.reorderTrashold})
 
         if 'onlyData' in request.GET:
             return  Response(toIncludeExtended , status=status.HTTP_200_OK)

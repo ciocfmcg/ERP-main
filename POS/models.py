@@ -134,11 +134,25 @@ class VendorServices(models.Model):
     logistics = models.PositiveIntegerField(default = 0)
     select = models.BooleanField(default = False)
 
+PURCHASE_ORDER_STATUS_CHOICES = (
+    ('create','create'),
+    ('sent','sent'),
+    ('returned','returned'),
+    ('cancelled','cancelled'),
+
+)
+
 class PurchaseOrder(models.Model):
-    item = models.CharField(max_length = 100 , null = False)
+    # purchaseOrderDate = models.DateField(null=True)
+    user = models.ForeignKey(User , related_name = 'purchaseOrers' , null = True)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
     service = models.ForeignKey(service,related_name = 'purchaseServices' , null = True)
-    rate = models.PositiveIntegerField(default = 0)
-    qty = models.PositiveIntegerField(default = 0)
+    status = models.CharField(max_length = 10  ,null = True, choices = PURCHASE_ORDER_STATUS_CHOICES)
+    products = models.CharField(max_length=10000,null=True)
+    totalamount = models.PositiveIntegerField(default = 0)
+
+
 
 
 

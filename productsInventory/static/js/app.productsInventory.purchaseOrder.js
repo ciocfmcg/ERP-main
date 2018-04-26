@@ -208,11 +208,31 @@ app.controller("businessManagement.productsInventory.purchaseOrder", function($s
 
   }
 
+  // $scope.form = {
+  //   service : '',
+  //   status: '',
+  //   products :[{
+  //     sku:'',
+  //     rate:0,
+  //     qty:6,
+  //   }],
+  //   totalamount:'',
+  //
+  // }
+
   $scope.create = function() {
+    // var f = $scope.form;
     for (var i = 0; i < $scope.pages.length; i++) {
       console.log('ppp',$scope.pages);
+      var tempProd = []
+      for (var i = 0; i < $scope.pages[i].products.length; i++) {
+        $scope.pages[i].products[i]
+      }
+
       var toSend = {
-        qty: $scope.pages[i].qty,
+        products : JSON.stringify(tempProd),
+        status : 'created',
+        totalamount: $scope.pages[i].qty * $scope.pages[i].rate,
         service: $scope.pages[i].pk
       }
 
