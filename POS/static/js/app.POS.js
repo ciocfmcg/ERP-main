@@ -625,7 +625,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.config = {
     views: views,
     url: '/api/POS/product/',
-    searchField: 'name',
+    filterSearch : true,
+    searchField : 'Name or SKU or Description',
     itemsNumPerView: [6, 12, 24],
     multiselectOptions: productmultiselectOptions,
   }
@@ -669,7 +670,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
     console.log($scope.data.tableData);
-
+    console.log($scope.tableData);
     if (action == 'new') {
       $scope.openProductForm();
     } else if (action == 'Bulk') {
@@ -861,7 +862,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
               return {};
             }
           } else {
-            return $scope.customers[idx];
+            return $scope.data.customerDataTable[idx];
           }
         }
       },
@@ -907,7 +908,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           if (idx == undefined || idx == null) {
             return {};
           } else {
-            return $scope.products[idx];
+            return $scope.data.tableData[idx];
           }
         }
       },
@@ -932,7 +933,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           if (idx == undefined || idx == null) {
             return {};
           } else {
-            return $scope.invoices[idx];
+            return $scope.data.invoiceDataTable[idx];
           }
         }
       },
@@ -957,7 +958,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           if (idx == undefined || idx == null) {
             return {};
           } else {
-            return $scope.customers[idx];
+            return $scope.data.customerDataTable[idx];
           }
         }
       },
@@ -981,12 +982,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       backdrop: true,
       resolve: {
         product: function() {
-
-          console.log($scope.products[idx]);
           if (idx == undefined || idx == null) {
             return {};
           } else {
-            return $scope.products[idx];
+            return $scope.data.tableData[idx];
           }
         }
       },
@@ -1166,7 +1165,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           if (idx == undefined || idx == null) {
             return {};
           } else {
-            return $scope.invoices[idx];
+            return $scope.data.invoiceDataTable[idx];
           }
         }
       },

@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^clientRelationships/', include('clientRelationships.urls')),
     url(r'^LMS/', include('LMS.urls')),
     url(r'^POS/', include('POS.urls')),
-    url(r'^warehouse/', include('warehouse.urls')),
+#    url(r'^warehouse/', include('warehouse.urls')),
     url(r'^organization/', include('organization.urls')),
     url(r'^recruitment/', include('recruitment.urls')),
     url(r'^payroll/', include('payroll.urls')),

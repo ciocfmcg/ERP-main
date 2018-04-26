@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from time import time
+
 # Create your models here.
 def getThemeImageUploadPath(instance , filename ):
     return 'PIM/images/theme/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
@@ -57,6 +59,10 @@ class chatMessage(models.Model):
 
 def getCalendarAttachment(instance , filename ):
     return 'calendar/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, instance.originator.username, filename)
+
+def getOGImageAttachment(instance , filename ):
+    return 'blogs/%s_%s' % (str(time()).replace('.', '_'), filename)
+
 
 from clientRelationships.models import Contact
 class calendar(models.Model):
@@ -138,6 +144,23 @@ class blogPost(models.Model):
     source = models.TextField(max_length = 40000 , null = True)
     tags = models.ManyToManyField(blogCategory , related_name = 'articles' , blank = True)
     contentType = models.CharField(max_length = 15 , choices = CONTENT_TYPE_CHOICE , default = 'article')
+
+    # url
+    #
+    # og image
+    # title
+    # description
+    # tags
+    # section
+    # author
+
+    shortUrl = models.CharField(max_length =100 , null = True)
+    ogimageUrl = models.CharField(max_length =1000 , null = True)
+    ogimage = models.ImageField( upload_to= getOGImageAttachment , null = True)
+    description = models.CharField(max_length =1000 , null = True)
+    tagsCSV = models.CharField(max_length =1000 , null = True) # comma seperated value
+    section = models.CharField(max_length =100 , null = True)
+    author = models.CharField(max_length =100 , null = True)
 
 class blogLike(models.Model):
     parent = models.ForeignKey(blogPost , related_name = 'likes')

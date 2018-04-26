@@ -1,5 +1,36 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
-<title>{{brandName}}</title>
+
+<title>{{blogobj.title}}</title>
+
+<meta name="description" content="{{blogobj.description}}"/>
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{blogobj.title}}" />
+<meta property="og:description" content="{{blogobj.description}}" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:site_name" content="24 Tutors" />
+<meta property="article:publisher" content="https://www.facebook.com/24tutorsIndia/" />
+{% for tag in tagsCSV %}
+<meta property="article:tag" content="{{tag}}" />{% endfor %}
+<meta property="article:section" content="{{blogobj.section}}" />
+<meta property="article:published_time" content="{{blogobj.created.isoformat}}" />
+<meta property="article:modified_time" content="{{blogobj.created.isoformat}}" />
+<meta property="og:updated_time" content="{{blogobj.created.isoformat}}" />
+<meta property="og:image" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
+<meta property="og:image:secure_url" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
+<meta property="og:image:width" content="{{blogobj.ogimage.width}}" />
+<meta property="og:image:height" content="{{blogobj.ogimage.height}}" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="{{blogobj.description}}" />
+<meta name="twitter:title" content="{{blogobj.title}}" />
+<meta name="twitter:site" content="@monomerce" />
+<meta name="twitter:image" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
+<meta name="twitter:creator" content="@monomerce" />
+
+<meta property="article:author" content="{{user}}" />
+
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
@@ -11,10 +42,10 @@
 {% block content %}
 <div>
   <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
-    <header style="background: url('/static/images/blog_banner.jpg') no-repeat top center/cover;height:40vh;width:100%;">
+    <header style="background: url('{{blogobj.ogimage.url}}') no-repeat top center/cover;height:40vh;width:100%;">
       <div class="container" style="overflow:hidden;">
         <div style="text-align:center;">
-          <div class="intro-lead-in" style="font-size:100px;padding-right:53px;margin-top:45px;color:#0b5e8c;">Blogs</div>
+          <!-- <div class="intro-lead-in" style="font-size:100px;padding-right:53px;margin-top:45px;color:#0b5e8c;">Blogs</div> -->
 
         </div>
       </div>
@@ -27,24 +58,22 @@
         <div class="container-fluid">
           <section style="padding-top: 20px;padding-bottom: 30px;">
 
-            <div class="row">
-              <div class="col-md-12">
-                <span style="font-size:30px;margin-left: 40px;margin-right: 10px"><i class="fa fa-user-o"></i>&nbsp; {{user}}</span><br><br>
-                <span style="margin-left: 40px;">{{date}}</span>
+            <div class="row" style="padding:20px">
+              <div class="col-md-9 text-left">
+                <h2 style="font-size:19px;" class="text-primary">{{blogobj.title}}</h2>
+                By {{user}} <span style="margin-left: 10px;"> | </span> <span style="margin-left: 10px;">{{blogobj.created}}</span>
+              </div>
+              <div class="col-md-3">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-primary pull-right" style="background:rgb(31, 116, 215);" target="_blank">
+                  <i class="fa fa-facebook"></i>  Share
+                </a>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-12 text-left" style="margin-left: 40px;margin-right: 10px">
-                <h2>{{title}}</h2>
-              </div>
+            <div class="container-fluid" style="padding:20px">
+              {{blogobj.source | safe}}
             </div>
-            <div class="container-fluid" style="margin-left:40px;margin-right: 10px;padding:0px">
-              {{header | safe}}
-              <div class="row">
-                <div class="col-lg-12 ">
-                  {{body | safe}}
-                </div>
-              </div>
+            <div class="row text-center">
+              <div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-width="900" data-numposts="5"></div>
             </div>
           </section>
         </div>

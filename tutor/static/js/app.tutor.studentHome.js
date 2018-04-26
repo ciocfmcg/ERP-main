@@ -14,39 +14,46 @@ app.config(function($stateProvider){
 });
 
 app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $stateParams , $http , Flash , $uibModal , $timeout) {
+  console.log($state.params);
+  if ($(location).attr('href').indexOf("mode=success") != -1) {
+    Flash.create('success' , 'Payment successfull')
+    $state.go('studentHome');
+  }
 
   $scope.form = {minutes1 : 0 , minutes2 : 0 , hours1 : 0, hours2 : 0}
   $scope.me = $users.get('mySelf');
 
-  $http({method : 'GET' , url : '/api/tutors/Tutor24User/' }).
-  then(function(response) {
-    $scope.profile = response.data;
-    $scope.profile.balance = response.data.tutorObj.balance;
-    if ($scope.profile.balance == null || $scope.profile.balance == undefined) {
-      return;
-    }
-    // $scope.profile.balance = 145;
-    var minutes = $scope.profile.balance%60;
-    var hours = parseInt($scope.profile.balance/60);
+  $scope.getProfile = function() {
+    $http({method : 'GET' , url : '/api/tutors/Tutor24User/' }).
+    then(function(response) {
+      $scope.profile = response.data;
+      $scope.profile.balance = response.data.tutorObj.balance;
+      if ($scope.profile.balance == null || $scope.profile.balance == undefined) {
+        return;
+      }
+      // $scope.profile.balance = 145;
+      var minutes = $scope.profile.balance%60;
+      var hours = parseInt($scope.profile.balance/60);
 
-    console.log(minutes);
-    console.log(hours);
+      console.log(minutes);
+      console.log(hours);
 
-    $scope.form.minutes1 = parseInt(minutes/10);
-    $scope.form.minutes2 = minutes%10;
+      $scope.form.minutes1 = parseInt(minutes/10);
+      $scope.form.minutes2 = minutes%10;
 
-    $scope.form.hours1 = parseInt(hours/10);
-    $scope.form.hours2 = hours%10;
+      $scope.form.hours1 = parseInt(hours/10);
+      $scope.form.hours2 = hours%10;
 
-    console.log($scope.form);
+      console.log($scope.form);
 
-  })
+    })
+  }
+
+  $scope.getProfile();
 
   $http({method : 'GET' , url : '/api/tutors/tutors24Session/?mode=onlyComplete&limit=3&student='+ $scope.me.pk}).
   then(function(response) {
-    console.log('resssssssssssssssssss',response.data.results);
     $scope.recentSession = response.data.results;
-
   })
 
   $scope.getTimeDiff = function(a,b){
@@ -57,8 +64,15 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
 
   $scope.startSession = function() {
 
+    $scope.getProfile();
+
     if ($scope.profile.tutorObj.standard == null ||$scope.profile.tutorObj.standard == undefined || $scope.profile.tutorObj.standard.length == 0) {
       Flash.create('danger' , 'Your profile is not complete please complete the profile in Account page')
+      return;
+    }
+
+    if ($scope.profile.balance < 10) {
+      Flash.create('danger' , 'Balance low , Please add time into your account.')
       return;
     }
 
@@ -113,33 +127,50 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
 
         $scope.sendTutoringRequest = function(sessionID) {
 
-          connection.session.publish('service.tutor.online' , [{type : 'newSessionRequest', sessionID : 1 , subject: sessionID , topic : 2 , id : $scope.me.username}], {}, {acknowledge: true});
+          var toSend= {
+            student: $scope.me.pk,
+            initialQuestion : $scope.form.question,
+            subject : $scope.form.subject,
+            topic : $scope.form.topic,
+          }
+
+          $http({method : 'POST' , url : '/api/tutors/tutors24Session/' , data : toSend}).
+          then(function(response) {
+
+            console.log("success");
+
+            $scope.sessionID = response.data.pk;
+
+            connection.session.publish('service.tutor.online' , [{type : 'newSessionRequest', sessionID : response.data.pk , subject: 1 , topic : 2 , id : $scope.me.username}], {}, {acknowledge: true});
 
 
-          $timeout(function() {
-            $scope.tutorsOnline = tutorsOnline;
+            $timeout(function() {
+              $scope.tutorsOnline = tutorsOnline;
 
-            console.log($scope.tutorsOnline.length + " tutors found");
+              console.log($scope.tutorsOnline.length + " tutors found");
 
-            for (var i = 0; i < $scope.tutorsOnline.length; i++) {
-              if ($scope.tutorsOnline[i].checked ) {
-                continue
+              for (var i = 0; i < $scope.tutorsOnline.length; i++) {
+                if ($scope.tutorsOnline[i].checked ) {
+                  continue
+                }
+
+                connection.session.publish('service.tutoring.call.' + $scope.tutorsOnline[i].tutorID , [{type : 'newSessionRequest', sessionID : $scope.sessionID , id : $scope.me.username}], {}, {acknowledge: true});
+
+                console.log("Waiting start");
+                console.log("Waiting end");
+
+                $scope.tutorsOnline[i].checked = true;
               }
 
-              connection.session.publish('service.tutoring.call.' + $scope.tutorsOnline[i].tutorID , [{type : 'newSessionRequest', sessionID : 1 , id : $scope.me.username}], {}, {acknowledge: true});
 
-              console.log("Waiting start");
-              console.log("Waiting end");
+            }, 10000)
 
-              $scope.tutorsOnline[i].checked = true;
-            }
+            $timeout(function() {
+              $scope.status = 'noluck';
+            },20000);
 
 
-          }, 10000)
-
-          $timeout(function() {
-            $scope.status = 'noluck';
-          },20000);
+          })
 
 
         }
@@ -181,14 +212,16 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
     })
   }
 
+
+
   $scope.addHours = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.tutor.addHours.form.html',
       size: 'lg',
       backdrop : true,
-      controller: function($scope ){
+      controller: function($scope, $http ){
         $scope.form= {minutes : 30 , promoStatus : null , promo: '' , promoPercent : 0 , rate : 150}
-
+        $scope.paymentParams = [];
         $scope.getDicount = function() {
           return $scope.form.rate * parseInt($scope.form.minutes) * $scope.form.promoPercent /(100*60);
         }
@@ -225,6 +258,20 @@ app.controller("home.tutor.studentHome", function($scope , $state , $users ,  $s
           }
 
           $scope.form.minutes = prev +val;
+        }
+
+        $scope.makePayment = function() {
+          var toSend =$scope.form;
+          toSend.grandTotal = $scope.getGrand();
+          $http({method : 'POST' , url : '/api/ERP/paytmPayment/' , data : toSend }).
+          then(function(response) {
+            $scope.paymentParams = response.data;
+
+            $timeout(function() {
+              $('#paymentSubmit').click();
+            }, 500)
+
+          })
         }
 
 

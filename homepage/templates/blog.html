@@ -1,5 +1,29 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
-<title>{{brandName}}</title>
+<title>Monomerce.com , Realtime inventory , Point of Sale systems in India</title>
+
+<meta name="description" content="One stop solution for your inventory mismatch problems. Get latest and fastest inventory update system ever"/>
+<link rel="canonical" href="https://monomerce.com/" />
+<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Monomerce.com , Realtime inventory , Point of Sale systems in India" />
+<meta property="og:description" content="One stop solution for your inventory mismatch problems. Get latest and fastest inventory update system ever" />
+<meta property="og:url" content="https://monomerce.com" />
+<meta property="og:site_name" content="24 Tutors" />
+<meta property="og:updated_time" content="2018-04-01T07:17:53+00:00" />
+<meta property="og:image" content="https://monomerce.com/static/images/seo_mono_common.png" />
+<meta property="og:image:secure_url" content="https://monomerce.com/static/images/seo_mono_common.png" />
+<meta property="og:image:width" content="1024" />
+<meta property="og:image:height" content="719" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="One stop solution for your inventory mismatch problems. Get latest and fastest inventory update system ever" />
+<meta name="twitter:title" content="Monomerce.com , Realtime inventory , Point of Sale systems in India" />
+<meta name="twitter:site" content="@monomerce" />
+<meta name="twitter:image" content="https://monomerce.com/static/images/seo_mono_common.png" />
+<meta name="twitter:creator" content="@monomerce" />
+
+<meta property="article:author" content="monomerce.com" />
+<link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
@@ -8,14 +32,9 @@
 <div>
   <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
     <header style="background: url('/static/images/blog_banner.jpg') no-repeat top center/cover;height:40vh;width:100%;">
-      <!-- <header  style="background:rgb(29, 98, 180);height:100vh;"> -->
       <div class="container" style="overflow:hidden;">
         <div style="text-align:center;">
-          <div class="intro-lead-in" style="font-size:100px;padding-right:53px;margin-top:45px;color:#0b5e8c;">Blogs</div>
-          <!-- <div class="intro-heading" >Think Free</div> -->
-          <!-- <div class="btn1" style="padding-right: 40px;">
-            <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
-          </div> -->
+
         </div>
       </div>
     </header>
@@ -30,27 +49,18 @@
       {% endif %}
 
       {% for a in data %}
-      <div class="container-fluid">
+
+      <div class="container-fluid" style="{% if forloop.counter|divisibleby:2 %}background:#eeeeee;{% endif %}">
         <section style="padding-top: 20px;padding-bottom: 30px;">
 
           <div class="row">
-            <div class="col-md-8 ">
-              <span style="font-size:30px;margin-left: 40px;margin-right: 10px"><i class="fa fa-user-o"></i>&nbsp; {{a.user}}</span><br><br>
-              <span style="margin-left: 40px;">{{a.date}}</span>
-            </div>
-          </div>
-          <div class="row">
             <div class="col-md-12 text-left" style="margin-left: 40px;margin-right: 10px">
-              <h2>{{a.title}}</h2>
+              <h2 style="font-size:19px;" class="text-primary"> <a href = "/{{a.url}}/ ">  {{a.title}} </a></h2>
+              By {{a.user}} <span style="margin-left: 10px;"> | </span> <span style="margin-left: 10px;">{{a.date}}</span>
             </div>
           </div>
-          <div class="container-fluid" style="margin-left:40px;margin-right: 10px;padding:0px">
+          <div class="container-fluid" style="margin-left:40px;margin-right: 10px;padding:0px;margin-top:15px;">
             {{a.header | safe}}
-            <div class="row">
-              <div class="col-lg-12 text-right">
-                <span><a href = "/blog/{{a.title}}/ ">Read more...</a></span>
-              </div>
-            </div>
           </div>
         </section>
       </div>

@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'ws://'+ wampServer +':8080/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'wss://'+ wampServer +':443/ws', realm: 'default'});
 
 tutorOnline = true;
 connection.onopen = function (session) {
@@ -79,11 +79,10 @@ connection.onopen = function (session) {
         console.log(args);
 
         if (args[0].type == 'newSessionRequest') {
-          if (tutoringTopics.indexOf(args[0].topic) != -1 && tutoringSubjects.indexOf(args[0].subject) != -1 ) {
-
-            connection.session.publish('service.tutor.onlineResponse.' + args[0].id  , [{at : new Date() , tutorID : wampBindName , checked : false}], {}, {acknowledge: true});
-
-          }
+          // if (tutoringTopics.indexOf(args[0].topic) != -1 && tutoringSubjects.indexOf(args[0].subject) != -1 ) {
+          //   connection.session.publish('service.tutor.onlineResponse.' + args[0].id  , [{at : new Date() , tutorID : wampBindName , checked : false}], {}, {acknowledge: true});
+          // }
+          connection.session.publish('service.tutor.onlineResponse.' + args[0].id  , [{at : new Date() , tutorID : wampBindName , checked : false}], {}, {acknowledge: true});
         }
       }
     }
@@ -171,9 +170,9 @@ connection.onopen = function (session) {
         });
       }
 
-      var url = '/tutoring/?session=' + args[0].sessionID;
-      var win = window.open(url, '_blank');
-      win.focus();
+      var url = '/studentHome/?session=' + args[0].sessionID;
+      window.location = "http://" + window.location.host + url;
+      // win.focus();
     }
 
     session.subscribe('service.tutoring.startSession.'+wampBindName, handleJoinSession).then(
@@ -228,6 +227,6 @@ connection.onopen = function (session) {
   // fired when connection was lost (or could not be established)
   //
 connection.onclose = function (reason, details) {
-   console.log("Connection lost: " + reason);
+   console.log("Connection lost: " + reason + details);
 }
 connection.open();

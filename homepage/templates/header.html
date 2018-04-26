@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-shrink bg-grey navbar-fixed-top">
+<nav class="navbar navbar-default navbar-shrink bg-blue navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header page-scroll">
@@ -9,6 +9,7 @@
           <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand paFge-scroll" href="/"><img src="{{brandLogoInverted}}" style="margin-top:-25px;max-width:400px;" height="60"></a>
+
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
@@ -32,9 +33,9 @@
           <a href="/career"> <i class="fa fa-line-chart"></i> Career</a>
         </li>
         {% if not user.is_authenticated %}
-        <li>
+        <!-- <li>
           <a href="/register"> <i class="fa fa-user"></i> Register</a>
-        </li>
+        </li> -->
         <li>
           <a href="/login"> <i class="fa fa-sign-in"></i> Login</a>
         </li>

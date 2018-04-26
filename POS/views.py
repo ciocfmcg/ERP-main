@@ -136,7 +136,7 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 
-settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+# settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
 
 
 class expanseReportHead(Flowable):
@@ -449,7 +449,6 @@ class ExternalEmailOrders(APIView):
     permission_classes = (permissions.AllowAny ,)
     def post(self , request , format = None):
         # print request.data
-        print '----------------------\n\n'
         body = request.data['html']
         subject = request.data['subject'].lower()
         seller = None
@@ -458,72 +457,116 @@ class ExternalEmailOrders(APIView):
         if 'amazon' in body.lower():
             seller = 'amazon'
 
-        # print seller
-        # print subject
+        if 'amazon' in seller.lower() and 'ship now' not in subject:
+            return Response(status=status.HTTP_200_OK)
+
+        print '----------------------\n\n'
+        print "Subject : ", subject
+        print "seller : ", seller , '\n'
+        # print "Body : ", body, '\n'
         typ = None
         soup = bs(body)
+
+
+
+
         tables = soup.findAll("table")
+        print len(tables)
 
-        for table in tables:
-             if table.findParent("table") is None:
+        if seller == 'amazon':
+            if 'refund for order' in subject:
+                typ = 'return'
+            if 'ship now' in subject:
+                typ = 'new'
+            if 'has dispatched the item you sold' in subject:
+                typ = 'shipped'
 
-                if seller == 'amazon':
-                    if 'refund for order' in subject:
-                        typ = 'return'
-                    if 'ship now' in subject:
-                        typ = 'new'
-                    if 'has dispatched the item you sold' in subject:
-                        typ = 'shipped'
-                if seller == 'flipkart':
-                    if 'flipkart return initiated' in subject:
-                        typ = 'rto'
-                    if 'new flipkart order' in subject:
-                        typ = 'new'
+        if seller == 'amazon':
+            if typ == 'new':
+                sku = body[body.index('SKU:')+4: body.index('Quantity:')].replace('<br>' , '').strip()
 
-                print "Type : " , typ , "Seller : " , seller
-                t = pd.read_html(str(table))[0]
-                if t.shape[0] >1:
-                    if seller == 'amazon':
-                        if typ == 'return' and 'order items' in t[0][0].lower() and 'refund reason' in t[1][0].lower():
-                            reason = t[1][1]
-                            items = t[0][1]
-                            if 'of' in items:
-                                items = items[items.index('of')+2:]
+                qty = body[body.index('Quantity:')+9: body.index('Order date:')].replace('<br>' , '').strip()
 
-                            print reason , items
-                    if seller == 'flipkart':
-                        if typ == 'new':
-                            sku = t[3][1]
-                            qty = t[4][1]
-                            orderID = t[0][1]
-                            price = t[5][1].replace('Rs.' , '').strip()
+                price = body[body.index(' price:')+7:].split('<br>')[0].replace('INR ' , '').strip()
 
-                            print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
 
-                            p = Product.objects.get(serialNo = sku)
-                            p.inStock -= int(qty)
 
-                            p.save()
+                orderID = body[body.index('Order ID:')+9:].split('<br>')[0].strip()
+
+                p = None
+                try:
+                    p = Product.objects.get(serialNo = sku)
+                except:
+                    try:
+                        ps = ProductVerient.object.get(sku = sku)
+                        p = ps.parent
+                    except:
+                        pass
+                finally:
+                    if p == None:
+                        return Response(status=status.HTTP_404_NOT_FOUND)
+
+                eo = ExternalOrders(marketPlace= 'amazon' , orderID = orderID , status = 'new' , buyersPrice = price )
+
+                eo.save()
+
+                prodMap = ExternalOrdersQtyMap(product = p , qty = qty)
+                prodMap.save()
+                eo.products.add(prodMap)
+                il = InventoryLog(typ = 'system', product = p , before =  p.inStock , after = p.inStock - int(qty) , externalOrder = eo )
+                il.save()
+
+                p.inStock -= int(qty)
+                p.save()
+
+
+
+
+
+
+                print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
+
+
+        # for table in tables:
+        #      if table.findParent("table") is None:
+        #
+        #
+        #         if seller == 'flipkart':
+        #             if 'flipkart return initiated' in subject:
+        #                 typ = 'rto'
+        #             if 'new flipkart order' in subject:
+        #                 typ = 'new'
+        #
+        #         print "Type : " , typ , "Seller : " , seller
+        #         try:
+        #             t = pd.read_html(str(table))[0]
+        #         except:
+        #             t = None
+        #         if t is not None and t.shape[0] >1:
+        #             if seller == 'amazon':
+        #                 if typ == 'return' and 'order items' in t[0][0].lower() and 'refund reason' in t[1][0].lower():
+        #                     reason = t[1][1]
+        #                     items = t[0][1]
+        #                     if 'of' in items:
+        #                         items = items[items.index('of')+2:]
+        #
+        #                     print reason , items
+        #             if seller == 'flipkart':
+        #                 if typ == 'new':
+        #                     sku = t[3][1]
+        #                     qty = t[4][1]
+        #                     orderID = t[0][1]
+        #                     price = t[5][1].replace('Rs.' , '').strip()
+        #
+        #                     print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
+        #
+        #                     p = Product.objects.get(serialNo = sku)
+        #                     p.inStock -= int(qty)
+        #
+        #                     p.save()
                     # print t , t.__class__ , typ
 
-                if seller == 'amazon':
-                    if typ == 'new':
-                        sku = body[body.index('SKU:')+4: body.index('Quantity:')].replace('<br>' , '').strip()
 
-                        qty = body[body.index('Quantity:')+9: body.index('Order date:')].replace('<br>' , '').strip()
-
-                        price = body[body.index(' price:')+7:].split('<br>')[0].replace('INR ' , '').strip()
-
-
-                        orderID = body[body.index('Order ID:')+9:].split('<br>')[0].strip()
-
-
-                        p = Product.objects.get(serialNo = sku)
-                        p.inStock -= int(qty)
-
-                        p.save()
-
-                        print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
                         # reg = "(?<=%s).*?(?=%s)" % ('Item','<br>')
                         # print re.match(reg, body)
 

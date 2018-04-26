@@ -10,7 +10,56 @@
 .has-danger .form-control-feedback , .has-success .form-control-feedback{
   display: default !important;
 }
+.textsize{
+  font-size: 50px;
+}
+@media only screen
+and (min-width : 300px)
+and (max-width : 500px) {
 
+   .textsize {
+    font-size: 25px;
+   }
+
+}
+
+    @media only screen
+    and (min-width : 500px)
+    and (max-width : 800px) {
+
+       .textsize {
+        font-size: 20px;
+       }
+
+    }
+
+  .imageicon{
+    width:40%;
+  }
+
+  @media only screen
+  and (min-width : 300px)
+  and (max-width : 500px) {
+
+     .imageicon {
+      width: 60%;
+     }
+
+  }
+
+.imageheight{
+    margin-top: -300px;
+}
+
+      @media only screen
+      and (min-width : 300px)
+      and (max-width : 500px) {
+
+         .imageheight {
+          margin-top: -140px;
+         }
+
+      }
 
 .has-danger{
   color:rgb(227, 49, 25);

@@ -36,7 +36,7 @@ class application(models.Model):
     haveJs = models.BooleanField(default = True)
     inMenu = models.BooleanField(default = True)
     # only selected users can assign access to the application to other user
-    module = models.ForeignKey(module , related_name = "apps" , null=False)
+    module = models.ForeignKey(module , related_name = "apps" , null=True)
     description = models.CharField(max_length = 500 , null = False)
     canConfigure = models.ForeignKey("self" , null = True, related_name="canBeConfigureFrom")
     def __unicode__(self):

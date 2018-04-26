@@ -25,7 +25,7 @@ DEFAULT_APPS_ON_REGISTER = ['app.tutor.account' , 'app.tutor.previousSessions' ,
 
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
 
-SITE_ADDRESS = 'http://127.0.0.1:8000' # the url prefix of the site
+SITE_ADDRESS = 'http://24tutors.com' # the url prefix of the site
 
 ROOT_APP = 'index' # the default app
 ECOMMERCE_APP = {
@@ -36,8 +36,9 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
+LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpg'
 
+SHOW_COMMON_APPS = False
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
@@ -57,7 +58,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com']
+ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8' , 'monomerce.com']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -65,15 +66,13 @@ LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once succe
 
 LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
 
-USE_CDN = False # when turned on the application will use the cndjs.com and other similar
+USE_CDN = True # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'momomerce.com'
-SERVICE_NAME = 'Inventory management simplified'
+BRAND_NAME = 'monomerce.com'
+SERVICE_NAME = 'Inventory, Sales and Ecommerce'
 BRAND_LOGO = '/static/images/mono_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
-
-SHOW_COMMON_APPS = 'false'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -200,6 +199,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'libreERP.settings_context.global_settings',
             ],
         },
     },
@@ -295,4 +295,19 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'skinstore.monomerce.com'
+WAMP_SERVER = 'wamp.cioc.in'
+
+PAYMENT_SUCCESS_REDIRECT ='http://24tutors.com/ERP/#/studentHome?mode=success'
+
+PAYTM_MERCHANT_KEY = "pvB_a%zTlH81EA6p"
+PAYTM_MERCHANT_ID = "CIOCFM10126867273379"
+
+if DEBUG:
+    PAYTM_MERCHANT_KEY = "pvB_a%zTlH81EA6p"
+    PAYTM_MERCHANT_ID = "CIOCFM10126867273379"
+    '''
+    In sandbox enviornment you can use following wallet credentials to login and make payment.
+    Mobile Number : 7777777777
+    Password : Paytm12345
+    This test wallet is topped-up to a balance of 7000 Rs. every 5 minutes.
+    '''

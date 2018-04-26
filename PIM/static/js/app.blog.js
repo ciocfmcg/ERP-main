@@ -1,6 +1,6 @@
 app.controller("controller.home.blog", function($scope , $state , $users ,  $stateParams , $http , Flash) {
   $scope.me = $users.get('mySelf');
-  $scope.editor = {source : '' , tags : [] , title : '' , header : '' , mode : 'header'};
+  $scope.editor = {source : '' , tags : [] , title : '' , header : '' , mode : 'header' , shortUrl : '', ogimage : emptyFile , ogimageUrl : '' , description : '', tagsCSV : '' ,section : '' , author : ''};
   $scope.filter = {text : '' , tags :[] , month : new Date() , state : 'published' , user : 'all'};
   $scope.itemsPerPage = 5;
   $scope.pageNo = 0;
@@ -74,6 +74,13 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
       $scope.editor.title = response.data.title;
       $scope.editor.header = response.data.header;
       $scope.editor.tags = response.data.tags;
+      $scope.editor.shortUrl = response.data.shortUrl;
+      $scope.editor.ogimageUrl = response.data.ogimageUrl;
+      $scope.editor.ogimage = response.data.ogimage;
+      $scope.editor.description = response.data.description;
+      $scope.editor.tagsCSV = response.data.tagsCSV;
+      $scope.editor.section = response.data.section;
+      $scope.editor.author = response.data.author;
       $scope.editor.mode = 'header';
     })
   } else if ($stateParams.action == 'new') {
@@ -112,7 +119,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
   }
 
   $scope.delete = function(){
-    $http({method : 'DELETE' , url : $scope.articleInView.url}).
+    $http({method : 'DELETE' , url :  '/api/PIM/blog' + '/' + $scope.articleInView.pk +'/'}).
     then(function(response){
       $scope.blogs.splice($scope.blogs.indexOf($scope.articleInView),1);
       $scope.mode = 'list';
@@ -163,7 +170,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
 
 
   $scope.edit = function(){
-    $state.go('home.blog' , { id : getPK($scope.articleInView.url) , action : 'edit'});
+    $state.go('home.blog' , { id : $scope.articleInView.pk , action : 'edit'});
   }
 
   $scope.comment = {text :''};
@@ -213,8 +220,25 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
     skin: 'lightgray',
     theme : 'modern',
     height : 640,
-    toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+    toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link | style-p style-h1 style-h2 style-h3',
     setup: function (editor ) {
+
+      [ 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(name){
+       editor.addButton("style-" + name, {
+           tooltip: "Toggle " + name,
+             text: name.toUpperCase(),
+             onClick: function() { editor.execCommand('mceToggleFormat', false, name); },
+             onPostRender: function() {
+                 var self = this, setup = function() {
+                     editor.formatter.formatChanged(name, function(state) {
+                         self.active(state);
+                     });
+                 };
+                 editor.formatter ? setup() : editor.on('init', setup);
+             }
+         })
+      });
+
       editor.addButton( 'publishBtn', {
         text: 'Publish',
         icon: false,
@@ -223,25 +247,55 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
           for (var i = 0; i < $scope.editor.tags.length; i++) {
             tags.push($scope.editor.tags[i].pk)
           }
-          var dataToSend = {
-            source : $scope.editor.source,
-            header : $scope.editor.header,
-            title : $scope.editor.title,
-            users : [$scope.me.pk],
-            sourceFormat : 'html',
-            state : 'published',
-            tags : tags,
-          };
+
+          console.log($scope.editor);
+
+          var fd = new FormData();
+
+          fd.append('source' ,$scope.editor.source);
+          fd.append('header' ,$scope.editor.header);
+          fd.append('title' ,$scope.editor.title);
+          fd.append('users' ,[$scope.me.pk]);
+          fd.append('sourceFormat' ,'html');
+          fd.append('state' ,'published');
+          fd.append('tags' , tags);
           
+          if ($scope.editor.ogimage ==emptyFile && ($scope.editor.ogimageUrl == '' || $scope.editor.ogimageUrl == undefined)) {
+            Flash.create('danger' , 'Either the OG image file OR og image url is required')
+            return;
+          }
+
+          if ($scope.editor.ogimage != emptyFile && typeof $scope.editor.ogimage != 'string' && $scope.editor.ogimage != null ) {
+            fd.append('ogimage' , $scope.editor.ogimage);
+
+          }else {
+            fd.append('ogimageUrl' , $scope.editor.ogimageUrl);
+          }
+
+          // 'shortUrl', 'description', 'tags','section' , 'author'
+          if ($scope.editor.shortUrl == '' || $scope.editor.tagsCSV == '' ||$scope.editor.section == '' || $scope.editor.author == '' ) {
+            Flash.create('danger' , 'Please check the SEO related fields');
+            return;
+          }
+
+          fd.append('shortUrl' , $scope.editor.shortUrl);
+          fd.append('tagsCSV' , $scope.editor.tagsCSV);
+          fd.append('section' , $scope.editor.section);
+          fd.append('author' , $scope.editor.author);
+          fd.append('description' , $scope.editor.description);
+
           if ($scope.mode == 'edit') {
             method = 'PATCH';
-            url = $scope.editor.url;
+            url = '/api/PIM/blog/' + $stateParams.id +'/';
           } else if ($scope.mode == 'new') {
             method = 'POST';
             url = '/api/PIM/blog/';
           }
 
-          $http({method : method , url : url, data : dataToSend}).
+          $http({method : method , url : url, data : fd, transformRequest: angular.identity,
+          headers: {
+            'Content-Type': undefined
+          }}).
           then(function(response){
             Flash.create('success' , response.status + ' : ' + response.statusText);
             $scope.editor.source = '';

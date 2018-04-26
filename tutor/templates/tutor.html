@@ -168,7 +168,7 @@
             </div> -->
           </div>
           <div class="col-md-3 text-left" style="padding:30px;">
-            <span style="color:red;padding-top:22px;" ><i class="fa fa-microphone fa-2x"></i></span>
+            <!-- <span style="color:red;padding-top:22px;" ><i class="fa fa-microphone fa-2x"></i></span> -->
           </div>
         </div>
 
@@ -179,10 +179,11 @@
               <div class="row" ng-repeat="m in messages">
                 <div class="container-fluid {{m.sendByMe? 'pull-right': 'pull-left'}}" >
                   <div class="container-fluid text-right" style="border:solid 1px #eeeeee;padding:10px;">
-                    {{m.message}}
+                    <span ng-if="m.message.indexOf('http') == -1">{{m.message}}</span>
+                    <a target="_blank" ng-if="m.message.indexOf('http') != -1" href="{{m.message}}">{{m.message}}</a>
                   </div>
                   <div class="container-fluid text-right" style="color:#c7c7c7;font-size:10px;">
-                    {{m.created |timeAgo}}
+                    {{m.created |date:'hh:mm a'}}
                   </div>
                 </div>
               </div>
@@ -191,8 +192,9 @@
         </div>
 
         <div class="row" style="position:absolute;bottom:0px;padding:10px;width:100%;">
+          <input type="file" file-model="messageFile" style="display:none;" id="messageFile">
           <div class="input-group">
-            <span class="input-group-btn"><button class="btn btn-primary" type="submit"> <i class="fa fa-paperclip"></i> </button></span>
+            <span class="input-group-btn"><button class="btn btn-primary" ng-click="attachMessageFile()"> <i class="fa fa-paperclip"></i> </button></span>
             <input class="form-control" type="text" ng-enter="enterTutorMsg()"  ng-model="tutorText" placeholder="Type your message here..." />
             <span class="input-group-btn"><button ng-click="enterTutorMsg()" class="btn btn-primary">Submit</button></span>
           </div>
