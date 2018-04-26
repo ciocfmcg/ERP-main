@@ -94,9 +94,12 @@ app.controller("projectManagement.LMS.evaluation.explore", function($scope, $sta
 
 app.controller("projectManagement.LMS.evaluation.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  $scope.form = {topic : '' , text : '' , subject : ''}
-  $scope.questions = []
-  $scope.selectedquestions=[]
+  $scope.resetForm=function(){
+    $scope.selectedquestions=[]
+    $scope.questions = []
+    $scope.form = {topic : '' , text : '' , subject : '' ,typ : '' ,book : '' ,section : ''}
+  }
+  $scope.resetForm();
 
   if ($scope.tab == undefined || $scope.tab.data == undefined) {
     $scope.mode = 'new';
@@ -113,13 +116,24 @@ app.controller("projectManagement.LMS.evaluation.form", function($scope, $state,
     $scope.fetchQuestions();
   });
 
-  $scope.fetchQuestions = function() {
-
-    if (typeof $scope.form.topic != 'object') {
+  $scope.$watch('form.section' , function(newValue , oldValue){
+    if (typeof newValue != 'object') {
       return;
     }
+    $scope.fetchQuestions();
+  });
 
-    $http({method:'GET',url:'/api/LMS/question/?topic='+ $scope.form.topic.pk + '&ques__contains=' + $scope.form.text}).
+  $scope.fetchQuestions = function() {
+
+    // if (typeof $scope.form.topic != 'object') {
+    //   return;
+    // }
+    if ($scope.form.typ == 'book') {
+      var url = '/api/LMS/question/?bookSection='+ $scope.form.section.pk + '&ques__contains=' + $scope.form.text
+    }else {
+      var url = '/api/LMS/question/?topic='+ $scope.form.topic.pk + '&ques__contains=' + $scope.form.text
+    }
+    $http({method:'GET',url:url}).
     then(function(response) {
       $scope.questions.length=0
       angular.forEach(response.data,function(obj){
@@ -137,7 +151,21 @@ app.controller("projectManagement.LMS.evaluation.form", function($scope, $state,
   };
 
   $scope.topicSearch = function(query) {
-    return $http.get( '/api/LMS/topic/?title__contains=' + query).
+    return $http.get( '/api/LMS/topic/?title__contains=' + query + '&subject='+ $scope.form.subject.pk).
+    then(function(response){
+      return response.data;
+    })
+  };
+
+  $scope.bookSearch = function(query) {
+    return $http.get( '/api/LMS/book/?title__contains=' + query).
+    then(function(response){
+      return response.data;
+    })
+  };
+
+  $scope.sectionSearch = function(query) {
+    return $http.get( '/api/LMS/section/?title__contains=' + query +'&book='+ $scope.form.book.pk).
     then(function(response){
       return response.data;
     })
@@ -152,11 +180,8 @@ app.controller("projectManagement.LMS.evaluation.form", function($scope, $state,
     }
   };
 
-
-  $scope.resetForm=function(){
-    $scope.selectedquestions=[]
-    $scope.questions.length=0
-    $scope.form={topic : '' , text : '' , subject : ''}
+  $scope.delete=function(indx){
+    $scope.selectedquestions.splice(indx,1)
   }
 
   $scope.save= function(){
@@ -192,9 +217,6 @@ app.controller("projectManagement.LMS.evaluation.form", function($scope, $state,
 
   };
 
-  $scope.delete=function(indx){
-    $scope.selectedquestions.splice(indx,1)
-  }
 
 });
 

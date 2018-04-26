@@ -53,7 +53,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['topic' , 'ques']
+    filter_fields = ['topic' , 'ques' , 'bookSection']
 
 class PaperQuesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

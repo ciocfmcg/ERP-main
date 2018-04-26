@@ -2,7 +2,46 @@
   <div class="col-md-6">
     <h4 ng-if="mode=='new'">Create Question Paper</h4>
     <h4 ng-if="mode=='edit'">Update Question Paper</h4>
+
     <div class="row">
+      <div class="form-group">
+        <label style="margin-top:20px;margin-left:20px">Select The Type</label>
+        <br><br>
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <img src="/static/images/BooksStack.png" style="height:50px;height:50px;" class="img img-circle">
+            <br>
+            Book
+            <br>
+            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'book'">
+          </div>
+          <div class="col-md-4 text-center">
+            <img src="/static/images/questionbanks.png" style="height:50px;height:50px;" class="img img-circle">
+            <br>
+            Question Bank
+            <br>
+            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'bank'">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-if="form.typ == 'book'">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Book</label>
+          <input type="text" class="form-control" ng-model="form.book" uib-typeahead="book as book.title for book in bookSearch($viewValue)">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Section</label>
+          <input type="text" class="form-control" ng-model="form.section" uib-typeahead="section as section.title for section in sectionSearch($viewValue)">
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-if="form.typ == 'bank'">
       <div class="col-md-6">
         <div class="form-group">
           <label>Subject </label>
@@ -16,7 +55,8 @@
         </div>
       </div>
     </div>
-    <div class="row" ng-if="form.topic.pk">
+
+    <div class="row" ng-if="form.topic.pk || form.section.pk">
       <div class="container-fluid">
         <div class="form-group">
         <label>Text</label>
@@ -27,7 +67,9 @@
     <div class="row" ng-repeat="q in questions">
       <div class="container-fluid" ng-init="q.selected = false;">
         <div class="well well-sm">
-          <input type="checkbox" ng-model="q.selected" style="margin-right:20px;">{{q.ques.ques}}
+          <input type="checkbox" ng-model="q.selected" style="margin-right:20px;">
+          <!-- {{q.ques.ques}} -->
+          <span mathjax-bind="q.ques.ques"></span>
         </div>
       </div>
     </div>
@@ -39,7 +81,8 @@
       <div class="well well-sm">
         <div class="col-md-10">
           <div class="form-group">
-            {{y.ques.ques}}
+            <!-- {{y.ques.ques}} -->
+            <span mathjax-bind="y.ques.ques"></span>
           </div>
         </div>
         <div class="col-md-2">

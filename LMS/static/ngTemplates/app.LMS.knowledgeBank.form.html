@@ -15,14 +15,14 @@
             <br>
             Book
             <br>
-            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" name="" ng-value="'book'">
+            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'book'">
           </div>
           <div class="col-md-6 text-center">
             <img src="/static/images/questionbanks.png" style="height:50px;height:50px;" class="img img-circle">
             <br>
             Question Bank
             <br>
-            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" name="" ng-value="'bank'">
+            <input ng-model="form.typ" name="type{{form.pk}}" type="radio" ng-value="'bank'">
           </div>
         </div>
       </div>
@@ -154,18 +154,32 @@
 
 
   </div>
+
+
   <div class="col-md-6">
     <div class="container-fluid">
       <span mathjax-bind="form.ques"></span>
 
       <div class="row" ng-repeat="qp in form.quesParts" style="margin-top:20px;">
-        <div class="container-fluid"> <button type="button" class="btn btn-danger btn-sm"  ng-click="removePart($index)">
+        <div class="container-fluid"> <button type="button" class="btn btn-danger btn-sm" mwl-confirm
+        title="Confirm"
+        message="Are you sure you want to delete this?"
+        confirm-text="Yes <i class='fa fa-check'></i>"
+        cancel-text="No"
+        on-confirm="removePart($index)"
+        confirm-button-type="danger"
+        cancel-button-type="default">
           Delete
         </button>
+        <button type="button" class="btn btn-primary btn-sm" ng-if="qp.mode == 'text'" ng-click="quesPartsEdit($index)">
+          Edit
+        </button>&nbsp;
           <span mathjax-bind="qp.txt" ng-if="qp.mode == 'text'"></span>
           <img ng-src="{{qp.image}}" style="width:90%;" ng-if="qp.mode == 'image'"> <br>
         </div>
       </div>
+
+      <br>
 
       <div ng-repeat="o in form.optionsParts" class="row" style="margin-top:20px;">
         <div class="container-fluid">
@@ -173,9 +187,19 @@
             ({{$index + 1}})
           </div>
           <div class="col-md-11">
-            <div class="container-fluid"> <button type="button" class="btn btn-danger btn-sm" ng-click="removeOption($index)">
+            <div class="container-fluid"> <button type="button" class="btn btn-danger btn-sm" mwl-confirm
+            title="Confirm"
+            message="Are you sure you want to delete this?"
+            confirm-text="Yes <i class='fa fa-check'></i>"
+            cancel-text="No"
+            on-confirm="removeOption($index)"
+            confirm-button-type="danger"
+            cancel-button-type="default">
               Delete
             </button>
+            <button type="button" class="btn btn-primary btn-sm" ng-if="o.mode == 'text'" ng-click="optionPartsEdit($index)">
+              Edit
+            </button>&nbsp;
             <span mathjax-bind="o.txt" ng-if="o.mode == 'text'"></span>
             <img ng-src="{{o.image}}" style="width:90%;" ng-if="o.mode == 'image'">
           </div>
