@@ -222,16 +222,16 @@ DATABASES = {
     }
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cioc_main',
-        'USER': 'cioc_main',
-        'PASSWORD': '8@8sxS$O}CaP',
-        'HOST': '97.74.232.81',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'cioc_main',
+#         'USER': 'cioc_main',
+#         'PASSWORD': '8@8sxS$O}CaP',
+#         'HOST': '97.74.232.81',   # Or an IP Address that your DB is hosted on
+#         'PORT': '3306',
+#     }
+# }
 
 
 # AUTH_PROFILE_MODULE = 'HR.userProfile'
