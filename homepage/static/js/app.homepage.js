@@ -91,6 +91,12 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval)
 
   $scope.typeIndex = 0;
 
+  $scope.activeTab=0;
+
+  $scope.changeTab= function(index) {
+ $scope.activeTab=index;
+  }
+
 
   $interval(function() {
 
