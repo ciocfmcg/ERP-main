@@ -84,7 +84,7 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval)
   console.log("main loded");
   $scope.crmBannerID = 1;
 
-  $scope.mainBannerImages = ['/static/images/main_banner.svg' ]
+  $scope.mainBannerImages = ['/static/images/banner-img2.jpg' ]
   $scope.bannerID = 0;
 
   $scope.typings = ["Online tutoring" , "24x7 online help" , "Learn from school" , "Learn from college", "Learn from home" , "Learn from anywhere ...."]
