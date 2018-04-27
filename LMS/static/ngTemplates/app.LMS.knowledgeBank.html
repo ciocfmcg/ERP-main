@@ -17,6 +17,15 @@
               <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
           </div>
       </uib-tab>
+      <uib-tab>
+          <uib-tab-heading>
+              Books Browse
+              <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+              <generic-Table data="data.booksTableData" config-Obj="{{booksConfig}}" callback-Fn="tableActionBooks"></generic-Table>
+          </div>
+      </uib-tab>
 
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading >
@@ -27,7 +36,13 @@
               <div ng-include="'/static/ngTemplates/app.LMS.knowledgeBank.form.html'"></div>
           </div>
           <div ng-if="tab.app == 'questionExplorer'">
+              <div ng-include="'/static/ngTemplates/app.LMS.knowledgeBank.question.explore.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'questionExplorer'">
               <div ng-include="'/static/ngTemplates/app.LMS.knowledgeBank.explore.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'BookExplorer'">
+              <div ng-include="'/static/ngTemplates/app.LMS.knowledgeBank.book.explore.html'"></div>
           </div>
       </uib-tab>
   </uib-tabset>

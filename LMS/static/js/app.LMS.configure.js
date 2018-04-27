@@ -202,7 +202,6 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
       description: '',
       dp: emptyFile,
       level: 0,
-      shortUrl: '',
       author: '',
       ISSN: '',
       volume: '',
@@ -230,7 +229,8 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
         console.log('bbbbbbbbb', bookData);
 
         $scope.Sectionform = {
-          title: ''
+          title: '',
+          shortUrl: ''
         }
         $scope.cancelSection = function() {
           $uibModalInstance.dismiss()
@@ -238,8 +238,17 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
         $scope.saveSection = function() {
           console.log('clickedddddddddddddddddd');
           console.log($scope.Sectionform.title);
+          if ($scope.Sectionform.title == null || $scope.Sectionform.title.length == 0) {
+            Flash.create('warning', 'Please Mention Some Title')
+            return;
+          }
+          if ($scope.Sectionform.shortUrl == null || $scope.Sectionform.shortUrl.length == 0) {
+            Flash.create('warning', 'Please Mention Some Short Url')
+            return;
+          }
           var secData = {
             title: $scope.Sectionform.title,
+            shortUrl: $scope.Sectionform.shortUrl,
             book: bookData.pk
           }
           $http({
@@ -249,7 +258,8 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
           }).
           then(function(response) {
             $uibModalInstance.dismiss(response.data)
-
+          },function(err) {
+            Flash.create('danger' , 'This Short Url Already Exist Select Another')
           })
         }
 
@@ -296,7 +306,6 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
           $scope.blogForm = {
             contentType: 'book',
             tags: [],
-            shortUrl: '',
             ogimage: emptyFile,
             ogimageUrl: '',
             description: '',
@@ -324,7 +333,7 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
             Flash.create('danger', 'Either the OG image file OR og image url is required')
             return;
           }
-          if ($scope.blogForm.shortUrl == '' || $scope.blogForm.tagsCSV == '' || $scope.blogForm.section == '' || $scope.blogForm.author == '' || $scope.blogForm.description == '') {
+          if ($scope.blogForm.tagsCSV == '' || $scope.blogForm.section == '' || $scope.blogForm.author == '' || $scope.blogForm.description == '') {
             Flash.create('danger', 'Please check the All SEO related fields');
             return;
           }
@@ -337,7 +346,6 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
           }
 
 
-          fd.append('shortUrl', $scope.blogForm.shortUrl);
           fd.append('tagsCSV', $scope.blogForm.tagsCSV);
           fd.append('section', $scope.blogForm.section);
           fd.append('author', $scope.blogForm.author);
@@ -486,9 +494,6 @@ app.controller("projectManagement.LMS.configure.form", function($scope, $state, 
       toSend.append('subject', $scope.form.subject.pk)
       if ($scope.form.dp != emptyFile && typeof $scope.form.dp != 'string') {
         toSend.append('dp', $scope.form.dp)
-      }
-      if ($scope.form.shortUrl != null && $scope.form.shortUrl.length > 0) {
-        toSend.append('shortUrl', $scope.form.shortUrl)
       }
       if ($scope.form.author != null && $scope.form.author.length > 0) {
         toSend.append('author', $scope.form.author)

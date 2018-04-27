@@ -1,0 +1,19 @@
+
+<div class="col-md-3 " style="padding-bottom:20px;padding-left:10px;padding-right:10px;" >
+
+  <div class="container-fluid card zoomOnHover" style="padding-bottom:10px;cursor:pointer;" ng-click="rowActionClicked('details')">
+    <div class="row" style="min-height:15vh;padding:20px">
+      <img style="width: 100%;height:200px;" class="img" ng-src="{{data.dp}}" ng-if="data.dp != null">
+      <img style="width: 100%;height:200px;" class="img" src="/static/images/lms.subject.png"  ng-if="data.dp == null">
+    </div>
+
+    <div class="row container-fluid" style="padding-top:20px;height:70px;">
+      <div class="col-md-12">
+        <span class="text-muted" style="font-size:20px;">{{data.title}}</span> <br>
+        <span class="text-muted">Subjecct : {{data.subject.title}}</span><br>
+        <span class="text-muted">Volume : {{data.volume}}</span><br>
+        <span class="text-muted">author : {{data.author}}</span>
+      </div>
+    </div>
+  </div>
+</div>

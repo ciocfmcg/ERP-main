@@ -71,7 +71,6 @@ class Book(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     title = models.CharField(max_length = 100 , null = False)
-    shortUrl = models.CharField(max_length = 100 , null = True)
     subject = models.ForeignKey(Subject , null = False , related_name='books')
     description = models.TextField(max_length=2000 , null = True)
     dp = models.FileField(upload_to = getCourseDPAttachmentPath , null = True)
@@ -83,12 +82,14 @@ class Book(models.Model):
 
 
 
+
 class Section(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateField(auto_now=True)
     title = models.CharField(max_length = 100 , null = False)
     sequence = models.PositiveIntegerField(null = True)
     book = models.ForeignKey(Book , null = False , related_name='sections')
+    shortUrl = models.CharField(max_length = 100 , null = True , unique = True)
 
 
 

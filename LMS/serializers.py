@@ -41,7 +41,7 @@ class SectionSerializer(serializers.ModelSerializer):
     # book = BookSerializer(many = False , read_only = True)
     class Meta:
         model = Section
-        fields = ('pk' , 'title' , 'book','sequence')
+        fields = ('pk' , 'title' , 'book','sequence' ,'shortUrl')
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -49,7 +49,7 @@ class BookSerializer(serializers.ModelSerializer):
     sections = SectionSerializer(many = True , read_only = True)
     class Meta:
         model = Book
-        fields = ('pk' , 'title' , 'shortUrl', 'subject', 'description', 'dp', 'author', 'ISSN'  , 'volume', 'version', 'license' ,'sections' )
+        fields = ('pk' , 'title' ,'subject', 'description', 'dp', 'author', 'ISSN'  , 'volume', 'version', 'license' ,'sections' )
 
     def create(self , validated_data):
         b = Book(**validated_data)
@@ -82,7 +82,7 @@ class SectionLiteSerializer(serializers.ModelSerializer):
     book = BookLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Section
-        fields = ('pk', 'title' , 'book' )
+        fields = ('pk', 'title' , 'book' ,'shortUrl')
 
 class QuestionSerializer(serializers.ModelSerializer):
     quesParts = QPartSerializer(many = True , read_only = True)
@@ -132,6 +132,9 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         if 'topic' in validated_data:
             instance.topic_id = self.context['request'].data['topic']
+
+        if 'typ' in validated_data:
+            instance.typ = validated_data.pop('typ')
 
 
         if instance.qtype not in ['mcq' , 'mcc']:

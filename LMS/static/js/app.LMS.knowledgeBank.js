@@ -6,10 +6,67 @@ app.config(function($stateProvider){
   });
 });
 
-app.controller("projectManagement.LMS.knowledgeBank", function($scope, $state, $users, $stateParams, $http, Flash) {
+// app.controller("projectManagement.LMS.knowledgeBank.book.explore", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
+//   $scope.bookData = $scope.bookDetails
+//   console.log('ccccccccccccc'.$scope.bookData);
+// })
+
+app.controller("projectManagement.LMS.knowledgeBank.book.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+  $scope.bookData = $scope.bookDetails
+  $scope.showQues = function(idx){
+    $scope.sectionQuestion = $scope.bookData.sections[idx].questions
+    $scope.view.typ = 'questions'
+  }
+  console.log('ccccccccccccc',$scope.bookData);
+
+  $scope.editQuestion = function(idx){
+    $scope.$parent.$parent.$parent.$parent.$parent.$parent.addTab({
+      title: 'EditBookQuestion : ' + $scope.sectionQuestion[idx].pk,
+      cancel: true,
+      app: 'questionEditor',
+      data: {
+        pk: $scope.sectionQuestion[idx].pk,
+      },
+      active: true
+    })
+    console.log($scope.$parent.$parent.$parent.$parent.$parent.$parent.addTab({
+      title: 'Edit Book Question',
+      cancel: true,
+      app: 'questionEditor',
+      data: {
+        pk: $scope.sectionQuestion[idx].pk,
+      },
+      active: true
+    }));
+  }
+  $scope.viewAnswer = function(idx){
+    $scope.$parent.$parent.$parent.$parent.$parent.$parent.addTab({
+      title: 'View Solution : ' + $scope.sectionQuestion[idx].pk,
+      cancel: true,
+      app: 'questionExplorer',
+      data: {
+        pk: $scope.sectionQuestion[idx].pk,
+      },
+      active: true
+    })
+    console.log($scope.$parent.$parent.$parent.$parent.$parent.$parent.addTab({
+      title: 'View Solution : ' + $scope.sectionQuestion[idx].pk,
+      cancel: true,
+      app: 'questionExplorer',
+      data: {
+        pk: $scope.sectionQuestion[idx].pk,
+      },
+      active: true
+    }));
+  }
+})
+
+
+app.controller("projectManagement.LMS.knowledgeBank", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
 
   $scope.data = {
-    tableData: []
+    tableData: [],
+    booksTableData: []
   };
 
   views = [{
@@ -19,10 +76,26 @@ app.controller("projectManagement.LMS.knowledgeBank", function($scope, $state, $
     itemTemplate: '/static/ngTemplates/app.LMS.question.item.html',
   }, ];
 
+  booksViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.LMS.knowledgeBank.books.item.html',
+  }, ];
+
 
   $scope.config = {
     views: views,
     url: '/api/LMS/question/',
+    getParams : [{key : 'typ' , value : 'bank'},],
+    searchField: 'ques',
+    deletable: true,
+    itemsNumPerView: [16, 32, 48],
+  }
+
+  $scope.booksConfig = {
+    views: booksViews,
+    url: '/api/LMS/book/',
     searchField: 'ques',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
@@ -42,8 +115,6 @@ app.controller("projectManagement.LMS.knowledgeBank", function($scope, $state, $
           var title = 'Details :';
           var appType = 'questionExplorer';
         }
-
-
         $scope.addTab({
           title: title + $scope.data.tableData[i].pk,
           cancel: true,
@@ -54,6 +125,49 @@ app.controller("projectManagement.LMS.knowledgeBank", function($scope, $state, $
           },
           active: true
         })
+      }
+    }
+
+  }
+
+  $scope.tableActionBooks = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.booksTableData);
+
+    for (var i = 0; i < $scope.data.booksTableData.length; i++) {
+      if ($scope.data.booksTableData[i].pk == parseInt(target)) {
+        if (action == 'details'){
+          var title = 'Details :';
+          var appType = 'BookExplorer';
+        }
+        $scope.bookDetails = $scope.data.booksTableData[i]
+        $scope.bookDetails.sections = $filter('orderBy')($scope.data.booksTableData[i].sections, 'sequence')
+        console.log();
+        for (var j = 0; j < $scope.bookDetails.sections.length; j++) {
+          console.log(j);
+          $http({
+            method: 'GET',
+            url: '/api/LMS/question/?bookSection=' + $scope.bookDetails.sections[j].pk,
+          }).
+          then((function(j) {
+            return function(response){
+              $scope.bookDetails.sections[j].questions = response.data
+            }
+          })(j))
+        }
+        console.log($scope.bookDetails);
+        // $timeout(function(){
+          $scope.addTab({
+            title: title + $scope.bookDetails.pk,
+            cancel: true,
+            app: appType,
+            data:{
+              pk: target,
+              index: i
+            },
+            active: true
+          })
+        // },1000);
       }
     }
 
@@ -137,11 +251,11 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       $scope.form.textModeOption = false;
       $scope.form.optionFile= emptyFile;
 
-      if ($scope.form.bookSection != null) {
-        $scope.form.typ = 'book';
-      }else {
-        $scope.form.typ = 'bank';
-      }
+      // if ($scope.form.bookSection != null) {
+      //   $scope.form.typ = 'book';
+      // }else {
+      //   $scope.form.typ = 'bank';
+      // }
 
       $scope.form.answer= response.data.objectiveAnswer;
       $scope.form.solutionVideoPath = response.data.solutionVideo;
@@ -153,7 +267,7 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       }
       if (response.data.bookSection != null) {
         $scope.form.book = response.data.bookSection.book;
-        $scope.form.section = response.data.bookSection;
+        $scope.form.bookSection = response.data.bookSection;
       }
 
       $scope.mode = 'edit';
@@ -171,12 +285,19 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       }
     })(indx))
   }
-
   $scope.removeOption = function(indx) {
     $http({method : 'DELETE' , url : '/api/LMS/qPart/' + $scope.form.optionsParts[indx].pk + '/' }).
     then((function(indx) {
       return function(response) {
         $scope.form.optionsParts.splice(indx , 1);
+      }
+    })(indx))
+  }
+  $scope.removeSolution= function(indx) {
+    $http({method : 'DELETE' , url : '/api/LMS/qPart/' + $scope.form.solutionParts[indx].pk + '/' }).
+    then((function(indx) {
+      return function(response) {
+        $scope.form.solutionParts.splice(indx , 1);
       }
     })(indx))
   }
@@ -193,17 +314,6 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     $scope.form.quesParts.splice(idx , 1);
   }
 
-  $scope.removeSolution= function(indx) {
-    $http({method : 'DELETE' , url : '/api/LMS/qPart/' + $scope.form.solutionParts[indx].pk + '/' }).
-    then((function(indx) {
-      return function(response) {
-        $scope.form.solutionParts.splice(indx , 1);
-      }
-    })(indx))
-  }
-
-
-
   $scope.updateOptPart = null
   $scope.updateOptPartIndex = null
   $scope.optionPartsEdit = function(idx){
@@ -216,17 +326,29 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     $scope.form.optionsParts.splice(idx , 1);
   }
 
+  $scope.updateSolPart = null
+  $scope.updateSolPartIndex = null
+  $scope.solutionPartsEdit = function(idx){
+    console.log('quespartssssssssssss',idx);
+    console.log($scope.form.solutionParts);
+    $scope.form.textModeSolution = true
+    $scope.form.solutionTxt = $scope.form.solutionParts[idx].txt
+    $scope.updateSolPart = $scope.form.solutionParts[idx].pk
+    $scope.updateSolPartIndex = idx
+    $scope.form.solutionParts.splice(idx , 1);
+  }
+
   $scope.resetForm = function() {
     if ($scope.form != undefined) {
       var subject = $scope.form.subject;
       var topic = $scope.form.topic;
       var book = $scope.form.book;
-      var section = $scope.form.section
+      var bookSection = $scope.form.bookSection
     }else{
       var subject = '';
       var topic = '';
       var book = '';
-      var section = '';
+      var bookSection = '';
     }
 
     $scope.mode = 'new';
@@ -235,7 +357,7 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
     $scope.form.subject = subject;
     $scope.form.topic = topic;
     $scope.form.book = book;
-    $scope.form.section = section
+    $scope.form.bookSection = bookSection
 
   }
 
@@ -254,7 +376,7 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       return;
     }else {
       if ($scope.form.typ == 'book') {
-        if ($scope.form.section.length>0 && !$scope.form.section.pk) {
+        if ($scope.form.bookSection.length>0 && !$scope.form.bookSection.pk) {
           Flash.create('warning', 'Please select a valid Section');
           return;
         }
@@ -280,15 +402,17 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       qtype : f.qtype,
       solutionVideoLink: f.solutionVideoLink,
     }
-    if (f.answer.length > 0) {
+    if (f.answer != null && f.answer.length > 0) {
       toSend.objectiveAnswer= f.answer;
     }
 
 
     if ($scope.form.typ == 'book') {
-      if ($scope.form.section.pk) {
+      if ($scope.form.bookSection.pk) {
         console.log('book');
-        toSend.bookSection = f.section.pk
+        toSend.bookSection = f.bookSection.pk
+      }else {
+        toSend.typ = 'bank'
       }
     }else {
       if ($scope.form.topic.pk) {
@@ -397,7 +521,7 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
           }else {
             $scope.form.quesParts.push(response.data);
           }
-          $scope.updateQuesPartIndex != null
+          $scope.updateQuesPartIndex = null
         }
       })(response))
     })
@@ -419,10 +543,17 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       toSend.append('image' , $scope.form.solutionFile);
       toSend.append('mode' , 'image');
     }
+    if ($scope.updateSolPart != null) {
+      var method = 'PATCH'
+      var url = '/api/LMS/qPart/' + $scope.updateSolPart + '/'
+    }else {
+      var method = 'POST'
+      var url = '/api/LMS/qPart/'
+    }
 
     $http({
-      method: 'POST',
-      url: '/api/LMS/qPart/',
+      method: method,
+      url: url,
       data: toSend,
       transformRequest: angular.identity,
       headers: {
@@ -430,14 +561,29 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
       }
     }).
     then(function(response) {
-
+      $scope.updateSolPart = null
       $http({method : 'PATCH' , url : '/api/LMS/question/' + $scope.form.pk + '/' , data : {qSolutionToAdd : response.data.pk}}).
       then((function(response) {
         return function(res) {
           Flash.create('success', 'Saved');
-          $scope.form.solutionParts.push(response.data);
           $scope.form.solutionTxt = '';
           $scope.form.solutionFile = emptyFile;
+          if ($scope.updateSolPartIndex != null) {
+            if ($scope.updateSolPartIndex == 0) {
+              if ($scope.form.solutionParts.length>0) {
+                $scope.form.solutionParts.splice($scope.updateSolPartIndex,0,response.data);
+              }else {
+                $scope.form.solutionParts.push(response.data);
+              }
+            }else if ($scope.updateSolPartIndex == $scope.form.solutionParts.length) {
+              $scope.form.solutionParts.push(response.data);
+            }else {
+              $scope.form.solutionParts.splice($scope.updateSolPartIndex,0,response.data);
+            }
+          }else {
+            $scope.form.solutionParts.push(response.data);
+          }
+          $scope.updateSolPartIndex = null
         }
       })(response))
     })
@@ -499,7 +645,7 @@ app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $sta
           }else {
             $scope.form.optionsParts.push(response.data);
           }
-          $scope.updateOptPartIndex != null
+          $scope.updateOptPartIndex = null
         }
       })(response))
     })

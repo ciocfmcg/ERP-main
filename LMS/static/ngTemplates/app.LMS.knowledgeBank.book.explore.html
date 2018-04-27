@@ -1,0 +1,58 @@
+<div class="container-fluid" ng-controller = "projectManagement.LMS.knowledgeBank.book.explore">
+  <div class="row" style="padding-top:20px">
+    <div class="row">
+      <div class="col-md-2 col-md-offset-1">
+        <img style="width: 150px;height:150px;" class="img" ng-src="{{bookData.dp}}" ng-if="bookData.dp != null">
+      </div>
+      <div class="col-md-4">
+        <label>Title : </label> {{bookData.title}} <br>
+        <label>Subject : </label> {{bookData.subject.title}} <br>
+        <label>Volume : </label> {{bookData.volume}} <br>
+        <label>Description : </label> {{bookData.description}} <br>
+      </div>
+      <div class="col-md-4">
+        <label><i class="fa fa-user"></i> Author : </label> {{bookData.author}} <br>
+        <label><i class="fa fa-barcode "></i> ISSN : </label> {{bookData.ISSN}} <br>
+        <label>version : </label> {{bookData.version}} <br>
+        <label>license : </label> {{bookData.license}} <br>
+      </div>
+    </div><br>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-5">
+
+          <div class="row" style="padding-left:20px">
+            <div class="form-group">
+              <h3 style="text-align:center">Sections </h3> <hr>
+            </div>
+            <div class="row" ng-repeat = " s in bookData.sections">
+              <div class="col-md-11">
+                <div class="well well-sm" ng-click="showQues($index)" style="cursor:pointer">
+                  {{s.title}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="form-group">
+            <h3 style="text-align:center" ng-if="sectionQuestion">Questions <hr></h3>
+          </div>
+          <div class="row">
+            <div class="col-md-6" ng-repeat = "q in sectionQuestion" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" >
+              <div class="container-fluid card" style="padding-bottom:10px;padding-top:15px">
+                <span mathjax-bind="q.ques"></span><br><br>
+                <label>Type :</label> {{q.qtype}} <br>
+                <span ng-if="q.bookSection.book.title"><label>Book :</label> {{q.bookSection.book.title}} <br></span>
+                <span ng-if="q.bookSection.title"><label>Section :</label> {{q.bookSection.title}} <br> <br></span>
+                <i class="fa fa-pencil fa-lg pull-right" style="cursor:pointer;padding-right:15px;padding-bottom:15px" ng-click="editQuestion($index)"></i>
+                <i class="fa fa-reorder fa-lg" style="cursor:pointer;padding-left:15px;padding-bottom:15px" ng-click="viewAnswer($index)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

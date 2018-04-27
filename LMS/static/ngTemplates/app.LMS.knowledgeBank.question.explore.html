@@ -1,0 +1,36 @@
+
+  <div class="container-fluid" ng-controller="projectManagement.LMS.knowledgeBank.form">
+    <div class="row" style="margin:20px">
+      <h4>QUESTION<h4>
+      <h3 style="margin-left:15px"><span mathjax-bind="form.ques"></span></h3>
+
+      <div class="row" ng-repeat="qp in form.quesParts" style="margin-top:20px;margin-left:30px">
+        <div class="container-fluid">
+          <label><span mathjax-bind="qp.txt" ng-if="qp.mode == 'text'"></span></label>
+          <img ng-src="{{qp.image}}" style="width:90%;" ng-if="qp.mode == 'image'"> <br>
+        </div>
+      </div>
+
+      <br>
+      <h4>OPTIONS<h4>
+      <div ng-repeat="o in form.optionsParts" class="row" style="margin-top:20px;">
+        <div class="container-fluid">
+          <div class="col-md-12">
+            <div class="container-fluid">
+              ({{$index + 1}}) &nbsp;&nbsp;
+              <span mathjax-bind="o.txt" ng-if="o.mode == 'text'"></span>
+              <img ng-src="{{o.image}}" style="width:90%;" ng-if="o.mode == 'image'">
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <h4>SOLUTIONS<h4>
+        <div ng-repeat="o in form.solutionParts" class="row" style="margin-top:20px;margin-left:15px">
+          <div class="container-fluid">
+            <span mathjax-bind="o.txt" ng-if="o.mode == 'text'"></span>
+            <img ng-src="{{o.image}}" style="width:90%;" ng-if="o.mode == 'image'">
+          </div>
+        </div>
+    </div>
+</div>
