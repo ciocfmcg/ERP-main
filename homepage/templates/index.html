@@ -2,46 +2,14 @@
 <title>CIOC</title>
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
-{% include "header.html" %}
-
-{% endblock %}
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
 <!-- Header -->
 {% block content %}
 <div ng-app="app" ng-controller="main">
   {% verbatim %}
-  <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
-    <header style="background-image: url({{mainBannerImages[bannerID]}});height:100vh;width:100%;">
 
-      <div class="container" style="overflow:hidden;">
-          <div class="intro-text" style="text-align:right;">
-              <div class="intro-lead-in" >We are your technology partner</div>
-              <!-- <div class="intro-heading" >Think Free</div> -->
-              <a href="#features" class="page-scroll btn btn-xl">Tell Me More</a>
-          </div>
-      </div>
+  <div id="particles-js">
 
-      <!-- <div class="row" style="padding-top:200px;color:#323232;">
-        <p ng-if="typeIndex == $index" ng-repeat="t in typings" typed-effect text="t" blink="true" style="font-size:100px;"></p>
-      </div>
-
-      <div style="margin-top:50px;" data-toggle="modal" data-target="#myModal" class="text-center glassy glassyButton col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
-        <i class="fa fa-play fa-2x"></i> <span style="font-size:25px;margin-left:10px;">See How it works</span>
-      </div>
-
-
-      <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-          <iframe width="100%" style="margin:0px;padding:0px;" height="500" src="https://www.youtube.com/embed/T4IkbcnaeOE" frameborder="0" allowfullscreen></iframe>
-
-        </div>
-      </div> -->
-
-
-
-      <!-- <iframe class="ware" width="560" style="left:60px;bottom:90px;position:absolute;" height="315" src="https://www.youtube.com/embed/qh5ciVvYgP0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
-    </header>
   </div>
   <!--/chatbox-->
   <!-- <div class="main-section" style="  width: 300px;position:fixed;right:30px;bottom:0px;z-index:9;" ng-controller="homepage.chat">
@@ -90,7 +58,314 @@
   {% endverbatim %}
   <!-- Services Section -->
   <div class="body">
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+    <div class="row" style="background-color:#009688;">
+      <div class="container">
+        <section id="features" style="padding-top:80px">
+          <div class="row">
+            <div class="col-lg-12 text-center" style="color:#ffffff;padding-top:0px">
+              <h2 class="section-heading">Services</h2>
+            </div>
+          </div>
+          <div class="row text-center" style="padding-top:80px">
+            <div class="col-md-4">
+              <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
+                </span>
+              <h4 class="service-heading white">24x7 Help</h4>
+              <!-- <p class=" white">We know you already have schools and tutions classes scheduled but what if its 8PM in the night and you have some doubt in a question you are trying to solve. Will you wait till next morning or evening to talk to your school teacher or tution sir to get it sorted out. How about just loging into <strong>24tutors.com</strong> and connect to a credible and experienced tutor to discuss the doubt then and there.</p> -->
+            </div>
+            <div class="col-md-4">
+              <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                </span>
+              <h4 class="service-heading white">Daily scheduled tutions</h4>
+              <!-- <p class=" white">Getting help in your studies on daily basis is a challenge and expensive. Browse though our tutors list and schedule daily sessions with them</p> -->
+            </div>
+            <div class="col-md-4">
+              <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
+                </span>
+              <h4 class="service-heading white">Mock tests</h4>
+              <!-- <p class=" white"> Feeling done with the preperation and want to test yourself then select a subject and topic and we will provide you online tests where you can get solutions of each question as well after you complete the test.</p> -->
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+    <!-- tiles start -->
+    <div class="container dynamicTile " style=" min-height:100vh">
+      <div class="row " style="padding-top:20vh">
+        <div class="col-sm-2 col-xs-4">
+          <div id="tile1" style="background-color: white">
+          </div>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+          <div id="tile2" class="tile">
+
+            <div class="carousel slide" data-ride="carousel">
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                <div class="item active">
+                  <img ng-src="static/images/metro/src1.png" class="img-responsive" />
+                </div>
+                <div class="item" style="background-color:#e67e22">
+                  <h3 class="tilecaption">text here</h3>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!--  <div class="col-sm-4 col-xs-8">
+<div id="tile7" class="tile">
+
+    <div class="carousel slide" data-ride="carousel">
+
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="http://handsontek.net/demoimages/tiles/gallery.png" class="img-responsive"/>
+        </div>
+        <div class="item">
+          <img src="http://handsontek.net/demoimages/tiles/gallery2.png" class="img-responsive"/>
+        </div>
+        <div class="item">
+          <img src="http://handsontek.net/demoimages/tiles/gallery3.png" class="img-responsive"/>
+        </div>
+      </div>
+    </div>
+
+</div>
+</div> -->
+        <div class="col-sm-4 col-xs-8 ">
+          <div id="tile10" class="tile">
+
+            <div class="carousel slide" data-ride="carousel">
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                <div class="item active">
+                  <h3 class="tilecaption" style="font-size:30px">CRM</h3>
+                </div>
+                <div class="item">
+                  <img src="static/images/metro/crm.png" class="img-responsive" />
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-sm-4 col-xs-8">
+          <div id="tile7" class="tile">
+
+            <div class="carousel slide" data-ride="carousel">
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                <div class="item active">
+                  <img src="static/images/metro/hr.png" class="img-responsive" />
+                </div>
+                <div class="item " style="background-color:#e74c3c">
+                  <h3 class="tilecaption" style="font-size:30px">HR</h3>
+                </div>
+
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4 col-xs-8">
+          <div id="tile7" class="tile">
+
+            <div class="carousel slide" data-ride="carousel">
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                <div class="item active" style="background-color:#9b59b6">
+                  <h3 class="tilecaption" style="font-size:30px">POS</h3>
+                </div>
+                <div class="item ">
+                  <img src="static/images/metro/pos.png" class="img-responsive" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+          <div id="tile8" class="tile">
+
+            <div class="carousel slide" data-ride="carousel">
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                <div class="item active">
+                  <img src="static/images/metro/src2.png" class="img-responsive" />
+                </div>
+                <div class="item" style="background-color:#1abc9c">
+                  <h3 class="tilecaption">text here</h3>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+          <div id="tile9" class="tile">
+
+            <div class="carousel slide" data-ride="carousel">
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                <div class="item active">
+                  <img src="static/images/metro/src4.png" class="img-responsive" />
+                </div>
+                <div class="item" style="background-color:#1abd44">
+                  <h3 class="tilecaption">text here</h3>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+    <!-- tiles end -->
+    <div class="row " style="background-color:#D84315; margin-top:4vh;">
+
+         <div class="col-lg-12 text-center" style="color:#ffffff;">
+          <h2 class="section-heading" style="font-size:40px; padding-top:20px">Products We Have</h2>
+        </div>
+
+
+      <div id="myCarousel" class="carousel slide " data-ride="carousel"  style="min-height:70vh">
+        <!-- Indicators -->
+        <ol class="carousel-indicators" >
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+          <li data-target="#myCarousel" data-slide-to="3"></li>
+          <li data-target="#myCarousel" data-slide-to="4"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <!-- <section style="padding-top:10vh">
+        <div class="col-lg-12 text-center" style="color:#ffffff;">
+        <h2 class="section-heading">Products We Have</h2>
+      </div>
+    </section> -->
+    <div class="carousel-inner " style="">
+
+    <div class="item active" style="padding-top:10vw">
+    <div class="row">
+    <div class="col-md-2">
+  </div>
+  <div class="col-md-4">
+  <div class="row" align="center">
+  <img ng-src="static/images/24tut.png" style="width:80%;">
+</div>
+</div>
+<div class="col-md-4 ">
+<div class="col-md-8" style="color:white;">
+<h1 style="font-size:20px; ">24tutors.com</h1>One-2-One online interactive class was never this easy then with 24Tutors. Get instantly connected to a tutor buddy 24x7
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="item " style="padding-top:10vw">
+<div class="row">
+<div class="col-md-2">
+</div>
+<div class="col-md-4">
+<div class="row" align="center">
+<img ng-src="static/images/mono.png" style="width:60%;">
+</div>
+</div>
+<div class="col-md-4 ">
+<div class="col-md-8" style="color:white;">
+<h1 style="font-size:20px; ">monomerce.com</h1> Helping Trillion dollar e-commerce industry to manage inventory with ease and make sure you dont miss any order
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="item " style="padding-top:10vw">
+<div class="row">
+<div class="col-md-2">
+</div>
+<div class="col-md-4">
+<div class="row" align="center">
+<img ng-src="static/images/libreERP.png" style="width:60%;">
+</div>
+</div>
+<div class="col-md-4 ">
+  <div class="col-md-8" style="color:white;">
+    <h1 style="font-size:20px; ">cioc.in</h1>Free and open source alternative to SAP, Salesforce and Zoho with full control over with the user without compromising with the features
+  </div>
+</div>
+</div>
+</div>
+
+
+<div class="item " style="padding-top:10vw">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4">
+      <div class="row" align="center">
+        <img ng-src="static/images/libreRPA.png" style="width:60%;">
+      </div>
+    </div>
+    <div class="col-md-4 ">
+      <div class="col-md-8" style="color:white;">
+        <h1 style="font-size:20px; ">cioc.in</h1>Horses for Sources and Forrester ranks RPA heigher then IOT/Cloud and self driving cars in terms of focus and investment around the globe. LibreRPA provides cutting edge alternative to coslty RPA softwares for free
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="item " style="padding-top:10vw">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4">
+      <div class="row" align="center">
+        <img ng-src="static/images/rackm.png" style="width:80%;">
+      </div>
+    </div>
+    <div class="col-md-4 ">
+      <div class="col-md-8" style="color:white;">
+        <h1 style="font-size:20px; ">rackmint.com</h1>Rackmint provide one stop solution for Warehouse Industry to manage space, leads and billing
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+      <span class="sr-only">Next</span>
+    </a>
+      </div>
+    </div>
+    <!-- <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
       <div class="container-fluid">
         <section id="features">
           <div class="row">
@@ -106,7 +381,8 @@
                       <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
                   </span>
               <h4 class="service-heading">24x7 Help</h4>
-              <p class="text-muted">We know you already have schools and tutions classes scheduled but what if its 8PM in the night and you have some doubt in a question you are trying to solve. Will you wait till next morning or evening to talk to your school teacher or tution sir to get it sorted out. How about just loging into <strong>24tutors.com</strong> and connect to a credible and experienced tutor to discuss the doubt then and there.</p>
+              <p class="text-muted">We know you already have schools and tutions classes scheduled but what if its 8PM in the night and you have some doubt in a question you are trying to solve. Will you wait till next morning or evening to talk to your school teacher or tution
+                sir to get it sorted out. How about just loging into <strong>24tutors.com</strong> and connect to a credible and experienced tutor to discuss the doubt then and there.</p>
             </div>
             <div class="col-md-4">
               <span class="fa-stack fa-4x">
@@ -127,137 +403,418 @@
           </div>
         </section>
       </div>
-    </div>
-      <!-- Portfolio Grid Section -->
-      <!-- <section id="portfolio" class="bg-light-gray" style="padding-left:0px;padding-right:0px;"> -->
+    </div> -->
+    <!-- Portfolio Grid Section -->
+    <!-- <section id="portfolio" class="bg-light-gray" style="padding-left:0px;padding-right:0px;"> -->
+
+
+    <!-- tech --------------------------------->
+
+
+
+    <section>
+      <div class="container ">
+        <div class="row ">
+          <h2 class="section-heading text-center" style="padding-top:30px">Technology We Expertise In</h2>
+
+          <div class="board ">
+            {% verbatim %}
+            <div class="board-inner">
+              <ul class="nav nav-tabs" id="myTab">
+                <div class="liner"></div>
+                <li class="{{activeTab == 0 ? 'activate' : ''}}" ng-click="changeTab(0)">
+                  <a href="#home" data-toggle="tab" title="Web">
+                     <span class="round-tabs one">
+                             <i class="fa fa-globe"></i>
+                     </span>
+                 </a></li>
+
+                <li class="{{activeTab == 1 ? 'activate' : ''}}" ng-click="changeTab(1)"><a href="#profile" data-toggle="tab" title="Mobile">
+                    <span class="round-tabs two">
+                        <i class="fa fa-mobile "></i>
+                    </span>
+                  </a>
+                </li>
+                <li class="{{activeTab == 2 ? 'activate' : ''}}" ng-click="changeTab(2)"><a href="#messages" data-toggle="tab" title="IOT">
+                    <span class="round-tabs three">
+                         IOT
+                    </span> </a>
+                </li>
+
+                <li class="{{activeTab == 3 ? 'activate' : ''}}" ng-click="changeTab(3)"><a href="#settings" data-toggle="tab" title="RPA">
+                        <span class="round-tabs four">
+                           RPA
+                        </span>
+                    </a></li>
+
+                <li class="{{activeTab == 4 ? 'activate' : ''}}" ng-click="changeTab(4)"><a href="#doner" data-toggle="tab" title="Desktop">
+                        <span class="round-tabs five">
+                             <i class="fa fa-desktop fa-1x"></i>
+                        </span> </a>
+                </li>
+
+              </ul>
+            </div>
+            {% endverbatim %}
+            <div class="tab-content">
+              <div class="tab-pane fade in active " id="home">
+
+                <h3 class="head text-center" style="padding-bottom:30px;padding-top:20px">Web applications</h3>
+
+                <div align="center">
+
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/angular.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/react.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/angular2.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/django.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/csharp.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/node.png">
+                  </div>
+
+                </div>
+              </div>
+              <div class="tab-pane fade " id="profile">
+
+                <h3 class="head text-center" style="padding-bottom:30px;padding-top:20px">Mobile applications</h3>
+
+                <div align="center">
+
+                  <div style="width:30%">
+                    <img class="col-md-6 col-sm-6 col-xs-12" ng-src="static/images/tech/android.png">
+                  </div>
+                  <div style="width:35%">
+                    <img class="col-md-6 col-sm-6 col-xs-12" ng-src="static/images/tech/apple.png">
+                  </div>
+
+
+                </div>
+              </div>
+              <div class="tab-pane fade " id="messages">
+
+                <h3 class="head text-center" style="padding-bottom:30px;padding-top:20px">IOT applications</h3>
+
+                <div align="center">
+
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/raspberry.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/edison.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/react.png">
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade " id="settings">
+
+                <h3 class="head text-center" style="padding-bottom:30px;padding-top:20px">RPA applications</h3>
+
+                <div align="center">
+
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/Blue_Prism.jpg">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/automation.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/uipath.png">
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade " id="doner">
+
+                <h3 class="head text-center" style="padding-bottom:30px;padding-top:20px">Desktop applications</h3>
+
+                <div align="center">
+
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/java.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/csharp.png">
+                  </div>
+                  <div style="width:50%">
+                    <img class="col-md-4 col-sm-4 col-xs-6" ng-src="static/images/tech/qt.png">
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+    <!-- end----->
+
+
+
+    <!-- scs -->
+    <section class="py-5 " style="padding:90px">
+      <h2 class="section-heading text-center" style="padding-bottom: 30px">Top Customers We Have Served </h2>
+      <div class="container ">
+        <div class="row">
+          <div class="col-md-2 col-sm-6">
+            <a href="#">
+               <img class="img-fluid d-block mx-auto" ng-src="static/images/skinstore.png" alt="" width="180vh">
+             </a>
+          </div>
+          <div class="col-md-2 col-sm-6">
+            <a href="#">
+               <img class="img-fluid d-block mx-auto" ng-src="static/images/skinstore.png" alt="" width="180vh">
+             </a>
+          </div>
+          <div class="col-md-2 col-sm-6">
+            <a href="#">
+               <img class="img-fluid d-block mx-auto" ng-src="static/images/skinstore.png" alt="" width="180vh">
+             </a>
+          </div>
+          <div class="col-md-2 col-sm-6">
+            <a href="#">
+               <img class="img-fluid d-block mx-auto" ng-src="static/images/skinstore.png" alt="" width="180vh">
+             </a>
+          </div>
+          <div class="col-md-2 col-sm-6">
+            <a href="#">
+               <img class="img-fluid d-block mx-auto" ng-src="static/images/skinstore.png" alt="" width="180vh">
+             </a>
+          </div>
+          <div class="col-md-2 col-sm-6">
+            <a href="#">
+               <img class="img-fluid d-block mx-auto" ng-src="static/images/skinstore.png" alt="" width="180vh">
+             </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+    <div class="row" style="background-color:#ffffff;">
+      <div class="container">
+        <section id="features" style="padding-top:80px">
+          <div class="row">
+            <div class="col-lg-12 text-center" style="padding-top:0px">
+              <h2 class="section-heading text-muted">Technology We Expertise</h2>
+            </div>
+          </div>
+         <div class="container">
+
+            <div class="row">
+              <div class="col-md-6 col-md-offset-3">
+                <div class="tab" role="tabpanel">
+
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">Web<span class="round-tabs one">
+                      <i class="icon icon-pencil"></i>
+                    </span></a></li>
+                    <li role="presentation"><a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">Mobile<span class="round-tabs two">
+                      <i class="icon icon-pencil"></i>
+                    </span></a></li>
+                    <li role="presentation"><a href="#Section3" aria-controls="settings" role="tab" data-toggle="tab">IOT<span class="round-tabs three">
+                      <i class="icon icon-pencil"></i>
+                    </span></a></li>
+                    <li role="presentation"><a href="#Section4" aria-controls="settings" role="tab" data-toggle="tab">RPA<span class="round-tabs four">
+                      <i class="icon icon-pencil"></i>
+                    </span></a></li>
+                    <li role="presentation"><a href="#Section5" aria-controls="settings" role="tab" data-toggle="tab">Desktop<span class="round-tabs five">
+                      <i class="icon icon-pencil"></i>
+                    </span></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="Section1">
+                      <h3 style="padding:10px">Web</h3>
+                      <img ng-src="static/images/24tut.png" class="col-md-4 col-sm-3 col-xs-8">
+                      <img ng-src="static/images/24tut.png" class="col-md-4 col-sm-3 col-xs-8">
+                      <img ng-src="static/images/24tut.png" class="col-md-4 col-sm-3 col-xs-8">
+                      <img ng-src="static/images/24tut.png" class="col-md-4 col-sm-3 col-xs-8">
+                      <img ng-src="static/images/24tut.png" class="col-md-4 col-sm-3 col-xs-8">
+                      <img ng-src="static/images/24tut.png" class="col-md-4 col-sm-3 col-xs-8">
+
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="Section2">
+                      <h3>Mobile</h3>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium, metus et scelerisque dignissim, ligula est imperdiet nisl, sit amet malesuada nunc felis in nisi. Nullam dapibus ligula dui, in rhoncus purus euismod nec. Duis in lacinia neque.
+                        Etiam tellus.
+                      </p>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="Section3">
+                      <h3>IOT</h3>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium, metus et scelerisque dignissim, ligula est imperdiet nisl, sit amet malesuada nunc felis in nisi. Nullam dapibus ligula dui, in rhoncus purus euismod nec. Duis in lacinia neque.
+                        Etiam tellus.
+                      </p>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="Section4">
+                      <h3>RPA</h3>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium, metus et scelerisque dignissim, ligula est imperdiet nisl, sit amet malesuada nunc felis in nisi. Nullam dapibus ligula dui, in rhoncus purus euismod nec. Duis in lacinia neque.
+                        Etiam tellus.
+                      </p>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="Section5">
+                      <h3>Desktop</h3>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium, metus et scelerisque dignissim, ligula est imperdiet nisl, sit amet malesuada nunc felis in nisi. Nullam dapibus ligula dui, in rhoncus purus euismod nec. Duis in lacinia neque.
+                        Etiam tellus.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div> -->
+
+
     <div class="container" style="padding-left:0px;padding-right:0px;">
       <div class="container-fluid">
         <div id="generic_price_table">
-         <div class="container-fluid">
-           <div class="row">
-             <div class="col-md-4">
-               <div class="generic_content active clearfix">
-                 <div class="generic_head_price clearfix">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="generic_content active clearfix">
+                  <div class="generic_head_price clearfix">
                     <div class="generic_head_content clearfix">
-                        <!-- <div class="head_bg"></div> -->
-                         <div class="headb"></div>
-                           <div class="head">
-                              <span>Basic</span>
-                           </div>
-                         </div>
-                         <div class="generic_price_tag clearfix">
-                           <span class="price">
+                      <!-- <div class="head_bg"></div> -->
+                      <div class="headb"></div>
+                      <div class="head">
+                        <span>Basic</span>
+                      </div>
+                    </div>
+                    <div class="generic_price_tag clearfix">
+                      <span class="price">
                              <span class="sign"> <i class="fa fa-inr"></i> </span>
-                             <span class="currency">2500</span>
-                             <!-- <span class="cent">.00</span> -->
-                             <span class="month">/Month</span>
-                           </span>
-                         </div>
-                       </div>
-                       <div class="generic_feature_list">
-                         <ul>
-                           <li><span>1</span> Account</li>
-                           <li><span>Upto 1000</span> Products</li>
-                           <li><span>Web Only</span></li>
-                           <li><span>5 Hours/Month</span> Support</li>
-                         </ul>
-                       </div>
-                       <div class="generic_feature_list" style="padding:10px">
-                         <button type="button" class="btn" style="background:#0066cc;color:white;">Buy Now</button>
-                       </div>
-                     </div>
-                   </div>
-                   <div class="col-md-4">
-                     <div class="generic_content active clearfix">
-                       <div class="generic_head_price clearfix">
-                         <div class="generic_head_content clearfix">
-                           <div class="head_bg"></div>
-                           <div class="head">
-                             <span>Standard</span>
-                           </div>
-                         </div>
-                         <div class="generic_price_tag clearfix">
-                           <span class="price">
+                      <span class="currency">2500</span>
+                      <!-- <span class="cent">.00</span> -->
+                      <span class="month">/Month</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="generic_feature_list">
+                    <ul>
+                      <li><span>1</span> Account</li>
+                      <li><span>Upto 1000</span> Products</li>
+                      <li><span>Web Only</span></li>
+                      <li><span>5 Hours/Month</span> Support</li>
+                    </ul>
+                  </div>
+                  <div class="generic_feature_list" style="padding:10px">
+                    <button type="button" class="btn" style="background:#0066cc;color:white;">Buy Now</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="generic_content active clearfix">
+                  <div class="generic_head_price clearfix">
+                    <div class="generic_head_content clearfix">
+                      <div class="head_bg"></div>
+                      <div class="head">
+                        <span>Standard</span>
+                      </div>
+                    </div>
+                    <div class="generic_price_tag clearfix">
+                      <span class="price">
                              <span class="sign"><i class="fa fa-inr"></i></span>
-                             <span class="currency">3500</span>
-                             <!-- <span class="cent">.99</span> -->
-                             <span class="month">/Month</span>
-                           </span>
-                         </div>
-                       </div>
-                       <div class="generic_feature_list">
-                         <ul>
-                           <li><span>4</span> Accounts</li>
-                           <li><span>Upto 3000</span> Products</li>
-                           <li><span>Android app</span></li>
-                           <li><span>10 Hours/Month</span> Support</li>
-                         </ul>
-                       </div>
-                       <div class="generic_feature_list" style="padding:10px">
-                         <button type="button" class="btn btn-warning">Buy Now</button>
-                       </div>
-                     </div>
-                   </div>
-                   <div class="col-md-4">
-                     <div class="generic_content active clearfix">
-                       <div class="generic_head_price clearfix">
-                         <div class="generic_head_content clearfix">
-                           <div class="head_b"></div>
-                           <div class="head">
-                             <span>Premium</span>
-                           </div>
-                         </div>
-                         <div class="generic_price_tag clearfix">
-                           <span class="price">
+                      <span class="currency">3500</span>
+                      <!-- <span class="cent">.99</span> -->
+                      <span class="month">/Month</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="generic_feature_list">
+                    <ul>
+                      <li><span>4</span> Accounts</li>
+                      <li><span>Upto 3000</span> Products</li>
+                      <li><span>Android app</span></li>
+                      <li><span>10 Hours/Month</span> Support</li>
+                    </ul>
+                  </div>
+                  <div class="generic_feature_list" style="padding:10px">
+                    <button type="button" class="btn btn-warning">Buy Now</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="generic_content active clearfix">
+                  <div class="generic_head_price clearfix">
+                    <div class="generic_head_content clearfix">
+                      <div class="head_b"></div>
+                      <div class="head">
+                        <span>Premium</span>
+                      </div>
+                    </div>
+                    <div class="generic_price_tag clearfix">
+                      <span class="price">
                              <span class="sign"><i class="fa fa-inr"></i></span>
-                             <span class="currency">4500</span>
-                             <!-- <span class="cent">.99</span> -->
-                             <span class="month">/Month</span>
-                           </span>
-                         </div>
-                       </div>
-                       <div class="generic_feature_list">
-                         <ul>
-                           <li><span>Unlimited</span> Accounts</li>
-                           <li><span>Unlimited</span> Products</li>
-                           <li><span>Android and iOS apps</span></li>
-                           <li><span>30 Hours/Month</span> Support</li>
-                         </ul>
-                       </div>
-                       <div class="generic_feature_list" style="padding:10px">
-                         <button type="button" class="btn btn-success">Buy Now</button>
-                       </div>
-                         <!-- div class="generic_price_btn clearfix">
+                      <span class="currency">4500</span>
+                      <!-- <span class="cent">.99</span> -->
+                      <span class="month">/Month</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="generic_feature_list">
+                    <ul>
+                      <li><span>Unlimited</span> Accounts</li>
+                      <li><span>Unlimited</span> Products</li>
+                      <li><span>Android and iOS apps</span></li>
+                      <li><span>30 Hours/Month</span> Support</li>
+                    </ul>
+                  </div>
+                  <div class="generic_feature_list" style="padding:10px">
+                    <button type="button" class="btn btn-success">Buy Now</button>
+                  </div>
+                  <!-- div class="generic_price_btn clearfix">
                            <a class="" href="">Sign up</a>
                          </div> -->
-                     </div>
-                   </div>
                 </div>
-             </div>
-           </div>
-         </div>
-       </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-       <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
-       <div class="container text-center" style="padding-left:0px;padding-right:0px;padding-top:50px;box-shadow: -12px 10px 50px 2px #d0d5dd;">
-         <div class="row">
-           <div class="col-lg-12 ">
-             <h2 class="section-heading">How it works ?</h2>
-           </div>
-         </div>
+    <section style="  background:url(   data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTgxNHB4IiBoZWlnaHQ9IjE4NzFweCIgdmlld0JveD0iMCAwIDE4MTQgMTg3MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDMuMiAoMzkwNjkpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkdyb3VwIDExPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI5MC44MzY1MjA2JSIgeTE9IjE5LjA0MDUxMjYlIiB4Mj0iMy42NTg5OTExNyUiIHkyPSIxMDAlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMDMwOUIiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzE0MUQ2NyIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjkzLjI5MjkzODMlIiB5MT0iNjIuNzg4MzU3MSUiIHgyPSI2Ny40NjU4MDk0JSIgeTI9IjM0Ljg0NjQ2OSUiIGlkPSJsaW5lYXJHcmFkaWVudC0yIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0U3RUFGNiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjAiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI2Mi4yNjMxMTMzJSIgeTE9IjU2LjEzNzkyMTIlIiB4Mj0iNTkuMTE0MDU1NiUiIHkyPSIzMi44MDk0MjQxJSIgaWQ9ImxpbmVhckdyYWRpZW50LTMiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRTdFQUY2IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJEZXNpbmciIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSIxLTQtSG9tZXBhZ2UtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA2LjAwMDAwMCwgLTMyMzIuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJJbnRlZ3JhdGlvbi1hcHBzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDYuMDAwMDAwLCAzMTAwLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTExIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTgxNi45MjIyNCw2NjcuNzYzNTA1IEMxODI2LjI0NjksNjEzLjMyNDk2MiAxNzkwLjI1NjY1LDU1OC44MDkwMjMgMTczNi41MjUwNSw1NDUuOTk2MTkxIEw0LjEyNzQ4NzgsMTMyLjg4ODg1NyBMMCwyMDAzLjg1NDk1IEwxNTY5LjcyMDU2LDE1NzQuMjIwOTkgQzE2MjIuOTkzMjIsMTU1OS42NDAyMiAxNjczLjczODMyLDE1MDMuNjg5MzYgMTY4My4wNjMwNCwxNDQ5LjI1MDQ2IEwxODE2LjkyMjI0LDY2Ny43NjM1MDUgWiIgaWQ9ImJhc2UiIGZpbGw9IiM0QkNFQUMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwOS4xOTY0MzIsIDEwNjguMzcxOTAyKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC05MDkuMTk2NDMyLCAtMTA2OC4zNzE5MDIpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04ODQuMDk1MjI3LDEyNzIuNTM5IEM5MDMuMjY0NjE4LDEyMjAuNzQ3MzUgODc3Ljg1Njk3LDExNjAuNjcyODcgODI3LjM0MDE3OSwxMTM4LjM1NjQ5IEw0NjAuNzk0MTU3LDk3Ni40MzA0ODQgQzQ2MC43OTQxNTcsOTc2LjQzMDQ4NCAxMjQuMjIxMTA1LDE3NjEuNjc1MDQgMjYxLjM2MTUzMSwxNzA0LjM1NDY0IEM0NjQuODUzMzYsMTYxOS4zMDE0NCA3MTYuODMxMzk2LDE1MTMuODI5OTcgNzE2LjgzMTM5NiwxNTEzLjgyOTk3IEM3NjcuNzc2ODcsMTQ5Mi41MDg2MSA4MjQuNjE1NzY5LDE0MzMuMjM5OTYgODQzLjc4NTU4OSwxMzgxLjQ0NzE1IEw4ODQuMDk1MjI3LDEyNzIuNTM5IFoiIGlkPSJzaGFwZSIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSIgb3BhY2l0eT0iMC4wNjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1NTkuNDk3ODU4LCAxMzQxLjg4ODYyMSkgc2NhbGUoLTEsIDEpIHJvdGF0ZSgtMTQzLjAwMDAwMCkgdHJhbnNsYXRlKC01NTkuNDk3ODU4LCAtMTM0MS44ODg2MjEpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xOTkxLjY2NDcxLDY4Mi4xNTk1MzMgQzIwMDcuNjI2MzgsNjI5LjI4OTQ1MiAxOTg3LjE5ODEyLDU1Ni41OTMxNDcgMTk0Ni4wMTU1NCw1MTkuNzY4Njg0IEwxNDY3LjY1MzA0LDkyLjAyODUyNSBDMTQ2Ny42NTMwNCw5Mi4wMjg1MjUgMTExNi40ODk2NiwxMzkxLjk1NjQ3IDExMTkuNTQ1MjMsMTM5MS4xODQ1OCBDMTEyMi42MDA4LDEzOTAuNDEyNjkgMTgwOC42NDY1MiwxMDM5LjE4NTQxIDE4MDguNjQ2NTIsMTAzOS4xODU0MSBDMTg1Ny43ODk2LDEwMTQuMDMwODEgMTkxMC41NjY1Niw5NTAuNzgyMTY5IDE5MjYuNTI5MDksODk3LjkwOTIzMSBMMTk5MS42NjQ3MSw2ODIuMTU5NTMzIFoiIGlkPSJzaGFwZS0iIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMykiIG9wYWNpdHk9IjAuMDYyNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU1OC4zMDk0MzgsIDc0MS42MDY3MjUpIHNjYWxlKC0xLCAxKSByb3RhdGUoLTE1LjAwMDAwMCkgdHJhbnNsYXRlKC0xNTU4LjMwOTQzOCwgLTc0MS42MDY3MjUpICI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat;  background-color: rgba(0, 0, 0, 0);background-position-x: 100%;background-position-y: 70%;  background-size: auto auto;  background-position: 100% 0background-color: #fffoverflow: hidden;  background-size: auto 100%;padding-top:0px;padding-bottom:0px;">
+      <div class="container text-center" style="padding-left:0px;padding-right:0px;padding-top:50px;box-shadow: -12px 10px 50px 2px #d0d5dd;">
+        <div class="row">
+          <div class="col-lg-12 ">
+            <h2 class="section-heading">How it works ?</h2>
+          </div>
+        </div>
 
 
-         <img src="/static/images/flow.svg" style="width: 60%;">
-       </div>
-      </section>
-      <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+        <img src="/static/images/flow.svg" style="width: 60%;">
+      </div>
+    </section>
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
 
 
       <!-- Contact Section -->
 
-      {% endblock %} {% block footer %}
-
-      {% include "footer.html" %}
+      {% endblock %} {% block footer %} {% include "footer.html" %}
 
     </div>
   </div>
@@ -276,5 +833,8 @@
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
 <script src="{% static 'js/app.homepage.js' %}"></script>
+
+<script src="{% static 'js/particles.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
 
 {% endblock %}
