@@ -60,12 +60,12 @@
                   <p style="font-size:20px;padding-left:15px"><strong>{{ forloop.counter }}.</strong> &nbsp; {{q.ques}}</p>
                   {% for qp in q.quesParts.all %}
                   <div class="row">
-                    <p style="font-size:17px;padding-left:45px">{{qp.txt}}</p>
+                    <p style="font-size:17px;padding-left:45px">{{qp.txt | safe}}</p>
                   </div>
                   {% endfor %}
                   <strong style="font-size:17px;padding-left:10px">Options</strong><br> {% for op in q.optionsParts.all %}
                   <div class="row">
-                    <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{op.txt}}</p>
+                    <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{op.txt | safe}}</p>
                   </div>
                   {% endfor %} {% if q.qtype == 'mcq' or q.qtype == 'mcc' or q.qtype == 'integer' or q.qtype == 'float' and q.objectiveAnswer != None %}
                   <strong style="font-size:17px;padding-left:10px">Answer</strong>
@@ -81,7 +81,7 @@
 
                     {% for sp in q.solutionParts.all %}
                     <div class="row">
-                      <p style="font-size:17px;padding-left:45px"> {{sp.txt}}</p>
+                      <p style="font-size:17px;padding-left:45px"> {{sp.txt | safe}}</p>
                     </div>
                     {% endfor %}
                   </div>
