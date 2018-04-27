@@ -73,6 +73,20 @@ class COIAPI(APIView):
 
         return Response({"data" : toReturn}, status=status.HTTP_200_OK)
 
+
+
+class ArchiveDocumentAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        toReturn= []
+        # for tr in getBasicDetails():
+        #     toReturn.append(str(tr))
+
+
+        return Response({"data" : toReturn}, status=status.HTTP_200_OK)
+
+
 class ApiAccountPublicApi(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny ,)
