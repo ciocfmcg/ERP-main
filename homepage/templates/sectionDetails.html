@@ -7,7 +7,7 @@
 <link rel="publisher" href="https://plus.google.com/b/105723801328437605094/" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="{{book.title}} {{sectionobj.title}}" />
+<meta property="og:title" content="{{book.title}} {{sectionobj.title}} pdf" />
 <meta property="og:description" content="{{blogobj.description}}" />
 <meta property="og:url" content="{{ request.build_absolute_uri }}" />
 <meta property="og:site_name" content="24 Tutors" />
@@ -108,8 +108,8 @@
                 <nav aria-label="...">
                   <ul class="pager">
                     {% if bot.prev %}
-                    <li><a href="/{{bot.prevobj.shortUrl}}" class="btn btn-default"><h3 style="font-size:15px;">{{bot.prevobj.title}}</h3></a></li>&nbsp; {% endif %} {% if bot.nxt %} &nbsp;
-                    <li><a href="/{{bot.nxtvobj.shortUrl}}" class="btn btn-default"><h3 style="font-size:15px;">{{bot.nxtvobj.title}}</h3></a></li>
+                    <li><a href="/{{bot.prevobj.shortUrl}}/" class="btn btn-default"><h3 style="font-size:15px;">{{bot.prevobj.title}}</h3></a></li>&nbsp; {% endif %} {% if bot.nxt %} &nbsp;
+                    <li><a href="/{{bot.nxtvobj.shortUrl}}/" class="btn btn-default"><h3 style="font-size:15px;">{{bot.nxtvobj.title}}</h3></a></li>
                     {% endif %}
                   </ul>
                 </nav>
@@ -130,7 +130,7 @@
 
           {% for sec in sections %}
             <ul>
-              <li><a style="color:white;" href="/{{sec.shortUrl}}">{{sec.title}}</a></li>
+              <li><a style="color:white;" href="/{{sec.shortUrl}}/">{{sec.title}}</a></li>
             </ul>
 
 
