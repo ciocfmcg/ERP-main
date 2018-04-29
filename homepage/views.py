@@ -23,6 +23,10 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from PIM.models import blogPost
 from LMS.models import Book,Section
+import sys, traceback
+
+
+
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
@@ -48,6 +52,10 @@ def blogDetails(request, blogname):
             sectionobj = Section.objects.filter(book = book.pk)
             return render(request, 'bookDetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
     except:
+
+        traceback.print_exc(file=sys.stdout)
+
+
         sectionobj = Section.objects.get(shortUrl=blogname)
         blogobj = blogPost.objects.get(header=sectionobj.book.pk)
         print 'boookkkkkk',sectionobj.book
@@ -74,7 +82,7 @@ def blogDetails(request, blogname):
                         prevobj = sec[a-1]
                         nxtvobj = sec[a+1]
 
-        return render(request, 'sectionDetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','),'sectionobj':sectionobj, 'book' : sectionobj.book ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
+        return render(request, 'sectionDetails.html', { "sections" : sec , "home": False, "tagsCSV" :  blogobj.tagsCSV.split(','),'sectionobj':sectionobj, 'book' : sectionobj.book ,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,'questions':sectionobj.questions.all(),'bot':{'prev':prev,'nxt':nxt,'prevobj':prevobj,'nxtvobj':nxtvobj}})
 
 
 

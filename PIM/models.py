@@ -164,6 +164,9 @@ class blogPost(models.Model):
     section = models.CharField(max_length =100 , null = True)
     author = models.CharField(max_length =100 , null = True)
 
+    def get_absolute_url(self):
+        return '/'+ self.shortUrl + '/'
+
 class blogLike(models.Model):
     parent = models.ForeignKey(blogPost , related_name = 'likes')
     user = models.ForeignKey(User , related_name = 'blogLikes')

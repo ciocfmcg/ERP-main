@@ -36,91 +36,108 @@
 <div>
   <!-- Services Section -->
   <div class="body">
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;padding-top:100px">
+    <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
 
-      <div class="container-fluid">
-        <!-- <section style="padding-bottom: 30px;"> -->
-        <div class="row" style="padding-bottom:35px;padding-left:20px;padding-right:20px">
-          <div class="row" style="padding-bottom: 20px;padding-left:15px">
-            <div class="col-md-8">
-              <h2 style="font-size:25px;" class="text-primary">{{book.title}}</h2>
-              <h4 style="font-size:20px;">By : {{book.author}}</h4>
-              <h5 style="font-size:15px;">Section : &nbsp; {{sectionobj.title}}</h5>
-            </div>
-            <div class="col-md-4">
-              <img src="{{book.dp.url}}" alt="{{book.title}}" class="pull-right" style="width:140px;">
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            {% for q in questions %}
-            <div class="row" style="padding:30px;margin:-5px;{% if forloop.counter|divisibleby:2 %}background:#eeeeee;{% endif %}">
-              <div class="col-md-6 text-left">
-                <div class="row">
-                  <p style="font-size:20px;padding-left:15px"><strong>{{ forloop.counter }}.</strong> &nbsp; {{q.ques | safe}}</p>
-                  {% for qp in q.quesParts.all %}
-                  <div class="row">
-                    <p style="font-size:17px;padding-left:45px">{{qp.txt | safe}}</p>
-                  </div>
-                  {% endfor %}
-                  <strong style="font-size:17px;padding-left:10px">Options</strong><br> {% for op in q.optionsParts.all %}
-                  <div class="row">
-                    <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{op.txt | safe}}</p>
-                  </div>
-                  {% endfor %} {% if q.qtype == 'mcq' or q.qtype == 'mcc' or q.qtype == 'integer' or q.qtype == 'float' and q.objectiveAnswer != None %}
-                  <strong style="font-size:17px;padding-left:10px">Answer</strong>
-                  <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{q.objectiveAnswer}}</p>
-                  {% endif %}
-
-
-                  <a class="btn btn-success" role="button" data-toggle="collapse" href="#collapseExample{{forloop.counter}}" aria-expanded="false" aria-controls="collapseExample">
-                    Solutions  <i class="fa fa-arrow-down" ng-click=""></i>
-                  </a>
-
-                  <div class="collapse" id="collapseExample{{forloop.counter}}">
-
-                    {% for sp in q.solutionParts.all %}
+      <div class="row" style="margin:0px;">
+        <div class="col-md-10" style="padding:0px;padding-top:100px;">
+          <div class="container-fluid">
+            <!-- <section style="padding-bottom: 30px;"> -->
+            <div class="row" style="padding-bottom:35px;padding-left:20px;padding-right:20px">
+              <div class="row" style="padding-bottom: 20px;padding-left:15px">
+                <div class="col-md-8">
+                  <h1 style="font-size:25px;" class="text-primary">{{book.title}} <small>{{sectionobj.title}}</small> </h1>
+                  <h4 style="font-size:20px;">{{book.author}}</h4>
+                </div>
+                <div class="col-md-4">
+                  <img src="{{book.dp.url}}" alt="{{book.title}}" class="pull-right" style="width:140px;">
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                {% for q in questions %}
+                <div class="row" style="padding:30px;margin:-5px;{% if forloop.counter|divisibleby:2 %}background:#eeeeee;{% endif %}">
+                  <div class="col-md-9 text-left">
                     <div class="row">
-                      <p style="font-size:17px;padding-left:45px"> {{sp.txt | safe}}</p>
+                      <p style="font-size:20px;padding-left:15px"><strong>{{ forloop.counter }}.</strong> &nbsp; {{q.ques | safe}}</p>
+                      {% for qp in q.quesParts.all %}
+                      <div class="row">
+                        <p style="font-size:17px;padding-left:45px">{{qp.txt | safe}}</p>
+                      </div>
+                      {% endfor %}
+                      <strong style="font-size:17px;padding-left:10px">Options</strong><br> {% for op in q.optionsParts.all %}
+                      <div class="row">
+                        <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{op.txt | safe}}</p>
+                      </div>
+                      {% endfor %} {% if q.qtype == 'mcq' or q.qtype == 'mcc' or q.qtype == 'integer' or q.qtype == 'float' and q.objectiveAnswer != None %}
+                      <strong style="font-size:17px;padding-left:10px">Answer</strong>
+                      <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{q.objectiveAnswer}}</p>
+                      {% endif %}
+
+
+                      <a class="btn btn-success" role="button" data-toggle="collapse" href="#collapseExample{{forloop.counter}}" aria-expanded="false" aria-controls="collapseExample">
+                        Solutions  <i class="fa fa-arrow-down" ng-click=""></i>
+                      </a>
+
+                      <div class="collapse" id="collapseExample{{forloop.counter}}">
+
+                        {% for sp in q.solutionParts.all %}
+                        <div class="row">
+                          <p style="font-size:17px;padding-left:45px"> {{sp.txt | safe}}</p>
+                        </div>
+                        {% endfor %}
+                      </div>
+
+
                     </div>
-                    {% endfor %}
+
                   </div>
-
-
+                  <div class="col-md-3">
+                    <div class="row" style="padding-top:25px">
+                      <div class="col-md-6">
+                        <button type="button" name="button" class="btn btn-block btn-primary">Watch Solution</button>
+                      </div>
+                      <div class="col-md-6">
+                        <button type="button" name="button" class="btn btn-block btn-default">Talk To A Tutor</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
+                {% endfor %}
               </div>
-              <div class="col-md-6">
-                <div class="row" style="padding-top:25px">
-                  <div class="col-md-6">
-                    <button type="button" name="button" class="btn btn-block btn-primary">Watch Solution</button>
-                  </div>
-                  <div class="col-md-6">
-                    <button type="button" name="button" class="btn btn-block btn-default">Talk To A Tutor</button>
-                  </div>
+              <div class="row">
+                <nav aria-label="...">
+                  <ul class="pager">
+                    {% if bot.prev %}
+                    <li><a href="/{{bot.prevobj.shortUrl}}" class="btn btn-default"><h3 style="font-size:15px;">{{bot.prevobj.title}}</h3></a></li>&nbsp; {% endif %} {% if bot.nxt %} &nbsp;
+                    <li><a href="/{{bot.nxtvobj.shortUrl}}" class="btn btn-default"><h3 style="font-size:15px;">{{bot.nxtvobj.title}}</h3></a></li>
+                    {% endif %}
+                  </ul>
+                </nav>
+                <div class="col-md-6 col-md-offset-6">
+                  <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-primary pull-right" style="background:rgb(31, 116, 215);" target="_blank">
+                      <i class="fa fa-facebook"></i>  Share
+                    </a>
                 </div>
               </div>
             </div>
-            {% endfor %}
+            <!-- </section> -->
           </div>
-          <div class="row">
-            <nav aria-label="...">
-              <ul class="pager">
-                {% if bot.prev %}
-                <li><a href="/{{bot.prevobj.shortUrl}}" class="btn btn-default"><h3 style="font-size:15px;">{{bot.prevobj.title}}</h3></a></li>&nbsp; {% endif %} {% if bot.nxt %} &nbsp;
-                <li><a href="/{{bot.nxtvobj.shortUrl}}" class="btn btn-default"><h3 style="font-size:15px;">{{bot.nxtvobj.title}}</h3></a></li>
-                {% endif %}
-              </ul>
-            </nav>
-            <div class="col-md-6 col-md-offset-6">
-              <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-primary pull-right" style="background:rgb(31, 116, 215);" target="_blank">
-                  <i class="fa fa-facebook"></i>  Share
-                </a>
-            </div>
-          </div>
+
+
         </div>
-        <!-- </section> -->
+        <div class="col-md-2" style="min-height:100vh;background: linear-gradient(#024b7b, white);padding-top:100px;color:white;">
+          <h3>Other Capters</h3>
+
+          {% for sec in sections %}
+            <ul>
+              <li><a style="color:white;" href="/{{sec.shortUrl}}">{{sec.title}}</a></li>
+            </ul>
+
+
+          {% endfor %}
+        </div>
       </div>
+
 
       {% endblock %} {% block footer %} {% include "footer.html" %}
     </div>

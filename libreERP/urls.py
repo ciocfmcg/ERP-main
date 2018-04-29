@@ -11,6 +11,14 @@ from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse
+from django.contrib.sitemaps.views import sitemap
+from PIM.sitemaps import BlogsSitemap
+
+
+sitemaps = {
+    'blogs': BlogsSitemap()
+}
+
 
 app_name="libreERP"
 urlpatterns = [
@@ -26,7 +34,6 @@ urlpatterns = [
     url(r'^logout/', logoutView , name ='logout'),
     url(r'^corporate/', index , name ='index'),
     url(r'^events/', eventHome, name = 'event'), # public blogs app
-    url(r'^blogs/', include('blogs.urls')), # public blogs app
     url(r'^api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^robots\.txt', include('robots.urls')),
@@ -44,6 +51,7 @@ urlpatterns = [
     url(r'^studentHome', studentHome , name ='studentHome'),
     url(r'^tutorHome', tutorHome , name ='tutorHome'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 if settings.DEBUG:

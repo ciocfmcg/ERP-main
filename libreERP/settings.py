@@ -83,6 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     'rest_framework',
     'corsheaders',
     'allauth',
@@ -105,7 +106,6 @@ INSTALLED_APPS = (
     'gitweb', # github.com local server with file browsing and diff viewer
     'taskBoard',
     'projects',
-    'blogs', # publically accesible blogging site
     'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
