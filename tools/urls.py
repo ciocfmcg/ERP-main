@@ -8,6 +8,8 @@ router = routers.DefaultRouter()
 router.register(r'fileCache' , FileCacheViewSet , base_name ='fileCache')
 router.register(r'apiAccount' , ApiAccountViewSet , base_name ='apiAccount')
 router.register(r'apiAccountLog' , ApiAccountLogViewSet , base_name ='apiAccountLog')
+router.register(r'archivedDocument' , ArchivedDocumentViewSet , base_name ='archivedDocument')
+router.register(r'documentContent' , DocumentContentViewSet , base_name ='documentContent')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -21,5 +23,4 @@ urlpatterns = [
     url(r'nlpGetPara/$' , NLPGetParaByTitle.as_view()),
     url(r'externalFileCache/$' , FileCacheAPI.as_view()),
     url(r'COI/$' , COIAPI.as_view()),
-    url(r'archiveDoc/$' , COIAPI.as_view()),
 ]

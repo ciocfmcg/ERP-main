@@ -80,4 +80,5 @@ class DocumentContent(models.Model):
     h = models.FloatField(null = True)
     category = models.CharField(default = 'other' , choices = DOCUMENT_PART_CATEGORY , max_length = 10)
     pageNo = models.PositiveIntegerField(null = False)
-    nlpResult = models.CharField(max_length = 3000)
+    nlpResult = models.CharField(max_length = 3000 , null = True)
+    text = models.CharField(max_length = 3000 , null = True)

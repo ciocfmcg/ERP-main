@@ -77,3 +77,30 @@ class ApiAccountLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApiAccountLog
         fields = ('pk' , 'account' , 'updated', 'actor', 'usageAdded', 'refID', 'accActive')
+
+class ArchivedDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArchivedDocument
+        fields = ('pk' , 'created' , 'pdf', 'user', 'description', 'title', 'docID')
+
+    def create(self , validated_data):
+        ad = ArchivedDocument(**validated_data)
+        ad.user = self.context['request'].user
+        from scripts.PDFReader.reader2 import read
+        ad.save()
+        pages = read(self.context['request'].FILES['pdf'] )
+        for pg in pages:
+            print pg
+            for p in pg.paragraphs:
+                dc = DocumentContent(doc = ad , typ = 'text' , x = p.boundingBox.x() , y = p.boundingBox.y() , w = p.boundingBox.width() , h = p.boundingBox.height() , category  = 'para' , pageNo = pg.pageNo , text = p.text )
+
+                dc.save()
+
+        return ad
+
+
+class DocumentContentSerializer(serializers.ModelSerializer):
+    doc = ArchivedDocumentSerializer(many = False , read_only = True)
+    class Meta:
+        model = DocumentContent
+        fields = ('pk' , 'created' , 'doc', 'typ', 'x', 'y', 'w' , 'h' , 'category' , 'pageNo' , 'nlpResult' , 'text')

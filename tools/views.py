@@ -74,19 +74,6 @@ class COIAPI(APIView):
         return Response({"data" : toReturn}, status=status.HTTP_200_OK)
 
 
-
-class ArchiveDocumentAPI(APIView):
-    renderer_classes = (JSONRenderer,)
-    permission_classes = (permissions.AllowAny ,)
-    def post(self , request , format = None):
-        toReturn= []
-        # for tr in getBasicDetails():
-        #     toReturn.append(str(tr))
-
-
-        return Response({"data" : toReturn}, status=status.HTTP_200_OK)
-
-
 class ApiAccountPublicApi(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny ,)
@@ -339,4 +326,23 @@ class ApiAccountLogViewSet(viewsets.ModelViewSet):
     filter_fields = ['account', 'refID']
     def get_queryset(self):
         qs = ApiAccountLog.objects.filter(actor = self.request.user).order_by('-updated')
+        return qs
+
+
+class ArchivedDocumentViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isOwner, )
+    serializer_class = ArchivedDocumentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
+    def get_queryset(self):
+        qs = ArchivedDocument.objects.all()
+        return qs
+
+class DocumentContentViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny, )
+    serializer_class = DocumentContentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['text' , 'category']
+    def get_queryset(self):
+        qs = DocumentContent.objects.all()
         return qs
