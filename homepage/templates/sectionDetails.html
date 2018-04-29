@@ -58,19 +58,24 @@
                 <div class="row" style="padding:30px;margin:-5px;{% if forloop.counter|divisibleby:2 %}background:#eeeeee;{% endif %}">
                   <div class="col-md-9 text-left">
                     <div class="row">
-                      <p style="font-size:20px;padding-left:15px"><strong>{{ forloop.counter }}.</strong> &nbsp; {{q.ques | safe}}</p>
-                      {% for qp in q.quesParts.all %}
-                      <div class="row">
-                        <p style="font-size:17px;padding-left:45px">{{qp.txt | safe}}</p>
+                      <p style="font-size:17px;padding-left:15px"><strong>{{ forloop.counter }}.</strong> &nbsp; {{q.ques | safe}}</p>
+                      <div class="row" style="padding-left:30px;">
+                        {% for qp in q.quesParts.all %}
+                          <p style="font-size:17px;padding-left:45px">{{qp.txt | safe}}</p>
+                        {% endfor %}
                       </div>
-                      {% endfor %}
-                      <strong style="font-size:17px;padding-left:10px">Options</strong><br> {% for op in q.optionsParts.all %}
-                      <div class="row">
-                        <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{op.txt | safe}}</p>
+                      {% if q.optionsParts.all.count > 0 %}
+                      <strong style="font-size:17px;padding-left:10px">Options</strong><br>
+                      {% endif %}
+                      <div class="row" style="padding-left:30px;">
+                        {% for op in q.optionsParts.all %}
+                          <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{op.txt | safe}}</p>
+                        {% endfor %}
                       </div>
-                      {% endfor %} {% if q.qtype == 'mcq' or q.qtype == 'mcc' or q.qtype == 'integer' or q.qtype == 'float' and q.objectiveAnswer != None %}
+
+                      {% if q.qtype == 'mcq' or q.qtype == 'mcc' or q.qtype == 'integer' or q.qtype == 'float' and q.objectiveAnswer != None %}
                       <strong style="font-size:17px;padding-left:10px">Answer</strong>
-                      <p style="font-size:17px;padding-left:45px">{{ forloop.counter }} &nbsp; {{q.objectiveAnswer}}</p>
+                      <p style="font-size:17px;padding-left:60px">{{ forloop.counter }} &nbsp; {{q.objectiveAnswer}}</p>
                       {% endif %}
 
 
@@ -80,11 +85,11 @@
 
                       <div class="collapse" id="collapseExample{{forloop.counter}}">
 
-                        {% for sp in q.solutionParts.all %}
-                        <div class="row">
-                          <p style="font-size:17px;padding-left:45px"> {{sp.txt | safe}}</p>
+                        <div class="row" style="padding-left:30px;">
+                          {% for sp in q.solutionParts.all %}
+                            <p style="font-size:17px;padding-left:45px"> {{sp.txt | safe}}</p>
+                          {% endfor %}
                         </div>
-                        {% endfor %}
                       </div>
 
 
