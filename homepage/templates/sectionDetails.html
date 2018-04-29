@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
 
-<title>{{book.title}} {{sectionobj.title}}</title>
+<title>{{book.title}} {{sectionobj.title}} pdf</title>
 
 <meta name="description" content="{{blogobj.description}}" />
 <link rel="canonical" href="{{ request.build_absolute_uri }}" />
@@ -23,7 +23,7 @@
 <meta property="og:image:height" content="{{blogobj.ogimage.height}}" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:description" content="{{blogobj.description}}" />
-<meta name="twitter:title" content="{{book.title}} {{sectionobj.title}}" />
+<meta name="twitter:title" content="{{book.title}} {{sectionobj.title}} pdf" />
 <meta name="twitter:site" content="@tutors_24" />
 <meta name="twitter:image" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
 <meta name="twitter:creator" content="@tutors_24" />
