@@ -91,7 +91,8 @@ class Section(models.Model):
     book = models.ForeignKey(Book , null = False , related_name='sections')
     shortUrl = models.CharField(max_length = 100 , null = True , unique = True)
 
-
+    def get_absolute_url(self):
+        return '/'+ self.shortUrl + '/'
 
 QUESTION_LEVEL_CHOICES = (
     ("easy", "easy"),

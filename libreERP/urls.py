@@ -13,10 +13,12 @@ from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse
 from django.contrib.sitemaps.views import sitemap
 from PIM.sitemaps import BlogsSitemap
+from LMS.sitemaps import SectionsSitemap
 
 
 sitemaps = {
-    'blogs': BlogsSitemap()
+    'blogs': BlogsSitemap(),
+    'sections': SectionsSitemap()
 }
 
 
