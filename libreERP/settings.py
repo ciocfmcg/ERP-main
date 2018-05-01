@@ -42,7 +42,7 @@ LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
 
-LOGIN_TEMPLATE = 'loginCenter.html'
+LOGIN_TEMPLATE = 'login.html'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -68,9 +68,10 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'India'
+BRAND_NAME = 'CIOC'
 
-BRAND_LOGO = '/static/images/rackmint.svg'
+BRAND_LOGO = '/static/images/cioc_icon.svg'
+BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -225,10 +226,10 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'django',
-#         'USER': 'root',
-#         'PASSWORD': 'password',
-#         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
+#         'NAME': 'cioc_main',
+#         'USER': 'cioc_main',
+#         'PASSWORD': '8@8sxS$O}CaP',
+#         'HOST': '97.74.232.81',   # Or an IP Address that your DB is hosted on
 #         'PORT': '3306',
 #     }
 # }

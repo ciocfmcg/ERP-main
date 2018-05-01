@@ -10,6 +10,10 @@ from time import time
 def getToolsFilePath(instance , filename ):
     return 'tools/fileChache/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
+def getArchivedFilePath(instance , filename ):
+    return 'tools/archive/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+
+
 API_ACCOUNT_TYPES = (
     ('trial' , 'trial'),
     ('community' , 'community'),
@@ -42,3 +46,39 @@ class FileCache(models.Model):
     fileID = models.CharField(max_length = 100, null = False)
     # this is a hashed indentifier for this file
     account = models.ForeignKey(ApiAccount , related_name='files', null = True)
+
+
+class ArchivedDocument(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    pdf = models.FileField(upload_to = getToolsFilePath , null = False)
+    user = models.ForeignKey(User , related_name='filesArchived' , null = True)
+    description = models.CharField(max_length = 500, null = True)
+    title = models.CharField(max_length = 100, null = True)
+    docID = models.CharField(max_length = 50, null = True)
+
+DOCUMENT_PART_TYPES = (
+    ('text' , 'text'),
+    ('img' , 'img'),
+)
+
+DOCUMENT_PART_CATEGORY = (
+    ('title', 'title'),
+    ('para', 'para'),
+    ('footnote', 'footnote'),
+    ('table', 'table'),
+    ('tableHeader', 'tableHeader'),
+    ('other', 'other'),
+)
+
+class DocumentContent(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    doc = models.ForeignKey(ArchivedDocument , null =False)
+    typ = models.CharField(default = 'text' , choices = DOCUMENT_PART_TYPES , max_length = 10)
+    x = models.FloatField(null = True)
+    y = models.FloatField(null = True)
+    w = models.FloatField(null = True)
+    h = models.FloatField(null = True)
+    category = models.CharField(default = 'other' , choices = DOCUMENT_PART_CATEGORY , max_length = 10)
+    pageNo = models.PositiveIntegerField(null = False)
+    nlpResult = models.CharField(max_length = 3000 , null = True)
+    text = models.CharField(max_length = 3000 , null = True)

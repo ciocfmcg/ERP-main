@@ -76,6 +76,12 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       ]
     };
 
+
+  var multiselectOptions = [{icon : 'fa fa-file' , text : 'stockReport' },
+    {icon : 'fa fa-file' , text : 'reorderingReport' },
+    // {icon : 'fa fa-envelope-o' , text : 'message' },
+  ];
+
   $scope.config = {
     views: views,
     url: '/api/POS/product/',
@@ -85,16 +91,19 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     options : options,
     filterSearch : true,
     // editable : true,
+    multiselectOptions : multiselectOptions,
     editorTemplate :  '/static/ngTemplates/app.productsInventory.product.modal.html',
   }
 
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
 
-    if (action == 'new') {
-      $scope.openProductForm();
-    } else if (action == 'Bulk') {
-      $scope.openProductBulkForm();
+    if (action == 'reorderingReport') {
+
+      window.open( "/api/POS/reorderingReport", "_blank")
+      // $scope.openProductForm();
+    } else if (action == 'stockReport') {
+      window.open( "/api/POS/stockReport", "_blank")
     } else {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -139,7 +148,6 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
   }
 
   $scope.openProductForm = function(idx) {
-
 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.product.form.html',

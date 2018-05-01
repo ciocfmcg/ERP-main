@@ -22,12 +22,90 @@ app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $prov
 // ]);
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
+
+
+
+app.directive('typedEffect', typedEffect);
+
+typedEffect.$inject = ['$interval', '$timeout'];
+
+function typedEffect($interval, $timeout) {
+    var directive = {
+        restrict: 'A',
+        scope: {
+            text: '<',
+            callback: '&'
+        },
+        link: link
+    };
+
+    return directive;
+
+    function link(scope, element, attrs) {
+        var i = 0, interval,
+            text = scope.text || '',
+            delay = parseInt(attrs.delay) || 0,
+            speed = parseInt(attrs.speed) || 100,
+            cursor = attrs.cursor || '|',
+            blink = attrs.blink ? attrs.blink === 'true' : true;
+
+        cursor = angular.element('<span>' + cursor + '</span>');
+
+        $timeout(typeText, delay);
+
+        function typeText() {
+            typeChar();
+            interval = $interval(typeChar, speed);
+
+            function typeChar() {
+                if (i <= text.length) {
+                    element.html(text.substring(0, i)).append(cursor);
+                    i++;
+                } else {
+                    $interval.cancel(interval);
+
+                    if (blink) {
+                        cursor.addClass('blink');
+                    } else {
+                        cursor.remove();
+                    }
+
+                    if (attrs.callback) {
+                        scope.callback();
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 app.controller('main' , function($scope , $state , $http , $timeout , $interval){
   console.log("main loded");
   $scope.crmBannerID = 1;
 
-  $scope.mainBannerImages = ['/static/images/rackmint_banner.png' ]
+  $scope.mainBannerImages = ['/static/images/banner-img2.jpg' ]
   $scope.bannerID = 0;
+
+  $scope.typings = ["Online tutoring" , "24x7 online help" , "Learn from school" , "Learn from college", "Learn from home" , "Learn from anywhere ...."]
+
+  $scope.typeIndex = 0;
+
+  $scope.activeTab=0;
+
+  $scope.changeTab= function(index) {
+ $scope.activeTab=index;
+  }
+
+
+  $interval(function() {
+
+    $scope.typeIndex += 1;
+    if ($scope.typeIndex == $scope.typings.length) {
+      $scope.typeIndex = 0;
+    }
+
+  }, 5000)
 
   $interval(function() {
     $scope.bannerID += 1;

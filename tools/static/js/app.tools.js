@@ -32,6 +32,16 @@ app.config(function($stateProvider){
     templateUrl: '/static/ngTemplates/app.tools.fileCache.html',
     controller: 'businessManagement.tools.fileCache'
   })
+  .state('businessManagement.tools.PDF', {
+    url: "/PDF",
+    templateUrl: '/static/ngTemplates/app.tools.PDF.html',
+    controller: 'businessManagement.tools.PDF'
+  })
+  .state('businessManagement.tools.archive', {
+    url: "/archive",
+    templateUrl: '/static/ngTemplates/app.tools.archive.html',
+    controller: 'businessManagement.tools.archive'
+  })
 
 });
 
