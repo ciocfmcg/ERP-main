@@ -1,0 +1,67 @@
+<div class="row" style="margin: 10px;">
+  <div class="col-md-4">
+    <button type="button" ng-click="save()" class="btn btn-success">save</button>
+  </div>
+  <!-- <div class="col-md-2">
+    <button type="button" class="btn btn-success" ng-click="save()">Generated</button>
+  </div> -->
+
+  <div class="col-md-4">
+    <strong>Total Value : </strong> {{getTotal()}} INR
+  </div>
+
+
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="container-fluid card" style="margin: 10px;{{item.pk == productInView.pk ? 'border-left:solid 5px #1f93e7' : ''}}" ng-repeat="item in productsToOrder" ng-click="showVendorOptions(item)" ng-if="$index <= pageNo*10 + 9 && $index >= pageNo*10">
+      <div class="row" style="height:7vh;cursor:pointer">
+        <div class="col-md-6">
+          <h4>{{item.name}}</h4>
+        </div>
+        <div class="col-md-6 text-right">
+          <span>Stock: {{item.Stock}}</span> <br>
+          <span>Sku: {{item.SKU}}</span>
+        </div>
+      </div>
+      <div class="row" ng-if="item.vendor" style="border-top:1px solid #d2d3d6;padding:10px">
+        <div class="col-md-8">
+          <h4>{{item.vendor.vendor.service.name}}</h4>
+          <span>@ {{item.vendor.rate}} INR per item</span> <br>
+          <span><strong>Total : </strong> {{item.vendor.rate * item.qty}} INR</span> <br>
+
+        </div>
+        <div class="col-md-4">
+          <span>Quantity:</span>
+          <input type="number" ng-model="item.qty" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <ul class="pager">
+        <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+        <li class="next {{pageNo == maxPage? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="container-fluid card" style="margin: 10px;" ng-repeat=" a in vendors">
+      <div class="row" style="height:7vh;">
+        <div class="col-md-6">
+          <h4>{{a.vendor.service.name}}</h4>
+          <span>Contact Person Name: {{a.vendor.contactPersonName}}</span><br>
+          <span>Contact Person Number: {{a.vendor.contactPersonNumber}}</span><br>
+          <span>Contact Email Id: {{a.vendor.contactPersonEmail}}</span><br>
+          <span>Payment Term: {{a.vendor.paymentTerm}}</span>
+        </div>
+        <div class="col-md-4 text-right">
+          <span>Rate: {{a.rate}}</span>
+        </div>
+        <div class="col-md-2 text-right">
+          <span style="font-size:30px;cursor:pointer;color:{{a.pk == productInView.vendor.pk  ?'#77e030':'#e0452a'}}" ng-click="selectVendor(a)"><i class="fa fa-check-circle"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

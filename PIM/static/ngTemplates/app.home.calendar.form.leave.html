@@ -5,19 +5,19 @@
         <div class="card" style="padding:0px;min-height:100px">
           <div class="row">
             <div class="col-md-10">
-              <div id="careerservice">
+              <div id="Menual">
                 <!-- <img src="/static/images/medical.jpg"> -->
               </div>
             </div>
             <div class="col-md-2" style="padding-top:40px">
               <span style="font-size:30px">ML</span><br>
-              <span style="font-size:20px">5</span>
+              <span style="font-size:20px">{{payroll.ml}}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="col-md-2 text-center" style="padding-top:45px;">
-        <input type="radio"  value="'ml'">
+        <input type="radio" ng-model="form.category" value="ML">
       </div>
     </div>
     <div class="row" style="padding:10px">
@@ -25,32 +25,62 @@
         <div class="card" style="padding:0px;min-height:100px">
           <div class="row">
             <div class="col-md-10">
-              <div id="careerservices">
+              <div id="Annual">
                 <!-- <img src="/static/images/medical.jpg"> -->
               </div>
             </div>
             <div class="col-md-2" style="padding-top:40px">
               <span style="font-size:30px">AL</span><br>
-              <span style="font-size:20px">6</span>
+              <span style="font-size:20px">{{payroll.al}}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="col-md-2 text-center" style="padding-top:45px;">
-        <input type="radio"  value="'ml'">
+        <input type="radio" ng-model="form.category" value="AL">
+      </div>
+    </div>
+    <div class="row" style="padding:10px">
+      <div class="col-md-10">
+        <div class="card" style="padding:0px;min-height:100px">
+          <div class="row">
+            <div class="col-md-10">
+              <div id="Casual">
+                <!-- <img src="/static/images/medical.jpg"> -->
+              </div>
+            </div>
+            <div class="col-md-2" style="padding-top:40px">
+              <span style="font-size:30px">CL</span><br>
+              <span style="font-size:20px">{{payroll.adHocLeaves}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center" style="padding-top:45px;">
+        <input type="radio" ng-model="form.category" value="casual">
       </div>
     </div>
     <div class="row padded10px">
       <div class="col-md-6">
         <div class="form-group">
           <label>From</label>
-          <input type="text" class="form-control">
+          <div class="input-group">
+            <input type="text" class="form-control" ng-model="form.fromDate" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy"  is-open="fromDate.opened" />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="fromDate.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <label>To</label>
-          <input type="text" class="form-control">
+          <div class="input-group">
+            <input type="text" class="form-control" ng-model="form.toDate" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy"  is-open="toDate.opened" />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="toDate.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+          </div>
         </div>
       </div>
     </div>
@@ -58,18 +88,30 @@
       <div class="form-group">
         <label class="control-label col-sm-3" for="agenda">Reason:</label>
         <div class="col-md-9">
-          <textarea type="text" rows="3"  value="" class="form-control " required ng-model="data.text"></textarea>
+          <textarea type="text" rows="3"  value="" class="form-control " required ng-model="form.comment"></textarea>
         </div>
       </div>
     </div>
-    <div class="row padded10px">
+
+    <!-- <div class="row padded10px">
+      <div class="form-group">
+        <label class="control-label col-sm-3" for="agenda">Approved:</label>
+        <div class="col-md-9">
+          <input type="checkbox" ng-model="form.approved">
+        </div>
+      </div>
+    </div> -->
+
+    <!-- <users-Field data="form.approvedBy" url="/api/HR/userSearch/" col="4" label="Approved By:"></users-Field> -->
+
+    <!-- <div class="row padded10px">
       <div class="form-group">
         <label class="control-label col-sm-3" for="agenda">Balance:</label>
         <div class="col-md-9">
-          {{balance}}
+          {{form.days}}
         </div>
       </div>
-    </div>
+    </div> -->
     <div class= "form-group container-fluid">
       <div class="btn-group">
         <button type="submit" class="btn btn-primary">{{editMode ? 'Save':'Submit'}}</button>

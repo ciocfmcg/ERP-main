@@ -76,7 +76,7 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
     // make patch request
     var f = $scope.form;
     dataToSend = {
-      user: f.pk,
+      // user: f.pk,
       hra: f.hra,
       special: f.special,
       lta: f.lta,
@@ -120,7 +120,7 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
 
     $http({
       method: 'PATCH',
-      url: '/api/HR/payroll/' + f.userq + '/',
+      url: '/api/HR/payroll/' + f.pk + '/',
       data: dataToSend
     }).
     then(function(response) {

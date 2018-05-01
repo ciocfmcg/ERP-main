@@ -10,14 +10,20 @@
 
 }
 
-#careerservice{
+#Menual{
   /*background: url('/static/images/newsheader.jpg') no-repeat top center/cover;*/
   height: 150px;
   background: url('/static/images/medical.jpg') no-repeat top center/cover;
 }
 
-#careerservices{
+#Annual{
   /*background: url('/static/images/newsheader.jpg') no-repeat top center/cover;*/
   height: 150px;
   background: url('/static/images/vacation1.jpg') no-repeat top center/cover;
+}
+
+#Casual{
+  /*background: url('/static/images/newsheader.jpg') no-repeat top center/cover;*/
+  height: 150px;
+  background: url('/static/images/casual.jpeg') no-repeat top center/cover;
 }

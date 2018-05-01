@@ -165,3 +165,16 @@ class groupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('url' , 'name')
+
+class leaveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Leave
+        fields = ('fromDate','toDate','days','approved','category','approvedBy','comment','approvedStage','approvedMatrix')
+    def create(self , validated_data):
+        del validated_data['approvedBy']
+        l = Leave(**validated_data)
+        l.save()
+        # l.user = self.context['request'].user
+        for i in self.context['request'].data['approvedBy']:
+            l.approvedBy.add(User.objects.get(pk = i))
+        return l

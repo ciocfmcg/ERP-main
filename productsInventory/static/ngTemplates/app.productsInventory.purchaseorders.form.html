@@ -1,0 +1,116 @@
+<div class="container-fluid" style="padding:10px" ng-controller="businessManagement.productsInventory.purchaseOrder.explore">
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Purchase order Details of {{data.service.name}}</h4>
+    </div>
+    <div class="col-md-4 text-right" styele="padding:10px">
+      <!-- <label>Status</label> -->
+      <select ng-model="data.status" class="form-control">
+        <option value="created">created</option>
+        <option value="sent">sent</option>
+        <option value="returned">returned</option>
+        <option value="cancelled">cancelled</option>
+        <option value="recieved">recieved</option>
+        <option value="reconciled">reconciled</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>cin:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.cin}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>tin:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.tin}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>city:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.city}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>state:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.state}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>pincode:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.pincode}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>country:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.country}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8" style="border-left:1px solid #eeeeee;min-height:60vh">
+        <div class="container-fluid">
+          <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+            <tr style="background-color: #eeeeee;height: 96px;">
+              <th>#</th>
+              <th>Item Description</th>
+              <th>Item Quantity</th>
+              <th>Item Rate (Rupees)</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="item in data.products">
+              <td>{{$index + 1}}</td>
+              <td>
+                <input type="text" class="form-control-pos" ng-model="item.product" uib-typeahead="p as p.name for p in productSearch($viewValue)">
+              </td>
+              <td>
+                <input type="number" class="form-control-pos" ng-model="item.qty">
+              </td>
+              <td>
+                <input type="float" class="form-control-pos" ng-model="item.rate">
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="container-fluid" style="padding:0px;">
+                  <button style="background-color:white;border:none;" ng-click="addTableRow()"><i class="fa fa-plus" aria-hidden="true"  style="cursor:pointer"></i>
+                      </button>
+                </div>
+              </td>
+              <td style="border:none;"></td>
+              <td style="border:none;"></td>
+              <td><i class="fa fa-inr"></i>{{getTotalRate()}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="row">
+          <div class="container-fluid">
+            <div class="col-md-12 text-center" style="margin-top: 27px;">
+              <button type="button" class="btn btn-success" ng-click="saveOrderForm()">Save</button>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

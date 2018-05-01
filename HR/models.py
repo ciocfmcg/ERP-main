@@ -195,3 +195,21 @@ User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
 def user_signed_up_(request, user, **kwargs):
     user.username = user.email+str(user.pk)
     user.save()
+
+LEAVES_CHOICES = (
+    ('AL','AL'),
+    ('ML','ML'),
+    ('casual','casual')
+)
+
+
+class Leave(models.Model):
+    fromDate = models.DateField( null= True )
+    toDate = models.DateField( null= True )
+    days = models.PositiveIntegerField(null = True)
+    approved = models.BooleanField(default = False)
+    category = models.CharField(choices = LEAVES_CHOICES , max_length = 100 , null = False)
+    approvedBy = models.ManyToManyField(User , related_name='leaves' , blank = True)
+    comment = models.CharField(max_length = 10000 , null = True)
+    approvedStage = models.PositiveIntegerField(null = True,default=0)
+    approvedMatrix = models.PositiveIntegerField(null = True,default=1)
