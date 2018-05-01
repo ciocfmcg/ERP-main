@@ -1,0 +1,103 @@
+<div class="container-fluid" style="padding:10px" ng-controller="businessManagement.productsInventory.purchaseOrder.explore">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Purchase order Details of {{data.service.name}}</h4>
+    </div>
+    <div class="col-md-2 text-right">
+      <a class="btn btn-default" href="/api/POS/productPrint/?POs={{data.pk}}">
+        Download <i class="fa fa-download"></i>
+      </a>
+    </div>
+    <div class="col-md-3 text-right" styele="padding:10px">
+      <!-- <label>Status</label> -->
+      <select ng-model="data.status" class="form-control">
+        <option value="created">created</option>
+        <option value="sent">sent</option>
+        <option value="returned">returned</option>
+        <option value="cancelled">cancelled</option>
+        <option value="recieved">recieved</option>
+        <option value="reconciled">reconciled</option>
+      </select>
+    </div>
+    <div class="col-md-1 text-right">
+      <button type="button" class="btn btn-success"ng-click="saveStatus()">Save</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>cin:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.cin}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>tin:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.tin}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>city:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.city}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>state:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.state}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>pincode:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.pincode}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <span>country:</span>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.service.address.country}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8" style="border-left:1px solid #eeeeee;min-height:60vh">
+      <div class="container-fluid">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Item Description</th>
+              <th>Item Quantity</th>
+              <th>Item Rate (Rupees)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="a in data.products">
+              <td>{{a.product.name}}</td>
+              <td style="text-align:center">{{a.qty}}</td>
+              <td style="text-align:center"><i class="fa fa-inr"></i>{{a.rate}}</td>
+            </tr>
+            <tr>
+              <td style="border:none;">Total:</td>
+              <td style="border:none;"></td>
+              <td style="text-align:center"><i class="fa fa-inr">{{getTotalRate()}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
