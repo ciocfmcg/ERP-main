@@ -204,6 +204,9 @@ LEAVES_CHOICES = (
 
 
 class Leave(models.Model):
+    user = models.ForeignKey(User , related_name = "leavesAuthored" , null=True)
+    # created = models.DateTimeField(auto_now_add = True)
+    # updated = models.DateField(auto_now=True)
     fromDate = models.DateField( null= True )
     toDate = models.DateField( null= True )
     days = models.PositiveIntegerField(null = True)

@@ -1,11 +1,33 @@
 <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
-  <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-wrench fa-5x "></i>
-    <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for Approvals</h3>
-  </p>
-</div>
+    <div class="container-fluid">
+      <uib-tabset>
+        <uib-tab active="searchTabActive">
+          <uib-tab-heading>
+            Leave Request <i class="fa fa-sign-out"></i>
+          </uib-tab-heading>
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+        </uib-tab>
+        <uib-tab>
+          <uib-tab-heading>
+            Time Sheet <i class="fa fa-clock-o"></i>
+          </uib-tab-heading>
+          <generic-Table data="data.sheetTableData" config-Obj="{{configSheet}}" callback-Fn="tableActionSheet"></generic-Table>
+        </uib-tab>
+        <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+          <uib-tab-heading>
+            {{tab.title}}
+            <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+          </uib-tab-heading>
+          <div ng-if="tab.app == 'leavesInfo'">
+            <div ng-include="'/static/ngTemplates/app.employees.approvals.leaveinfo.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'sheetInfo'">
+            <div ng-include="'/static/ngTemplates/app.employees.approvals.timeSheetinfo.html'"></div>
+          </div>
+        </uib-tab>
+      </uib-tabset>
+    </div>
+  </div>
 </div>

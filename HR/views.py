@@ -302,5 +302,17 @@ class leaveViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Leave.objects.all()
     serializer_class = leaveSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['user']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user']
+    def get_queryset(self):
+
+        desigs = self.request.user.managing.all()
+        reportees = []
+        for d in desigs:
+            reportees.append(d.user)
+
+        return Leave.objects.filter(user__in = reportees)
+
+
+# class leaveApi(APIView):
+#     renderer_classes = (JSONRenderer)

@@ -244,7 +244,7 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
     // make patch request
     var f = $scope.form;
     dataToSend = {
-      user: f.pk,
+      // user: f.pk,
       reportingTo: f.reportingTo.pk,
       primaryApprover: f.primaryApprover.pk,
       secondaryApprover: f.secondaryApprover.pk,

@@ -1,165 +1,126 @@
 <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
 
   <breadcrumb></breadcrumb>
-  <div class="col-md-9">
-    <!-- <div class="container-fluid" ng-if="mode == 'home'">
-      <generic-Calendar date="date" day-Items="data.items" item-Templates="{{templates}}" day-Clicked="showDay" item-Clicked="showPerticular"></generic-Calendar>
-    </div> -->
-    <div class="container-fluid" style="padding:0px">
-      <div class="row" style="height:100px;width:100%;border-bottom:1px solid #eeeeee">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-2 text-left">
-              <span style="font-size:20px">Date:</span>
-              <ul class="pager">
-                <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prev()"><span aria-hidden="true"></span> <i class="fa fa-angle-left" style="color:black;font-size:25px"></i></a></li>
-                <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="next()"><i class="fa fa-angle-right" style="color:black;font-size:25px"></i> <span aria-hidden="true"></span></a></li>
-              </ul>
-            </div>
-            <div class="col-md-10 text-right">
-              <span style="font-size:20px">Employee ID:</span>
+
+  <div class="container-fluid">
+    <div class="col-md-9">
+      <div class="container-fluid" style="padding:0px">
+        <div class="row" style="height:100px;width:100%;border-bottom:1px solid #eeeeee">
+          <div class="container-fluid">
+            <div class="row">
+
+              <div class="col-md-12">
+                <ul class="pager">
+                  <li class="previous {{pageNo == 0? 'disabled':''}}">
+                    <a href="" ng-click="prev()" style="margin-top: 10px;"><span aria-hidden="true"></span> <i class="fa fa-angle-left" style="color:black;font-size:25px"></i></a>
+                  </li>
+                  <div class="col-md-2" ng-repeat="d in dates" style="cursor:pointer;margin-left:20px;" ng-click="selectDate($index)">
+                    <div class="container-fluid card {{$index == selectIndex ? 'bg-blue' : ''}} " style="border-radius:50px;padding:20px;">
+                      <span>{{d | date:'dd MMM'}}</span>
+                    </div>
+                  </div>
+                  <li class="next {{disableNext? 'disabled':''}}">
+                    <a href="" style="margin-top: 10px;" ng-click="next()"><i class="fa fa-angle-right" style="color:black;font-size:25px"></i> <span aria-hidden="true"></span></a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="container-fluid"  style="margin-top:30px">
-        <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
-          <tr style="background-color: #eeeeee;height: 96px;">
-            <th>#</th>
-            <th>Project</th>
-            <th>Time</th>
-            <th>Details</th>
-            <th></th>
-          </tr>
-          <tr ng-repeat="item in projects">
-            <td>{{$index + 1}}</td>
-            <td>
-              <input type="text" class="form-control-pos" ng-model="item.data" uib-typeahead="p as p.name for p in projectSearch($viewValue)">
-            </td>
-            <td>
-              <input type="number" class="form-control-pos"  placeholder="time">
-            </td>
-            <td>
-              <textarea type="text" class="form-control-pos"  placeholder="Details of your project"></textarea>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="container-fluid" style="padding:0px;">
-                <button style="background-color:white;border:none;" ng-click="addTableRow()"><i class="fa fa-plus" aria-hidden="true"  style="cursor:pointer"></i>
-                    </button>
-              </div>
-            </td>
-            <td style="border:none;"></td>
-            <td><input type="text" class="form-control-pos"  placeholder="Total Time"></td>
-            <td style="border:none;"></td>
-            <td style="border:none;"></td>
-          </tr>
-        </table>
-      </div>
+        <div class="container-fluid" style="margin-top:30px">
+          <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+            <tr style="background-color: #eeeeee;height: 96px;">
+              <th>#</th>
+              <th>Project</th>
+              <th>Time(Hrs.)</th>
+              <th>Details</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="item in items">
+              <td>{{$index + 1}}</td>
+              <td>
+                <input uib-typeahead="p as p.title for p in projectSearch($viewValue)" ng-model="item.project" type="text" class="form-control-pos">
+                <td>
+                  <input type="number" step=".01" class="form-control-pos" ng-model="item.duration">
+                </td>
+                <td>
+                  <textarea type="text" class="form-control-pos" ng-model="item.comment"></textarea>
+                </td>
+                <td>
+                  <button ng-if="timeSheet.status =='created'" type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
+                </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="container-fluid" style="padding:0px;">
+                  <button style="background-color:white;border:none;" ng-click="addTableRow()"><i class="fa fa-plus" aria-hidden="true"  style="cursor:pointer"></i>
+                      </button>
+                </div>
+              </td>
+              <td style="border:none;"></td>
+              <td>{{totalTime()}} Hrs.</td>
+              <td style="border:none;"></td>
+              <td style="border:none;"></td>
+            </tr>
+          </table>
+        </div>
 
+
+        <div class="row">
+          <div class="container-fluid" style="padding-top:20px">
+            <div class="row text-center" style="padding:20px" ng-if="timeSheet.status =='created'">
+              <button type="button" class="btn btn-success" ng-click="save()">Save</button>
+              <button type="button" class="btn btn-default" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="Submit()" confirm-button-type="danger" cancel-button-type="default" style="cursor:pointer;">Submit</button>
+            </div>
+            <div class="row text-center" ng-if="timeSheet.status =='submitted'" style="padding:20px">
+              <button type="button" class="btn btn-info">Sent for Approval</button>
+            </div>
+            <div class="row text-center" ng-if="timeSheet.status =='approved'" style="padding:20px">
+              <button type="button" class="btn btn-success">Approved</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-3" style="position:absolute; height:100%;right:0px">
+
+      <div class="row text-center">
+        <h3 class="text-muted">{{dates[selectIndex] | date : 'dd MMM yyyy'}}</h3>
+      </div>
 
       <div class="row">
-        <div class="container-fluid" style="padding-top:20px">
-            <div class="row text-center" style="padding:20px">
-              <button type="button" class="btn btn-success" ng-click="save()">Save</button>
-              <button type="button" class="btn btn-danger" ng-click="edit()">Edit</button>
+        <div class="container-fluid" style="padding-bottom:40px">
+          <div class="row">
+            <div class="col-md-6 text-center" style="padding:10px">
+              <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="checkin()" confirm-button-type="danger" cancel-button-type="default"
+                style="position:relative;top:30px;right:-15px;cursor:pointer;">Checkin</button>
             </div>
+            <div class="col-md-6 text-center" style="padding:10px">
+              <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="checkout()" confirm-button-type="danger" cancel-button-type="default"
+                style="position:relative;top:30px;right:-15px;cursor:pointer;">Checkout</button>
+            </div>
+          </div>
         </div>
+        <div class="container-fluid">
+          <div class="col-md-12 " style="margin-bottom:10px;" ng-repeat="p in projects">
+            <div class="card" style="padding:10px;min-height:150px;background-color:white;color:black">
+              <h4>{{p.title}}</h4>
+              <small>Due date : {{p.dueDate | date : 'dd MMM yyyy'}}</small>
+              <div>
+                <hr>
+                <strong>Project :</strong> {{p.description}} <br>
+              </div>
+              <i class="fa fa-plus-circle fa-3x" ng-click="addProjects($index)" style="position:absolute;right:20px;bottom:10px;cursor:pointer;"></i>
+            </div>
+          </div>
+        </div>
+
+
       </div>
 
     </div>
   </div>
-  <div class="col-md-3" style="position:absolute; height:100%;top:0px;right:0px">
-    <div class="row">
-      <div class="container-fluid" style="padding-top:80px;padding-bottom:40px">
-        <div class="row">
-          <div class="col-md-6 text-center"style="padding:10px">
-            <button type="button" class="btn btn-default" style="width:100%" mwl-confirm
-            title="Confirm"
-            message="Are you sure?"
-            confirm-text="Yes <i class='fa fa-check'></i>"
-            cancel-text="No"
-            on-confirm="delete(data.pk , index)"
-            confirm-button-type="danger"
-            cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">Checkin</button>
-          </div>
-          <div class="col-md-6 text-center"style="padding:10px">
-            <button type="button" class="btn btn-default" style="width:100%" mwl-confirm
-            title="Confirm"
-            message="Are you sure?"
-            confirm-text="Yes <i class='fa fa-check'></i>"
-            cancel-text="No"
-            on-confirm="delete(data.pk , index)"
-            confirm-button-type="danger"
-            cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">Checkout</button>
-          </div>
-        </div>
-      </div>
-      <div class="container-fluid">
-        <div class="col-md-12 " style="margin-bottom:10px;">
-          <div class="card" style="padding:10px;min-height:150px;background-color:white;color:black">
-            <h4>{{data.title}}</h4>
-            <small>Due date : {{data.dueDate | date:'dd-MMM'}}</small>
-            <div class="pull-right">
-              Percentage completion : {{data.completion}}
-            </div>
-            <div>
-              <hr>
-              <strong>Project :</strong> {{data.project.title}} <br>
-            </div>
-            <i class="fa fa-plus-circle fa-3x" ng-click="rowActionClicked('taskBrowser')" style="position:absolute;right:20px;bottom:10px;cursor:pointer;"></i>
-          </div>
-        </div>
-        <div class="col-md-12 " style="margin-bottom:10px;">
-          <div class="card" style="padding:10px;min-height:150px;background-color:white;color:black">
-            <h4>{{data.title}}</h4>
-            <small>Due date : {{data.dueDate | date:'dd-MMM'}}</small>
-            <div class="pull-right">
-              Percentage completion : {{data.completion}}
-            </div>
-            <div>
-              <hr>
-              <strong>Project :</strong> {{data.project.title}} <br>
-            </div>
-            <i class="fa fa-plus-circle fa-3x" ng-click="rowActionClicked('taskBrowser')" style="position:absolute;right:20px;bottom:10px;cursor:pointer;"></i>
-          </div>
-        </div>
-        <div class="col-md-12 " style="margin-bottom:10px;">
-          <div class="card" style="padding:10px;min-height:150px;background-color:white;color:black">
-            <h4>{{data.title}}</h4>
-            <small>Due date : {{data.dueDate | date:'dd-MMM'}}</small>
-            <div class="pull-right">
-              Percentage completion : {{data.completion}}
-            </div>
-            <div>
-              <hr>
-              <strong>Project :</strong> {{data.project.title}} <br>
-            </div>
-            <i class="fa fa-plus-circle fa-3x" ng-click="rowActionClicked('taskBrowser')" style="position:absolute;right:20px;bottom:10px;cursor:pointer;"></i>
-          </div>
-        </div>
-        <div class="col-md-12 " style="margin-bottom:10px;">
-          <div class="card" style="padding:10px;min-height:150px;background-color:white;color:black">
-            <h4>{{data.title}}</h4>
-            <small>Due date : {{data.dueDate | date:'dd-MMM'}}</small>
-            <div class="pull-right">
-              Percentage completion : {{data.completion}}
-            </div>
-            <div>
-              <hr>
-              <strong>Project :</strong> {{data.project.title}} <br>
-            </div>
-            <i class="fa fa-plus-circle fa-3x" ng-click="rowActionClicked('taskBrowser')" style="position:absolute;right:20px;bottom:10px;cursor:pointer;"></i>
-          </div>
-        </div>
-      </div>
 
 
-    </div>
-
-  </div>
 </div>

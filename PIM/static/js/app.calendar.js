@@ -218,15 +218,6 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
     });
   };
 
-
-  // $http({
-  //   method: 'GET',
-  //   url: '/api/HR/payroll/?user=' + $scope.userPK
-  // }).
-  // then(function(response) {
-  //   $scope.payroll = response.data[0];
-  //   console.log($scope.payroll);
-  // })
   $scope.me = $users.get("mySelf");
 
   console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.me.pk);
@@ -246,7 +237,7 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
     fromDate:'',
     toDate:'',
     days: 0,
-    approved:true,
+    approved:false,
     category:'',
     approvedBy:[],
     comment:'',
@@ -300,20 +291,20 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
       Flash.create('success', 'Saved')
     })
     // $scope.payroll.ml=[];
-    console.log('aaaa',$scope.payroll);
-    var newDates = $scope.payroll.ml - diffDays;
-    var dataToSend = {ml :newDates}
-    $http({
-      method: 'PATCH',
-      url: '/api/HR/payroll/' +  $scope.payroll.pk + '/',
-      data: dataToSend
-
-    }).
-    then(function(response) {
-      // $scope.payroll.ml.push($scope.payroll.ml)
-      $scope.payroll.pk = response.data.pk;
-      Flash.create('success', 'Saved')
-    })
+    // console.log('aaaa',$scope.payroll);
+    // var newDates = $scope.payroll.ml - diffDays;
+    // var dataToSend = {ml :newDates}
+    // $http({
+    //   method: 'PATCH',
+    //   url: '/api/HR/payroll/' +  $scope.payroll.pk + '/',
+    //   data: dataToSend
+    //
+    // }).
+    // then(function(response) {
+    //   // $scope.payroll.ml.push($scope.payroll.ml)
+    //   $scope.payroll.pk = response.data.pk;
+    //   Flash.create('success', 'Saved')
+    // })
 
     //
     // data = { eventType : 'ToDo', user : $scope.me.url , text : $scope.data.text  };

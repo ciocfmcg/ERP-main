@@ -51,7 +51,7 @@ from reportlab.lib.colors import *
 from reportlab.lib.units import inch, cm
 import calendar
 # import datetime
-#from forex_python.converter import CurrencyCodes
+from forex_python.converter import CurrencyCodes
 from HR.models import payroll
 from django.contrib.auth.models import User
 from finance.models import ExpenseSheet

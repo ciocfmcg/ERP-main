@@ -4,19 +4,19 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
 
   $scope.me = $users.get("mySelf");
 
-  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.pk);
+  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.me.pk);
   $http({
     method: 'GET',
-    url: '/api/HR/payroll/?user=' + $scope.userPK
+    url: '/api/HR/payroll/?user=' + $scope.me.pk
   }).
   then(function(response) {
-    $scope.payroll = response.data;
+    $scope.payroll = response.data[0];
     console.log($scope.payroll);
   })
-  console.log('((((((((((((((()))))))))))))))', $scope.userPK);
+  console.log('((((((((((((((()))))))))))))))', $scope.me.pk);
   $http({
     method: 'GET',
-    url: '/api/HR/designation/?user=' + $scope.userPK
+    url: '/api/HR/designation/?user=' + $scope.me.pk
   }).
   then(function(response) {
     console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
@@ -51,7 +51,7 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
 
   $http({
     method: 'GET',
-    url: '/api/HR/profileAdminMode/?user=' + $scope.userPK
+    url: '/api/HR/profileAdminMode/?user=' + $scope.me.pk
   }).
   then(function(response) {
     console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
