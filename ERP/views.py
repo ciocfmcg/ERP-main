@@ -18,6 +18,13 @@ from rest_framework.renderers import JSONRenderer
 from gitweb.views import generateGitoliteConf
 import requests
 
+class LocationTrackerAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        print request.data
+        return Response(status = status.HTTP_200_OK)
+
 class SendSMSApi(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny ,)

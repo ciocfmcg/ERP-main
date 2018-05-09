@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'registerDevice/$' , registerDeviceApi.as_view()),
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
     url(r'sendSMS/$' , SendSMSApi.as_view()),
+    url(r'locationTracker/$' , LocationTrackerAPI.as_view()),
 ]

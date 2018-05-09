@@ -54,6 +54,8 @@ class ArchivedDocument(models.Model):
     user = models.ForeignKey(User , related_name='filesArchived' , null = True)
     description = models.CharField(max_length = 500, null = True)
     title = models.CharField(max_length = 100, null = True)
+    source = models.CharField(max_length = 100, null = True)
+    dated = models.DateField(null=True)
     docID = models.CharField(max_length = 50, null = True)
 
 DOCUMENT_PART_TYPES = (

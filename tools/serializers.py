@@ -89,7 +89,7 @@ class ArchivedDocumentSerializer(serializers.ModelSerializer):
     sections = DocumentSectionsSerializer(many = True , read_only = True)
     class Meta:
         model = ArchivedDocument
-        fields = ('pk' , 'created' , 'pdf', 'user', 'description', 'title', 'docID' , 'sections')
+        fields = ('pk' , 'created' , 'pdf', 'user', 'source', 'dated', 'description', 'title', 'docID' , 'sections')
 
     def create(self , validated_data):
         ad = ArchivedDocument(**validated_data)

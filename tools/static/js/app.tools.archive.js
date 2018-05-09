@@ -33,6 +33,14 @@ app.controller('businessManagement.tools.archive' , function($scope , $http , $a
         } else if (action == 'archieveBrowser') {
           var title = 'Details :';
           var appType = 'archieveBrowser';
+        }else if (action == 'delete') {
+          // $http({method : 'DELETE' , url : '/api/tools/archivedDocument/' + target +'/'}).
+          // then(function(response) {
+          //
+          //
+          //
+          // });
+
         }
 
         $scope.addTab({
@@ -151,6 +159,8 @@ app.controller('businessManagement.tools.new' , function($scope , $http , $aside
     fd.append( 'pdf', $scope.form.file);
     fd.append( 'description', $scope.form.description);
     fd.append( 'title', $scope.form.title);
+    fd.append( 'source', $scope.form.source);
+    fd.append( 'dated', $scope.form.dated.toJSON().split('T')[0]);
     fd.append( 'docID', $scope.form.docID);
 
     $http({method : 'POST' , url : '/api/tools/archivedDocument/' , data : fd , transformRequest: angular.identity,
