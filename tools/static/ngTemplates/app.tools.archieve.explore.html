@@ -1,0 +1,16 @@
+<div class="container-fluid" ng-controller="businessManagement.tools.archive.explore">
+  <table class="table" style="border: 1px solid black;margin-top:20px;">
+    <tr style="border: 1px solid black;">
+      <th style="border: 1px solid black;">TITLE</th>
+      <th style="border: 1px solid black;">Start Page</th>
+      <th style="border: 1px solid black;">End Page</th>
+    </tr>
+    <tr style="border: 1px solid black;" ng-repeat="data in archieve.sections">
+      <th style="border: 1px solid black;"> {{data.title}}</th>
+      <th style="border: 1px solid black;">{{data.startPage}}</th>
+      <th style="border: 1px solid black;">{{data.endPage}}</th>
+      <th>
+    </tr>
+
+  </table>
+</div>

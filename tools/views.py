@@ -333,7 +333,7 @@ class ArchivedDocumentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isOwner, )
     serializer_class = ArchivedDocumentSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title']
+    filter_fields = ['title' , 'created']
     def get_queryset(self):
         qs = ArchivedDocument.objects.all()
         return qs
@@ -342,7 +342,7 @@ class DocumentContentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
     serializer_class = DocumentContentSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['text' , 'category']
+    filter_fields = ['text' , 'category' , 'created']
     def get_queryset(self):
         qs = DocumentContent.objects.all()
         return qs

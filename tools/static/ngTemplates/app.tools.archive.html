@@ -46,14 +46,23 @@
               <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
           </div>
       </uib-tab>
+      <uib-tab>
+          <uib-tab-heading>
+              Users
+              <i class="fa fa-user"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+            <generic-Table data="users.tableData" config-Obj="{{userConfig}}" callback-Fn="tableAction"></generic-Table>
+          </div>
+      </uib-tab>
 
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading >
               {{tab.title}}
               <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
-          <div ng-if="tab.app == 'apiAccountBrowser'">
-              <div ng-include="'/static/ngTemplates/app.tools.apiAccounts.explore.html'"></div>
+          <div ng-if="tab.app == 'archieveBrowser'">
+              <div ng-include="'/static/ngTemplates/app.tools.archieve.explore.html'"></div>
           </div>
       </uib-tab>
   </uib-tabset>

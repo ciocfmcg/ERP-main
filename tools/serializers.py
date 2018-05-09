@@ -78,10 +78,18 @@ class ApiAccountLogSerializer(serializers.ModelSerializer):
         model = ApiAccountLog
         fields = ('pk' , 'account' , 'updated', 'actor', 'usageAdded', 'refID', 'accActive')
 
+# documenmt sections
+class DocumentSectionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentSections
+        fields = ('pk'  , 'title', 'startPage', 'endPage')
+
 class ArchivedDocumentSerializer(serializers.ModelSerializer):
+    #sections
+    sections = DocumentSectionsSerializer(many = True , read_only = True)
     class Meta:
         model = ArchivedDocument
-        fields = ('pk' , 'created' , 'pdf', 'user', 'description', 'title', 'docID')
+        fields = ('pk' , 'created' , 'pdf', 'user', 'description', 'title', 'docID' , 'sections')
 
     def create(self , validated_data):
         ad = ArchivedDocument(**validated_data)
@@ -89,12 +97,26 @@ class ArchivedDocumentSerializer(serializers.ModelSerializer):
         from scripts.PDFReader.reader2 import read
         ad.save()
         pages = read(self.context['request'].FILES['pdf'] )
+        titles = []
+
         for pg in pages:
             print pg
+
+            for t in pg.titles:
+                if len(pg.titles)<3:
+                    titles.append({'text' : t.text ,'pageNo' : pg.pageNo })
+
             for p in pg.paragraphs:
                 dc = DocumentContent(doc = ad , typ = 'text' , x = p.boundingBox.x() , y = p.boundingBox.y() , w = p.boundingBox.width() , h = p.boundingBox.height() , category  = 'para' , pageNo = pg.pageNo , text = p.text )
-
                 dc.save()
+
+        for ti, t in enumerate(titles):
+            try:
+                ds = DocumentSections(doc = ad , title = t['text'] , startPage = t['pageNo'] , endPage = titles[ti+1]['pageNo'])
+            except:
+                ds = DocumentSections(doc = ad , title = t['text'] , startPage = t['pageNo'] )
+
+            ds.save()
 
         return ad
 

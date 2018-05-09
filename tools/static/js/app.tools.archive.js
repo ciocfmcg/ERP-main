@@ -1,4 +1,4 @@
-app.controller('businessManagement.tools.archive' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('businessManagement.tools.archive' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions, $uibModal){
   // settings main page controller
 
   $scope.data = {
@@ -8,7 +8,8 @@ app.controller('businessManagement.tools.archive' , function($scope , $http , $a
   views = [{
     name: 'list',
     icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/tableDefault.html',
+    template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
+    itemTemplate : '/static/ngTemplates/app.tools.archieve.item.html',
   }, ];
 
 
@@ -16,7 +17,6 @@ app.controller('businessManagement.tools.archive' , function($scope , $http , $a
     views: views,
     url: '/api/tools/archivedDocument/',
     searchField: 'name',
-    deletable: true,
     itemsNumPerView: [16, 32, 48],
   }
 
@@ -30,9 +30,9 @@ app.controller('businessManagement.tools.archive' , function($scope , $http , $a
         if (action == 'edit') {
           var title = 'Edit Contact :';
           var appType = 'contactEditor';
-        } else if (action == 'details') {
+        } else if (action == 'archieveBrowser') {
           var title = 'Details :';
-          var appType = 'contactExplorer';
+          var appType = 'archieveBrowser';
         }
 
         $scope.addTab({
@@ -76,7 +76,57 @@ app.controller('businessManagement.tools.archive' , function($scope , $http , $a
   }
 
 
+  userviews = [{
+    name: 'list',
+    icon: 'fa-person',
+    template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
+    itemTemplate : '/static/ngTemplates/app.tools.archieve.users.html',
+  }, ];
 
+
+  $scope.userConfig = {
+    views: userviews,
+    url: '/api/HR/users/',
+    searchField: 'username',
+    itemsNumPerView: [16, 32, 48],
+  }
+
+
+
+
+
+
+})
+app.controller('businessManagement.tools.archieve.item' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions,$uibModal){
+
+
+  $scope.addInfo = function(value) {
+    $scope.user=[]
+  $http.get('/api/HR/users/'+value+'/').
+  then(function(response) {
+    $scope.user = response.data;
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.tools.archieve.users.modal.html',
+      size: 'lg',
+      controller: 'tools.archive.users.modal',
+      resolve:{
+        data:function(){
+          return $scope.user;
+        }
+      }
+    });
+  })
+}
+
+})
+
+app.controller('tools.archive.users.modal' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions,data){
+$scope.user=data;
+  $scope.values = [];
+  $scope.add = function() {
+    $scope.values.push($scope.form.add);
+    $scope.form.add = '';
+  }
 
 })
 
@@ -113,6 +163,14 @@ app.controller('businessManagement.tools.new' , function($scope , $http , $aside
     })
 
   }
+
+
+
+})
+app.controller('businessManagement.tools.archive.explore', function($scope, $http, $aside, Flash) {
+
+  $scope.archieve = $scope.data.tableData[$scope.tab.data.index]
+  console.log($scope.archieve.sections,"gfgf");
 
 
 

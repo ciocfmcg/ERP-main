@@ -82,3 +82,9 @@ class DocumentContent(models.Model):
     pageNo = models.PositiveIntegerField(null = False)
     nlpResult = models.CharField(max_length = 3000 , null = True)
     text = models.CharField(max_length = 3000 , null = True)
+
+class DocumentSections(models.Model):
+    doc = models.ForeignKey(ArchivedDocument , null =False , related_name="sections")
+    title = models.CharField(max_length = 200 , null = False)
+    startPage = models.PositiveIntegerField(null = False)
+    endPage = models.PositiveIntegerField(null = True)
