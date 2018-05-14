@@ -139,6 +139,11 @@ class ExternalOrders(models.Model):
     earnings = models.FloatField(null= True)
     buyerPincode = models.CharField(null= True , max_length = 7)
 
+    class Meta:
+        unique_together = ('marketPlace', 'orderID',)
+
+
+
 from django.db.models.signals import post_save , pre_delete
 from django.dispatch import receiver
 from django.conf import settings as globalSettings
