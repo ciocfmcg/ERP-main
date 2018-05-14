@@ -449,6 +449,45 @@ class ExternalEmailOrders(APIView):
     permission_classes = (permissions.AllowAny ,)
     def post(self , request , format = None):
         # print request.data
+
+        print request.data
+        if 'html' not in request.data: # then its a flipkart order
+            sku = request.data['sku']
+            orderID = request.data['orderId']
+            qty = request.data['quantity']
+            price = request.data['price']
+            p = None
+            try:
+                p = Product.objects.get(serialNo = sku)
+            except:
+                try:
+                    ps = ProductVerient.object.get(sku = sku)
+                    p = ps.parent
+                except:
+                    pass
+            finally:
+                if p == None:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+
+            eo = ExternalOrders(marketPlace= 'flipkart' , orderID = orderID , status = 'new' , buyersPrice = price )
+
+            try:
+                eo.save()
+            except:
+                eo = ExternalOrders.objects.get(marketPlace= 'amazon' , orderID = orderID)
+
+            prodMap = ExternalOrdersQtyMap(product = p , qty = qty)
+            prodMap.save()
+            eo.products.add(prodMap)
+            il = InventoryLog(typ = 'system', product = p , before =  p.inStock , after = p.inStock - int(qty) , externalOrder = eo )
+            il.save()
+
+            p.inStock -= int(qty)
+            p.save()
+
+            return Response(status=status.HTTP_200_OK)
+
+
         body = request.data['html']
         subject = request.data['subject'].lower()
         seller = None
@@ -456,9 +495,13 @@ class ExternalEmailOrders(APIView):
             seller = 'flipkart'
         if 'amazon' in body.lower():
             seller = 'amazon'
+        if 'theskinstore.in' in body.lower():
+            seller = 'skinstore'
 
         if 'amazon' in seller.lower() and 'ship now' not in subject:
             return Response(status=status.HTTP_200_OK)
+
+
 
         print '----------------------\n\n'
         print "Subject : ", subject
@@ -480,6 +523,12 @@ class ExternalEmailOrders(APIView):
                 typ = 'new'
             if 'has dispatched the item you sold' in subject:
                 typ = 'shipped'
+
+        if seller == 'skinstore':
+            if 'thank you for shopping' in body.lower():
+                typ = 'new'
+            if 'your order status has been' in subject.lower():
+                typ = 'statusChange'
 
         if seller == 'amazon':
             if typ == 'new':
@@ -508,7 +557,10 @@ class ExternalEmailOrders(APIView):
 
                 eo = ExternalOrders(marketPlace= 'amazon' , orderID = orderID , status = 'new' , buyersPrice = price )
 
-                eo.save()
+                try:
+                    eo.save()
+                except:
+                    eo = ExternalOrders.objects.get(marketPlace= 'amazon' , orderID = orderID)
 
                 prodMap = ExternalOrdersQtyMap(product = p , qty = qty)
                 prodMap.save()
@@ -519,12 +571,57 @@ class ExternalEmailOrders(APIView):
                 p.inStock -= int(qty)
                 p.save()
 
-
-
-
-
-
                 print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
+
+
+        if seller == 'skinstore':
+            if typ == 'new':
+                tbl = soup.findAll('table', attrs={'bgcolor': '#c0b475'})[0]
+                t = pd.read_html(str(tbl))[0]
+                print t
+
+                orderID = body.split('Your Order ID : <span style="color:#000">')[1].split('</span>')[0]
+
+                eo = ExternalOrders(marketPlace= 'skinstore' , orderID = orderID , status = 'new' )
+                print eo
+                try:
+                    eo.save()
+                except:
+                    eo = ExternalOrders.objects.get(marketPlace= 'amazon' , orderID = orderID)
+
+                for index, row in t.iterrows():
+                    if index == 0:
+                        continue
+                    sku = row[2]
+                    qty = row[3]
+                    if isinstance(sku , str):
+                        print sku , qty
+                        p = None
+                        try:
+                            p = Product.objects.get(serialNo = sku)
+                        except:
+                            try:
+                                ps = ProductVerient.object.get(sku = sku)
+                                p = ps.parent
+                            except:
+                                pass
+                        finally:
+                            if p == None:
+                                return Response(status=status.HTTP_404_NOT_FOUND)
+
+                        prodMap = ExternalOrdersQtyMap(product = p , qty = qty)
+                        prodMap.save()
+                        eo.products.add(prodMap)
+                        il = InventoryLog(typ = 'system', product = p , before =  p.inStock , after = p.inStock - int(qty) , externalOrder = eo )
+                        il.save()
+                        print il
+                        p.inStock -= int(qty)
+                        p.save()
+                    else:
+                        break
+
+
+                print orderID
 
 
         # for table in tables:

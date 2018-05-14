@@ -175,7 +175,7 @@ class ExternalOrders(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     marketPlace = models.CharField(max_length = 50 , null = True)
-    orderID = models.CharField(max_length = 100 , null = True , unique=True)
+    orderID = models.CharField(max_length = 100 , null = True)
     products = models.ManyToManyField(ExternalOrdersQtyMap , blank = False)
     status = models.CharField(max_length = 10 , default = 'new' , choices = EXTERNAL_ORDER_STATUS_CHOICES)
     buyersPrice = models.FloatField(null= True)
@@ -188,7 +188,8 @@ class ExternalOrders(models.Model):
     earnings = models.FloatField(null= True)
     buyerPincode = models.CharField(null= True , max_length = 7)
 
-
+    class Meta:
+        unique_together = ('marketPlace' , 'orderID')
 
 
 TYPE_CHOICES = (
@@ -205,6 +206,9 @@ class InventoryLog(models.Model):
     before = models.PositiveIntegerField(default = 0)
     after = models.PositiveIntegerField(default = 0)
     externalOrder = models.ForeignKey(ExternalOrders ,null = True , related_name ="externalOrders")
+
+    class Meta:
+        unique_together = ('externalOrder' , 'product')
 
 
 from django.db.models.signals import post_save , pre_delete
