@@ -1,18 +1,25 @@
-<div class="container-fluid" ng-controller="businessManagement.productsInventory.vendors.explore">
-  <div class="row" style="margin-top:30px">
-    <div class="col-md-3">
-      <h3>vendor Details</h3>
+<div class="container-fluid" style="padding:10px" ng-controller="businessManagement.productsInventory.purchaseOrder.explore">
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Purchase order Details of {{data.service.name}}</h4>
+    </div>
+    <div class="col-md-4 text-right" styele="padding:10px">
+      <!-- <label>Status</label> -->
+      <select ng-model="data.status" class="form-control">
+        <option value="created">created</option>
+        <option value="sent">sent</option>
+        <option value="returned">returned</option>
+        <option value="cancelled">cancelled</option>
+        <option value="recieved">recieved</option>
+        <option value="reconciled">reconciled</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service For:</span>
-        </div>
-        <div class="col-md-6">
-          <span>{{data.service.name}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 text-right">
-          <span>Service cin:</span>
+          <span>cin:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.cin}}</span>
@@ -20,7 +27,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service tin:</span>
+          <span>tin:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.tin}}</span>
@@ -28,7 +35,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
+          <span>city:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.city}}</span>
@@ -36,7 +43,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
+          <span>state:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.state}}</span>
@@ -44,7 +51,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
+          <span>pincode:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.pincode}}</span>
@@ -52,69 +59,33 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
+          <span>country:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.country}}</span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 text-right">
-          <span>Customer Name:</span>
-        </div>
-        <div class="col-md-6">
-          <span>{{data.contactPersonName}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 text-right">
-          <span>Customer Number:</span>
-        </div>
-        <div class="col-md-6">
-          <span>{{data.contactPersonNumber}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 text-right">
-          <span>Customer Email Id:</span>
-        </div>
-        <div class="col-md-6">
-          <span>{{data.contactPersonEmail}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 text-right">
-          <span>Payment Term:</span>
-        </div>
-        <div class="col-md-6">
-          <span>{{data.paymentTerm}}</span>
-        </div>
-      </div>
     </div>
-    <div class="col-md-9" style="border-left:1px solid #eeeeee;min-height:60vh">
+    <div class="col-md-8" style="border-left:1px solid #eeeeee;min-height:60vh">
         <div class="container-fluid">
           <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
             <tr style="background-color: #eeeeee;height: 96px;">
               <th>#</th>
               <th>Item Description</th>
+              <th>Item Quantity</th>
               <th>Item Rate (Rupees)</th>
-              <th>Fullfillment Time (Time)</th>
-              <th>Logistic (Cost)</th>
               <th></th>
             </tr>
-            <tr ng-repeat="item in products">
+            <tr ng-repeat="item in data.products">
               <td>{{$index + 1}}</td>
               <td>
-                <input type="text" class="form-control-pos" ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
+                <input type="text" class="form-control-pos" ng-model="item.product" uib-typeahead="p as p.name for p in productSearch($viewValue)">
+              </td>
+              <td>
+                <input type="number" class="form-control-pos" ng-model="item.qty">
               </td>
               <td>
                 <input type="float" class="form-control-pos" ng-model="item.rate">
-              </td>
-              <td>
-                <input type="number" class="form-control-pos" ng-model="item.fulfilmentTime">
-              </td>
-              <td>
-                <input type="number" class="form-control-pos" ng-model="item.logistics">
               </td>
               <td>
                 <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
@@ -129,15 +100,14 @@
               </td>
               <td style="border:none;"></td>
               <td style="border:none;"></td>
-              <td style="border:none;"></td>
-              <td style="border:none;"></td>
+              <td><i class="fa fa-inr"></i>{{getTotalRate()}}</td>
             </tr>
           </table>
         </div>
         <div class="row">
           <div class="container-fluid">
             <div class="col-md-12 text-center" style="margin-top: 27px;">
-              <button type="button" class="btn btn-success" ng-click="saveVenderServiceForm()">Save</button>
+              <button type="button" class="btn btn-success" ng-click="saveOrderForm()">Save</button>
             </div>
           </div>
         </div>

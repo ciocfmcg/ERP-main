@@ -1,4 +1,4 @@
-<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.productsInventory.purchaseOrder.items">
   <div class="container-fluid card" style="padding-bottom:10px;">
     <div class="row" style="border-bottom: 1px solid #dedede;">
       <div class="col-md-8" style="position:relative;display:block;">
@@ -6,27 +6,27 @@
           <h3>{{data.service.name}}</h3>
         </div>
       </div>
+      <div class="col-md-4 text-right">
+        <h4>#{{data.pk}}</h4>
+      </div>
     </div>
     <div class="row container-fluid" style="padding-top:20px;height:70px;">
       <div class="col-md-10">
-        <strong>Name:</strong> {{data.contactPersonName}} <br>
-        <strong>Number:</strong> {{data.contactPersonNumber}} <br>
-        <strong>Email:</strong> {{data.contactPersonEmail}} <br>
-        <strong>Payment Term:</strong> {{data.paymentTerm}} <br>
+        <strong>Status:</strong> {{data.status}} <br>
+        <span>{{data.products.length}} Item Selected</span><br>
+        <strong>Total Value:</strong> <i class="fa fa-inr"></i> {{data.totalamount}} <br>
       </div>
       <div class="col-md-2">
         <div style="padding-right:20px;">
           <div class="row">
             <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
             <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
-          </span> <br><br>
-            <span class="pull-right" style="cursor:pointer;">
-          <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
-        </span>
-
-          </div>
+          </span>
+        </div><br>
           <div class="row">
-
+            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('info')">
+            <i class="fa fa-info fa-lg" style="margin-top:0px;"></i>
+          </span>
           </div>
         </div>
       </div>

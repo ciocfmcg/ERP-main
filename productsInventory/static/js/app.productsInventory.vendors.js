@@ -57,7 +57,7 @@ app.controller("businessManagement.productsInventory.vendors.form", function($sc
 
     fd.append('contactPersonName', f.contactPersonName);
     fd.append('contactPersonNumber', f.contactPersonNumber);
-    // fd.append('contactDoc', f.contactDoc);
+    fd.append('contactPersonEmail', f.contactPersonEmail);
     fd.append('paymentTerm', f.paymentTerm);
     fd.append('service', f.service.pk)
 
@@ -195,7 +195,7 @@ app.controller("businessManagement.productsInventory.vendors", function($scope, 
   $scope.config = {
     views: views,
     url: '/api/POS/vendorProfile/',
-    searchField: 'name',
+    searchField: 'service',
     itemsNumPerView: [16, 32, 48],
   }
 

@@ -125,6 +125,7 @@ class VendorProfile(models.Model):
     paymentTerm = models.PositiveIntegerField(default = 0)
     contactPersonName = models.CharField(max_length = 100 , null = False)
     contactPersonNumber = models.CharField(max_length = 100 , null = False)
+    contactPersonEmail = models.CharField(max_length = 100 , null = True)
 
 class VendorServices(models.Model):
     vendor = models.ForeignKey(VendorProfile,related_name = 'vendors' , null = True)
@@ -134,10 +135,13 @@ class VendorServices(models.Model):
     logistics = models.PositiveIntegerField(default = 0)
 
 PURCHASE_ORDER_STATUS_CHOICES = (
-    ('create','create'),
+    ('created','created'),
     ('sent','sent'),
     ('returned','returned'),
     ('cancelled','cancelled'),
+    ('recieved','recieved'),
+    ('reconciled','reconciled'),
+
 
 )
 
@@ -147,7 +151,7 @@ class PurchaseOrder(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     service = models.ForeignKey(service,related_name = 'purchaseServices' , null = True)
-    status = models.CharField(max_length = 10  ,null = True, choices = PURCHASE_ORDER_STATUS_CHOICES)
+    status = models.CharField(max_length = 10  ,default = 'created', choices = PURCHASE_ORDER_STATUS_CHOICES)
     products = models.CharField(max_length=10000,null=True)
     totalamount = models.PositiveIntegerField(default = 0)
 

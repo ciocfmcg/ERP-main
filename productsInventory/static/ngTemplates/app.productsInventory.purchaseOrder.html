@@ -6,7 +6,26 @@
         <uib-tab-heading>
           Purchas Orders
         </uib-tab-heading>
-        <div style="margin-top:20px;"  ng-include="'/static/ngTemplates/app.productsInventory.purchaseOrder.form.html'">
+        <div style="margin-top:20px;"  ng-include="'/static/ngTemplates/app.productsInventory.purchaseOrderMain.form.html'">
+        </div>
+      </uib-tab>
+      <uib-tab>
+        <uib-tab-heading>
+          Browse <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+      </uib-tab>
+
+      <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+        <uib-tab-heading>
+          {{tab.title}}
+          <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+        </uib-tab-heading>
+        <div ng-if="tab.app == 'ordersEditor'">
+          <div style="margin-top:30px;" ng-include="'/static/ngTemplates/app.productsInventory.purchaseorders.form.html'"></div>
+        </div>
+        <div ng-if="tab.app == 'ordersInfo'">
+          <div ng-include="'/static/ngTemplates/app.productsInventory.purchaseorders.explore.html'"></div>
         </div>
       </uib-tab>
     </uib-tabset>

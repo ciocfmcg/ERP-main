@@ -468,6 +468,8 @@ class DealViewSet(viewsets.ModelViewSet):
 class RelationshipViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , readOnly , )
     serializer_class = RelationshipSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
     def get_queryset(self):
         return service.objects.filter(deals__in = Deal.objects.filter(active = True).filter(result='won')).distinct()
 

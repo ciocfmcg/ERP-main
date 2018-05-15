@@ -100,7 +100,7 @@ class VendorProfileSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)
     class Meta:
         model = VendorProfile
-        fields = ('pk','created','updated','service','contactDoc','paymentTerm','contactPersonName','contactPersonNumber')
+        fields = ('pk','created','updated','service','contactDoc','paymentTerm','contactPersonName','contactPersonNumber','contactPersonEmail')
     def create(self , validated_data):
         p = VendorProfile(**validated_data)
         p.service = service.objects.get(pk=self.context['request'].data['service'])
@@ -115,7 +115,7 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         p = PurchaseOrder(**validated_data)
         p.user = self.context['request'].user
-        # p.service = service.objects.get(pk=self.context['request'].data['service'])
+        p.service = service.objects.get(pk=self.context['request'].data['service'])
         p.save()
         return p
 

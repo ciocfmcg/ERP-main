@@ -21,6 +21,7 @@ router.register(r'externalOrdersQtyMap' , ExternalOrdersQtyMapViewSet , base_nam
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'invoicePrint/$' , InvoicePrint.as_view() ),
+    url(r'productPrint/$' , ProductPrint.as_view() ),
     url(r'bulkProductsCreation/$' , BulkProductsCreationAPI.as_view() ),
     url(r'externalEmailOrders/$' , ExternalEmailOrders.as_view() ),
     url(r'reorderingReport/$' , ReorderingReport.as_view() ),
