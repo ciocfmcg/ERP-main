@@ -11,9 +11,14 @@
         <span>Company Name:{{data.company}}</span>
       </div>
       <div class="col-md-1 text-center" ng-if="hover">
-        <span><i class="fa fa-info" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('info')"></i></span>
-        <br><br>
-        <span><i class="fa fa-pencil" aria-hidden="true" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('edit')"></i></span>
+        <div class="row">
+          <span><i class="fa fa-info" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('info')"></i>
+          </span>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <span><i class="fa fa-pencil" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('edit')"></i>
+          </span>
+        </div>
       </div>
     </div>
   </div>
