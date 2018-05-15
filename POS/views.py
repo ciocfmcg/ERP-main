@@ -124,7 +124,7 @@ class ExternalOrdersQtyMapViewSet(viewsets.ModelViewSet):
 class InventoryLogViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
     serializer_class = InventoryLogSerializer
-    queryset = InventoryLog.objects.all()
+    queryset = InventoryLog.objects.all().order_by('-created')
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['product']
 

@@ -2,6 +2,14 @@
   <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;">
     <div class="row">
       <div class="col-md-6 text-right">
+        <strong>Date and Time:</strong>
+      </div>
+      <div class="col-md-6">
+        {{data.created | date:'dd MMM yyyy , hh:mm a'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 text-right">
         <strong>Inventory Log Type:</strong>
       </div>
       <div class="col-md-6">
