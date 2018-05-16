@@ -113,7 +113,6 @@ INSTALLED_APPS = (
 	'clientRelationships',# CRM like sales force
 	'LMS',# LMS
 	'POS',# POS terminal like tally
-	'tutor',# canvas
 	'workforceManagement',# canvas
     'support',# canvas
 	'warehouse',# warehouse application
