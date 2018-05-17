@@ -37,7 +37,7 @@ appSecret = '1862d87355a28680764175a978a7579b0';
 from flipkart import FlipkartAPI, Authentication
 import requests
 
-ERPServer = 'http://skinstore.monomerce.com:8000'
+ERPServer = 'http://skinstore.monomerce.com:9001'
 
 import time, threading
 
@@ -64,7 +64,9 @@ def fetchAndCheck():
 
 def foo():
     print(time.ctime())
-    threading.Timer(300, fetchAndCheck).start()
+    while True:
+        time.sleep(300)
+        fetchAndCheck()
 
 if __name__ == '__main__':
     foo()

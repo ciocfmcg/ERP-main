@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'wss://'+ wampServer +':443/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'ws://'+ wampServer +':8080/ws', realm: 'default'});
 
 tutorOnline = true;
 connection.onopen = function (session) {
