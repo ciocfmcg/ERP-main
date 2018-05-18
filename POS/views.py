@@ -476,16 +476,20 @@ class ExternalEmailOrders(APIView):
             try:
                 eo.save()
             except:
-                eo = ExternalOrders.objects.get(marketPlace= 'amazon' , orderID = orderID)
+                eo = ExternalOrders.objects.get(marketPlace= 'flipkart' , orderID = orderID)
 
             prodMap = ExternalOrdersQtyMap(product = p , qty = qty)
             prodMap.save()
             eo.products.add(prodMap)
             il = InventoryLog(typ = 'system', product = p , before =  p.inStock , after = p.inStock - int(qty) , externalOrder = eo )
-            il.save()
 
-            p.inStock -= int(qty)
-            p.save()
+            try:
+                il.save()
+
+                p.inStock -= int(qty)
+                p.save()
+            except:
+                pass
 
             return Response(status=status.HTTP_200_OK)
 
