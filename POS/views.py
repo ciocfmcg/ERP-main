@@ -126,7 +126,7 @@ class InventoryLogViewSet(viewsets.ModelViewSet):
     serializer_class = InventoryLogSerializer
     queryset = InventoryLog.objects.all().order_by('-created')
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['product']
+    filter_fields = ['product' ]
 
 
 themeColor = colors.HexColor('#227daa')

@@ -203,7 +203,7 @@ app.controller("controller.POS.productinfo.form", function($scope, product) {
   $scope.configProductInfo = {
     views: views,
     url: '/api/POS/inventoryLog/',
-    searchField: 'name',
+    // searchField: 'orderID',
     itemsNumPerView: [8, 16, 24],
     getParams: [{
       key: 'product',

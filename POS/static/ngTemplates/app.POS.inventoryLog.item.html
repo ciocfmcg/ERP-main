@@ -48,5 +48,15 @@
         {{data.externalOrder.orderID}}({{data.externalOrder.marketPlace}})
       </div>
     </div>
+
+    <div class="row" ng-if="data.typ == 'system'">
+      <div class="col-md-6 text-right">
+        <strong>Channel :</strong>
+      </div>
+      <div class="col-md-6" >
+        {{data.externalOrder.marketPlace}}
+      </div>
+    </div>
+
   </div>
 </div>
