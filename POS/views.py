@@ -452,8 +452,7 @@ class ExternalEmailOrders(APIView):
     permission_classes = (permissions.AllowAny ,)
     def post(self , request , format = None):
         # print request.data
-
-        print request.data
+        print '--------------------'
         if 'html' not in request.data: # then its a flipkart order
             sku = request.data['sku']
             orderID = request.data['orderId']
@@ -461,10 +460,10 @@ class ExternalEmailOrders(APIView):
             price = request.data['price']
             p = None
             try:
-                p = Product.objects.get(serialNo = sku)
+                p = Product.objects.get(serialNo__iexact = sku)
             except:
                 try:
-                    ps = ProductVerient.object.get(sku = sku)
+                    ps = ProductVerient.object.get(sku__iexact = sku)
                     p = ps.parent
                 except:
                     pass
@@ -498,7 +497,7 @@ class ExternalEmailOrders(APIView):
             seller = 'flipkart'
         if 'amazon' in body.lower():
             seller = 'amazon'
-        if 'theskinstore.in' in body.lower():
+        if 'theskinstore.in' in body.lower() and 'ship now' not in subject:
             seller = 'skinstore'
 
         if 'amazon' in seller.lower() and 'ship now' not in subject:
@@ -545,16 +544,20 @@ class ExternalEmailOrders(APIView):
 
                 orderID = body[body.index('Order ID:')+9:].split('<br>')[0].strip()
 
+
+                print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
+
                 p = None
                 try:
-                    p = Product.objects.get(serialNo = sku)
+                    p = Product.objects.get(serialNo__iexact = sku)
                 except:
                     try:
-                        ps = ProductVerient.object.get(sku = sku)
+                        ps = ProductVerient.object.get(sku__iexact = sku)
                         p = ps.parent
                     except:
                         pass
                 finally:
+                    print "sku : " , sku
                     if p == None:
                         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -569,12 +572,16 @@ class ExternalEmailOrders(APIView):
                 prodMap.save()
                 eo.products.add(prodMap)
                 il = InventoryLog(typ = 'system', product = p , before =  p.inStock , after = p.inStock - int(qty) , externalOrder = eo )
-                il.save()
 
-                p.inStock -= int(qty)
-                p.save()
+                try:
+                    il.save()
+                    p.inStock -= int(qty)
+                    p.save()
+                except:
+                    pass
 
-                print "sku : " , sku , " Qty : " , qty , " orderID : " , orderID , " price : " , price
+
+
 
 
         if seller == 'skinstore':
@@ -590,7 +597,7 @@ class ExternalEmailOrders(APIView):
                 try:
                     eo.save()
                 except:
-                    eo = ExternalOrders.objects.get(marketPlace= 'amazon' , orderID = orderID)
+                    eo = ExternalOrders.objects.get(marketPlace= 'skinstore' , orderID = orderID)
 
                 for index, row in t.iterrows():
                     if index == 0:
@@ -601,10 +608,10 @@ class ExternalEmailOrders(APIView):
                         print sku , qty
                         p = None
                         try:
-                            p = Product.objects.get(serialNo = sku)
+                            p = Product.objects.get(serialNo__iexact = sku)
                         except:
                             try:
-                                ps = ProductVerient.object.get(sku = sku)
+                                ps = ProductVerient.object.get(sku__iexact = sku)
                                 p = ps.parent
                             except:
                                 pass
@@ -616,10 +623,14 @@ class ExternalEmailOrders(APIView):
                         prodMap.save()
                         eo.products.add(prodMap)
                         il = InventoryLog(typ = 'system', product = p , before =  p.inStock , after = p.inStock - int(qty) , externalOrder = eo )
-                        il.save()
-                        print il
-                        p.inStock -= int(qty)
-                        p.save()
+                        try:
+                            il.save()
+                            p.inStock -= int(qty)
+                            p.save()
+                        except:
+                            pass
+
+
                     else:
                         break
 
