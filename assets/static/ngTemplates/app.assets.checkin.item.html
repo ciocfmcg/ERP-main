@@ -1,0 +1,18 @@
+<div class="col-md-6" style="margin-top: 10px;">
+  <div class="container-fluid card" style="padding-top:10px;">
+    <div class="row">
+      <div class="col-md-3">
+        <img ng-src="{{data.user | getDP}}" class="img img-rounded" style="height:50px;width:50px">
+      </div>
+      <div class="col-md-9">
+        <h4>{{data.user| getName}}</h4>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <label><b>Serial Nos : </b> </label>{{data.serialNos}} <br>
+      <label><b>Manufactured On : </b> </label>{{data.manufacturedOn}} <br>
+      <label><b>Warranty Till : </b> </label>{{data.warrantyTill}} <br>
+      <label><b>PO No : </b> </label>{{data.poNumber}} <br>
+    </div>
+  </div>
+</div>

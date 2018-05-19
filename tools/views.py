@@ -55,7 +55,7 @@ import StringIO
 # from scripts.kpmgPDFExtract.kpmgMain import main as kpmg
 # from scripts.pdfEditor.markings import *
 
-from scripts.PDFReader.reader2 import getBasicDetails
+# from scripts.PDFReader.reader2 import getBasicDetails
 
 from shutil import copyfile
 

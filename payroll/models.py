@@ -36,7 +36,7 @@ class Payslip(models.Model):
     tds = models.FloatField(null=False)
     report = models.ForeignKey(PayrollReport , related_name = "payslips" , null = True)
     days = models.PositiveIntegerField(null = False)
-    deffered = models.BooleanField(default = False)    
+    deffered = models.BooleanField(default = False)
     amount = models.FloatField(null=False)
     totalPayable = models.FloatField(null=False)
     reimbursement = models.PositiveIntegerField(default = 0)
