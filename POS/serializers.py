@@ -96,6 +96,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
     #     instance.save()
     #     return instance
 
+
+
 class VendorProfileSerializer(serializers.ModelSerializer):
     service = serviceSerializer(many = False , read_only = True)
     class Meta:
@@ -104,7 +106,11 @@ class VendorProfileSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         p = VendorProfile(**validated_data)
         p.service = service.objects.get(pk=self.context['request'].data['service'])
-        p.save()
+
+        try:
+            p.save()
+        except:
+            raise ValidationError(detail={'PARAMS' : 'Service Profile already exists'} )
         return p
 
 class PurchaseOrderSerializer(serializers.ModelSerializer):

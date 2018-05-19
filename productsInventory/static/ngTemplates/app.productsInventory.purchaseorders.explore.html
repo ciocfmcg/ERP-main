@@ -11,12 +11,12 @@
     <div class="col-md-3 text-right" styele="padding:10px">
       <!-- <label>Status</label> -->
       <select ng-model="data.status" class="form-control">
-        <option value="created">created</option>
-        <option value="sent">sent</option>
-        <option value="returned">returned</option>
-        <option value="cancelled">cancelled</option>
-        <option value="recieved">recieved</option>
-        <option value="reconciled">reconciled</option>
+        <option value="created">Created</option>
+        <option value="sent">Sent</option>
+        <option value="returned">Returned</option>
+        <option value="cancelled">Cancelled</option>
+        <option value="recieved">Recieved</option>
+        <option value="reconciled">Reconciled</option>
       </select>
     </div>
     <div class="col-md-1 text-right">
@@ -25,9 +25,28 @@
   </div>
   <div class="row">
     <div class="col-md-4">
+
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>cin:</span>
+          <strong>PO Number :</strong>
+        </div>
+        <div class="col-md-6">
+          <span style="font-size:20px;"># {{data.pk}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <strong>Created On :</strong>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.created | date: 'dd MMM yyyy , hh:mm a'}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <strong>CIN :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.cin}}</span>
@@ -35,7 +54,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>tin:</span>
+          <strong>TIN :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.tin}}</span>
@@ -43,7 +62,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>city:</span>
+          <strong>Address :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.city}}</span>
@@ -51,7 +70,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>state:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.state}}</span>
@@ -59,7 +77,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>pincode:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.pincode}}</span>
@@ -67,7 +84,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>country:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.country}}</span>

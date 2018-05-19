@@ -17,9 +17,28 @@
   </div>
   <div class="row">
     <div class="col-md-4">
+
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>cin:</span>
+          <strong>PO Number :</strong>
+        </div>
+        <div class="col-md-6">
+          <span style="font-size:20px;"># {{data.pk}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <strong>Created On :</strong>
+        </div>
+        <div class="col-md-6">
+          <span>{{data.created | date: 'dd MMM yyyy , hh:mm a'}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <strong>CIN :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.cin}}</span>
@@ -27,7 +46,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>tin:</span>
+          <strong>TIN :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.tin}}</span>
@@ -35,7 +54,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>city:</span>
+          <strong>Address :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.city}}</span>
@@ -43,7 +62,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>state:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.state}}</span>
@@ -51,7 +69,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>pincode:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.pincode}}</span>
@@ -59,7 +76,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>country:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.country}}</span>

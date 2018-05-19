@@ -1,8 +1,16 @@
 <div class="container-fluid" ng-controller="businessManagement.productsInventory.vendors.form">
   <div class="col-md-6">
-    <div class="form-group" style="padding-top: 19px;">
-      <label>Service</label>
-      <input type="text" class="form-control" ng-model="form.service" uib-typeahead="p as p.name for p in serviceSearch($viewValue)" placeholder="Search For Service">
+
+    <h3 ng-if="mode == 'new'">Create a new vendor profile</h3>
+    <h3 ng-if="mode != 'new'">Edit vendor profile </h3>
+
+    <div class="form-group" style="margin-top:20px;">
+      <label>Company</label>
+      <div class="{{(showCreateCompanyBtn || companyExist) && !showCompanyForm ? 'input-group':''}}">
+          <input uib-typeahead="company as company.name for company in serviceSearch($viewValue)" ng-model="form.company" type="text" class="form-control" placeholder="Search using name">
+          <span ng-click="createCompany()" ng-if="(showCreateCompanyBtn || companyExist) && !showCompanyForm" class="input-group-addon btn btn-primary" ><i class="fa fa-{{!companyExist ? 'plus':'pencil'}}"></i> {{ !companyExist?  'New':'Update'}}</span>
+      </div>
+      <p ng-if="showCreateCompanyBtn && !companyExist" class="help-block">No company with this name exist!. Click <span class="badge">new</span> to create.</p>
     </div>
     <div class="form-group">
       <label>Contact Name</label>
@@ -24,9 +32,86 @@
       <label>Payment Term</label>
       <input type="text " class="form-control" ng-model="form.paymentTerm" placeholder="enter Payment Term">
     </div>
-    <button type="button" class="btn btn-primary" ng-click="save()">
-      Save
-    </button>
+
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-primary" ng-click="save()">
+        Save
+      </button>
+      <button type="button" class="btn btn-default" ng-click="resetForm()">
+        Reset
+      </button>
+    </div>
+
   </div>
-</div>
+
+
+  <div class="col-md-6" ng-if="showCompanyForm">
+    <h4>Company Details (Optional)</h4>
+
+    <div class="form-group">
+      <label>Telephone</label>
+      <input type="text " class="form-control" ng-model="form.company.telephone">
+    </div>
+
+    <div class="form-group">
+      <label>About</label>
+      <textarea class="form-control" rows="8" ng-model="form.company.about"></textarea>
+    </div>
+
+    <div style="cursor:pointer;margin:20px;" ng-click="companyAdvanceOptions = !companyAdvanceOptions">
+      <div class="text-primary">
+        <i class="fa fa-lg fa-sort-{{companyAdvanceOptions? 'up':'desc'}}" style="margin-right:20px;"></i>  Show advance options
+      </div>
+    </div>
+
+    <div ng-if="companyAdvanceOptions" class="animated fadeIn">
+      <div class="form-group">
+        <label>Mobile</label>
+        <input type="text " class="form-control" ng-model="form.company.mobile">
+      </div>
+
+      <div class="form-group">
+        <label>Address</label>
+        <input placeholder="Street" type="text " class="form-control" ng-model="form.company.address.street">
+        <div class="row" style="margin-top:5px;">
+          <div class=" col-md-6">
+            <input placeholder="City" type="text " class="form-control" ng-model="form.company.address.city">
+          </div>
+          <div class="col-md-6">
+            <input placeholder="State" type="text " class="form-control" ng-model="form.company.address.state">
+          </div>
+
+        </div>
+        <div class="row" style="margin-top:5px;">
+          <div class=" col-md-6">
+            <input placeholder="pincode" type="text " class="form-control" ng-model="form.company.address.pincode">
+          </div>
+          <div class="col-md-6">
+            <input placeholder="Country" type="text " class="form-control" ng-model="form.company.address.country">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label>CIN</label>
+        <input type="text " class="form-control" ng-model="form.company.cin">
+      </div>
+      <div class="form-group">
+        <label>TIN</label>
+        <input type="text " class="form-control" ng-model="form.company.tin">
+      </div>
+      <div class="form-group">
+        <label>Logo</label>
+        <input type="text " class="form-control" ng-model="form.company.logo">
+      </div>
+      <div class="form-group">
+        <label>web</label>
+        <input type="text " class="form-control" ng-model="form.company.web">
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary pull-right col-md-3 pull-right" ng-click="updateCompanyDetails()">Save company details</button>
+  </div>
+
+
 </div>

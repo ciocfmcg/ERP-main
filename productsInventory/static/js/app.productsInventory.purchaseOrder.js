@@ -19,21 +19,6 @@ app.controller("businessManagement.productsInventory.purchaseOrder.explore", fun
 
   if (typeof $scope.data.products == 'string') {
     $scope.data.products = JSON.parse($scope.data.products)
-
-    for (var i = 0; i < $scope.data.products.length; i++) {
-      $http({
-        method: 'GET',
-        url: '/api/POS/product/' + $scope.data.products[i].product + '/',
-      }).
-      then((function(i) {
-        return function(response) {
-          $scope.data.products[i].product = response.data;
-        }
-      })(i))
-
-    }
-
-    console.log('ppppppppp', $scope.data.products);
   }
 
   $scope.addTableRow = function() {

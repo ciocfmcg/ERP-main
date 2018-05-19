@@ -2,15 +2,15 @@
   <breadcrumb></breadcrumb>
   <div class="container-fluid">
     <uib-tabset>
-      <uib-tab active="searchTabActive">
+      <uib-tab>
         <uib-tab-heading>
-          Purchas Orders
+          Create New PO
         </uib-tab-heading>
         <div style="margin-top:20px;"  ng-include="'/static/ngTemplates/app.productsInventory.purchaseOrderMain.form.html'">
         </div>
       </uib-tab>
-      <uib-tab>
-        <uib-tab-heading>
+      <uib-tab active="searchTabActive">
+        <uib-tab-heading  >
           Browse <i class="fa fa-list-ul"></i>
         </uib-tab-heading>
         <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>

@@ -22,9 +22,123 @@ app.controller("businessManagement.productsInventory.vendors.form", function($sc
   };
 
 
-  console.log($scope.tab);
+  $scope.companyAdvanceOptions = false;
+  $scope.showCreateCompanyBtn = false;
+  $scope.companyExist = false;
+  $scope.showCompanyForm = false;
 
 
+  $scope.$watch('form.company', function(newValue, oldValue) {
+    console.log(newValue);
+    if (typeof newValue == "string" && newValue.length > 0) {
+      $scope.showCreateCompanyBtn = true;
+      $scope.companyExist = false;
+      $scope.showCompanyForm = false;
+    } else if (typeof newValue == "object") {
+      $scope.companyExist = true;
+    } else {
+      $scope.showCreateCompanyBtn = false;
+      $scope.showCompanyForm = false;
+    }
+
+    if (newValue == '') {
+      $scope.showCreateCompanyBtn = false;
+      $scope.showCompanyForm = false;
+      $scope.companyExist = false;
+    }
+
+  });
+
+  $scope.createCompany = function() {
+    if ($scope.companyExist) {
+      $scope.showCompanyForm = true;
+      $scope.showCreateCompanyBtn = false;
+      return
+    }
+
+    if (typeof $scope.form.company == "string" && $scope.form.company.length > 1) {
+      var dataToSend = {
+        name: $scope.form.company,
+        user: $scope.me.pk
+      }
+      $http({
+        method: 'POST',
+        url: '/api/ERP/service/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        $scope.form.company = response.data;
+        Flash.create('success', 'Created');
+      })
+    } else {
+      Flash.create('warning', 'Company name too small')
+    }
+  }
+
+
+  $scope.updateCompanyDetails = function() {
+    if (typeof $scope.form.company != "object") {
+      Flash.create('warning', "Company's basic details missing")
+      return
+    }
+
+    if ($scope.form.company.address != null && typeof $scope.form.company.address == 'object') {
+      var method = 'POST';
+      var url = '/api/ERP/address/'
+      if (typeof $scope.form.company.address.pk == 'number') {
+        method = 'PATCH'
+        url += $scope.form.company.address.pk + '/'
+      }
+      $http({
+        method: method,
+        url: url,
+        data: $scope.form.company.address
+      }).
+      then(function(response) {
+        $scope.form.company.address = response.data;
+        var dataToSend = $scope.form.company;
+        dataToSend.address = response.data.pk;
+
+        $http({
+          method: 'PATCH',
+          url: '/api/ERP/service/' + $scope.form.company.pk + '/',
+          data: dataToSend
+        }).
+        then(function(response) {
+          $scope.form.company = response.data;
+          Flash.create('success', 'Saved');
+        });
+      })
+    } else {
+
+      var dataToSend = $scope.form.company;
+
+      $http({
+        method: 'PATCH',
+        url: '/api/ERP/service/' + $scope.form.company.pk + '/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        $scope.form.company = response.data;
+        Flash.create('success', 'Saved');
+      });
+
+    }
+
+
+
+  }
+
+
+  $scope.resetForm = function() {
+    $scope.form = {
+      'contactPersonName': '',
+      'contactPersonNumber': '',
+      'contactDoc': emptyFile,
+      'paymentTerm': '',
+      'company': ''
+    }
+  }
 
 
 
@@ -33,15 +147,11 @@ app.controller("businessManagement.productsInventory.vendors.form", function($sc
     $scope.form = $scope.tab.data;
     console.log('aaaaaaaaaaaa', $scope.tab.data);
     $scope.form.contactDoc = emptyFile;
+    $scope.form.company = $scope.form.service;
+
   } else {
     $scope.mode = 'new';
-    $scope.form = {
-      'contactPersonName': '',
-      'contactPersonNumber': '',
-      'contactDoc': emptyFile,
-      'paymentTerm': '',
-      'service': ''
-    }
+    $scope.resetForm();
   }
 
 
@@ -59,7 +169,7 @@ app.controller("businessManagement.productsInventory.vendors.form", function($sc
     fd.append('contactPersonNumber', f.contactPersonNumber);
     fd.append('contactPersonEmail', f.contactPersonEmail);
     fd.append('paymentTerm', f.paymentTerm);
-    fd.append('service', f.service.pk)
+    fd.append('service', f.company.pk)
 
     console.log(fd);
     if ($scope.mode == 'new') {
@@ -82,6 +192,8 @@ app.controller("businessManagement.productsInventory.vendors.form", function($sc
     then(function(response) {
       $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved')
+    }, function(err) {
+      Flash.create('danger' , 'Profile already available, please edit')
     })
   }
 

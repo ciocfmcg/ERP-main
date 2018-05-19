@@ -1,18 +1,11 @@
 <div class="container-fluid" ng-controller="businessManagement.productsInventory.vendors.explore">
   <div class="row" style="margin-top:30px">
     <div class="col-md-3">
-      <h3>vendor Details</h3>
+      <h3>{{data.service.name}}</h3>
+
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service For:</span>
-        </div>
-        <div class="col-md-6">
-          <span>{{data.service.name}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 text-right">
-          <span>Service cin:</span>
+          <strong>CIN :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.cin}}</span>
@@ -20,7 +13,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service tin:</span>
+          <strong>TIN :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.tin}}</span>
@@ -28,7 +21,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
+          <strong>Address</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.city}}</span>
@@ -36,7 +29,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.state}}</span>
@@ -44,7 +36,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.pincode}}</span>
@@ -52,7 +43,6 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Service city:</span>
         </div>
         <div class="col-md-6">
           <span>{{data.service.address.country}}</span>
@@ -60,7 +50,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Customer Name:</span>
+          <strong>Name :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.contactPersonName}}</span>
@@ -68,7 +58,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Customer Number:</span>
+          <strong>Contact No :</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.contactPersonNumber}}</span>
@@ -76,7 +66,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Customer Email Id:</span>
+          <strong>Email Id:</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.contactPersonEmail}}</span>
@@ -84,7 +74,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 text-right">
-          <span>Payment Term:</span>
+          <strong>Payment Term:</strong>
         </div>
         <div class="col-md-6">
           <span>{{data.paymentTerm}}</span>

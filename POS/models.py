@@ -120,7 +120,7 @@ class ProductVerient(models.Model):
 class VendorProfile(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
-    service = models.ForeignKey(service,related_name = 'services' , null = True)
+    service = models.OneToOneField(service,related_name = 'services' , null = True )
     contactDoc = models.FileField(null = True , upload_to = getContractDoc)
     paymentTerm = models.PositiveIntegerField(default = 0)
     contactPersonName = models.CharField(max_length = 100 , null = False)
