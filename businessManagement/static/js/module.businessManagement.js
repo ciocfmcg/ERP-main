@@ -29,7 +29,7 @@ app.controller('businessManagement' , function($scope , $users , Flash , $http){
 
   $scope.labels2 = ["Sales", "Collections"];
 
-  $scope.graphForm = {graphType : 'week'}
+  $scope.graphForm = {graphType : 'month'}
 
   $scope.$watch('graphForm.graphType' , function(newValue , oldValue) {
 
