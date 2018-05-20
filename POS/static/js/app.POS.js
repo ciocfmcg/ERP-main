@@ -572,6 +572,18 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
 
+  $scope.today = new Date();
+  $scope.firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+
+
+  var day = $scope.today.getDay(),
+  var diff = $scope.today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+
+  $scope.monday = new Date(d.setDate(diff));
+
+
+  console.log($scope.monday , $scope.firstDay , $scope.today);
+
   $scope.item = '';
   $scope.items = '';
   $scope.items1 = '';
