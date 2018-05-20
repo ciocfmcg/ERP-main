@@ -18,7 +18,9 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
     $scope.mode = 'edit';
     $scope.invoice = invoice;
     $scope.form = invoice;
-    console.log($scope.form.products);
+
+    $scope.form.receivedDate = new Date($scope.form.receivedDate);
+    $scope.form.duedate = new Date($scope.form.duedate);
 
     if (typeof $scope.form.products == 'string') {
       $scope.form.products = JSON.parse($scope.form.products)
@@ -62,7 +64,6 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
     return subTotalTax.toFixed(2);
   }
   $scope.productSearch = function(query) {
-    console.log("called");
     return $http.get('/api/POS/product/?name__contains=' + query).
     then(function(response) {
       return response.data;
@@ -70,14 +71,8 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
   }
 
   $scope.saveInvoiceForm = function() {
-    console.log('************');
-    console.log($scope.invoice.duedate);
-    console.log($scope.form);
-    // console.log($scope.products.data.pk);
 
     var f = $scope.form;
-    console.log(f);
-    console.log(f.products);
     if (typeof $scope.invoice.duedate == 'object') {
       var date = $scope.invoice.duedate.toJSON().split('T')[0];
     } else {
@@ -87,12 +82,16 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
       // invoicedate: date,
       duedate: date,
       products: JSON.stringify(f.products),
+      amountRecieved : f.amountRecieved,
+      paymentRefNum : f.paymentRefNum,
+      receivedDate : f.receivedDate.toJSON().split('T')[0],
+      modeOfPayment : f.modeOfPayment,
     }
 
     $http({
       method: 'PATCH',
       url: '/api/POS/invoice/' + f.pk + '/',
-      data: toSend
+      data: toSend,
     }).
     then(function(response) {
       // $scope.form.pk = response.data.pk;
@@ -568,26 +567,67 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
 
 });
 
+
+function getMonday( date ) {
+    var day = date.getDay() || 7;
+    if( day !== 1 )
+        date.setHours(-24 * (day - 1));
+    return date;
+}
+
+
 app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
 
   $scope.today = new Date();
-  $scope.firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+  $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 1);
+  $scope.monday = getMonday(new Date());
 
 
-  var day = $scope.today.getDay(),
-  var diff = $scope.today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+  $scope.graphForm = {graphType : 'week'}
 
-  $scope.monday = new Date(d.setDate(diff));
+  $scope.$watch('graphForm.graphType' , function(newValue , oldValue) {
+
+    if (newValue == 'day') {
+      var toSend = {date : $scope.today};
+    }else if (newValue == 'week') {
+      var toSend = {from : $scope.monday , to : $scope.today};
+    }else {
+      var toSend = {from : $scope.firstDay , to : $scope.today};
+    }
+
+    $http({method : 'POST' , url : '/api/POS/salesGraphAPI/' , data : toSend}).
+    then(function(response) {
+      $scope.stats = response.data;
+
+      $scope.data2 = [$scope.stats.totalCollections.amountRecieved__sum, $scope.stats.totalSales.grandTotal__sum];
+
+      $scope.labels = [];
+      // $scope.series = ['Series A'];
+      $scope.trendData = [
+        []
+      ];
+
+      for (var i = 0; i < $scope.stats.trend.length; i++) {
+        $scope.stats.trend[i]
+        $scope.trendData[0].push($scope.stats.trend[i].sum)
+        $scope.labels.push($scope.stats.trend[i].created)
+      }
 
 
-  console.log($scope.monday , $scope.firstDay , $scope.today);
+      // $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      // // $scope.series = ['Series A'];
+      // $scope.data = [
+      //   [65, 59, 80, 81, 56, 55, 50, 60, 71, 66, 77, 44]
+      // ];
 
-  $scope.item = '';
-  $scope.items = '';
-  $scope.items1 = '';
-  // $scope.products =[{name:'prabhakar'},{name:'ankita'},{name:'sai'},{name:'swagata'},{name:'pradeep'},{name:'raju'}]
+
+    })
+
+
+
+  })
 
   $scope.productSearch = function(query) {
     console.log("called");
@@ -596,9 +636,6 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       return response.data.results;
     })
   }
-
-  $scope.selected = '';
-  // $scope.customers =[{name:'prabhakar'},{name:'ankita'},{name:'sai'},{name:'swagata'},{name:'pradeep'},{name:'raju'}]
 
   $scope.data = {
     tableData: [],
@@ -618,11 +655,11 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
   var productmultiselectOptions = [{
-    icon: 'fa fa-plus',
-    text: 'configure'
+    icon: 'fa fa-wrench',
+    text: 'taxCodes'
   }, {
     icon: 'fa fa-plus',
-    text: 'Bulk'
+    text: 'bulkUpload'
   }, {
     icon: 'fa fa-plus',
     text: 'new'
@@ -689,19 +726,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     console.log($scope.tableData);
     if (action == 'new') {
       $scope.openProductForm();
-    } else if (action == 'Bulk') {
+    } else if (action == 'bulkUpload') {
       $scope.openProductBulkForm();
-    } else if (action == 'configure') {
-      // $aside.open({
-      //   templateUrl: '/static/ngTemplates/app.POS.productConfigureForm.html',
-      //   placement: 'right',
-      //   size: 'xl',
-      //   backdrop: true,
-      //   resolve: {
-      //
-      //   },
-      //   controller: 'controller.POS.productConfigure.form'
-      // })
+    } else if (action == 'taxCodes') {
       $scope.openProductConfigureForm();
     } else {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
@@ -1205,18 +1232,13 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   }
 
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  // $scope.series = ['Series A'];
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 50, 60, 71, 66, 77, 44]
 
-  ];
   $scope.onClick = function(points, evt) {
     console.log(points, evt);
   };
 
-  $scope.labels2 = ["Sales", "Products"];
-  $scope.data2 = [800, 500];
+  $scope.labels2 = ["Sales", "Collections"];
+
 
 
   $scope.addRow = function() {
@@ -1285,7 +1307,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       products: JSON.stringify(f.products),
       customer: f.customer.pk,
       grandTotal: $scope.subTotal(),
-      totalTax: $scope.subTotalTax()
+      totalTax: $scope.subTotalTax(),
+      amountRecieved : f.amountRecieved,
+      paymentRefNum : f.paymentRefNum,
+      receivedDate : f.receivedDate.toJSON().split('T')[0],
     }
     // var returnquaterParts=toSend.returnquater.split('/');
     // toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[0]+'-'+returnquaterParts[1];

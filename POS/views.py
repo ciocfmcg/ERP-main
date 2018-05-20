@@ -443,6 +443,71 @@ def genInvoice(response , invoice, request):
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
+from datetime import timedelta
+from django.db.models import Sum
+class SalesGraphAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        print "---------------------------------------\n"
+        if "date" in request.data:
+            # one day sale
+            d = datetime.datetime.strptime(request.data["date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            invcs = Invoice.objects.filter(invoicedate = d)
+            custs = Customer.objects.filter(created__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+
+        else:
+            frm = datetime.datetime.strptime(request.data["from"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            to = datetime.datetime.strptime(request.data["to"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            invcs = Invoice.objects.filter(invoicedate__range=(frm, to))
+            custs = Customer.objects.filter(created__range = (frm , to))
+
+        totalSales = invcs.aggregate(Sum('grandTotal'))
+        totalCollections = invcs.aggregate(Sum('amountRecieved'))
+        sales =  invcs.count()
+        custCount = custs.count()
+
+
+        last_month = datetime.datetime.now() - timedelta(days=30)
+
+        data = (Invoice.objects.all()
+            .extra(select={'created': 'date(created)'})
+            .values('created')
+            .annotate(sum=Sum('grandTotal')))
+
+        print data
+
+        return Response({"totalSales" : totalSales , "totalCollections" : totalCollections ,  "sales" : sales , "custCount" : custCount , "trend" : data},status=status.HTTP_200_OK)
+
+
+class ExternalSalesGraphAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        print "---------------------------------------\n"
+        if "date" in request.data:
+            # one day sale
+            d = datetime.datetime.strptime(request.data["date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+
+            invcs = ExternalOrders.objects.filter(created__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+
+        else:
+            frm = datetime.datetime.strptime(request.data["from"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            to = datetime.datetime.strptime(request.data["to"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            invcs = ExternalOrders.objects.filter(created__range=(frm, to))
+
+        print invcs
+        last_month = datetime.datetime.now() - timedelta(days=30)
+
+        data = (invcs
+            .extra(select={'created': 'date(created)' })
+            .values('created' , 'marketPlace' )
+            )
+
+        print data
+
+        return Response({"amazon" : 0 , "flipkart" : 0 ,  "skinstore" : 0, "trend" : data},status=status.HTTP_200_OK)
+
 
 from django.db.models import Max
 class GetNextAvailableInvoiceIDAPIView(APIView):

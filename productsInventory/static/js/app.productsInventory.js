@@ -99,7 +99,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     fields : ['name' , 'price' , 'serialNo' , 'inStock'],
     options : options,
     filterSearch : true,
-    // editable : true,
+    multiSelect : false,
     multiselectOptions : multiselectOptions,
     editorTemplate :  '/static/ngTemplates/app.productsInventory.product.modal.html',
   }

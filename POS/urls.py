@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'reorderingReport/$' , ReorderingReport.as_view() ),
     url(r'stockReport/$' , StockReport.as_view() ),
     url(r'getNextAvailableInvoiceID/$' , GetNextAvailableInvoiceIDAPIView.as_view() ),
+    url(r'salesGraphAPI/$' , SalesGraphAPIView.as_view() ),
+    url(r'externalSalesGraphAPI/$' , ExternalSalesGraphAPIView.as_view() ),
 ]

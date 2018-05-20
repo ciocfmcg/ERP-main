@@ -21,7 +21,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
-app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio) {
+app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio , $rootScope) {
 
   $scope.tutoringCall = function(request) {
     console.log("in controller, calling: " , request);
@@ -87,6 +87,20 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   $scope.brandLogo = BRAND_LOGO;
   $scope.serviceName = SERVICE_NAME;
   $scope.modules = $permissions.module();
+
+  $scope.sideMenuVisibility = true;
+
+
+  // $scope.$on('toggleSideMenu' , function(evt) {
+  //   console.log("toggle data");
+  // })
+
+
+  $scope.toggleSideMenu = function() {
+    $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
+  }
+
+
 
   $scope.openAllNotifications = function() {
 
@@ -553,7 +567,6 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
 app.controller('controller.generic.menu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
-  console.log("generic menu ");
   var parts = $state.current.name.split('.');
   $scope.moduleName = parts[0];
   $scope.appName = parts[1];
@@ -568,7 +581,6 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
   $scope.rawApps = [];
 
   $scope.buildMenu = function(apps) {
-    console.log(apps);
     for (var i = 0; i < apps.length; i++) {
       var a = apps[i];
       var parts = a.name.split('.');
@@ -582,15 +594,10 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
   }
 
   var as = $permissions.apps();
-  console.log(as);
   if (typeof as.success == 'undefined') {
-
-    console.log("buildMenu");
-
     $scope.rawApps = as;
     $scope.buildMenu(as);
   } else {
-    console.log("buildMenu2");
     as.success(function(response) {
       $scope.buildMenu(response);
       $scope.rawApps = response;
@@ -628,11 +635,7 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
 app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope , $timeout) {
 
   $scope.showCommonApps = SHOW_COMMON_APPS;
-
-  console.log("side menu controller loaded");
-
   $scope.user = $users.get('mySelf');
-
   $scope.fixedApps = [
     // {icon : 'home' , state : 'home'},
     // {icon : 'envelope-o' , state : 'home.mail'},
@@ -654,9 +657,6 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
   }
 
   $scope.buildSingleModulelessApps = function(){
-    console.log("will build the menu");
-    console.log($scope.modules);
-    console.log($scope.rawApps);
     if ($scope.modules.length == 0 && $scope.rawApps.length >0) {
       $scope.apps = [];
       $scope.fixedApps= []
@@ -731,10 +731,6 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
 
   $scope.buildMenu = function() {
     $scope.apps = [];
-
-
-
-
     for (var i = 0; i < $scope.modules.length; i++) {
       if ($scope.modules[i].name == $scope.moduleName) {
         for (var j = 0; j < $scope.rawApps.length; j++) {

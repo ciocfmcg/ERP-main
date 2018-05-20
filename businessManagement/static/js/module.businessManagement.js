@@ -20,8 +20,113 @@ app.config(function($stateProvider){
 
 });
 
-app.controller('businessManagement' , function($scope , $users , Flash){
+app.controller('businessManagement' , function($scope , $users , Flash , $http){
   // main businessManagement tab default page controller
+
+  $scope.today = new Date();
+  $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 1);
+  $scope.monday = getMonday(new Date());
+
+  $scope.labels2 = ["Sales", "Collections"];
+
+  $scope.graphForm = {graphType : 'week'}
+
+  $scope.$watch('graphForm.graphType' , function(newValue , oldValue) {
+
+    if (newValue == 'day') {
+      var toSend = {date : $scope.today};
+    }else if (newValue == 'week') {
+      var toSend = {from : $scope.monday , to : $scope.today};
+    }else {
+      var toSend = {from : $scope.firstDay , to : $scope.today};
+    }
+
+    $http({method : 'POST' , url : '/api/POS/externalSalesGraphAPI/' , data : toSend}).
+    then(function(response) {
+
+      $scope.uniqueDates = [];
+      $scope.trend = [];
+      for (var i = 0; i < response.data.trend.length; i++) {
+        var d = response.data.trend[i];
+
+        if ($scope.uniqueDates.indexOf(d.created)  == -1 ) {
+          $scope.uniqueDates.push(d.created);
+        }
+
+      }
+
+      for (var i = 0; i < $scope.uniqueDates.length; i++) {
+        $scope.trend.push({date : $scope.uniqueDates[i] , amazon : 0 , flipkart : 0 , skinstore : 0})
+      }
+
+      for (var i = 0; i < response.data.trend.length; i++) {
+        d = response.data.trend[i];
+
+        for (var j = 0; j < $scope.trend.length; j++) {
+          if ($scope.trend[j].date == d.created) {
+            $scope.trend[j][d.marketPlace] += 1;
+          }
+        }
+      }
+
+      $scope.labels = [];
+      var s1 = [];
+      var s2 = [];
+      var s3 = [];
+      for (var i = 0; i < $scope.trend.length; i++) {
+        $scope.labels.push($scope.trend[i].date);
+        s1.push($scope.trend[i].flipkart);
+        s2.push($scope.trend[i].amazon);
+        s3.push($scope.trend[i].skinstore);
+      }
+      $scope.trendData = [s1, s2, s3];
+
+      $scope.stats = {flipkart : 0 , amazon : 0 , skinstore : 0};
+
+      for (var i = 0; i < s1.length; i++) {
+        $scope.stats.flipkart += s1[i];
+        $scope.stats.amazon += s2[i];
+        $scope.stats.skinstore += s3[i];
+      }
+
+      $scope.series = ["Flipkart" , "Amazon" , "Skinstore"];
+
+
+
+      // $scope.stats = response.data;
+      //
+      // $scope.data2 = [$scope.stats.totalCollections.amountRecieved__sum, $scope.stats.totalSales.grandTotal__sum];
+      //
+      // $scope.labels = [];
+      // // $scope.series = ['Series A'];
+      // $scope.trendData = [
+      //   []
+      // ];
+      //
+      // for (var i = 0; i < $scope.stats.trend.length; i++) {
+      //   $scope.stats.trend[i]
+      //   // $scope.trendData[0].push($scope.stats.trend[i].sum)
+      //   $scope.labels.push($scope.stats.trend[i].created)
+      // }
+      //
+      //
+      // // $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      // // // $scope.series = ['Series A'];
+      // $scope.trendData = [
+      //   [65, 59, 80, 81, 56, 55, 50, 60, 89, 66, 77, 44],
+      //   [65, 59, 80, 81, 56, 45, 50, 60, 71, 11, 77, 44],
+      //   [65, 59, 80, 81, 56, 55, 30, 60, 71, 66, 77, 44],
+      // ];
+
+
+    })
+
+
+
+  })
+
+
+
 });
 
 app.controller('businessManagement.menu' , function($scope , $users , Flash , $permissions){

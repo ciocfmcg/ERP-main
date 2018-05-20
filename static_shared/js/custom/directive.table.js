@@ -36,6 +36,10 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   $scope.editorTemplate = angular.isDefined($scope.config.editorTemplate) ? $scope.config.editorTemplate:'';
 
   $scope.haveOptions = angular.isDefined($scope.config.options) ? true:false;
+  $scope.multiSelect = angular.isDefined($scope.config.multiSelect) ? true:false;
+
+  $scope.selectable = $scope.multiSelect;
+
   $scope.canCreate = angular.isDefined($scope.config.canCreate) ? $scope.config.canCreate:false;
   $scope.url = $scope.config.url;
   $scope.searchField = angular.isDefined($scope.config.searchField) ? $scope.config.searchField:'';
@@ -234,10 +238,10 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
           $scope.tableHeading.push(key);
           $scope.sortFlag.push(0);  // by default no sort is applied , 1 for accending and -1 for descending
         }
-        if ($scope.isSelectable) {
-          $scope.tableHeading.unshift('Select');
-          $scope.sortFlag.unshift(-2); // no sort can be applied on this column
-        }
+        // if ($scope.isSelectable ) {
+        //   $scope.tableHeading.unshift('Select');
+        //   $scope.sortFlag.unshift(-2); // no sort can be applied on this column
+        // }
 
         if ($scope.haveOptions || $scope.editable || $scope.deletable) {
           $scope.tableHeading.push('Options')

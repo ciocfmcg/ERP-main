@@ -39,32 +39,32 @@
                   <div class="col-md-4 text-center">
                     <img src="/static/images/monthicon.png" class="img" style="width:80px;height:80px;" alt=""> <br>
                     <label>Month</label>
-                    <input type="radio" name="type" value="Month">
+                    <input ng-model="graphForm.graphType" type="radio" name="type" value="month">
                   </div>
                   <div class="col-md-4 text-center">
                     <img src="/static/images/weekicon.png" class="img" style="width:80px;height:80px;" alt=""> <br>
                     <label>Week</label>
-                    <input type="radio" name="type" value="Week">
+                    <input ng-model="graphForm.graphType" type="radio" name="type" value="week">
                   </div>
                   <div class="col-md-4 text-center">
                     <img src="/static/images/dayicon.jpg" class="img" style="width:80px;height:80px;" alt=""> <br>
                     <label>Day</label>
-                    <input checked type="radio" name="type" value="Day">
+                    <input ng-model="graphForm.graphType" type="radio" name="type" value="day">
                   </div>
                 </div>
               </div>
               <div class="row" style="margin-bottom:30px;">
-                <div class="col-md-8">
+                <div class="col-md-12">
                   <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2" style="width: 700px;height: 100%;">
                   </canvas>
                 </div>
-                <div class="col-md-4" style="padding-top: 60px;font-size: 20px;">
+                <!-- <div class="col-md-4" style="padding-top: 60px;font-size: 20px;">
                   <div class="row">
                     <div class="col-md-6 text-right">
                       <strong>Sales:</strong>
                     </div>
                     <div class="col-md-6">
-                      <i class="fa fa-inr"></i> 5000
+                      <i class="fa fa-inr"></i> {{stats.totalSales.grandTotal__sum}}
                     </div>
                   </div>
 
@@ -76,13 +76,13 @@
                       <i class="fa fa-inr"></i> 5000
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="small-box bg-aqua">
                     <div class="inner">
-                      <h3>150</h3>
+                      <h3>{{stats.sales}}</h3>
                       <p>New Orders</p>
                     </div>
                     <div class="icon">
@@ -96,7 +96,8 @@
                 <div class="col-md-6">
                   <div class="small-box bg-green">
                     <div class="inner">
-                      <h3>53<sup style="font-size: 20px">%</sup></h3>
+                      <h3>{{stats.custCount}}</h3>
+                      <!-- <h3>53<sup style="font-size: 20px">%</sup></h3> -->
                       <p>New Customer</p>
                     </div>
                     <div class="icon">
@@ -108,7 +109,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col-md-6">
                   <div class="small-box bg-red">
                     <div class="inner">
@@ -137,13 +138,13 @@
                   </a>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="row">
                 <div class="col-md-6">
                   <div class="small-box bg-blue">
                     <div class="inner">
                       <h3>
-                        <i class="fa fa-inr"></i> 444</h3>
+                        <i class="fa fa-inr"></i> {{stats.totalCollections.amountRecieved__sum}}</h3>
                       <p>Total collections</p>
                     </div>
                     <div class="icon">
@@ -157,7 +158,7 @@
                 <div class="col-md-6">
                   <div class="small-box bg-red">
                     <div class="inner">
-                      <h3><i class="fa fa-inr"></i> 65</h3>
+                      <h3><i class="fa fa-inr"></i> {{stats.totalSales.grandTotal__sum}}</h3>
                       <p>Total Sales</p>
                     </div>
                     <div class="icon">
@@ -173,7 +174,7 @@
           </div>
           <div class="row" style="margin-top:30px">
             <div class="col-md-12">
-              <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true"  chart-click="onClick" style="width: 832px;height: 305px;">
+              <canvas id="line" class="chart chart-line" chart-data="trendData" chart-labels="labels" chart-legend="true"  chart-click="onClick" style="width: 632px;height: 305px;">
               </canvas>
             </div>
           </div>
