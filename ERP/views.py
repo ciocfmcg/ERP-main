@@ -15,7 +15,6 @@ from django.db.models import Q
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
-from gitweb.views import generateGitoliteConf
 import requests
 import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
@@ -223,35 +222,6 @@ class serviceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         u = self.request.user
         return service.objects.all()
-
-class registerDeviceApi(APIView):
-    renderer_classes = (JSONRenderer,)
-    permission_classes = (permissions.AllowAny ,)
-    def post(self , request , format = None):
-        if 'username' in request.data and 'password' in request.data and 'sshKey' in request.data:
-            sshKey = request.data['sshKey']
-            deviceName =sshKey.split()[2]
-            mode = request.data['mode']
-            print sshKey
-            user = authenticate(username =  request.data['username'] , password = request.data['password'])
-            if user is not None:
-                if user.is_active:
-                    d , n = device.objects.get_or_create(name = deviceName , sshKey = sshKey)
-                    gp , n = profile.objects.get_or_create(user = user)
-                    if mode == 'logout':
-                        print "deleted"
-                        gp.devices.remove(d)
-                        d.delete()
-                        generateGitoliteConf()
-                        return Response(status=status.HTTP_200_OK)
-                    gp.devices.add(d)
-                    gp.save()
-                    generateGitoliteConf()
-            else:
-                raise NotAuthenticated(detail=None)
-            return Response(status=status.HTTP_200_OK)
-        else:
-            raise ValidationError(detail={'PARAMS' : 'No data provided'} )
 
 class deviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

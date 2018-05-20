@@ -102,22 +102,13 @@ INSTALLED_APPS = (
     'mail', # mail application
     'businessManagement', # BM application
     'ecommerce', # ecommerce
-    'projectManagement',
-    'gitweb', # github.com local server with file browsing and diff viewer
-    'taskBoard',
-    'projects',
     'blogs', # publically accesible blogging site
-    'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
-	'tools',# general purpose tools like OCR, AI or big data related stuffs
 	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
-	'LMS',# LMS
 	'POS',# POS terminal like tally
-	'tutor',# canvas
 	'workforceManagement',# canvas
     'support',# canvas
-	'warehouse',# warehouse application
 	'employees',# employees details
 	'payroll',# payroll
 	'performance',# performance

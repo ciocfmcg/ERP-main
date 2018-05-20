@@ -3,11 +3,8 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
-from gitweb.serializers import repoLiteSerializer
 from ERP.serializers import serviceSerializer
 from ERP.models import service
-from projects.models import project
-from projects.serializers import projectLiteSerializer
 from datetime import datetime
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -23,7 +20,7 @@ class AccountLiteSerializer(serializers.ModelSerializer):
 class CostCenterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CostCenter
-        fields = ('pk', 'head' , 'name' , 'code' , 'created' , 'account' , 'projects')
+        fields = ('pk', 'head' , 'name' , 'code' , 'created' , 'account')
 
 class TransactionSerializer(serializers.ModelSerializer):
     fromAcc = AccountLiteSerializer(many = False , read_only = True)
@@ -84,20 +81,15 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 class ExpenseSheetSerializer(serializers.ModelSerializer):
     # invoice = InvoiceSerializer(many = True , read_only = True)
-    project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = ExpenseSheet
-        fields = ('pk','created','approved','approvalMatrix','approvalStage','dispensed','notes' , 'project','transaction','submitted' )
-        read_only_fields = ( 'project', 'user',)
+        fields = ('pk','created','approved','approvalMatrix','approvalStage','dispensed','notes' ,'transaction','submitted' )
+        read_only_fields = ('user',)
     def create(self , validated_data):
         u = self.context['request'].user
         reqData = self.context['request'].data
         es = ExpenseSheet(**validated_data)
         es.approvalStage = 0
-        if 'project' in reqData:
-            es.project = project.objects.get(id = int(reqData['project']))
-        else:
-            raise ValidationError(detail= 'project ID not found')
         es.dispensed = False
         es.submitted = False
         es.user = u
@@ -110,8 +102,6 @@ class ExpenseSheetSerializer(serializers.ModelSerializer):
             instance.notes = validated_data.pop('notes')
         if 'approved' in reqData:
                     instance.approved = validated_data.pop('approved')
-        if 'project' in reqData:
-            instance.project = project.objects.get(pk = int(reqData['project']))
         if instance.user == self.context['request'].user and 'submitted' in reqData:
             if not instance.submitted:
                 instance.submitted = True

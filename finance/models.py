@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 from ERP.models import service
-from projects.models import project
 from time import time
 # Create your models here.
 
@@ -31,7 +30,6 @@ class CostCenter(models.Model):
     code = models.CharField(max_length = 50 , blank = False)
     created = models.DateTimeField(auto_now_add=True)
     account = models.ForeignKey(Account)
-    projects = models.ManyToManyField(project , related_name = 'costCenters')
 
     def __unicode__(self):
         return '<name : %s > , <head : %s > , <code : %s>' %(self.name , self.head.username , self.code)
@@ -88,11 +86,10 @@ class ExpenseSheet(models.Model):
     approvalStage = models.PositiveSmallIntegerField(default=0)
     dispensed = models.BooleanField(default = False)
     notes =  models.CharField(max_length = 30 , null = True)
-    project = models.ForeignKey(project , null = False)
     transaction = models.ForeignKey(Transaction , null = True , related_name = 'expenseSheet')
     submitted = models.BooleanField(default = False)
     def __unicode__(self):
-        return '<notes : %s > , <approved : %s > , <project : %s > , < user : %s >' %(self.notes , self.approved , self.project , self.user.username)
+        return '<notes : %s > , <approved : %s > , < user : %s >' %(self.notes , self.approved , self.user.username)
 
 class Invoice(models.Model):
     user = models.ForeignKey(User , related_name='invoiceGeneratedOrSubmitted' , null = False)

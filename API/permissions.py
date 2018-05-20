@@ -1,7 +1,6 @@
 from rest_framework import permissions
 from ERP.models import application , permission as erp_permission
 from django.core.exceptions import PermissionDenied
-from tools.models import ApiAccount
 from django.shortcuts import render, redirect, get_object_or_404
 
 class isAdmin(permissions.BasePermission):
@@ -21,26 +20,6 @@ class isAdminOrReadOnly(permissions.BasePermission):
         else:
             return request.user.is_superuser
             # Check permissions for write request
-
-class PublicAPIAccess(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if 'apiKey' not in request.GET and 'apiKey' not in request.data:
-            return False
-        else:
-            try:
-                apiKey = request.GET['apiKey']
-            except:
-                apiKey = request.data['apiKey']
-
-            acc =get_object_or_404(ApiAccount, apiKey = apiKey)
-
-            if not acc.active:
-                return False
-            else:
-                if acc.remaining ==0:
-                    return False
-                else:
-                    return True
 
 
 class readOnly(permissions.BasePermission):

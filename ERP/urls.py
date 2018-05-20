@@ -18,7 +18,6 @@ router.register(r'service' , serviceViewSet , base_name = 'service')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'registerDevice/$' , registerDeviceApi.as_view()),
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
     url(r'sendSMS/$' , SendSMSApi.as_view()),
     url(r'paytmPayment/$' , MakePaytmPayment.as_view()),
