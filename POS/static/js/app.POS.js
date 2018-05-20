@@ -566,7 +566,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
 
 app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {
 
-  $scope.hover = false;
+  // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
 
   $scope.item = '';
   $scope.items = '';
@@ -575,9 +575,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.productSearch = function(query) {
     console.log("called");
-    return $http.get('/api/POS/product/?name__contains=' + query).
+    return $http.get('/api/POS/product/?search=' + query + '&limit=10').
     then(function(response) {
-      return response.data;
+      return response.data.results;
     })
   }
 
@@ -753,6 +753,15 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   var onlyDate = new Date(dummyDate.getFullYear(), dummyDate.getMonth(), dummyDate.getDate()); // 2013-07-30 23:59:59
 
+  $scope.getInvoiceID = function() {
+    $http({method : 'GET' , url : '/api/POS/getNextAvailableInvoiceID/'}).
+    then(function(response) {
+      $scope.form.serialNumber = response.data.pk;
+    })
+  }
+
+
+
   $scope.resetForm = function() {
     var dummyDate = new Date();
 
@@ -763,12 +772,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       totalTax: 0,
       grandTotal: 0,
       deuDate: onlyDate,
+      modeOfPayment: 'cash',
+      serialNumber : '',
       products: [{
         data: '',
         quantity: 1
       }],
       // returnquater : 'jan-march'
     }
+
+    $scope.getInvoiceID();
 
   }
 
@@ -822,18 +835,6 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     }
 
   });
-
-
-
-
-
-  $http({
-    method: 'GET',
-    url: '/api/POS/product/'
-  }).
-  then(function(response) {
-    $scope.products = response.data;
-  })
 
 
   $scope.createInvoice = function() {
@@ -1179,25 +1180,6 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   }
 
-
-  $http({
-    method: 'GET',
-    url: '/api/POS/customer/'
-  }).
-  then(function(response) {
-    $scope.customers = response.data;
-  })
-
-  $http({
-    method: 'GET',
-    url: '/api/POS/invoice/'
-  }).
-  then(function(response) {
-    $scope.invoices = response.data;
-  })
-
-
-
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // $scope.series = ['Series A'];
   $scope.data = [
@@ -1226,29 +1208,18 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   };
 
   $scope.saveInvoice = function() {
-    console.log('************');
-    // console.log($scope.products.data.pk);
 
     var f = $scope.form;
     console.log(f);
-    console.log('0000000000000', f.products);
     for (var i = 0; i < f.products.length; i++) {
-      console.log(f.products[i].data.pk, f.products[i].quantity);
-
-
       var fd = new FormData();
-
-      fd.append('name', f.products[i].data.name);
-      fd.append('productMeta', f.products[i].data.productMeta.pk);
-      fd.append('price', f.products[i].data.price);
-      fd.append('serialNo', f.products[i].data.serialNo);
-      fd.append('description', f.products[i].data.description);
       fd.append('inStock', (f.products[i].data.inStock - f.products[i].quantity));
-      fd.append('cost', f.products[i].data.cost);
-      fd.append('logistics', f.products[i].data.logistics);
+
+      if (f.products[i].data.pk == undefined) {
+        continue;
+      }
 
       var url = '/api/POS/product/' + f.products[i].data.pk + '/'
-      // console.log(sendData);
       $http({
         method: 'PATCH',
         url: url,
@@ -1259,7 +1230,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         }
       }).
       then(function(response) {
-        console.log('789', response.data);
+
       })
     }
     if (f.serialNumber.length == 0) {
@@ -1267,23 +1238,25 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       return;
     }
 
+    if (f.customer.pk == undefined) {
+      Flash.create('warning' , 'Please select a customer');
+      return;
+    }
 
 
+    if (f.products.length == 1 &&  f.products[0].data == "" ) {
+      Flash.create('danger' , 'There is no product to generate invoice for')
+      return;
+    }
 
-    //
 
-    // if ($scope.invoiceMode) {
-    //
-    // }JSON.stringify(f.invoiceDate).split('T')[0].split('"')[1]
-    console.log(f.invoiceDate);
-    console.log(f.invoiceDate.toJSON().split('T')[0]);
     var toSend = {
       serialNumber: f.serialNumber,
       invoicedate: f.invoiceDate.toJSON().split('T')[0],
       reference: f.reference,
       duedate: f.deuDate.toJSON().split('T')[0],
       returnquater: f.returnquater,
-
+      modeOfPayment : f.modeOfPayment,
       products: JSON.stringify(f.products),
       customer: f.customer.pk,
       grandTotal: $scope.subTotal(),

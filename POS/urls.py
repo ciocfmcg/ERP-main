@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'externalEmailOrders/$' , ExternalEmailOrders.as_view() ),
     url(r'reorderingReport/$' , ReorderingReport.as_view() ),
     url(r'stockReport/$' , StockReport.as_view() ),
+    url(r'getNextAvailableInvoiceID/$' , GetNextAvailableInvoiceIDAPIView.as_view() ),
 ]

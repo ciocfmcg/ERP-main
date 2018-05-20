@@ -443,6 +443,19 @@ def genInvoice(response , invoice, request):
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
+
+from django.db.models import Max
+class GetNextAvailableInvoiceIDAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        # id__max is None if there are no Posts in the database
+        id_max = Invoice.objects.all().aggregate(Max('id'))['id__max']
+        id_next = id_max + 1 if id_max else 1
+
+        return Response({"pk" : id_next},status=status.HTTP_200_OK)
+
+
 from BeautifulSoup import BeautifulSoup as bs
 import pandas as pd
 import re
