@@ -122,13 +122,17 @@ app.controller("POS.invoice.item", function($scope) {
 
 app.controller("controller.POS.productMeta.form", function($scope, $http, Flash) {
 
-  if ($scope.tab == undefined) {
+  $scope.resetForm = function() {
     $scope.configureForm = {
       'description': '',
       'code': '',
       'taxRate': '',
       'typ': 'HSN'
     }
+  }
+
+  if ($scope.tab == undefined) {
+    $scope.resetForm();
   } else {
     $scope.configureForm = $scope.tab.data.meta;
   }
@@ -774,6 +778,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       deuDate: onlyDate,
       modeOfPayment: 'cash',
       serialNumber : '',
+      receivedDate : new Date(),
       products: [{
         data: '',
         quantity: 1
@@ -952,7 +957,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.openCustomerInfo = function(idx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.customerinfo.form.html',
-      size: 'md',
+      size: 'xl',
       backdrop: true,
       resolve: {
         customer: function() {
@@ -1049,6 +1054,14 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
                   },
                   active: true
                 })
+              }else if (action == 'delete') {
+
+                $http({method : 'DELETE' , url : '/api/clientRelationships/productMeta/' + target + '/'}).
+                then(function(response) {
+                  Flash.create('success' , 'Deleted');
+                  $scope.$broadcast('forceRefetch',)
+                })
+
               }
 
 

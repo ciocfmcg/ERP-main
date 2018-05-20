@@ -73,7 +73,7 @@
 </div>
 <hr>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-5">
     <div class="col-md-10" style="padding-left: 0px;">
       <div class="form-group">
         <label>Customer Name</label>
@@ -107,20 +107,20 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6" ng-if="form.customer.pk">
+  <div class="col-md-5" ng-if="form.customer.pk">
     <div class="row">
       <div class="col-md-6" style="margin-top: 43px;">
         <span><b>Billing Address</b></span><br>
-        <span>{{form.customer.street}}</span><br>
-        <span>{{form.customer.city}}</span><br>
-        <span>{{form.customer.state}}</span>
-        <span>{{form.customer.pincode}}</span><br>
-        <span>{{form.customer.country}}</span>
+        <span>{{form.customer.streetBilling}}</span><br>
+        <span>{{form.customer.cityBilling}}</span><br>
+        <span>{{form.customer.stateBilling}}</span>
+        <span>{{form.customer.pincodeBilling}}</span><br>
+        <span>{{form.customer.countryBilling}}</span>
       </div>
       <div class="checkbox">
-        <label><input type="checkbox" value="checked" style="margin-top: -2px;"ng-model="customer.sameAsShipping">&nbsp; Billing Address Same as Shipping</label>
+        <label><input type="checkbox" value="checked" style="margin-top: -2px;"ng-model="form.customer.sameAsShipping">&nbsp; Billing Address Same as Shipping</label>
       </div>
-      <div class="col-md-6" ng-if="!customer.sameAsShipping">
+      <div class="col-md-6" ng-if="!form.customer.sameAsShipping">
         <span><b>Shipping Address</b></span><br>
         <span>{{form.customer.street}}</span><br>
         <span>{{form.customer.city}}</span><br>
@@ -131,9 +131,29 @@
 
     </div>
   </div>
-</div>
-</div>
 
+  <div class="col-md-2 pull-right">
+    <div class="form-group">
+      <label>Amount Recieved</label>
+      <input type="number" class="form-control" ng-model="form.amountRecieved">
+    </div>
+    <div class="form-group">
+      <label>Payment Ref. Number</label>
+      <input type="text" class="form-control" ng-model="form.paymentRefNum">
+    </div>
+    <div class="form-group">
+      <label>Received Date</label>
+      <div class="input-group">
+        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.receivedDate" is-open="statusDue.opened" ng-init="today" />
+        <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
 
 <div class="container-fluid" style="padding:0px">
   <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
@@ -199,18 +219,15 @@
 
 </div>
 
+<div class="down-part">
+  <div class="row">
+    <div class="col-md-12 text-center" style="margin-top: 27px;">
+      <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
+      <button type="button" class="btn btn-success" ng-click="saveInvoice()">Save</button>
 
+      <a ng-if="form.pk" class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
 
-
-  <div class="down-part">
-    <div class="row">
-      <div class="col-md-12 text-center" style="margin-top: 27px;">
-        <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
-        <button type="button" class="btn btn-success" ng-click="saveInvoice()">Save</button>
-
-        <a ng-if="form.pk" class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
-
-        <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button>
-      </div>
+      <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button>
     </div>
   </div>
+</div>

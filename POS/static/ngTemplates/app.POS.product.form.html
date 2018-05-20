@@ -63,7 +63,7 @@
         <input type="text" class="form-control" ng-model="productVerientForm.sku">
       </div>
       <div class="form-group">
-        <label>Units Perpack</label>
+        <label>Units / Pack</label>
         <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack">
       </div>
       <div class="row">
@@ -75,7 +75,7 @@
         <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
           <div class="col-md-12">
             <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/><br/>
-            <span><strong>Units Perpack:</strong>{{data.unitPerpack}}</span>
+            <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span>
             <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
             <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
               style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </button>

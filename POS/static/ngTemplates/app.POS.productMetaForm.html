@@ -1,8 +1,8 @@
 <div class="container-fluid" ng-controller="controller.POS.productMeta.form">
   <div class="row">
-    <h3 ng-if="mode == 'edit'">Edit product Meta : {{configureForm.description}}</h3>
-    <h3 ng-if="mode == 'new'">Create Edit product Meta</h3>
     <div class="col-md-6">
+      <h3 ng-if="configureForm.pk">Edit product Meta : {{configureForm.description}}</h3>
+      <h3 ng-if="!configureForm.pk">Create product Meta</h3>
       <div class="form-group">
         <label>Description</label>
         <input type="text" class="form-control" ng-model="configureForm.description">
@@ -22,10 +22,9 @@
         <label>Tax Rate</label>
         <input type="num" class="form-control" ng-model="configureForm.taxRate">
       </div>
-      <div class="row">
-        <div class="col-md-12 " style="margin-top: 27px;">
-          <button type="button" class="btn btn-success" ng-click="saveproductMeta()">Save</button>
-        </div>
+      <div class="btn-group btn-group-sm">
+        <button type="button" class="btn btn-success" ng-click="saveproductMeta()">Save</button>
+        <button type="button" class="btn btn-default" ng-click="resetForm()">Save</button>
       </div>
     </div>
   </div>
