@@ -11,7 +11,7 @@ from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 app_name="libreERP"
 urlpatterns = [
-    url(r'^$', index , name ='root'),
+    url(r'^$', home , name ='root'),
     url(r"^ecommerce/", ecommerceHome , name = 'ecommerce'), # public  ecommerce app
     url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),
