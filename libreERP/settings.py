@@ -36,7 +36,7 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/foodfLogin.png'
+LOGIN_PAGE_IMAGE = '/static/images/login_background.png'
 
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
