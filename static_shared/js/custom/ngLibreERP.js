@@ -6,7 +6,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
     tabReplace: '    '
   });
 
-  $urlRouterProvider.otherwise('/home');
+  $urlRouterProvider.otherwise('/businessManagement');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
@@ -536,10 +536,10 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
   $scope.user = $users.get('mySelf');
 
   $scope.fixedApps = [
-    {icon : 'home' , state : 'home'},
-    {icon : 'envelope-o' , state : 'home.mail'},
-    {icon : 'calendar' , state : 'home.calendar'},
-    {icon : 'sticky-note-o' , state : 'home.notes'},
+    // {icon : 'home' , state : 'home'},
+    // {icon : 'envelope-o' , state : 'home.mail'},
+    // {icon : 'calendar' , state : 'home.calendar'},
+    // {icon : 'sticky-note-o' , state : 'home.notes'},
   ]
 
   var parts = $state.current.name.split('.');
