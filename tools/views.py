@@ -346,3 +346,9 @@ class DocumentContentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = DocumentContent.objects.all()
         return qs
+class DocumentCommenttViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny, )
+    serializer_class = DocumentCommentSerializer
+    def get_queryset(self):
+        qs = DocumentComment.objects.all()
+        return qs

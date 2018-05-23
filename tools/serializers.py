@@ -126,3 +126,8 @@ class DocumentContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentContent
         fields = ('pk' , 'created' , 'doc', 'typ', 'x', 'y', 'w' , 'h' , 'category' , 'pageNo' , 'nlpResult' , 'text')
+
+class DocumentCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentComment
+        fields = ('pk' , 'created' , 'user' , 'doc', 'x', 'y', 'pageNo' ,  'text')

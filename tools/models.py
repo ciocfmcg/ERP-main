@@ -90,3 +90,12 @@ class DocumentSections(models.Model):
     title = models.CharField(max_length = 200 , null = False)
     startPage = models.PositiveIntegerField(null = False)
     endPage = models.PositiveIntegerField(null = True)
+
+class DocumentComment(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User , related_name='documentComment' , null = True)
+    text = models.CharField(max_length = 1000 , null = False)
+    pageNo = models.PositiveIntegerField(null = True)
+    doc = models.ForeignKey(ArchivedDocument , null =False)
+    x = models.FloatField(null = True)
+    y = models.FloatField(null = True)

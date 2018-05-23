@@ -191,8 +191,8 @@ class PageNumCanvas(canvas.Canvas):
         p.drawOn(self , 85*mm  , 18*mm)
 
         p1 = Paragraph(settingsFields.get(name = 'companyAddress').value , compNameStyle)
-        p1.wrapOn(self , 150*mm , 10*mm)
-        p1.drawOn(self , 55*mm  , 10*mm)
+        p1.wrapOn(self , 200*mm , 10*mm)
+        p1.drawOn(self , 15*mm  , 10*mm)
 
 
         p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)

@@ -10,6 +10,7 @@ router.register(r'apiAccount' , ApiAccountViewSet , base_name ='apiAccount')
 router.register(r'apiAccountLog' , ApiAccountLogViewSet , base_name ='apiAccountLog')
 router.register(r'archivedDocument' , ArchivedDocumentViewSet , base_name ='archivedDocument')
 router.register(r'documentContent' , DocumentContentViewSet , base_name ='documentContent')
+router.register(r'documentComment' , DocumentCommenttViewSet , base_name ='documentComment')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
