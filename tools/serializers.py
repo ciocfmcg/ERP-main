@@ -127,7 +127,16 @@ class DocumentContentSerializer(serializers.ModelSerializer):
         model = DocumentContent
         fields = ('pk' , 'created' , 'doc', 'typ', 'x', 'y', 'w' , 'h' , 'category' , 'pageNo' , 'nlpResult' , 'text')
 
+from HR.serializers import userSearchSerializer
+
 class DocumentCommentSerializer(serializers.ModelSerializer):
+    user = userSearchSerializer(read_only = True , many = False)
     class Meta:
         model = DocumentComment
         fields = ('pk' , 'created' , 'user' , 'doc', 'x', 'y', 'pageNo' ,  'text')
+    def create(self , validated_data):
+        dc = DocumentComment(**validated_data)
+        print validated_data
+        dc.user_id = self.context['request'].data['user']
+        dc.save()
+        return dc

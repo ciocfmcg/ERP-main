@@ -349,6 +349,8 @@ class DocumentContentViewSet(viewsets.ModelViewSet):
 class DocumentCommenttViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
     serializer_class = DocumentCommentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['doc' , 'pageNo' ]
     def get_queryset(self):
         qs = DocumentComment.objects.all()
         return qs
