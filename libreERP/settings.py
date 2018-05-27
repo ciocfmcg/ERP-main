@@ -100,7 +100,7 @@ INSTALLED_APPS = (
     'homepage', # landing page
     'mail', # mail application
     'businessManagement', # BM application
-    # 'ecommerce', # ecommerce
+    'ecommerce', # ecommerce
     'projectManagement',
     'gitweb', # github.com local server with file browsing and diff viewer
     'taskBoard',
@@ -109,7 +109,6 @@ INSTALLED_APPS = (
     'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
-	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
 	'LMS',# LMS
 	'workforceManagement',# canvas
