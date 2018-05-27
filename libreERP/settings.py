@@ -120,7 +120,6 @@ INSTALLED_APPS = (
 	'organization',# organization
 	'logistic',# logistics
 	'assets',# assets
-	'productsInventory',# inventory for POS products
 )
 
 
