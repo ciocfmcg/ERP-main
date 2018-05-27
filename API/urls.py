@@ -6,7 +6,6 @@ urlpatterns = [
     url(r'^social/', include('social.urls')),
     url(r'^mail/', include('mail.urls')),
     url(r'^PIM/', include('PIM.urls')),
-    url(r'^ecommerce/', include('ecommerce.urls')),
     url(r'^git/', include('gitweb.urls')),
     url(r'^projects/', include('projects.urls')),
     url(r'^taskBoard/', include('taskBoard.urls')),

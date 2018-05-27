@@ -100,7 +100,7 @@ INSTALLED_APPS = (
     'homepage', # landing page
     'mail', # mail application
     'businessManagement', # BM application
-    'ecommerce', # ecommerce
+    # 'ecommerce', # ecommerce
     'projectManagement',
     'gitweb', # github.com local server with file browsing and diff viewer
     'taskBoard',

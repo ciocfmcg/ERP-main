@@ -5,7 +5,16 @@ from rest_framework.exceptions import *
 from .models import *
 from social.serializers import commentLikeSerializer
 from social.models import commentLike
-from clientRelationships.serializers import ContactLiteSerializer
+from clientRelationships.models import Contact
+
+
+class ContactLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ('pk' , 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
+        read_only_fields = ( 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
+
+
 class themeSerializer(serializers.ModelSerializer):
     class Meta:
         model = theme
