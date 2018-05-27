@@ -32,6 +32,14 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
     };
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
+
+
+  $scope.sideMenuVisibility = true;
+
+  $scope.toggleSideMenu = function() {
+    $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
+  }
+
   $permissions.module().
   success(function(response) {
     // console.log(response);

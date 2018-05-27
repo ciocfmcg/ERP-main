@@ -1,7 +1,7 @@
 <div class="col-md-3 animated fadeIn" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
   <div class="container-fluid">
     <div class="row">
-      <div class="container-fluid card" style="padding-bottom:10px;">
+      <div class="container-fluid card" style="padding-bottom:0px;">
         <div class="row" style="border-bottom: 1px solid #dedede;">
           <div class="col-md-4" style="padding:0px;">
             <img style="width: 120px;height:120px;" class="img" ng-if="data.profile.displayPicture != null" ng-src="{{data.profile.displayPicture}}">
@@ -24,7 +24,7 @@
             <span ng-if="data.profile.mobile == null && data.email == null" class="text-muted">No contact details</span>
           </div>
         </div>
-        <div class="row text-center">
+        <div class="row text-center" style="background:#eeeeee;">
           <div class="col-md-8" style="padding:5px;">
             <div class="col-md-2">
               <span style="cursor:pointer;" ng-click="rowActionClicked('im')">
