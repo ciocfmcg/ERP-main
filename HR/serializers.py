@@ -150,3 +150,39 @@ class groupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('url' , 'name')
+
+
+class leaveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Leave
+        fields = ('pk','user','fromDate','toDate','days','approved','category','approvedBy','comment','approvedStage','approvedMatrix')
+    def create(self , validated_data):
+        del validated_data['approvedBy']
+        l = Leave(**validated_data)
+        l.user = self.context['request'].user
+        l.save()
+        # l.user = self.context['request'].user
+        for i in self.context['request'].data['approvedBy']:
+            l.approvedBy.add(User.objects.get(pk = i))
+        return l
+
+    def update(self , instance , validated_data):
+        if instance.user.designation in self.context['request'].user.managing.all():
+            instance.approvedStage += 1
+            if instance.approvedStage == instance.approvedMatrix:
+                instance.approved = True
+                instance.approvedBy.add(self.context['request'].user)
+                if instance.approved == True:
+                    payrolobj = instance.user.payroll
+                    if instance.category == 'AL':
+                        payrolobj.al = payrolobj.al - instance.days
+                    elif instance.category == 'ML':
+                        payrolobj.ml = payrolobj.ml - instance.days
+                    elif instance.category == 'casual':
+                        payrolobj.adHocLeaves = payrolobj.adHocLeaves - instance.days
+                    payrolobj.save()
+
+            instance.save()
+            return instance
+        else:
+            raise SuspiciousOperation('Not Authorized')

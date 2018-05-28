@@ -53,7 +53,8 @@ app.controller("controller.home.calendar", function($scope , $http ,$aside, $sta
     templates = {
       meeting : '/static/ngTemplates/app.home.calendar.form.meeting.html' ,
       reminder : '/static/ngTemplates/app.home.calendar.form.reminder.html' ,
-      todo : '/static/ngTemplates/app.home.calendar.form.todo.html'
+      todo : '/static/ngTemplates/app.home.calendar.form.todo.html',
+      leave : '/static/ngTemplates/app.home.calendar.form.leave.html'
     };
     input = {formTitle : typeof index == 'undefined'? 'Create' : 'Edit' , template : templates , items : $scope.data.items , editor: index};
     position = 'left';
@@ -215,6 +216,118 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
     } , function(response){
       Flash.create('danger' , response.status + ' : ' + response.statusText);
     });
+  };
+
+  $scope.me = $users.get("mySelf");
+
+  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.me.pk);
+  $http({
+    method: 'GET',
+    url: '/api/HR/payroll/?user=' + $scope.me.pk
+  }).
+  then(function(response) {
+    $scope.payroll = response.data[0];
+    console.log($scope.payroll);
+  })
+
+
+
+
+  $scope.form = {
+    fromDate:'',
+    toDate:'',
+    days: 0,
+    approved:false,
+    category:'',
+    approvedBy:[],
+    comment:'',
+    approvedStage:0,
+    approvedMatrix:1,
+  }
+
+  $scope.saveLeaves = function(){
+    var f = $scope.form;
+    var url = '/api/HR/leave/';
+
+
+
+    var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+    var firstDate = f.fromDate;
+    var secondDate = f.toDate;
+
+    var diffDays = Math.round(Math.abs((f.fromDate.getTime() - f.toDate.getTime())/(oneDay)));
+
+
+
+
+    var tosend = {
+      fromDate: f.fromDate.toJSON().split('T')[0],
+      toDate: f.toDate.toJSON().split('T')[0],
+      days: diffDays,
+      approved: f.approved,
+      category: f.category,
+      approvedBy: f.approvedBy,
+      comment: f.comment,
+      approvedStage: f.approvedStage,
+      approvedMatrix: f.approvedMatrix,
+    }
+    console.log('aaaaaaa',tosend);
+    if ($scope.form.pk == undefined) {
+      var method = 'POST';
+    } else {
+      var method = 'PATCH';
+      url += f.pk + '/'
+      // url  = '/api/HR/leave/';
+    }
+
+    $http({
+      method: method,
+      url: url,
+      data: tosend,
+
+    }).
+    then(function(response) {
+      $scope.form.pk = response.data.pk;
+      Flash.create('success', 'Saved')
+    })
+    // $scope.payroll.ml=[];
+    // console.log('aaaa',$scope.payroll);
+    // var newDates = $scope.payroll.ml - diffDays;
+    // var dataToSend = {ml :newDates}
+    // $http({
+    //   method: 'PATCH',
+    //   url: '/api/HR/payroll/' +  $scope.payroll.pk + '/',
+    //   data: dataToSend
+    //
+    // }).
+    // then(function(response) {
+    //   // $scope.payroll.ml.push($scope.payroll.ml)
+    //   $scope.payroll.pk = response.data.pk;
+    //   Flash.create('success', 'Saved')
+    // })
+
+    //
+    // data = { eventType : 'ToDo', user : $scope.me.url , text : $scope.data.text  };
+    // $http({method : method , url : url , data : data}).
+    // then(function(response){
+    //   Flash.create('success' , response.status + ' : ' + response.statusText);
+    //   $scope.resetForm();
+    //   $scope.$$postDigest(function(){
+    //     $scope.data.items.push( {'type' : response.data.eventType, data : response.data ,  date : new Date(response.data.when)});
+    //   })
+    //   if($scope.editMode) {
+    //     for (var i = 0; i < $scope.data.items.length; i++) {
+    //       if ($scope.data.items[i].data.url.cleanUrl() == response.data.url.cleanUrl()){
+    //         $scope.data.items.splice(i, 1);
+    //         return;
+    //       }
+    //     }
+    //   }
+    // } , function(response){
+    //   Flash.create('danger' , response.status + ' : ' + response.statusText);
+    // });
+
+
   };
 
   $scope.resetForm = function(){

@@ -294,3 +294,21 @@ class payrollViewSet(viewsets.ModelViewSet):
     serializer_class = payrollSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user' ]
+
+
+class leaveViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = leaveSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user']
+    def get_queryset(self):
+
+        if self.request.user.is_superuser:
+            return Leave.objects.all()
+
+        desigs = self.request.user.managing.all()
+        reportees = []
+        for d in desigs:
+            reportees.append(d.user)
+
+        return Leave.objects.filter(user__in = reportees)

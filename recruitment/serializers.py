@@ -39,9 +39,9 @@ class JobsSerializer(serializers.ModelSerializer):
         del validated_data['contacts']
         print validated_data
         inv = Jobs(**validated_data)
-        inv.unit = Units.objects.get(pk = self.context['request'].data['unit'])
+        inv.unit = Unit.objects.get(pk = self.context['request'].data['unit'])
         inv.department = Departments.objects.get(pk = self.context['request'].data['department'])
-        inv.role = Roles.objects.get(pk = self.context['request'].data['role'])
+        inv.role = Role.objects.get(pk = self.context['request'].data['role'])
         inv.save()
         for i in self.context['request'].data['contacts']:
             inv.contacts.add(User.objects.get(pk = i))
@@ -54,9 +54,9 @@ class JobsSerializer(serializers.ModelSerializer):
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        instance.unit = Units.objects.get(pk = self.context['request'].data['unit'])
+        instance.unit = Unit.objects.get(pk = self.context['request'].data['unit'])
         instance.department = Departments.objects.get(pk = self.context['request'].data['department'])
-        instance.role = Roles.objects.get(pk = self.context['request'].data['role'])
+        instance.role = Role.objects.get(pk = self.context['request'].data['role'])
         if 'contacts' in self.context['request'].data:
             for i in self.context['request'].data['contacts']:
                 instance.contacts.add(User.objects.get(pk = i))

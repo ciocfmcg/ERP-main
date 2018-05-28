@@ -13,6 +13,7 @@ router.register(r'profileAdminMode' , userProfileAdminModeViewSet , base_name ='
 router.register(r'designation' , userDesignationViewSet , base_name = 'designation')
 router.register(r'rank' , rankViewSet , base_name = 'rank')
 router.register(r'payroll' , payrollViewSet , base_name = 'payroll')
+router.register(r'leave' , leaveViewSet , base_name = 'leave')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

@@ -27,7 +27,7 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
 
   $scope.config = {
     views: views,
-    url: '/api/recruitment/jobs/',
+    url: '/api/recruitment/job/',
     searchField: 'jobtype',
     itemsNumPerView: [16, 32, 48],
   }
@@ -96,13 +96,13 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
     })
   };
   $scope.unitsSearch = function(query) {
-    return $http.get('/api/organization/units/?name__contains=' + query).
+    return $http.get('/api/organization/unit/?name__contains=' + query).
     then(function(response) {
       return response.data;
     })
   };
   $scope.roleSearch = function(query) {
-    return $http.get('/api/organization/roles/?name__contains=' + query).
+    return $http.get('/api/organization/role/?name__contains=' + query).
     then(function(response) {
       return response.data;
     })
@@ -141,7 +141,7 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
       skill: f.skill
     }
     console.log(toSend);
-    var url = '/api/recruitment/jobs/';
+    var url = '/api/recruitment/job/';
     if ($scope.form.pk == undefined) {
       var method = 'POST';
     } else {

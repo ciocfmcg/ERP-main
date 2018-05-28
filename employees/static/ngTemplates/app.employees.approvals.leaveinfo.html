@@ -1,0 +1,123 @@
+<div ng-controller="workforceManagement.employees.approvals.info" style="padding-top:20px;">
+  <div class="col-md-12">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:14vh;position:relative;">
+      <div class="row">
+        <h3>Leave Request For:</h3>
+      </div>
+      <div class="row text-center">
+        <img ng-src="{{data.user | getDP}}" style="width:100px;">
+      </div>
+      <div class="row text-center">
+        <h4>{{data.user | getName}}</h4>
+      </div>
+    </div>
+    <div class="col-md-8" style="padding:20px;border-left:solid 1px #eeeeee;">
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          From date:
+        </div>
+        <div class="col-md-6">
+          <span>
+            {{data.fromDate | date}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          To date:
+        </div>
+        <div class="col-md-6">
+          <span>
+              {{data.toDate | date}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          Total days:
+        </div>
+        <div class="col-md-6">
+          <span>
+            {{data.days}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          Catagory:
+        </div>
+        <div class="col-md-6">
+          <span ng-if="data.category == 'AL'">
+            Annual Leave
+          </span>
+          <span ng-if="data.category == 'ML'">
+            Medical Leave
+          </span>
+          <span ng-if="data.category == 'casual'">
+            Casual Leave
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          Comments:
+        </div>
+        <div class="col-md-6">
+          <span>
+          {{data.comment}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          approvedStage:
+        </div>
+        <div class="col-md-6">
+          <span>
+          {{data.approvedStage}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          approvedMatrix:
+        </div>
+        <div class="col-md-6">
+          <span>
+            {{data.approvedMatrix}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          Approved:
+        </div>
+        <div class="col-md-6">
+          <span>
+            {{data.approved}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          Approved By:
+        </div>
+        <div class="col-md-6">
+          <span ng-repeat="u in data.approvedBy">
+            {{u | getName}}
+          </span> <br>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 text-right" ng-if="!data.approved">
+      <!-- <button type="button" class="btn btn-default">Approve</button> -->
+      <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save()" confirm-button-type="danger" cancel-button-type="default"
+        style="position:relative;top:30px;right:-15px;cursor:pointer;">Approve</button>
+      <!-- <div class="col-md-2" style="padding-top:10px;">
+        <switch ng-model="data.approved" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approval :</span>
+      </div> -->
+    </div>
+    <!-- <div class="col-md-12 text-center">
+      <button type="button" class="btn btn-success" ng-click="save()">save</button>
+    </div> -->
+  </div>

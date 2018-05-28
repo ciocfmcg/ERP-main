@@ -15,7 +15,7 @@ app.controller('admin.manageUsers.mailAccount', function($scope, $http) {
 app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
   $scope.data = $scope.tab.data;
-
+  console.log($scope.data);
 
 
   console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.data.pk);
@@ -27,6 +27,42 @@ app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $stat
     $scope.payroll = response.data[0];
     console.log($scope.payroll);
   })
+  console.log('((((((((((((((()))))))))))))))', $scope.data.userPK);
+  $http({
+    method: 'GET',
+    url: '/api/HR/designation/?user=' + $scope.data.userPK
+  }).
+  then(function(response) {
+    console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
+    $scope.designation = response.data[0];
+    console.log($scope.designation);
+
+
+    if (typeof $scope.designation.division == 'number') {
+      $http({
+        method: 'GET',
+        url: '/api/organization/divisions/' + $scope.designation.division + '/'
+      }).
+      then(function(response) {
+        $scope.designation.division = response.data;
+      })
+    }
+
+    if (typeof $scope.designation.unit == 'number') {
+      $http({
+        method: 'GET',
+        url: '/api/organization/unit/' + $scope.designation.unit + '/'
+      }).
+      then(function(response) {
+        $scope.designation.unit = response.data;
+      })
+
+    }
+
+  })
+
+
+
 
 });
 
@@ -40,7 +76,7 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
     // make patch request
     var f = $scope.form;
     dataToSend = {
-      user: f.pk,
+      // user: f.pk,
       hra: f.hra,
       special: f.special,
       lta: f.lta,
@@ -59,18 +95,28 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
       ifscCode: f.ifscCode,
       bankName: f.bankName,
       deboarded: f.deboarded,
+      PFUan: f.PFUan,
+      pan: f.pan,
 
 
     }
 
     if (typeof f.joiningDate == 'object') {
       dataToSend.joiningDate = f.joiningDate.toJSON().split('T')[0]
-    }else {
+    } else {
       dataToSend.joiningDate = f.joiningDate
     }
+
+    // if (typeof f.lastWorkingDate == 'object') {
+    //   dataToSend.lastWorkingDate = f.lastWorkingDate.toJSON().split('T')[0]
+    // } else {
+    //   dataToSend.lastWorkingDate = f.lastWorkingDate
+    // }
+
     if (f.lastWorkingDate != null) {
       dataToSend.lastWorkingDate = f.lastWorkingDate.toJSON().split('T')[0]
     }
+
 
     $http({
       method: 'PATCH',
@@ -97,12 +143,137 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
 
 });
 
+app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash, $users) {
+
+  // $scope.user = $users.get($scope.tab.data.user);
+
+  $scope.divisionSearch = function(query) {
+    return $http.get('/api/organization/divisions/?name__contains=' + query).
+    then(function(response) {
+      console.log('@', response.data);
+      return response.data;
+    })
+  };
+
+  $scope.unitSearch = function(query) {
+    // console.log('************',query);
+    return $http.get('/api/organization/unit/?name__contains=' + query).
+    then(function(response) {
+      console.log('@', response.data)
+      return response.data;
+    })
+  };
+
+  $scope.depSearch = function(query) {
+    // console.log('************',query);
+    return $http.get('/api/organization/departments/?name__contains=' + query).
+    then(function(response) {
+      console.log('@', response.data)
+      return response.data;
+    })
+  };
+
+  $scope.roleSearch = function(query) {
+    // console.log('************',query);
+    return $http.get('/api/organization/role/?name__contains=' + query).
+    then(function(response) {
+      console.log('@', response.data)
+      return response.data;
+    })
+  };
+
+  $scope.form = $scope.tab.data;
+
+  if (typeof $scope.form.reportingTo == 'number') {
+    $scope.form.reportingTo = $users.get($scope.form.reportingTo);
+  }
+
+  if (typeof $scope.form.secondaryApprover == 'number') {
+    $scope.form.secondaryApprover = $users.get($scope.form.secondaryApprover);
+  }
+
+  if (typeof $scope.form.primaryApprover == 'number') {
+    $scope.form.primaryApprover = $users.get($scope.form.primaryApprover);
+  }
+  if (typeof $scope.form.division == 'number') {
+    $http({
+      method: 'GET',
+      url: '/api/organization/divisions/' + $scope.form.division + '/'
+    }).
+    then(function(response) {
+      $scope.form.division = response.data;
+    })
+  }
+
+  if (typeof $scope.form.unit == 'number') {
+    $http({
+      method: 'GET',
+      url: '/api/organization/unit/' + $scope.form.unit + '/'
+    }).
+    then(function(response) {
+      $scope.form.unit = response.data;
+    })
+  }
+
+  if (typeof $scope.form.department == 'number') {
+    $http({
+      method: 'GET',
+      url: '/api/organization/departments/' + $scope.form.department + '/'
+    }).
+    then(function(response) {
+      $scope.form.department = response.data;
+    })
+  }
+
+  if (typeof $scope.form.role == 'number') {
+    $http({
+      method: 'GET',
+      url: '/api/organization/role/' + $scope.form.role + '/'
+    }).
+    then(function(response) {
+      $scope.form.role = response.data;
+    })
+  }
+
+
+
+
+
+  console.log('pppppppppppppppppppp', $scope.tab.data);
+  $scope.save = function() {
+    // make patch request
+    var f = $scope.form;
+    dataToSend = {
+      // user: f.pk,
+      reportingTo: f.reportingTo.pk,
+      primaryApprover: f.primaryApprover.pk,
+      secondaryApprover: f.secondaryApprover.pk,
+      division: f.division.pk,
+      unit: f.unit.pk,
+      department: f.department.pk,
+      role: f.role.pk
+
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/HR/designation/' + f.pk + '/',
+      data: dataToSend
+    }).
+    then(function(response) {
+
+      // $scope.form.pk = response.data.pk;
+      Flash.create('success', response.status + ' : ' + response.statusText);
+    }, function(err) {})
+  }
+});
+
 
 
 app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
   $scope.page = 1;
-  $scope.maxPage = 5;
+  $scope.maxPage = 3;
   console.log($scope.tab);
 
   $scope.data = $scope.tab.data;
@@ -153,7 +324,7 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
 
     if (typeof prof.dateOfBirth == 'object') {
       dataToSend.dateOfBirth = prof.dateOfBirth.toJSON().split('T')[0]
-    }else {
+    } else {
       dataToSend.dateOfBirth = prof.dateOfBirth
     }
 
@@ -209,8 +380,8 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     'drivingLicense': emptyFile,
     'cheque': emptyFile,
     'passbook': emptyFile,
-    'sign':emptyFile,
-    'IDPhoto':emptyFile
+    'sign': emptyFile,
+    'IDPhoto': emptyFile
 
   }
 
@@ -218,7 +389,7 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     var f = $scope.files;
     var fd = new FormData();
 
-    var fileFields = ['TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook','sign','IDPhoto']
+    var fileFields = ['TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook', 'sign', 'IDPhoto']
     for (var i = 0; i < fileFields.length; i++) {
       if ($scope.files[fileFields[i]] != emptyFile) {
         fd.append(fileFields[i], $scope.files[fileFields[i]])
@@ -501,9 +672,31 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
             })(target));
           }
         }
-        // u = $users.get(target)
+      } else if (action == 'editDesignation') {
+        for (var i = 0; i < $scope.data.tableData.length; i++) {
+          if ($scope.data.tableData[i].pk == target) {
+            u = $users.get(target)
+            $http.get('/api/HR/designation/' + $scope.data.tableData[i].designation + '/').
+            success((function(target) {
+              return function(response) {
+                response.userPK = target;
+                // console.log(target);
+                u = $users.get(target)
+                console.log("will add tab profile : ");
+                console.log(response);
+                $scope.addTab({
+                  title: 'Edit Designation for ' + u.first_name + ' ' + u.last_name,
+                  cancel: true,
+                  app: 'editDesignation',
+                  data: response,
+                  active: true
+                })
 
-        // $scope.addTab({title : 'Profile for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'viewProfile' , data : u , active : true})
+                console.log($scope.tabs);
+              }
+            })(target));
+          }
+        }
       } else if (action == 'editPayroll') {
         for (var i = 0; i < $scope.data.tableData.length; i++) {
           if ($scope.data.tableData[i].pk == target) {
@@ -630,23 +823,6 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
   }
 
 
-  $scope.editDesignation = function(index) {
-    // var userData = $scope.tabs[index].data;
-    // dataToSend = {
-    //
-    //
-    // }
-    // if (userData.password != '') {
-    //   dataToSend.password = userData.password
-    // }
-    // $http({method : 'PATCH' , url : userData.url.replace('users' , 'usersAdminMode') , data : dataToSend }).
-    // then(function(response){
-    //    Flash.create('success', response.status + ' : ' + response.statusText);
-    // }, function(response){
-    //    Flash.create('danger', response.status + ' : ' + response.statusText);
-    // });
-  }
-
   $scope.Reporting = function(query) {
     // console.log('************',query);
     console.log("@@@@@@@@@@@@@@");
@@ -656,43 +832,6 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       return response.data;
     })
   };
-
-
-
-
-
-
-
-
-  $scope.save = function() {
-    console.log('entered');
-    var f = $scope.form;
-    var toSend = {
-      'reportingTo': f.reportingTo.pk,
-      'primaryApprover': f.primaryApprover.pk,
-      'secondaryApprover': f.secondaryApprover.pk,
-    }
-    console.log('222222222', toSend);
-
-    $scope.me = $users.get('mySelf');
-    $http({
-      method: 'POST',
-      url: '/api/HR/designation/',
-      data: toSend,
-    }).
-    then(function(response) {
-      $scope.form.pk = response.data.pk;
-      Flash.create('success', 'Saved')
-      // $scope.fetchData();
-      //  $scope.$broadcast('forceRefetch',)
-      //    $scope.$broadcast('forcerefresh', response.data);
-      //  $route.reload();
-    })
-  }
-  //
-  // var name=$scope.tabs[index].data;
-  // console.log('@@@@@@@@@@@@@@@@',name);
-
 
 
 });
