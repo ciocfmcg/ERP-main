@@ -100,12 +100,10 @@ INSTALLED_APPS = (
     'homepage', # landing page
     'mail', # mail application
     'businessManagement', # BM application
-    # 'ecommerce', # ecommerce
     'projectManagement',
     'gitweb', # github.com local server with file browsing and diff viewer
     'taskBoard',
     'projects',
-    'blogs', # publically accesible blogging site
     'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs

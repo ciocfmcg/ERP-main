@@ -39,6 +39,17 @@ app.config(function($stateProvider ){
     templateUrl: '/static/ngTemplates/app.home.notes.html',
     controller: 'controller.home.notes'
   })
+  .state('home.profile', {
+    url: "/profile",
+    templateUrl: '/static/ngTemplates/app.home.profile.html',
+    controller: 'controller.home.profile'
+  })
+  .state('home.myWork', {
+    url: "/myWork",
+    templateUrl: '/static/ngTemplates/app.home.myWork.html',
+    controller: 'controller.home.myWork'
+  })
+  
 
 });
 
