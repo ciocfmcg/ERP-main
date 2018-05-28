@@ -1,0 +1,14 @@
+<div class="col-md-6" style="margin-top: 10px;" >
+  <div class="container-fluid card" style="padding-top:10px;">
+    <div class="col-md-3">
+      <img ng-src="{{data.to | getDP}}" class="img img-rounded" style="height:30px;width:30px">
+    </div>
+    <div class="col-md-9">
+      {{data.to | getName}}
+    </div>
+    <div class="col-md-12">
+      <label>Serial No:</label>{{data.serialNo}}
+      <button type="button" class="btn btn-sm btn-default" ng-click="rowActionClicked('return')" >return</button>
+    </div>
+  </div>
+</div>

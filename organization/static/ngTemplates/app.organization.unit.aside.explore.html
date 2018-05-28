@@ -1,0 +1,125 @@
+<div class="modal-header bg-blue"  style="height:7vh;padding-top:8px;">
+
+  <div class="col-md-10">
+    <div class="row">
+      <div class="col-md-6 text-right">
+        ID :
+      </div>
+      <div class="col-md-6">
+        {{unit.pk}}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 text-right">
+        Name :
+      </div>
+      <div class="col-md-6">
+        {{unit.name}}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 text-right">
+        City :
+      </div>
+      <div class="col-md-6">
+        {{unit.address}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="row">
+      <i class="fa fa-pencil fa-lg" ng-click="edit()"></i>
+    </div> <br>
+    <div class="row">
+      <i class="fa fa-trash fa-lg" mwl-confirm
+          title="Confirm"
+          message="Are you sure you want to delete this Unit?"
+          confirm-text="Yes <i class='fa fa-check'></i>"
+          cancel-text="No"
+          placement = "bottom"
+          on-confirm="delete()"
+          confirm-button-type="danger"
+          cancel-button-type="default"></i>
+    </div>
+  </div>
+
+</div>
+<div class="modal-body" style="position:relative;padding:0px;">
+
+  <div ng-if="mode == 'edit'">
+    <div class="container-fluid" style="margin-top:30px;">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" ng-model="unit.name">
+      </div>
+      <div class="form-group">
+        <label>City</label>
+        <input type="text" class="form-control" ng-model="unit.address">
+      </div>
+      <button type="button" class="btn btn-primary" ng-click="save()">
+        Save
+      </button>
+    </div>
+
+
+  </div>
+
+  <div ng-if="mode == 'view'">
+    <div class="row">
+      <div class="container-fluid">
+        <label style="margin-top:20px;margin-left:30px;">Users</label>
+        <div class="row" style="padding:0px;">
+          <div class="col-md-6" ng-repeat="u in users" style="padding:10px;">
+            <div class="container-fluid card" style="padding-top:10px;">
+              <div class="col-md-4">
+                <img ng-src="{{u.pk | getDP}}" style="width:50px;height:50px;" class="img img-circle">
+              </div>
+              <div class="col-md-8">
+                {{u.pk | getName}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+        <label style="margin-top:20px;margin-left:30px;">Parents</label>
+        <div class="row" ng-repeat="hq in unit.parent" style="padding:0px;">
+          <div class="container-fluid card {{$first ? 'bg-red':''}}" style="padding-top:10px;">
+            <div class="col-md-2 text-center">
+              <i class="fa fa-star fa-3x" ng-if="$first"></i>
+            </div>
+            <div class="col-md-10">
+              HQ : {{hq.name}} <br>
+              City : {{hq.city}} <br>
+              Type : {{hq.level | humanize}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-if="unit.children.length >0">
+      <div class="container-fluid">
+        <label style="margin-top:20px;margin-left:30px;">Stations</label>
+        <div class="row" ng-repeat="hq in unit.children" style="padding:0px;" ng-if="hq.level == 'station'">
+          <div class="container-fluid card" style="padding-top:10px; margin-bottom:30px;">
+            <div class="col-md-2 text-center">
+              <!-- <i class="fa fa-star fa-3x" ng-if="$first"></i> -->
+            </div>
+            <div class="col-md-10">
+              <h4>{{hq.name}}</h4>
+              City : {{hq.city}} <br>
+              Type : {{hq.level | humanize}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

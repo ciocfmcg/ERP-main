@@ -277,7 +277,7 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
 
     $http({
       method: 'PATCH',
-      url: '/api/payroll/report/' + $scope.report.pk + '/',
+      url: '/api/payroll/' + $scope.report.pk + '/',
       data: toSend
     }).
     then(function() {

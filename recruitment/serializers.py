@@ -17,12 +17,12 @@ class DepartmentsLiteSerializer(serializers.ModelSerializer):
 
 class UnitsLiteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Units
+        model = Unit
         fields = ('pk' , 'name' )
 
 class RolesLiteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Roles
+        model = Role
         fields = ('pk' , 'name')
 
 

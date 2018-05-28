@@ -1,0 +1,143 @@
+<div ng-controller="businessManagement.assets.form.info" style="padding-top:20px;">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="row text-center">
+        <h4>{{data.name}}</h4>
+      </div>
+      <div class="row">
+      </div>
+    </div>
+    <div class="col-md-3" style="border-left:solid 4px #eeeeee;">
+
+      <label>Name:</label>
+      <span>
+       {{data.name}}
+      </span>
+      <br>
+
+      <label>Brand:</label>
+      <span>
+        {{data.brand}}
+      </span>
+      <br>
+
+      <label>Model No:</label>
+      <span>
+          {{data.modelNo}}
+      </span>
+    </div>
+    <div class="col-md-3" style="border-left:solid 4px #eeeeee;">
+      <label>Total quantity:</label>
+      <span>
+       {{infoForm.totalQuantity}}
+      </span>
+      <br>
+
+      <label>In Stock:</label>
+      <span>
+        {{infoForm.totalQuantity-infoForm.alloted}}
+      </span>
+      <br>
+
+      <label>Alloted:</label>
+      <span>
+          {{infoForm.alloted}}
+      </span>
+    </div>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-default" ng-click="auditLogs()">Audit Logs</button>
+      <button type="button" class="btn btn-default pull-right" ng-click="checkOutFun()">Check Out</button>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="row text-center">
+        <h3>Checkin</h3>
+      </div>
+      <div >
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Serial Nos</label>
+              <input type="text" class="form-control" ng-model="checkinForm.serialNos">
+            </div>
+            <div class="form-group">
+              <label>Manufactured On</label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="checkinForm.manufacturedOn" is-open="manufacturedOn.opened" ng-init="today" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="manufacturedOn.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Warranty Till</label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="checkinForm.warrantyTill" is-open="warrantyTill.opened" ng-init="today" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="warrantyTill.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>PO No</label>
+              <input type="text" class="form-control" ng-model="checkinForm.poNumber">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12" style="margin-top:10px;">
+            <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="row text-center">
+        <h3>Allotment</h3>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Serial No</label>
+              <input type="text" class="form-control" ng-model="allotmentForm.serialNo">
+            </div>
+            <div class="form-group">
+              <label>To</label>
+              <input type="text" class="form-control" ng-model="allotmentForm.to" uib-typeahead="user as user.username for user in userSearch($viewValue)">
+            </div>
+            <div class="form-group">
+              <label>Approved By</label>
+              <input type="text" class="form-control" ng-model="allotmentForm.approvedBy" uib-typeahead="user as user.username for user in userSearch($viewValue)">
+
+            </div>
+            <div class="form-group">
+              <label>Comments</label>
+              <textarea type="text" class="form-control" ng-model="allotmentForm.comments"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Refurbished</label>
+              <input type="checkbox" ng-model="allotmentForm.refurbished">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12" style="margin-top:10px;">
+            <button type="button" class="btn btn-primary" ng-click="allot();">Allot</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="row text-center">
+        <h3>Users</h3>
+      </div>
+      <div class="container-fluid">
+        <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+      </div>
+
+    </div>
+  </div>
+</div>

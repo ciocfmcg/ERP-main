@@ -129,20 +129,21 @@ app.controller("workforceManagement.organization.departments.form", function($sc
   // 'telephone':'',
   // 'fax':'',
 
-  $scope.units = [];
+  $scope.unit = [];
   if ($scope.tab != undefined) {
     $scope.mode = 'edit';
     $scope.form = $scope.tab.data.departments;
-    $scope.units = $scope.form.units;
+    $scope.unit = $scope.form.unit;
     $scope.form.units = [];
   } else {
     $scope.mode = 'new';
     $scope.resetForm();
   }
+  // console.log($scope.units);
 
   $scope.unitsSearch = function(query) {
     // console.log('************',query);
-    return $http.get('/api/organization/units/?name__contains=' + query).
+    return $http.get('/api/organization/unit/?name__contains=' + query).
     then(function(response) {
       console.log('@', response.data);
       return response.data;
@@ -152,23 +153,25 @@ app.controller("workforceManagement.organization.departments.form", function($sc
 
 
   $scope.unititem = function() {
-    $scope.units.push($scope.form.units)
+    $scope.unit.push($scope.form.units)
+    console.log($scope.unit);
+    console.log($scope.form.units);
     $scope.form.units = [];
   }
 
 
   $scope.deleteitem = function(index) {
-    $scope.units.splice(index, 1);
+    $scope.unit.splice(index, 1);
   }
 
 
 
   $scope.save = function() {
     console.log('entered');
-    console.log($scope.units);
+    console.log($scope.unit);
     // $scope.form.units = [ ];
-    for (var i = 0; i < $scope.units.length; i++) {
-      $scope.form.units.push($scope.units[i].pk)
+    for (var i = 0; i < $scope.unit.length; i++) {
+      $scope.form.units.push($scope.unit[i].pk)
     }
     var f = $scope.form;
     var url = '/api/organization/departments/';
@@ -178,14 +181,14 @@ app.controller("workforceManagement.organization.departments.form", function($sc
       fd.append('picture', f.picture)
     }
 
-
+    console.log($scope.form.units);
     fd.append('title', f.title);
     fd.append('dept_name', f.dept_name);
     fd.append('mobile', f.mobile);
     fd.append('telephone', f.telephone);
     fd.append('fax', f.fax);
     fd.append('contacts', f.contacts);
-    fd.append('units', f.units);
+    fd.append('unit', f.units);
 
     console.log(fd);
     if ($scope.mode == 'new') {

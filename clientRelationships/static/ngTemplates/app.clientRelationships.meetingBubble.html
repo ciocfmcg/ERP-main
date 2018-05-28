@@ -8,8 +8,6 @@
     </h3>
     <div class="timeline-body">
       <div class="container-fluid" style="overflow:hidden;position:relative;">
-        <i class="fa fa-users" style="font-size:230px;margin-left:520px;color:#fffdfa;"></i>
-        <div style="position:absolute;top:0px;">
           <div class="row" ng-if="data.location.length>0">
             <label>Location :</label>  <span>{{data.location}}</span> <br>
           </div>
@@ -23,7 +21,7 @@
           <div class="row" ng-if="data.contacts.length>0">
             <label>External :</label> <br>
             <div style="padding-left:50px;">
-              <div ng-repeat="c in data.contacts" class="col-md-4" style="cursor:pointer;" ng-click="$emit('exploreContact', {contact: c});">
+              <div ng-repeat="c in data.contacts" class="col-md-6" style="cursor:pointer;" ng-click="$emit('exploreContact', {contact: c});">
                 <div class="container-fluid card" style="padding:0px;margin-bottom:10px;">
                   <div class="col-md-3" style="padding:0px;">
                     <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getCRMDP}}">
@@ -39,7 +37,7 @@
           <div class="row" ng-if="data.internalUsers.length>0">
             <label>Internal :</label> <br>
             <div style="padding-left:50px;">
-              <div ng-repeat="c in data.internalUsers" class="col-md-4">
+              <div ng-repeat="c in data.internalUsers" class="col-md-6">
                 <div class="container-fluid card" style="padding:0px;margin-bottom:10px;">
                   <div class="col-md-3" style="padding:0px;">
                     <img style="width: 50px;height:50px;" class="img img-rounded" ng-src="{{c | getDP}}">
@@ -52,7 +50,6 @@
               </div>
           </div>
           </div>
-        </div>
       </div>
     </div>
     <!-- <div class="timeline-footer" >

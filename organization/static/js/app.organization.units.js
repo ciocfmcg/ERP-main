@@ -27,7 +27,7 @@ app.controller("workforceManagement.organization.units", function($scope, $state
 
   $scope.config = {
     views: views,
-    url: '/api/organization/units/',
+    url: '/api/organization/unit/',
     searchField: 'name',
     itemsNumPerView: [16, 32, 48],
   }
@@ -126,7 +126,7 @@ app.controller("workforceManagement.organization.units.form", function($scope, $
 
   $scope.unitsSearch = function(query) {
     // console.log('************',query);
-    return $http.get('/api/organization/units/?name__contains=' + query).
+    return $http.get('/api/organization/unit/?name__contains=' + query).
     then(function(response) {
       console.log('@', response.data);
       return response.data;
@@ -178,7 +178,7 @@ app.controller("workforceManagement.organization.units.form", function($scope, $
   $scope.save = function() {
     console.log('entered');
     var f = $scope.form;
-    var url = '/api/organization/units/';
+    var url = '/api/organization/unit/';
 
     // var parent = []
     // for (var i = 0; i < $scope.form.parent.length; i++) {

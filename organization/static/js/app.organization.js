@@ -14,11 +14,189 @@ app.config(function($stateProvider){
         },
         "@workforceManagement.organization": {
           templateUrl: '/static/ngTemplates/app.organization.dash.html',
-          // controller : 'projectManagement.LMS.default',
+          controller : 'workforceManagement.organization.dash',
         }
     }
   })
 });
+
+
+app.controller("workforceManagement.organization.dash",function($scope, $state, $users, $stateParams, $http, Flash, $uibModal ,$aside) {
+
+  $scope.form = {division : '' , datasource : {}}
+
+  $scope.colorCodeUnit = function(children) {
+    var toRemove = []
+    for (var i = 0; i < children.length; i++) {
+
+
+      // if (children[i].level == 'station') {
+        children[i].className = 'middle-level';
+      //   toRemove.push(i);
+      // }else if (children[i].level == 'HQ') {
+      //   children[i].className = 'frontend1';
+      // }
+
+      $scope.colorCodeUnit(children[i].children);
+    }
+
+    for (var i = toRemove.length -1; i >= 0; i--)
+    children.splice(toRemove[i],1);
+
+  }
+
+  $scope.openHQ = function(pk) {
+    $scope.nodeInView = pk;
+    $http({method : 'GET' , url : '/api/organization/unitSuperLite/' + pk +'/'}).
+    then(function(response) {
+
+      $scope.form.datasource = response.data;
+
+      // if ($scope.form.datasource.level == 'station') {
+        $scope.form.datasource.className = 'middle-level';
+      // }else if ($scope.form.datasource.level == 'HQ') {
+      //   $scope.form.datasource.className = 'frontend1';
+      // }
+
+      $scope.colorCodeUnit($scope.form.datasource.children);
+
+      $scope.chart.init({data : $scope.form.datasource});
+      $('.orgchart').addClass('noncollapsable');
+
+    })
+  }
+
+  $scope.fetchFirstLevelUnit = function() {
+    $http({method : 'GET' , url : '/api/organization/firstLevelUnit/?divisions=' + $scope.form.division.pk }).
+    then(function(response) {
+      $scope.firstLevelHQs = response.data;
+      // console.log($scope.firstLevelHQs);
+      console.log(response.data);
+
+      $scope.openHQ($scope.firstLevelHQs.pk);
+      $scope.nodeInView = $scope.firstLevelHQs.pk;
+    })
+  }
+
+  $scope.$watch('form.division' , function(newValue , oldValue) {
+    if (typeof newValue == 'object') {
+      $scope.fetchFirstLevelUnit();
+    }
+  })
+
+
+
+
+  $scope.inView = null;
+
+  var nodeTemplate = function(data) {
+    return `
+      <span class="office"></span>
+      <div class="title">${data.name}</div>
+      <div class="content"></div>
+    `;
+  };
+
+  $scope.buildChart = function() {
+    $scope.chart = $('#chart-container').orgchart({
+      'nodeContent': 'level',
+      'direction': 't2b',
+      'nodeId': 'pk',
+      'pan': true,
+      'nodeTemplate': nodeTemplate,
+      createNode: function($node, data) {
+
+        var secondMenuIconInfo = $('<i>', {
+          'class': 'fa fa-info fa-3x second-menu-icon bg-blue', id : $node[0].id,
+          click: function(event) {
+            $scope.inView = $(this)[0].id;
+            $scope.viewUnit($(this))
+            event.stopPropagation();
+          }
+        });
+
+        $node[0].onclick = function() {
+          console.log("clicked : " + $node);
+        }
+        $node.append(secondMenuIconInfo);
+      }
+    });
+
+
+
+    $scope.openHQ(8);
+
+  }
+
+
+  $scope.buildChart();
+
+  $http({method : 'GET' , url : '/api/organization/divisions'}).
+  then(function(response) {
+    $scope.divisions = response.data;
+    $scope.form.division = $scope.divisions[0];
+  })
+
+  $scope.selectDivision = function(idx) {
+  $scope.form.division = $scope.divisions[idx];
+}
+
+$scope.viewUnit = function(idx) {
+    $aside.open({
+      templateUrl: '/static/ngTemplates/app.organization.unit.aside.explore.html',
+      placement: 'left',
+      size: 'md',
+      backdrop: true,
+      controller:function($scope , input, $http , $uibModalInstance) {
+        $scope.mode = 'view';
+        $scope.edit = function() {
+          $scope.mode = 'edit';
+        }
+
+        $scope.delete = function() {
+          $http({method : 'DELETE' , url : '/api/organization/unit/' + $scope.unit.pk + '/'}).
+          then(function(response) {
+            $uibModalInstance.dismiss('reload');
+          })
+        }
+
+        $scope.save = function() {
+          $http({method : 'PATCH' , url : '/api/organization/unit/' + $scope.unit.pk + '/' , data : {name : $scope.unit.name , city : $scope.unit.address}}).
+          then(function(response) {
+            $uibModalInstance.dismiss('reload');
+          })
+        }
+
+
+        $http({method : 'GET' , url : '/api/organization/unitFull/' + input + '/'}).
+        then(function(response) {
+          $scope.unit = response.data;
+          $http({method : 'GET' , url : '/api/HR/userSearch/?unit=' + $scope.unit.pk}).
+          then(function(response) {
+            $scope.users = response.data;
+          })
+        })
+        $scope.input = input;
+      },
+      resolve: {
+       input: function () {
+         return $scope.inView;
+        }
+      }
+    }).result.then(function (d) {
+
+    }, function (d) {
+      console.log(d);
+      if (d == 'reload') {
+        $scope.openHQ($scope.nodeInView);
+      }
+    });
+  }
+
+
+});
+
+
 app.controller("workforceManagement.organization", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = {

@@ -16,6 +16,9 @@
               <span style="font-size:15px">Date of Processing:{{data.dateOfProcessing}} <span ng-if="!data.dateOfProcessing" class="text-danger">NA</span> </span><br>
             </div>
           </div>
+          <div class="pull-right">
+            <a style="cursor:pointer;" target="_blank" href="/api/payroll/payslipsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
+          </div>
         </div>
       </div>
     </div>

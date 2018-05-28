@@ -50,7 +50,7 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.colors import *
 from reportlab.lib.units import inch, cm
 import calendar
-import datetime
+# import datetime
 from forex_python.converter import CurrencyCodes
 from HR.models import payroll
 from django.contrib.auth.models import User
@@ -138,6 +138,7 @@ def payslip(response ,paySlip,userObj, request):
     elements.append(t1)
     doc.build(elements)
 
+
 class GetPayslip(APIView):
     def get(self , request , format = None):
         print 'enterrrrrrrrrrrrrrrrrr'
@@ -150,6 +151,25 @@ class GetPayslip(APIView):
         response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
         payslip(response , p , q , request)
         return response
+
+#code for excelSheet
+
+from excel_response import ExcelResponse
+
+class PayslipsReport(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self , request , format = None):
+        objs = Payslip.objects.filter(report_id = request.GET['report'])
+
+        toReturn = []
+
+        for o in objs:
+            toReturn.append({"Employee Name" : o.user.first_name + ' ' + o.user.last_name , "payslipID" : o.pk , "totalPayable" : o.totalPayable,"tds" : o.tds , "accountNumber" : o.user.payroll.accountNumber ,"bankName" : o.user.payroll.bankName , "ifscCode" : o.user.payroll.ifscCode, "pan" : o.user.payroll.pan , "PFUan" : o.user.payroll.PFUan})
+
+
+
+
+        return ExcelResponse(toReturn)
 
 class GetReimbursement(APIView):
     renderer_classes = (JSONRenderer,)

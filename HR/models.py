@@ -186,6 +186,8 @@ class payroll(models.Model):
     special = models.PositiveIntegerField(null = True)
     lta = models.PositiveIntegerField(null = True)
     basic = models.PositiveIntegerField(null = True)
+    PFUan = models.PositiveIntegerField(null = True)
+    pan = models.CharField(max_length = 30 , null = True)
     taxSlab = models.PositiveIntegerField(default=10)
     adHoc = models.PositiveIntegerField(null = True)
     policyNumber = models.CharField(null = True , max_length = 50)

@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h3>Return</h3>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="form-group">
+      <label>Comment:</label>
+      <textarea class="form-control" rows="3" placeholder="Reason to return?" ng-model="returnFrom.returnComment"></textarea> <br>
+      <button type="button"
+        mwl-confirm
+        title="Confirm"
+        message="Are you sure?"
+        confirm-text="Yes <i class='fa fa-check'></i>"
+        cancel-text="No"
+        on-confirm="returnProduct(data.pk)"
+        confirm-button-type="danger"
+        cancel-button-type="default"
+       class="btn-danger btn-sm " <i class="fa fa-trash"></i> Return </button>
+      <!-- <label>Are you sure ?:</label> -->
+      <!-- <input type="radio" name="return" ng-model="returnFrom.returned" value="true"> Yes
+      <input type="radio" name="return" ng-model="returnFrom.returned" value="false"> No <br> -->
+      <!-- <button type="button" class="from-control btn btn-default" ng-click="returnProduct()" name="button">Return</button> -->
+    </div>
+
+  </div>
+</div>
