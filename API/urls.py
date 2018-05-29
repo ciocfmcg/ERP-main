@@ -13,7 +13,6 @@ urlpatterns = [
     url(r'^finance/', include('finance.urls')),
     url(r'^tools/', include('tools.urls')),
     url(r'^clientRelationships/', include('clientRelationships.urls')),
-    url(r'^LMS/', include('LMS.urls')),
     url(r'^organization/', include('organization.urls')),
     url(r'^recruitment/', include('recruitment.urls')),
     url(r'^payroll/', include('payroll.urls')),

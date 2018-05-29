@@ -70,11 +70,7 @@ app.controller("workforceManagement.organization.dash",function($scope, $state, 
     $http({method : 'GET' , url : '/api/organization/firstLevelUnit/?divisions=' + $scope.form.division.pk }).
     then(function(response) {
       $scope.firstLevelHQs = response.data;
-      // console.log($scope.firstLevelHQs);
-      console.log(response.data);
-
-      $scope.openHQ($scope.firstLevelHQs.pk);
-      $scope.nodeInView = $scope.firstLevelHQs.pk;
+      $scope.openHQ($scope.firstLevelHQs[0].pk);
     })
   }
 
@@ -123,8 +119,6 @@ app.controller("workforceManagement.organization.dash",function($scope, $state, 
     });
 
 
-
-    $scope.openHQ(8);
 
   }
 

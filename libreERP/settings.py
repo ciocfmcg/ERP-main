@@ -108,7 +108,7 @@ INSTALLED_APPS = (
 	'finance',# billing , invoicing , finance etc
 	'tools',# general purpose tools like OCR, AI or big data related stuffs
 	'clientRelationships',# CRM like sales force
-	'LMS',# LMS
+	# 'LMS',# LMS
 	'workforceManagement',# canvas
     'support',# canvas
 	'employees',# employees details
