@@ -20,63 +20,80 @@ app.directive('ecommerceListingEditor', function () {
 app.controller('ecommerce.form.listing' , function($scope , $state , $stateParams , $http , Flash){
   $scope.data = {mode : 'select' , form : {} };
   $scope.config = JSON.parse($scope.configObj);
+  console.log('rrrrrrrrrrrrr',$scope.config);
 
   if (angular.isDefined($scope.config.pk)) {
     $scope.id = $scope.config.pk;
     $scope.editorMode = 'edit';
+    console.log('editinggggggggg');
   }else {
+    console.log('newwwwwwwwwwww');
     $scope.editorMode = 'new';
     $scope.data.genericProduct = $scope.config.parent;
-  }
-
-  $scope.choiceSearch = function(query , field) {
-    return $http.get('/api/ecommerce/choiceOption/?name__contains=' + query + '&parent=' + field.parentLabel).
-    then(function(response){
-      return response.data;
-    })
-  }
-
-  $scope.removeMedia = function(index) {
-    $scope.data.form.files.splice(index,1);
-  }
-
-
-  $scope.buildForm = function(){
-    $scope.data.mode = 'create'
-    fields = $scope.data.genericProduct.fields;
-    for (var i = 0; i < fields.length; i++) {
-      if (fields[i].fieldType == 'boolean'){
-        if (fields[i].default == 'true') {
-          $scope.data.genericProduct.fields[i].default = true;
-        } else {
-          $scope.data.genericProduct.fields[i].default = false;
-        }
-      } else if (fields[i].fieldType == 'float') {
-        $scope.data.genericProduct.fields[i].default = parseFloat(fields[i].default);
-      } else if (fields[i].fieldType == 'date') {
-        $scope.data.genericProduct.fields[i].default = new Date();
-      } else if (fields[i].fieldType == 'choice') {
-        $http({method : 'GET' , url : '/api/ecommerce/choiceLabel/?name=' + fields[i].unit}).
-        then((function(i){
-          return function(response){
-            $scope.data.genericProduct.fields[i].parentLabel = response.data[0].pk;
-          }
-        })(i))
+    for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
+      if ($scope.data.genericProduct.fields[i].fieldType == 'choice') {
+        $scope.data.genericProduct.fields[i].data = JSON.parse($scope.data.genericProduct.fields[i].data)
       }
     }
   }
 
-  $scope.switchMediaMode = function(mode){
-    $scope.data.form.mediaType = mode;
+  // $scope.choiceSearch = function(query , field) {
+  //   return $http.get('/api/ecommerce/choiceOption/?name__contains=' + query + '&parent=' + field.parentLabel).
+  //   then(function(response){
+  //     return response.data;
+  //   })
+  // }
 
+  $scope.removeMedia = function(index) {
+    $http({method : 'DELETE' , url : '/api/ecommerce/media/' + $scope.data.form.files[index].pk + '/'}).
+    then(function(response){
+      $scope.data.form.files.splice(index,1);
+    })
   }
 
+  $scope.productSearch = function(val){
+    console.log('ssssssssssss',val);
+    return $http.get('/api/POS/product/?search=' + val +'&limit=10').
+    then(function(response) {
+      return response.data.results;
+    })
+  }
+  $scope.buildForm = function(){
+    $scope.data.mode = 'create'
+    console.log('caaaaaaaa',$scope.data);
+    console.log($scope.data.genericProduct.fields);
+    fields = $scope.data.genericProduct.fields;
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].fieldType == 'boolean'){
+        if (fields[i].default == 'true') {
+          $scope.data.genericProduct.fields[i].value = true;
+        } else {
+          $scope.data.genericProduct.fields[i].value = false;
+        }
+      } else if (fields[i].fieldType == 'float') {
+        $scope.data.genericProduct.fields[i].value = parseFloat(fields[i].default);
+      } else if (fields[i].fieldType == 'date') {
+        $scope.data.genericProduct.fields[i].value = new Date();
+      }else if (fields[i].fieldType == 'char') {
+        $scope.data.genericProduct.fields[i].value = fields[i].default;
+      }else if (fields[i].fieldType == 'choice') {
+        $scope.data.genericProduct.fields[i].value = fields[i].default;
+      }
+      // else if (fields[i].fieldType == 'choice') {
+      //   $http({method : 'GET' , url : '/api/ecommerce/choiceLabel/?name=' + fields[i].unit}).
+      //   then((function(i){
+      //     return function(response){
+      //       $scope.data.genericProduct.fields[i].parentLabel = response.data[0].pk;
+      //     }
+      //   })(i))
+      // }
+    }
+  }
+
+
+
   $scope.resetForm = function(){
-    $scope.data.form = {mediaType : '' , files : [] , file : emptyFile , url : '', source : '',
-      availability : 'local',
-      priceModel : 'quantity',
-      shippingOptions : 'pickup',
-      category : 'product',
+    $scope.data.form = {mediaType : '' , files : [] , file : emptyFile , url : '', source : '', product : ''
     }
   }
 
@@ -89,11 +106,12 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
       post = {method : 'POST' , url : '/api/ecommerce/listing/'};
     }
     form = $scope.data.form;
+    console.log(form);
     dataToSend = {}
-    for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
-      f = $scope.data.genericProduct.fields[i];
-      dataToSend[f.name] = f.default;
-    }
+    // for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
+    //   f = $scope.data.genericProduct.fields[i];
+    //   dataToSend[f.name] = f.default;
+    // }
     files = [];
     for (var i = 0; i < form.files.length; i++) {
       files.push(form.files[i].pk);
@@ -101,43 +119,60 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
     if (files.length != 0) {
       dataToSend.files = files;
     }
-    console.log(form);
-    for (key in form) {
-      if (key != 'files' && key !='file') {
-        if (key == 'replacementPeriod') {
-          dataToSend[key] = parseInt(form[key]);
-          continue;
-        }
-        dataToSend[key] = form[key];
-      }
-    }
+    // for (key in form) {
+    //   if (key != 'files' && key !='file') {
+    //     if (key == 'product') {
+    //       dataToSend[key] = form[key].pk;
+    //       continue;
+    //     }else if (key == 'source') {
+    //       dataToSend[key] = form[key]
+    //     }
+    //     dataToSend[key] = form[key];
+    //   }
+    // }
+    dataToSend.product = form['product'].pk;
+    dataToSend.source = form['source'];
     specs = [];
     for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
       f = $scope.data.genericProduct.fields[i];
       toPush = {};
       toPush['name'] = f.name;
-      toPush['value'] = f.default;
+      toPush['value'] = f.value;
       toPush['fieldType'] = f.fieldType;
       toPush['unit'] = f.unit;
+      toPush['helpText'] = f.helpText;
+      toPush['data'] = f.data;
+      console.log(toPush);
       specs.push(toPush);
     }
     dataToSend.specifications = JSON.stringify(specs)
     dataToSend.parentType = $scope.data.genericProduct.pk;
     $http({method : post.method , url : post.url , data : dataToSend}).
     then(function(response){
+      console.log('ressssssssssss');
       if ($scope.editorMode == 'new') {
-        $scope.data.form.files = [];
-        $scope.data.form.file = emptyFile;
+        console.log('11111');
+        $scope.buildForm();
+        console.log('2222222');
         $scope.resetForm();
-        for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
-          $scope.data.genericProduct.fields[i].default = '';
-        }
+        console.log('3333333');
+        // $scope.data.form.files = [];
+        // $scope.data.form.file = emptyFile;
+        // $scope.resetForm();
+        // for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
+        //   $scope.data.genericProduct.fields[i].default = '';
+        // }
       }
       Flash.create('success', response.status + ' : ' + response.statusText);
-    }, function(response){
-      Flash.create('danger', response.status + ' : ' + response.statusText);
+    }, function(err){
+      Flash.create('danger', err.status + ' : ' + err.statusText);
     })
 
+
+  }
+
+  $scope.switchMediaMode = function(mode){
+    $scope.data.form.mediaType = mode;
 
   }
 
@@ -180,7 +215,9 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
         for (var i = 0; i < gp.fields.length; i++) {
           for (var j = 0; j < specs.length; j++) {
             if (gp.fields[i].name == specs[j].name) {
-              gp.fields[i].default = specs[j].value;
+              console.log(specs[j].name,specs[j].value);
+              gp.fields[i].value = specs[j].value;
+              gp.fields[i].data = specs[j].data;
             }
           }
         }
@@ -204,11 +241,20 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
     toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
   };
 
-
+  $scope.$on('removeFiles', function(event, data) {
+    console.log('broooooooooooooo',$scope.data,$scope.data.form.files.length);
+    for (var i = 0; i < $scope.data.form.files.length; i++) {
+      console.log(i);
+      $http({method : 'DELETE' , url : '/api/ecommerce/media/' + $scope.data.form.files[i].pk + '/'}).
+      then(function(response){
+        console.log('deleted');
+      })
+    }
+  })
 
 });
 
-app.controller('businessManagement.ecommerce.listings' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('businessManagement.ecommerce.listings' , function($scope ,$rootScope, $http , $aside , $state, Flash , $users , $filter , $permissions){
 
   $scope.getConfig = function(mode , data){
     toReturn = {};
@@ -231,7 +277,7 @@ app.controller('businessManagement.ecommerce.listings' , function($scope , $http
   $scope.config = {
     views : views,
     url : '/api/ecommerce/listingLite/',
-    fields : ['pk','title' , 'description' , 'priceModel' , 'approved' , 'category' , 'parentType'],
+    fields : ['pk','approved' ,  'parentType'],
     searchField: 'title',
     options : options,
     deletable : true,
@@ -267,7 +313,7 @@ app.controller('businessManagement.ecommerce.listings' , function($scope , $http
     if (action=='edit') {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)){
-          $scope.addTab({title : 'Edit Listing : ' + $scope.data.tableData[i].title , cancel : true , app : 'editListing' , data : {pk : target} , active : true})
+          $scope.addTab({title : 'Edit Listing : ' + $scope.data.tableData[i].pk , cancel : true , app : 'editListing' , data : {pk : target} , active : true})
         }
       }
     }
@@ -281,7 +327,10 @@ app.controller('businessManagement.ecommerce.listings' , function($scope , $http
   };
 
   $scope.goBack = function(){
+    $rootScope.$broadcast('removeFiles', {});
+    // console.log($scope.data);
     $scope.data.mode = 'select';
+    $scope.data.genericProduct = ''
   }
 
 });

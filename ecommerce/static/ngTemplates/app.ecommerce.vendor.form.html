@@ -1,0 +1,23 @@
+<div ng-controller = "businessManagement.ecommerce.configure.form">
+
+  <div class="col-md-6" style="margin-top:10px;">
+    <div class="form-group">
+      <label> Type {{$scope.form.mode}}</label>
+      <select class="form-control" ng-model="form.mode">
+        <option value = "field">Field</option>
+        <option value = "genericProduct">Product</option>
+
+        <!-- actual form building as seen by the vendor is in generic product-->
+      </select>
+
+      <!-- <p class="help-block">Field is to create a property of a genric product. An example can be weight , screen size , power and so on.</p> -->
+
+    </div>
+  </div>
+  <div class="col-md-6" style="margin-top:10px;">
+    <div ng-if="form.mode == 'field'" ng-include="editorTemplateField"></div>
+    <div ng-if="form.mode == 'genericProduct'" ng-include="editorTemplateGenericProduct"></div>
+
+    <button type="button" class="btn btn-primary" ng-click="submit()">Submit</button>
+  </div>
+</div>
