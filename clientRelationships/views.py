@@ -292,7 +292,7 @@ def genInvoice(response , contract, request):
 
 
     data += [['', '','','', '', '',Paragraph(str(totalTax) , tableBodyStyle)  , Paragraph(str(grandTotal) , tableBodyStyle) ],
-            ['', '', '', '', '',  Paragraph('Grand Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
+            ['', '', '', '', '',  Paragraph('Grand Total (USD)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
     t=Table(data)
     ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
                 ('VALIGN',(0,1),(-1,-3),'TOP'),
