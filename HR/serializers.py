@@ -30,7 +30,7 @@ class rankSerializer(serializers.ModelSerializer):
 class userDesignationSerializer(serializers.ModelSerializer):
     class Meta:
         model = designation
-        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
+        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover' ,'division' ,'unit' ,'department' ,'role')
 
         read_only_fields=('user',)
         def create(self , validated_data):
@@ -42,6 +42,7 @@ class userDesignationSerializer(serializers.ModelSerializer):
             d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
             d.save()
             return d
+
         #  'unitType' , 'domain' , 'rank' , 'unit' , 'department' ,
 class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
@@ -54,7 +55,7 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
     """ Only admin """
     class Meta:
         model = profile
-        fields = ( 'pk','empID', 'married', 'dateOfBirth' , 'anivarsary' , 'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
+        fields = ( 'pk','empID', 'married', 'dateOfBirth' ,'displayPicture' , 'anivarsary' , 'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
         'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry', 'prefix', 'gender' , 'email', 'mobile' , 'emergency' , 'website',
         'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV', 'resignation','vehicleRegistration', 'appointmentAcceptance','pan', 'drivingLicense','cheque','passbook',
         'note1' , 'note2' , 'note3', 'bloodGroup')
@@ -63,7 +64,7 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
         if not u.is_staff:
             raise PermissionDenied()
 
-        for key in ['empID','married', 'dateOfBirth' , 'anivarsary' ,'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
+        for key in ['empID','married', 'dateOfBirth' , 'displayPicture' ,'anivarsary' ,'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
         'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry', 'prefix', 'gender' , 'email', 'mobile' , 'emergency' , 'website',
         'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV', 'resignation','vehicleRegistration', 'appointmentAcceptance','pan', 'drivingLicense','cheque','passbook',
         'note1' , 'note2' , 'note3', 'bloodGroup']:
@@ -237,3 +238,14 @@ class leaveSerializer(serializers.ModelSerializer):
             return instance
         else:
             raise SuspiciousOperation('Not Authorized')
+
+class ProfileOrgChartsSerializer(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField()
+    # user = userSerializer(many=False , read_only=True)
+    # profile = userProfileSerializer(many=False , read_only=True)
+    class Meta:
+        model = designation
+        fields = ( 'user' , 'reportingTo','profile' )
+        read_only_fields = ('profile',)
+    def get_profile(self, obj):
+        return obj.user.profile.pk

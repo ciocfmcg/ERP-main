@@ -6,7 +6,7 @@ app.controller("controller.home.myWork", function($scope, $state, $users, $state
     $scope.selectIndex = indx;
   }
 
-  $scope.selectIndex = 2;
+  $scope.selectIndex = 7;
 
   $scope.next = function() {
     $scope.selectIndex < $scope.dates.length - 1 ? $scope.selectIndex++ : $scope.selectIndex = 0;
@@ -76,7 +76,11 @@ app.controller("controller.home.myWork", function($scope, $state, $users, $state
   var today = new Date();
   var day = 1000 * 3600 * 24;
 
-  $scope.dates = [new Date(today.getTime() - day * 2), new Date(today.getTime() - day), today, new Date(today.getTime() + day), new Date(today.getTime() + 2 * day)];
+  // $scope.dates = [new Date(today.getTime() - day * 2), new Date(today.getTime() - day), today, new Date(today.getTime() + day), new Date(today.getTime() + 2 * day)];
+  $scope.dates = []
+  for (var i = 10; i > 0; i--) {
+    $scope.dates.push(new Date(today.getTime() - day * (i-3)))
+  }
 
   console.log($scope.dates);
 

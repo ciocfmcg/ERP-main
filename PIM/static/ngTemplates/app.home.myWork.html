@@ -5,23 +5,32 @@
   <div class="container-fluid">
     <div class="col-md-9">
       <div class="container-fluid" style="padding:0px">
-        <div class="row" style="height:100px;width:100%;border-bottom:1px solid #eeeeee">
+        <div class="row" style="height:150px;width:100%;border-bottom:1px solid #eeeeee">
           <div class="container-fluid">
             <div class="row">
 
               <div class="col-md-12">
                 <ul class="pager">
-                  <li class="previous {{pageNo == 0? 'disabled':''}}">
-                    <a href="" ng-click="prev()" style="margin-top: 10px;"><span aria-hidden="true"></span> <i class="fa fa-angle-left" style="color:black;font-size:25px"></i></a>
-                  </li>
-                  <div class="col-md-2" ng-repeat="d in dates" style="cursor:pointer;margin-left:20px;" ng-click="selectDate($index)">
-                    <div class="container-fluid card {{$index == selectIndex ? 'bg-blue' : ''}} " style="border-radius:50px;padding:20px;">
-                      <span>{{d | date:'dd MMM'}}</span>
+                  <div class="col-md-1">
+
+                    <li class="previous {{pageNo == 0? 'disabled':''}}">
+                      <a href="" ng-click="prev()" style="margin-top: 35px;"><span aria-hidden="true"></span> <i class="fa fa-angle-left" style="color:black;font-size:35px"></i></a>
+                    </li>
+                  </div>
+                  <div class="col-md-10">
+
+                    <div class="col-md-2" ng-repeat="d in dates" style="cursor:pointer;margin-left:30px;margin-bottom:15px;" ng-click="selectDate($index)">
+                      <div class="container-fluid card {{$index == selectIndex ? 'bg-blue' : ''}} " style="border-radius:50px;padding:15px;">
+                        <span>{{d | date:'dd MMM'}}</span>
+                      </div>
                     </div>
                   </div>
-                  <li class="next {{disableNext? 'disabled':''}}">
-                    <a href="" style="margin-top: 10px;" ng-click="next()"><i class="fa fa-angle-right" style="color:black;font-size:25px"></i> <span aria-hidden="true"></span></a>
-                  </li>
+                  <div class="col-md-1">
+
+                    <li class="next {{disableNext? 'disabled':''}}">
+                      <a href="" style="margin-top: 35px;" ng-click="next()"><i class="fa fa-angle-right" style="color:black;font-size:35px"></i> <span aria-hidden="true"></span></a>
+                    </li>
+                  </div>
                 </ul>
               </div>
             </div>

@@ -358,3 +358,68 @@ class LeavesCalAPI(APIView):
         print leaves
         toSend = {'total':total,'holidays':holidays,'sundays':sundays,'saturdays':saturdays,'leaves':leaves,'fromDate':fromDate,'toDate':toDate}
         return Response({'data':toSend}, status = status.HTTP_200_OK)
+
+# class ProfileOrgChartsViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     queryset = designation.objects.all()
+#     serializer_class = ProfileOrgChartsSerializer
+
+def findChild(d):
+    toReturn = []
+
+    for des in  d.user.managing.all():
+        try:
+            dp = des.user.profile.displayPicture.url
+            if dp == None:
+                dp = '/static/images/userIcon.png'
+        except:
+            dp = '/static/images/userIcon.png'
+
+        if des.role:
+            role = des.role.name
+        else:
+            role = ''
+        toReturn.append({
+            "id" : des.user.pk,
+            "name" : des.user.first_name + ' ' +  des.user.last_name,
+            "dp" : dp,
+            "children" : findChild(des),
+            "role" : role,
+        })
+
+    return toReturn
+
+
+
+class OrgChartAPI(APIView):
+    def get(self , request , format = None):
+        d = User.objects.get(pk = request.GET['user']).designation
+        print d.role,d.reportingTo
+        if d.reportingTo is not None:
+            d = d.reportingTo.designation
+        try:
+            dp = d.user.profile.displayPicture.url
+            if dp == None:
+                dp = '/static/images/userIcon.png'
+
+        except:
+            dp = '/static/images/userIcon.png'
+
+        if d.role:
+            role = d.role.name
+        else:
+            role = ''
+
+        toReturn = {
+            "id" : d.user.pk,
+            "name" : d.user.first_name + ' ' +  d.user.last_name,
+            "dp" : dp,
+            "children" : findChild(d),
+            "role" : role,
+            # "parent" : findChild(d),
+        }
+
+        print toReturn
+
+
+        return Response(toReturn )

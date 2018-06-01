@@ -7,7 +7,7 @@ from allauth.socialaccount.signals import social_account_added
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.contrib import admin
-
+from organization.models import *
 
 
 def getSignaturesPath(instance , filename):
@@ -170,6 +170,10 @@ class designation(models.Model):
     # unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty
     # department = models.CharField(max_length = 30 , null = True)
     # rank = models.ForeignKey( rank , null = True )
+    division = models.ForeignKey( Division , null = True )
+    unit = models.ForeignKey( Unit , null = True )
+    department = models.ForeignKey( Departments , null = True )
+    role = models.ForeignKey( Role , null = True )
     reportingTo = models.ForeignKey(User , related_name = "managing" , null=True)
     primaryApprover = models.ForeignKey(User, related_name = "approving" , null=True)
     secondaryApprover = models.ForeignKey(User , related_name = "alsoApproving" , null=True)
