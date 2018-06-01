@@ -5,6 +5,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 from PIM.serializers import *
+import datetime
+from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
 
 class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -78,10 +80,10 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
 class payrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = payroll
-        fields = ('pk','user','created','updated','hra','special','lta','basic','taxSlab','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate')
+        fields = ('pk','user','created','updated','hra','special','lta','basic','taxSlab','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate','alHold','mlHold','adHocLeavesHold')
 
     def update(self ,instance, validated_data):
-        for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate']:
+        for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate','alHold','mlHold','adHocLeavesHold']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -92,7 +94,7 @@ class payrollSerializer(serializers.ModelSerializer):
 class payrollLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = payroll
-        fields = ('pk','user', 'al','ml','adHocLeaves','joiningDate','off')
+        fields = ('pk','user', 'al','ml','adHocLeaves','joiningDate','off','alHold','mlHold','adHocLeavesHold')
 
 class userSerializer(serializers.ModelSerializer):
     profile = userProfileSerializer(many=False , read_only=True)
@@ -155,33 +157,82 @@ class groupSerializer(serializers.ModelSerializer):
 class leaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leave
-        fields = ('pk','user','fromDate','toDate','days','approved','category','approvedBy','comment','approvedStage','approvedMatrix')
+        fields = ('pk','created','user','fromDate','toDate','days','approved','category','approvedBy','comment','approvedStage','approvedMatrix','status','leavesCount')
     def create(self , validated_data):
-        del validated_data['approvedBy']
+        print 'cameeeeeeeeeeeee'
+        print validated_data
+        print self.context['request'].data
+        print datetime.date.today(),type(datetime.datetime.now())
+        print validated_data['fromDate'],type(validated_data['fromDate'])
+
+        if validated_data['fromDate'] < datetime.date.today():
+            print 'lessssssssssss'
+        elif datetime.date.today().isocalendar()[1] == validated_data['fromDate'].isocalendar()[1]:
+            print 'sameeeeeeeeeee'
+        elif validated_data['days'] > 15:
+            print 'moreeeeeeeeeeee'
+        payrollObj = payroll.objects.get(pk=int(self.context['request'].data['payroll']))
+        if self.context['request'].data['category'] == 'ML':
+            print 'mlllllllllllll',payrollObj.ml
+            payrollObj.mlHold = payrollObj.mlHold + int(self.context['request'].data['holdDays'])
+            payrollObj.ml = payrollObj.ml - int(self.context['request'].data['holdDays'])
+        elif self.context['request'].data['category'] == 'AL':
+            payrollObj.alHold = payrollObj.alHold + int(self.context['request'].data['holdDays'])
+            payrollObj.al = payrollObj.al - int(self.context['request'].data['holdDays'])
+        elif self.context['request'].data['category'] == 'casual':
+            # print 'mlllllllllllll',payrollObj.adHocLeaves
+            payrollObj.adHocLeavesHold = payrollObj.adHocLeavesHold + int(self.context['request'].data['holdDays'])
+            payrollObj.adHocLeaves = payrollObj.adHocLeaves - int(self.context['request'].data['holdDays'])
+        payrollObj.save()
         l = Leave(**validated_data)
         l.user = self.context['request'].user
+        if validated_data['fromDate'] < datetime.date.today():
+            l.approvedMatrix = 2
+        elif datetime.date.today().isocalendar()[1] == validated_data['fromDate'].isocalendar()[1]:
+            l.approvedMatrix = 2
+        elif validated_data['days'] > 15:
+            l.approvedMatrix = 2
         l.save()
-        # l.user = self.context['request'].user
-        for i in self.context['request'].data['approvedBy']:
-            l.approvedBy.add(User.objects.get(pk = i))
         return l
 
     def update(self , instance , validated_data):
         if instance.user.designation in self.context['request'].user.managing.all():
+            print 'came'
+            print validated_data
+            print self.context['request'].data
             instance.approvedStage += 1
+            appObj = instance.approvedBy.all()
+            instance.approvedBy.clear()
+            for i in appObj:
+                instance.approvedBy.add(i.user)
+            instance.approvedBy.add(self.context['request'].user)
             if instance.approvedStage == instance.approvedMatrix:
-                instance.approved = True
-                instance.approvedBy.add(self.context['request'].user)
-                if instance.approved == True:
-                    payrolobj = instance.user.payroll
+                print 'cameeeeeee'
+                payrolobj = instance.user.payroll
+                if self.context['request'].data['typ'] == 'approve':
+                    print 'approveddddd'
+                    instance.approved = True
+                    instance.status = 'approved'
+                    if instance.approved == True:
+                        if instance.category == 'AL':
+                            payrolobj.alHold = payrolobj.alHold - instance.leavesCount
+                        elif instance.category == 'ML':
+                            payrolobj.mlHold = payrolobj.mlHold - instance.leavesCount
+                        elif instance.category == 'casual':
+                            payrolobj.adHocLeavesHold = payrolobj.adHocLeavesHold - instance.leavesCount
+                        payrolobj.save()
+                elif self.context['request'].data['typ'] == 'reject':
+                    instance.status = 'rejected'
                     if instance.category == 'AL':
-                        payrolobj.al = payrolobj.al - instance.days
+                        payrolobj.al = payrolobj.al + instance.leavesCount
+                        payrolobj.alHold = payrolobj.alHold - instance.leavesCount
                     elif instance.category == 'ML':
-                        payrolobj.ml = payrolobj.ml - instance.days
+                        payrolobj.ml = payrolobj.ml + instance.leavesCount
+                        payrolobj.mlHold = payrolobj.mlHold - instance.leavesCount
                     elif instance.category == 'casual':
-                        payrolobj.adHocLeaves = payrolobj.adHocLeaves - instance.days
+                        payrolobj.adHocLeaves = payrolobj.adHocLeaves + instance.leavesCount
+                        payrolobj.adHocLeavesHold = payrolobj.adHocLeavesHold + instance.leavesCount
                     payrolobj.save()
-
             instance.save()
             return instance
         else:

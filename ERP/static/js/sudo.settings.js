@@ -48,6 +48,92 @@ app.controller('admin.settings.configure.blog' , function($scope , $stateParams 
   }
 
 });
+
+app.controller('admin.settings.configure.calendar.form' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
+  console.log('hey');
+
+  $scope.holiDayForm = {name : '' , typ : 'national' , date : new Date()}
+
+  $scope.saveHoliday = function() {
+    if ($scope.holiDayForm.name == null || $scope.holiDayForm.name.length == 0) {
+      Flash.create('warning', 'Please Mention The Name' );
+      return
+    }
+    if ($scope.holiDayForm.date == null) {
+      Flash.create('warning', 'Please Select The Date' );
+      return
+    }
+    var url = '/api/ERP/companyHoliday/'
+    var method = 'POST';
+    var dataToSend = {
+      typ : $scope.holiDayForm.typ,
+      name : $scope.holiDayForm.name,
+    };
+    if (typeof $scope.holiDayForm.date == 'object') {
+      dataToSend.date = $scope.holiDayForm.date.toJSON().split('T')[0]
+    }else {
+      dataToSend.date = $scope.holiDayForm.date
+    }
+    if ($scope.holiDayForm.pk) {
+      url += $scope.holiDayForm.pk + '/'
+      method = 'PATCH'
+    }
+    console.log(dataToSend);
+    $http({method : method , url : url , data : dataToSend}).
+    then(function(response) {
+      console.log(response.data);
+      if ($scope.holiDayForm.pk) {
+        Flash.create('success', 'Updated' );
+      }else {
+
+        Flash.create('success', 'Created' );
+      }
+      $scope.holiDayForm = {typ : 'national' , date : new Date()}
+    })
+  }
+
+  $scope.data = {
+    tableData: []
+  };
+
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.ERP.settings.configure.calendar.item.html',
+  }, ];
+
+
+  $scope.config = {
+    views: views,
+    url: '/api/ERP/companyHoliday/',
+    searchField: 'name',
+    itemsNumPerView: [16, 32, 48],
+  }
+
+
+  $scope.tableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableData);
+
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      if ($scope.data.tableData[i].pk == parseInt(target)) {
+        console.log($scope.holiDayForm);
+        if (action == 'edit') {
+          var title = 'Edit :';
+          var appType = 'divisionEditor';
+          console.log('yessssssssss',$scope.data.tableData[i]);
+          $scope.holiDayForm = $scope.data.tableData[i]
+          console.log($scope.holiDayForm);
+        }
+      }
+    }
+  }
+
+
+});
+
+
 app.controller('admin.settings.configure' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
 
   // settings for dashboard controller

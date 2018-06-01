@@ -1,0 +1,15 @@
+<div class="col-md-6" style="padding-bottom:20px;padding-left:10px;padding-right:10px;cursor:pointer" ng-click="rowActionClicked('edit')">
+  <div class="container-fluid card" style="padding:15px 15px;">
+    <div class="row text-center">
+      <h4>{{data.name}}
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <strong>Date : </strong> {{data.date | date : 'dd MMM yyyy'}}
+      </div>
+      <div class="col-md-6">
+        <strong>Type : </strong> {{data.typ}}
+      </div>
+    </div>
+  </div>
+</div>

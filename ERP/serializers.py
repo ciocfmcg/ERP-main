@@ -191,3 +191,8 @@ class groupPermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = groupPermission
         fields = ( 'pk' , 'app' , 'group' )
+
+class CompanyHolidaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyHolidays
+        fields = ('pk','created','date','typ','name')

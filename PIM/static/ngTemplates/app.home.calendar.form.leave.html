@@ -75,10 +75,34 @@
         </div>
       </div>
     </div>
+    <div class="row" style="font-size:18px" ng-if="showCal">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="row text-center">
+          <div class="col-md-6">
+            <strong>Total : </strong> {{total}}
+          </div>
+          <div class="col-md-6">
+            <strong>Leaves : </strong> {{leaves}}
+          </div>
+        </div>
+        <div class="row" style="padding:20px 15px">
+          <div class="row" ng-if="saturdays.length>0">
+            <strong>{{saturdays.length > 1 ? 'Saturdays' : 'Saturday'}} - </strong> {{saturdays.length}}
+          </div>
+          <div class="row" ng-if="sundays.length>0">
+            <strong>{{sundays.length > 1 ? 'Sundays' : 'Sunday'}} - </strong> {{sundays.length}}
+          </div>
+          <div class="row" ng-if="holidays.length>0">
+            <strong ng-repeat="h in holidays">{{h.date | date : "dd-MMM"}} - {{h.name}}<br></strong>
+
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row padded10px">
       <div class="form-group">
-        <label class="control-label col-sm-3" for="agenda">Reason:</label>
-        <div class="col-md-9">
+        <label class="control-label col-sm-2" for="agenda">Reason:</label>
+        <div class="col-md-10">
           <textarea type="text" rows="3"  value="" class="form-control " required ng-model="form.comment"></textarea>
         </div>
       </div>
@@ -106,7 +130,7 @@
     <div class= "form-group container-fluid">
       <div class="btn-group">
         <button type="submit" class="btn btn-primary">{{editMode ? 'Save':'Submit'}}</button>
-        <a ng-click="resetForm()" class="btn btn-default">Reset</a>
+        <a ng-click="resetForm('leave')" class="btn btn-default">Reset</a>
       </div>
     </div>
 

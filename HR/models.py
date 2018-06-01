@@ -204,6 +204,9 @@ class payroll(models.Model):
     bankName = models.CharField(max_length = 30 , null = True)
     deboarded = models.BooleanField(default = False)
     lastWorkingDate = models.DateField(null = True)
+    alHold = models.PositiveIntegerField(null = True,default=0)
+    mlHold = models.PositiveIntegerField(null = True,default=0)
+    adHocLeavesHold = models.PositiveIntegerField(null = True,default=0)
 
 User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
 
@@ -220,17 +223,25 @@ LEAVES_CHOICES = (
     ('ML','ML'),
     ('casual','casual')
 )
+STATUS_CHOICES = (
+    ('inProcess','inProcess'),
+    ('approved','approved'),
+    ('rejected','rejected')
+)
 
 
 class Leave(models.Model):
     user = models.ForeignKey(User , related_name = "leavesAuthored" , null=True)
     # created = models.DateTimeField(auto_now_add = True)
     # updated = models.DateField(auto_now=True)
+    created = models.DateField(auto_now=True)
     fromDate = models.DateField( null= True )
     toDate = models.DateField( null= True )
     days = models.PositiveIntegerField(null = True)
+    leavesCount = models.PositiveIntegerField(null = True)
     approved = models.BooleanField(default = False)
     category = models.CharField(choices = LEAVES_CHOICES , max_length = 100 , null = False)
+    status = models.CharField(choices = STATUS_CHOICES , max_length = 100 , null = False ,default='inProcess')
     approvedBy = models.ManyToManyField(User , related_name='leaves' , blank = True)
     comment = models.CharField(max_length = 10000 , null = True)
     approvedStage = models.PositiveIntegerField(null = True,default=0)

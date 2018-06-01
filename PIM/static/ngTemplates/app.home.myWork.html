@@ -28,9 +28,9 @@
           </div>
         </div>
         <div class="container-fluid" style="margin-top:30px">
-          <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+          <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;" ng-if="timeSheet.status != 'approved'">
             <tr style="background-color: #eeeeee;height: 96px;">
-              <th>#</th>
+              <th>S.No</th>
               <th>Project</th>
               <th>Time(Hrs.)</th>
               <th>Details</th>
@@ -63,6 +63,31 @@
               <td style="border:none;"></td>
             </tr>
           </table>
+
+          <table class="table table-bordered" ng-if="timeSheet.status == 'approved'">
+            <thead>
+              <tr>
+                <th class="text-center">S.No</th>
+                <th class="text-center">Project</th>
+                <th class="text-center">Time(Hrs.)</th>
+                <th class="text-center">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in items">
+                <td>{{$index + 1}}</td>
+                <td>{{item.project.title}}</td>
+                <td>{{item.duration}}</td>
+                <td>{{item.comment}}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td style="border:none;">Total time:</td>
+                <td>{{totalTime()}} Hrs.</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
 
@@ -92,13 +117,15 @@
       <div class="row">
         <div class="container-fluid" style="padding-bottom:40px">
           <div class="row">
-            <div class="col-md-6 text-center" style="padding:10px">
+            <div class="col-md-{{btnTyp == '' || btnTyp.checkIn == null ? '12' : '6'}} text-center" style="padding:10px">
               <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="checkin()" confirm-button-type="danger" cancel-button-type="default"
-                style="position:relative;top:30px;right:-15px;cursor:pointer;">Checkin</button>
+                style="position:relative;top:30px;right:-15px;cursor:pointer;" ng-if="Checkinshow && (btnTyp == '' || btnTyp.checkIn == null)">Checkin</button>
+              <span ng-if="btnTyp != '' && btnTyp.checkIn != null ">{{btnTyp.checkIn | date : 'dd MMM yyyy'}}<br>{{btnTyp.checkIn | date : 'hh:mm:a'}}<span>
             </div>
             <div class="col-md-6 text-center" style="padding:10px">
               <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="checkout()" confirm-button-type="danger" cancel-button-type="default"
-                style="position:relative;top:30px;right:-15px;cursor:pointer;">Checkout</button>
+                style="position:relative;top:30px;right:-15px;cursor:pointer;" ng-if="btnTyp != '' && btnTyp.checkIn != null && btnTyp.checkOut == null">Checkout</button>
+              <span ng-if="btnTyp != '' && btnTyp.checkOut != null">{{btnTyp.checkOut | date : 'dd MMM yyyy'}}<br>{{btnTyp.checkOut | date : 'hh:mm:a'}}<span>
             </div>
           </div>
         </div>

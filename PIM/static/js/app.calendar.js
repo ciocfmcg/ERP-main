@@ -220,7 +220,7 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
 
   $scope.me = $users.get("mySelf");
 
-  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.me.pk);
+  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.me);
   $http({
     method: 'GET',
     url: '/api/HR/payroll/?user=' + $scope.me.pk
@@ -232,112 +232,124 @@ app.controller('controller.home.calendar.aside', function($scope, $uibModalInsta
 
 
 
-
+$scope.leaveForm = function(){
   $scope.form = {
     fromDate:'',
     toDate:'',
-    days: 0,
-    approved:false,
     category:'',
-    approvedBy:[],
     comment:'',
-    approvedStage:0,
-    approvedMatrix:1,
   }
+  $scope.showCal = false
+}
+$scope.leaveForm()
+  $scope.$watch('[form.fromDate,form.toDate]', function(newValue , oldValue) {
+    console.log();
+    if (typeof $scope.form.fromDate == 'object' && typeof $scope.form.toDate == 'object') {
+
+      console.log('cccccccccccc',$scope.form.fromDate , $scope.form.toDate);
+      $http({
+        method: 'GET',
+        url: '/api/HR/leavesCal/?fromDate=' + $scope.form.fromDate.toJSON().split('T')[0] + '&toDate=' + $scope.form.toDate.toJSON().split('T')[0]
+      }).
+      then(function(response) {
+        console.log('leavesssssssssssss',response.data.data);
+        $scope.total = response.data.data.total
+        $scope.holidays = response.data.data.holidays
+        $scope.saturdays = response.data.data.saturdays
+        $scope.sundays = response.data.data.sundays
+        $scope.leaves = response.data.data.leaves
+        $scope.fromDate = response.data.data.fromDate
+        $scope.toDate = response.data.data.toDate
+        if ($scope.total > 0) {
+          $scope.showCal = true
+        }else {
+          $scope.showCal = false
+        }
+        console.log($scope.total , $scope.holidays ,$scope.saturdays ,$scope.sundays , $scope.leaves);
+      })
+    }
+
+  },true);
 
   $scope.saveLeaves = function(){
     var f = $scope.form;
-    var url = '/api/HR/leave/';
+    if ($scope.total == undefined || $scope.total<1) {
+      Flash.create('warning', 'Please Select The Valid Dates')
+      return
+    }
+    if (f.category.length == 0) {
+      Flash.create('warning', 'Please Select The Leave Type')
+      return
+    }
+    if (f.category == 'AL' && ($scope.payroll.al < $scope.leaves)) {
+      Flash.create('warning', 'Leaves Are More Than Anual Leaves')
+      return
+    }else if (f.category == 'ML' && ($scope.payroll.ml < $scope.leaves)){
+      Flash.create('warning', 'Leaves Are More Than Medical Leaves')
+      return
+    }else if (f.category == 'casual' && ($scope.payroll.adHocLeaves < $scope.leaves)) {
+      Flash.create('warning', 'Leaves Are More Than Casual Leaves')
+      return
+    }
 
 
-
-    var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-    var firstDate = f.fromDate;
-    var secondDate = f.toDate;
-
-    var diffDays = Math.round(Math.abs((f.fromDate.getTime() - f.toDate.getTime())/(oneDay)));
-
+    // var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+    // var firstDate = f.fromDate;
+    // var secondDate = f.toDate;
+    //
+    // var diffDays = Math.round(Math.abs((f.fromDate.getTime() - f.toDate.getTime())/(oneDay)));
 
 
+    console.log($scope.fromDate,$scope.toDate);
 
     var tosend = {
-      fromDate: f.fromDate.toJSON().split('T')[0],
-      toDate: f.toDate.toJSON().split('T')[0],
-      days: diffDays,
-      approved: f.approved,
+      fromDate: $scope.fromDate,
+      toDate: $scope.toDate,
+      days: $scope.total,
+      leavesCount: $scope.leaves,
       category: f.category,
-      approvedBy: f.approvedBy,
       comment: f.comment,
-      approvedStage: f.approvedStage,
-      approvedMatrix: f.approvedMatrix,
+      payroll : $scope.payroll.pk,
+      holdDays : $scope.leaves
     }
     console.log('aaaaaaa',tosend);
-    if ($scope.form.pk == undefined) {
-      var method = 'POST';
-    } else {
-      var method = 'PATCH';
-      url += f.pk + '/'
-      // url  = '/api/HR/leave/';
-    }
 
     $http({
-      method: method,
-      url: url,
+      method: 'POST',
+      url: '/api/HR/leave/',
       data: tosend,
 
     }).
     then(function(response) {
-      $scope.form.pk = response.data.pk;
-      Flash.create('success', 'Saved')
+      $scope.leaveForm()
+      Flash.create('success', 'Submited Successfully')
+      $http({
+        method: 'GET',
+        url: '/api/HR/payroll/?user=' + $scope.me.pk
+      }).
+      then(function(response) {
+        $scope.payroll = response.data[0];
+        console.log($scope.payroll);
+      })
     })
-    // $scope.payroll.ml=[];
-    // console.log('aaaa',$scope.payroll);
-    // var newDates = $scope.payroll.ml - diffDays;
-    // var dataToSend = {ml :newDates}
-    // $http({
-    //   method: 'PATCH',
-    //   url: '/api/HR/payroll/' +  $scope.payroll.pk + '/',
-    //   data: dataToSend
-    //
-    // }).
-    // then(function(response) {
-    //   // $scope.payroll.ml.push($scope.payroll.ml)
-    //   $scope.payroll.pk = response.data.pk;
-    //   Flash.create('success', 'Saved')
-    // })
-
-    //
-    // data = { eventType : 'ToDo', user : $scope.me.url , text : $scope.data.text  };
-    // $http({method : method , url : url , data : data}).
-    // then(function(response){
-    //   Flash.create('success' , response.status + ' : ' + response.statusText);
-    //   $scope.resetForm();
-    //   $scope.$$postDigest(function(){
-    //     $scope.data.items.push( {'type' : response.data.eventType, data : response.data ,  date : new Date(response.data.when)});
-    //   })
-    //   if($scope.editMode) {
-    //     for (var i = 0; i < $scope.data.items.length; i++) {
-    //       if ($scope.data.items[i].data.url.cleanUrl() == response.data.url.cleanUrl()){
-    //         $scope.data.items.splice(i, 1);
-    //         return;
-    //       }
-    //     }
-    //   }
-    // } , function(response){
-    //   Flash.create('danger' , response.status + ' : ' + response.statusText);
-    // });
-
 
   };
 
-  $scope.resetForm = function(){
-    $scope.data.text = '';
-    $scope.data.attachment = emptyFile;
-    $scope.data.with = '';
-    $scope.data.when = new Date();
-    $scope.data.venue = '';
-    $scope.data.level = 'Normal';
-    $scope.data.duration = '';
+  $scope.resetForm = function(typ){
+    if (typ != undefined) {
+      console.log('typ');
+      $scope.leaveForm()
+    }else {
+      console.log('noneeeeeeeeee');
+      $scope.data.text = '';
+      $scope.data.attachment = emptyFile;
+      $scope.data.with = '';
+      $scope.data.when = new Date();
+      $scope.data.venue = '';
+      $scope.data.level = 'Normal';
+      $scope.data.duration = '';
+    }
+
   };
 
   $scope.editMode = false;
