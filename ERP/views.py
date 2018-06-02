@@ -17,6 +17,10 @@ from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from gitweb.views import generateGitoliteConf
 import requests
+from datetime import date,timedelta
+from dateutil.relativedelta import relativedelta
+import calendar
+from HR.models import payroll
 
 class LocationTrackerAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -291,3 +295,10 @@ class permissionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = permission.objects.all()
     serializer_class = permissionSerializer
+
+class CompanyHolidayViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = CompanyHolidays.objects.all()
+    serializer_class = CompanyHolidaySerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = [ 'name','date']

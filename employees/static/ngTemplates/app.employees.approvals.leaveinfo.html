@@ -1,8 +1,8 @@
 <div ng-controller="workforceManagement.employees.approvals.info" style="padding-top:20px;">
-  <div class="col-md-12">
-    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:14vh;position:relative;">
-      <div class="row">
-        <h3>Leave Request For:</h3>
+  <div class="col-md-12" style="font-size:18px">
+    <div class="col-md-2" style="border-right:solid 2px #eeeeee;min-height:14vh;position:relative;">
+      <div class="row text-center">
+        <h3>Leave Request For</h3>
       </div>
       <div class="row text-center">
         <img ng-src="{{data.user | getDP}}" style="width:100px;">
@@ -14,7 +14,7 @@
     <div class="col-md-8" style="padding:20px;border-left:solid 1px #eeeeee;">
       <div class="row">
         <div class="col-md-3 text-right ">
-          From date:
+          <strong>From date :</strong>
         </div>
         <div class="col-md-6">
           <span>
@@ -24,7 +24,7 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          To date:
+          <strong>To date :</strong>
         </div>
         <div class="col-md-6">
           <span>
@@ -34,7 +34,7 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          Total days:
+          <strong>Total days :</strong>
         </div>
         <div class="col-md-6">
           <span>
@@ -44,7 +44,17 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          Catagory:
+          <strong>Taking Leaves :</strong>
+        </div>
+        <div class="col-md-6">
+          <span>
+            {{data.leavesCount}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 text-right ">
+          <strong>Catagory :</strong>
         </div>
         <div class="col-md-6">
           <span ng-if="data.category == 'AL'">
@@ -60,7 +70,7 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          Comments:
+          <strong>Comments :</strong>
         </div>
         <div class="col-md-6">
           <span>
@@ -70,7 +80,7 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          approvedStage:
+          <strong>approvedStage :</strong>
         </div>
         <div class="col-md-6">
           <span>
@@ -80,7 +90,7 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          approvedMatrix:
+          <strong>approvedMatrix :</strong>
         </div>
         <div class="col-md-6">
           <span>
@@ -90,7 +100,7 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          Approved:
+          <strong>Approved :</strong>
         </div>
         <div class="col-md-6">
           <span>
@@ -100,24 +110,24 @@
       </div>
       <div class="row">
         <div class="col-md-3 text-right ">
-          Approved By:
+          <strong>Approved By :</strong>
         </div>
         <div class="col-md-6">
+          <span>{{data.approvedBy.length>0 ? '' : 'None'}}</span>
           <span ng-repeat="u in data.approvedBy">
             {{u | getName}}
           </span> <br>
         </div>
       </div>
     </div>
-    <div class="col-md-1 text-right" ng-if="!data.approved">
-      <!-- <button type="button" class="btn btn-default">Approve</button> -->
-      <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save()" confirm-button-type="danger" cancel-button-type="default"
-        style="position:relative;top:30px;right:-15px;cursor:pointer;">Approve</button>
-      <!-- <div class="col-md-2" style="padding-top:10px;">
-        <switch ng-model="data.approved" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approval :</span>
-      </div> -->
+    <div class="col-md-2" ng-if="!data.approved">
+      <div class="btn-group btn-group-md pull-right">
+        <button type="button" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save('approve')" confirm-button-type="default" cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">Approve</button>
+
+        <button type="button" class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save('reject')" confirm-button-type="default" cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">Reject</button>
+      </div>
+      <!-- <button type="button" class="btn btn-succes" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save('approved')" confirm-button-type="danger" cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">Approve</button>
+      <button type="button" class="btn btn-danger" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save('rejected')" confirm-button-type="danger" cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">Rejected</button> -->
     </div>
-    <!-- <div class="col-md-12 text-center">
-      <button type="button" class="btn btn-success" ng-click="save()">save</button>
-    </div> -->
+
   </div>

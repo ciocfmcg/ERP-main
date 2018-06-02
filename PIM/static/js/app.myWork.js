@@ -6,7 +6,7 @@ app.controller("controller.home.myWork", function($scope, $state, $users, $state
     $scope.selectIndex = indx;
   }
 
-  $scope.selectIndex = 2;
+  $scope.selectIndex = 7;
 
   $scope.next = function() {
     $scope.selectIndex < $scope.dates.length - 1 ? $scope.selectIndex++ : $scope.selectIndex = 0;
@@ -76,7 +76,11 @@ app.controller("controller.home.myWork", function($scope, $state, $users, $state
   var today = new Date();
   var day = 1000 * 3600 * 24;
 
-  $scope.dates = [new Date(today.getTime() - day * 2), new Date(today.getTime() - day), today, new Date(today.getTime() + day), new Date(today.getTime() + 2 * day)];
+  // $scope.dates = [new Date(today.getTime() - day * 2), new Date(today.getTime() - day), today, new Date(today.getTime() + day), new Date(today.getTime() + 2 * day)];
+  $scope.dates = []
+  for (var i = 10; i > 0; i--) {
+    $scope.dates.push(new Date(today.getTime() - day * (i-3)))
+  }
 
   console.log($scope.dates);
 
@@ -119,19 +123,48 @@ app.controller("controller.home.myWork", function($scope, $state, $users, $state
 
   $scope.checkin = function() {
     var d = new Date();
+    console.log(d);
     $scope.checkinTime = d.getTime();
-    console.log('aaaaaa', $scope.checkinTime);
+    console.log('aaaaaa', $scope.checkinTime,$scope.timeSheet);
+    $http({
+      method: 'PATCH',
+      url: '/api/performance/timeSheet/'+ $scope.timeSheet.pk + '/',
+      data: {
+        checkInTime: 'checkin',
+      }
+    }).
+    then(function(response) {
+      $scope.btnTyp = response.data;
+    })
   }
 
   $scope.checkout = function() {
     var d = new Date();
     $scope.checkoutTime = d.getTime() - $scope.checkinTime;
-    console.log('bbbbbbbbbb', $scope.checkoutTime);
+    console.log('bbbbbbbbbb', $scope.checkoutTime,$scope.timeSheet);
+    $http({
+      method: 'PATCH',
+      url: '/api/performance/timeSheet/'+ $scope.timeSheet.pk + '/',
+      data: {
+        checkOutTime: 'checkout',
+      }
+    }).
+    then(function(response) {
+      $scope.btnTyp = response.data;
+    })
   }
 
   $scope.$watch('selectIndex', function(newValue, oldValue) {
+    var today = new Date()
 
     var dt = $scope.dates[newValue];
+    if (dt > today ) {
+      console.log('featureeeeeeee');
+      $scope.Checkinshow = false
+    }else {
+      console.log('past or equallllllllll');
+      $scope.Checkinshow = true
+    }
 
     $http({
       method: 'GET',
@@ -151,11 +184,23 @@ app.controller("controller.home.myWork", function($scope, $state, $users, $state
         then(function(response) {
           $scope.timeSheet = response.data;
           $scope.items = $scope.timeSheet.items;
+          console.log('dddddddddddd',$scope.timeSheet);
+          if ($scope.timeSheet.checkIn == null && $scope.timeSheet.checkOut == null) {
+            $scope.btnTyp = ''
+          }else {
+            $scope.btnTyp = $scope.timeSheet
+          }
         })
 
       } else {
         $scope.timeSheet = response.data[0];
         $scope.items = $scope.timeSheet.items;
+        console.log('dddddddddddd',$scope.timeSheet);
+        if ($scope.timeSheet.checkIn == null && $scope.timeSheet.checkOut == null) {
+          $scope.btnTyp = ''
+        }else {
+          $scope.btnTyp = $scope.timeSheet
+        }
       }
 
     })

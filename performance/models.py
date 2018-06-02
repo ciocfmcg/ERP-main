@@ -24,6 +24,8 @@ class TimeSheet(models.Model):
     approved = models.BooleanField(default = False)
     approvedBy = models.ManyToManyField(User , related_name='times' , blank = True)
     status = models.CharField(choices = STATUS_CHOICES , max_length = 10 ,default='created', null = True)
+    checkIn = models.DateTimeField(null = True)
+    checkOut = models.DateTimeField(null = True)
 
     class Meta:
         unique_together = ('user', 'date',)

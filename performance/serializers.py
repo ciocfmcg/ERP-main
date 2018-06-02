@@ -7,6 +7,7 @@ from HR.serializers import userSearchSerializer
 from rest_framework.response import Response
 import os
 from projects.serializers import projectLiteSerializer
+from datetime import datetime
 
 
 class TimeSheetItemSerializer(serializers.ModelSerializer):
@@ -27,7 +28,7 @@ class TimeSheetSerializer(serializers.ModelSerializer):
     items = TimeSheetItemSerializer(many = True , read_only = True)
     class Meta:
         model = TimeSheet
-        fields = ('pk','created','user','date','approved','approvedBy' , 'items','status')
+        fields = ('pk','created','user','date','approved','approvedBy' , 'items','status' , 'checkIn' , 'checkOut')
         read_only_fields=('user', )
     def create(self , validated_data):
         t = TimeSheet(**validated_data)
@@ -38,6 +39,16 @@ class TimeSheetSerializer(serializers.ModelSerializer):
 
     def update(self , instance , validated_data):
         print self.context['request'].data,validated_data
+        if 'checkInTime' in self.context['request'].data:
+            instance.checkIn = datetime.now()
+            # instance.checkOut = None
+            instance.save()
+            return instance
+        if 'checkOutTime' in self.context['request'].data:
+            instance.checkOut = datetime.now()
+            # instance.checkIn = None
+            instance.save()
+            return instance
         if instance.status == 'submitted':
             if 'typ' in self.context['request'].data:
                 if self.context['request'].data['typ'] == 'approved':

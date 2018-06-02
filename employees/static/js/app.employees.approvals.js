@@ -9,13 +9,17 @@ app.config(function($stateProvider) {
 app.controller("workforceManagement.employees.approvals.info", function($scope, $state, $users, $stateParams, $http, Flash, $timeout) {
 
   $scope.data = $scope.tab.data;
-
-  $scope.save = function() {
+  $scope.me = $users.get("mySelf");
+  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.me);
+  // $scope.friend = $users.get( $scope.data.user);
+  //
+  // console.log('friendddd', $scope.friend);
+  $scope.save = function(typ) {
     var url = '/api/HR/leave/' + $scope.data.pk + '/';
     $http({
       method: 'PATCH',
       url: url,
-      data: {},
+      data: {typ:typ},
     }).
     then(function(response) {
       Flash.create('success', 'Saved');

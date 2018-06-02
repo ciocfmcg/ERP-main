@@ -17,4 +17,6 @@ router.register(r'leave' , leaveViewSet , base_name = 'leave')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'leavesCal/$' , LeavesCalAPI.as_view()),
+    url(r'profileOrgCharts/$' , OrgChartAPI.as_view()),
 ]

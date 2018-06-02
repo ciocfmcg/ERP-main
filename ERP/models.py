@@ -132,3 +132,15 @@ class service(models.Model): # contains other companies datails
 
     def __unicode__(self):
         return '< name :%s>,<user :%s>,<address :%s>' %(self.name ,self.user.username, self.address)
+
+HOLIDAY_TYPE_CHOICES = (
+    ('national' , 'national'),
+    ('state' , 'state'),
+    ('restricted' , 'restricted'),
+)
+
+class CompanyHolidays(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    date = models.DateField(null=True)
+    typ = models.CharField(choices = HOLIDAY_TYPE_CHOICES , max_length = 20 , default = 'national')
+    name = models.CharField(max_length = 50 , null = True)

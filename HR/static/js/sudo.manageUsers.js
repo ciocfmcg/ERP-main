@@ -243,18 +243,40 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
   $scope.save = function() {
     // make patch request
     var f = $scope.form;
+    console.log(f);
     dataToSend = {
       // user: f.pk,
-      reportingTo: f.reportingTo.pk,
-      primaryApprover: f.primaryApprover.pk,
-      secondaryApprover: f.secondaryApprover.pk,
-      division: f.division.pk,
-      unit: f.unit.pk,
-      department: f.department.pk,
-      role: f.role.pk
+      // reportingTo: f.reportingTo.pk,
+      // primaryApprover: f.primaryApprover.pk,
+      // secondaryApprover: f.secondaryApprover.pk,
+      // division: f.division.pk,
+      // unit: f.unit.pk,
+      // department: f.department.pk,
+      // role: f.role.pk
 
     }
-
+    if (f.reportingTo != null && typeof f.reportingTo == 'object') {
+      dataToSend.reportingTo = f.reportingTo.pk
+    }
+    if (f.primaryApprover != null && typeof f.primaryApprover == 'object') {
+      dataToSend.primaryApprover = f.primaryApprover.pk
+    }
+    if (f.secondaryApprover != null && typeof f.secondaryApprover == 'object') {
+      dataToSend.secondaryApprover = f.secondaryApprover.pk
+    }
+    if (f.division != null && typeof f.division == 'object') {
+      dataToSend.division = f.division.pk
+    }
+    if (f.unit != null && typeof f.unit == 'object') {
+      dataToSend.unit = f.unit.pk
+    }
+    if (f.department != null && typeof f.department == 'object') {
+      dataToSend.department = f.department.pk
+    }
+    if (f.role != null && typeof f.role == 'object') {
+      dataToSend.role = f.role.pk
+    }
+    console.log(dataToSend);
     $http({
       method: 'PATCH',
       url: '/api/HR/designation/' + f.pk + '/',
@@ -368,6 +390,7 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
   }
 
   $scope.files = {
+    "displayPicture": emptyFile,
     'TNCandBond': emptyFile,
     'resume': emptyFile,
     'certificates': emptyFile,
@@ -389,7 +412,7 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     var f = $scope.files;
     var fd = new FormData();
 
-    var fileFields = ['TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook', 'sign', 'IDPhoto']
+    var fileFields = ['displayPicture','TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook', 'sign', 'IDPhoto']
     for (var i = 0; i < fileFields.length; i++) {
       if ($scope.files[fileFields[i]] != emptyFile) {
         fd.append(fileFields[i], $scope.files[fileFields[i]])
@@ -481,7 +504,6 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       },
     ]
   };
-  var fields = ['username', 'email', 'first_name', 'last_name', 'profile'];
 
   var multiselectOptions = [{
       icon: 'fa fa-book',
@@ -502,9 +524,8 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     views: views,
     options: options,
     itemsNumPerView: [12, 24, 48],
-    multiselectOptions: multiselectOptions,
+    // multiselectOptions: multiselectOptions,
     searchField: 'username',
-    fields: fields,
   };
 
   $scope.tabs = [];
