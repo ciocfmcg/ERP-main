@@ -53,7 +53,7 @@ class Unit(models.Model):
 
 class Departments(models.Model):
     dept_name = models.CharField(max_length = 400 , null = False)
-    mobile = models.PositiveIntegerField(null=False)
+    mobile = models.CharField(null=False, max_length = 15)
     telephone = models.PositiveIntegerField(null=True , default=0)
     fax = models.PositiveIntegerField(null=True , default=0)
     contacts = models.ManyToManyField(User , related_name='departmentsHeading' )
