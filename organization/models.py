@@ -28,8 +28,8 @@ class Division(models.Model):
     gstin = models.CharField(max_length = 200 , null = False)
     pan = models.CharField(max_length = 200 , null = False)
     cin = models.CharField(max_length = 200 , null = False)
-    l1 = models.CharField(max_length = 200 , null = False)
-    l2 = models.CharField(max_length = 200 , null = False)
+    l1 = models.CharField(max_length = 200 , null = True)
+    l2 = models.CharField(max_length = 200 , null = True)
 
 
 
