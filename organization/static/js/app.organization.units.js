@@ -202,13 +202,22 @@ app.controller("workforceManagement.organization.units.form", function($scope, $
       address: f.address,
       pincode: f.pincode,
       mobile: f.mobile,
-      telephone: f.telephone,
-      fax: f.fax,
-      l1: f.l1,
-      l2: f.l2,
       contacts: f.contacts,
       division: f.division.pk,
       parent:f.parent.pk
+    }
+
+    if (f.telephone.length != '' && f.telephone != undefined) {
+      toSend.telephone = f.telephone;
+    }
+    if (f.fax.length != '' && f.fax != undefined) {
+      toSend.fax = f.fax;
+    }
+    if (f.l1.length != '' && f.l1 != undefined) {
+      toSend.l1 = f.l1;
+    }
+    if (f.l2.length != '' && f.l2 != undefined) {
+      toSend.l2 = f.l2;
     }
 
     // if (division != null) {
