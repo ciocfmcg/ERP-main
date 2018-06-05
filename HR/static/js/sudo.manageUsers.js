@@ -504,7 +504,6 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       },
     ]
   };
-  var fields = ['username', 'email', 'first_name', 'last_name', 'profile'];
 
   var multiselectOptions = [{
       icon: 'fa fa-book',
@@ -525,9 +524,8 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     views: views,
     options: options,
     itemsNumPerView: [12, 24, 48],
-    multiselectOptions: multiselectOptions,
+    // multiselectOptions: multiselectOptions,
     searchField: 'username',
-    fields: fields,
   };
 
   $scope.tabs = [];

@@ -148,8 +148,15 @@ app.controller("workforceManagement.organization.division.form", function($scope
     fd.append('gstin', f.gstin);
     fd.append('pan', f.pan);
     fd.append('cin', f.cin);
-    fd.append('l1', f.l1);
-    fd.append('l2', f.l2);
+
+    if (f.l1 != '' && f.l1 != undefined) {
+      fd.append('l1', f.l1);
+    }
+
+    if (f.l2 != '' && f.l2 != undefined) {
+      fd.append('l2', f.l2);
+    }
+
 
     console.log(fd);
     if ($scope.mode == 'new') {

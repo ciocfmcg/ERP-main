@@ -364,9 +364,9 @@ class LeavesCalAPI(APIView):
 #     queryset = designation.objects.all()
 #     serializer_class = ProfileOrgChartsSerializer
 
-def findChild(d):
+def findChild(d, pk = None):
     toReturn = []
-
+    sameLevel = False
     for des in  d.user.managing.all():
         try:
             dp = des.user.profile.displayPicture.url
@@ -379,12 +379,23 @@ def findChild(d):
             role = des.role.name
         else:
             role = ''
+
+        if str(des.user.pk) == pk:
+            clsName = 'middle-level'
+            sameLevel = True
+        else:
+            clsName = 'product-dept'
+            if sameLevel:
+                clsName = 'rd-dept'
+
+
         toReturn.append({
             "id" : des.user.pk,
             "name" : des.user.first_name + ' ' +  des.user.last_name,
             "dp" : dp,
             "children" : findChild(des),
             "role" : role,
+            "className" :  clsName
         })
 
     return toReturn
@@ -410,12 +421,20 @@ class OrgChartAPI(APIView):
         else:
             role = ''
 
+
+        if str(d.user.pk) == request.GET['user']:
+            clsName = 'middle-level'
+        else:
+            clsName = 'frontend1'
+
+
         toReturn = {
             "id" : d.user.pk,
             "name" : d.user.first_name + ' ' +  d.user.last_name,
             "dp" : dp,
-            "children" : findChild(d),
+            "children" : findChild(d , pk = request.GET['user']),
             "role" : role,
+            "className" :  clsName
             # "parent" : findChild(d),
         }
 

@@ -25,6 +25,8 @@ class module(models.Model):
     icon = models.CharField(max_length = 20 , null = True )
     haveCss = models.BooleanField(default = True)
     haveJs = models.BooleanField(default = True)
+    def __unicode__(self):
+        return self.name
 
 class application(models.Model):
     # each application in a module will have an instance of this model

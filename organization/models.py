@@ -28,8 +28,8 @@ class Division(models.Model):
     gstin = models.CharField(max_length = 200 , null = False)
     pan = models.CharField(max_length = 200 , null = False)
     cin = models.CharField(max_length = 200 , null = False)
-    l1 = models.CharField(max_length = 200 , null = False)
-    l2 = models.CharField(max_length = 200 , null = False)
+    l1 = models.CharField(max_length = 200 , null = True)
+    l2 = models.CharField(max_length = 200 , null = True)
 
 
 
@@ -39,11 +39,11 @@ class Unit(models.Model):
     name = models.CharField(max_length = 200 , null = False)
     address = models.CharField(max_length = 400 , null = False)
     pincode = models.PositiveIntegerField(null=False)
-    l1 = models.CharField(max_length = 200 , null = False)
-    l2 = models.CharField(max_length = 200 , null = False)
-    mobile = models.PositiveIntegerField(null=True , default=0)
-    telephone = models.PositiveIntegerField(null=True , default=0)
-    fax = models.PositiveIntegerField(null=True , default=0)
+    l1 = models.CharField(max_length = 200 , null = True)
+    l2 = models.CharField(max_length = 200 , null = True)
+    mobile = models.CharField(null=True , max_length=15)
+    telephone = models.CharField(null=True , max_length=15)
+    fax = models.CharField(null=True , max_length=15)
     contacts = models.ManyToManyField(User , related_name='unitsHeading' )
     division = models.ForeignKey(Division , null = True , related_name = "units")
     parent = models.ForeignKey("self" , related_name="children" , null = True )
@@ -53,7 +53,7 @@ class Unit(models.Model):
 
 class Departments(models.Model):
     dept_name = models.CharField(max_length = 400 , null = False)
-    mobile = models.PositiveIntegerField(null=False)
+    mobile = models.CharField(null=False, max_length = 15)
     telephone = models.PositiveIntegerField(null=True , default=0)
     fax = models.PositiveIntegerField(null=True , default=0)
     contacts = models.ManyToManyField(User , related_name='departmentsHeading' )

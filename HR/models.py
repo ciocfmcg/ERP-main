@@ -208,9 +208,9 @@ class payroll(models.Model):
     bankName = models.CharField(max_length = 30 , null = True)
     deboarded = models.BooleanField(default = False)
     lastWorkingDate = models.DateField(null = True)
-    alHold = models.PositiveIntegerField(null = True,default=0)
-    mlHold = models.PositiveIntegerField(null = True,default=0)
-    adHocLeavesHold = models.PositiveIntegerField(null = True,default=0)
+    alHold = models.PositiveIntegerField(default=0)
+    mlHold = models.PositiveIntegerField(default=0)
+    adHocLeavesHold = models.PositiveIntegerField(default=0)
 
 User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
 
