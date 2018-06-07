@@ -3,10 +3,9 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from homepage.views import index
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 
-from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration
+from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration,index,crmHome
 
 from ERP.views import serviceRegistration
 
@@ -14,6 +13,7 @@ app_name="libreERP"
 
 urlpatterns = [
     url(r'^$', index , name ='root'),
+    url(r'^CRM/', crmHome , name ='CRM'),
     url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),
     url(r'^admin/', include(admin.site.urls)),
