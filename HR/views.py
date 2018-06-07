@@ -97,6 +97,7 @@ def generateOTP(request):
     # send a SMS with the OTP
     return JsonResponse({} ,status =200 )
 
+@csrf_exempt
 def loginView(request):
 
     # print request.META['HTTP_USER_AGENT']
@@ -154,10 +155,13 @@ def loginView(request):
 
     	if user is not None:
             login(request , user)
-            if request.GET:
+            if request.GET and 'next' in request.GET:
                 return redirect(request.GET['next'])
             else:
-                return redirect(reverse(globalSettings.LOGIN_REDIRECT))
+                if 'mode' in request.GET and request.GET['mode'] == 'api':
+                    return JsonResponse({} , status = 200)
+                else:
+                    return redirect(reverse(globalSettings.LOGIN_REDIRECT))
         else:
             if statusCode == 200 and not u.is_active:
                 authStatus = {'status' : 'warning' , 'message' : 'Your account is not active.'}
@@ -165,6 +169,8 @@ def loginView(request):
             else:
                 authStatus = {'status' : 'danger' , 'message' : 'Incorrect username or password.'}
                 statusCode = 401
+    if 'mode' in request.GET and request.GET['mode'] == 'api':
+        return JsonResponse(authStatus , status = statusCode)
 
     return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
 

@@ -49,7 +49,7 @@ from flipkartFolder import FlipkartAPI, Authentication
 import requests
 
 
-ERPServer = 'http://localhost:8000'
+ERPServer = 'http://192.168.1.109:8000'
 
 import time, threading
 
@@ -71,36 +71,34 @@ def fetchAndCheck():
             # print o.get_label()
 
             # requests.post(ERPServer + '/api/POS/externalEmailOrders/' , data = {"sku" : str(o.attributes['sku']) , "orderId" : str(o.attributes['orderId']) ,  "quantity" : str(o.attributes['quantity']) , "price" : str(o.attributes['price']) })
+        for oi in orderIds:
+            print oi
+            resSearch = requests.get( 'https://api.flipkart.net/sellers/v3/shipments?orderIds=' + str(oi) , headers = {"Authorization" : "Bearer " + tokenS} )
+
+            print resSearch
+            # # print resSearch.text
+            for s in resSearch.json()['shipments']:
+                # print "shipmenet id : " , s['shipmentId']
+                resSearch = requests.get( 'https://api.flipkart.net/sellers/v3/shipments/' + s['shipmentId'] , headers = {"Authorization" : "Bearer " + tokenS} )
+                # print resSearch
+
+                for ss in resSearch.json()['shipments']:
+                    print ss['buyerDetails']
+                    print ss['billingAddress']['contactNumber']
+
+                    requests.post(ERPServer + '/api/marketing/contactsScraped/' , data = {"name" : ss['buyerDetails']['firstName'] + ' ' + ss['buyerDetails']['lastName'] , "mobile" : ss['billingAddress']['contactNumber'] , "pincode" : ss['billingAddress']['pinCode'] , "source" : "skinstore" , "tag" : "skin care products"})
     except:
         pass
 
 
-    print orderIds
 
-
-    for oi in orderIds:
-        print oi
-        resSearch = requests.get( 'https://api.flipkart.net/sellers/v3/shipments?orderIds=' + str(oi) , headers = {"Authorization" : "Bearer " + tokenS} )
-
-        print resSearch
-        # # print resSearch.text
-        for s in resSearch.json()['shipments']:
-            # print "shipmenet id : " , s['shipmentId']
-            resSearch = requests.get( 'https://api.flipkart.net/sellers/v3/shipments/' + s['shipmentId'] , headers = {"Authorization" : "Bearer " + tokenS} )
-            # print resSearch
-
-            for ss in resSearch.json()['shipments']:
-                print ss['buyerDetails']
-                print ss['billingAddress']['contactNumber']
-
-                requests.post(ERPServer + '/api/marketing/contactsScraped/' , data = {"name" : ss['buyerDetails']['firstName'] + ' ' + ss['buyerDetails']['lastName'] , "mobile" : ss['billingAddress']['contactNumber'] , "pincode" : ss['billingAddress']['pinCode'] })
 
 def foo():
     print(time.ctime())
     while True:
-        time.sleep(300)
         fetchAndCheck()
+        time.sleep(300)
 
 if __name__ == '__main__':
-    fetchAndCheck()
-    # foo()
+    # fetchAndCheck()
+    foo()
