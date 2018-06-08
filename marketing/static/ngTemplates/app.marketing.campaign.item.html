@@ -1,3 +1,13 @@
-<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="">
-
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;cursor:pointer">
+  <div class="container-fluid card" style="padding:15px 5px;">
+    <div class="row text-center">
+      <h4>{{data.name}}</h4>
+    </div>
+    <hr>
+    <div class="row" style="padding:0px 30px;height:20px">
+      <i style="cursor:pointer;" class="fa fa-pencil fa-lg" ng-click="rowActionClicked('edit')" ng-if="data.status=='created'"></i>
+      <i style="cursor:pointer;" class="fa fa-info fa-lg pull-right" ng-click="rowActionClicked('info')">
+    </i>
+    </div>
+  </div>
 </div>

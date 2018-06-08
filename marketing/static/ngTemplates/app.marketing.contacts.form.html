@@ -52,6 +52,32 @@
         <input type="text " class="form-control" ng-model="form.source">
       </div>
 
+      <div class="form-group">
+        <label>PinCode</label>
+        <input type="text " class="form-control" ng-model="form.pinCode">
+      </div>
+
+      <div class="form-group">
+        <label>Tags</label>
+        <div class="input-group">
+          <input type="text" class="form-control"  ng-model="form.tag" uib-typeahead="tag as tag.name for tag in tagSearch($viewValue)"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn {{form.tag.pk == null ? 'btn-primary':'btn-success'}}" ng-click="saveTags()">{{form.tag.pk == null ? 'Create':'Add'}}</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="row" style="padding:15px 10px">
+        <div class="col-md-6" ng-repeat="t in form.tagsList">
+          <div class="container-fluid card">
+            <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="closeTags($index)"></i>
+            <div class="row container-fluid" style="padding-top:10px;">
+              <h4><b>{{t.name}}<b></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
 
         <div class="btn-group ">
