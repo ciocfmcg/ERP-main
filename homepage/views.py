@@ -5,6 +5,9 @@ from django.conf import settings as globalSettings
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
+def crmHome(request):
+    return render(request, 'crm.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
 
 def blogDetails(request, blogname):
     blogobj = blogPost.objects.get(title=blogname)

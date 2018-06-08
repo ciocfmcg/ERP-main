@@ -1,0 +1,208 @@
+{% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+<title>CIOC</title>
+{% endblock %} {% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
+
+<!-- Header -->
+{% block content %}
+
+
+<div ng-app="app" ng-controller="main">
+  <div class="body">
+    <div class="row visible-md visible-lg" style="height:100vh; padding-top:30vh; background: linear-gradient( #2adfe4, #FFFFFF);">
+      <div class="col-md-7 col-md-offset-1 col-xs-12" style="padding:50px;">
+        <h1 style="font-size:55px;color:#000000">CRM that helps you sell smarter, better, faster.</h1>
+        <p style="font-size:20px; padding-top:30px;">Reach out to prospects at the right moment and engage them across every channel. CIOC CRM helps businesses of all sizes close more deals the smarter way.</p>
+      </div>
+      <div class="col-md-3 col-xs-12" style="padding:50px;">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label style="font-size:18px;">Get Started Today.</label>
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-control" placeholder="Full Name">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <div class="checkbox">
+              <label><input type="checkbox"> I agree to the <a href="/terms">Terms of Service </a>  and <a href="/policy">Privacy Policy</a> . </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">GET STARTED</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row visible-sm text-center" style="height:100vh; padding-top:35vh; background: linear-gradient( #2adfe4, #FFFFFF);">
+      <div class="container-fluid">
+        <h1 style="font-size:55px;color:#000000">CRM that helps you sell smarter, better, faster.</h1>
+        <p style="font-size:20px; padding-top:30px;">Reach out to prospects at the right moment and engage them across every channel. CIOC CRM helps businesses of all sizes close more deals the smarter way.</p>
+      </div>
+    </div>
+
+    <div class="row visible-xs text-center" style="height:100vh; padding-top:25vh; background: linear-gradient( #2adfe4, #FFFFFF);">
+      <div class="container-fluid">
+        <h1 style="font-size:40px;color:#000000">CRM that helps you sell smarter, better, faster.</h1>
+      </div>
+    </div>
+
+    <div class="row visible-sm visible-xs text-center" style="padding:20px;">
+      <div class="container-fluid">
+        <form>
+          <div class="form-group">
+            <label style="font-size:18px;">Get Started Today.</label>
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-control" placeholder="Full Name">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <div class="checkbox">
+              <label><input type="checkbox"> I agree to the <a href="/terms">Terms of Service </a>  and <a href="/policy">Privacy Policy</a> . </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">GET STARTED</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row text-center" style="background-image: url('/static/images/crm-home-wave.svg') ; background-repeat: no-repeat, repeat;">
+      <div class="col-md-3 col-sm-6" >
+        <img src="/static/images/zcrm-banner-telephony.jpg" alt="">
+      </div>
+      <div class="col-md-3 col-sm-6" style="padding-top:120px;">
+        <img src="/static/images/zcrm-banner-mail.jpg" alt="">
+      </div>
+      <div class="col-md-3 col-sm-6" >
+        <img src="/static/images/zcrm-banner-salessignals.jpg" alt="">
+      </div>
+      <div class="col-md-3 col-sm-6" style="padding-top:120px;">
+        <img src="/static/images/zcrm-banner-chat.jpg" alt="">
+      </div>
+    </div>
+    <div class="row text-center" style="padding:30px; padding-top:20px;">
+      <h1 style="font-size:35px; color:#000000; padding-bottom:80px;"> <b> Multichannel CRM software</b> </h1>
+      <div class="col-md-3 col-sm-6" style="padding-top:30px;" >
+        <img src="/static/images/email.png" alt="">
+        <p style="font-size:25px;"><b>Email</b> </p>
+        <p style="font-size:17px;"> Prioritize your emails by sales <br> pipeline, with context and <br> analytics. </p>
+        <p style="font-size:15px;"> <a href="#">Learn More</a> </p>
+      </div>
+      <div class="col-md-3 col-sm-6" style="padding-top:30px;" >
+        <img src="/static/images/chat.png" alt="">
+        <p style="font-size:25px;"><b>Live Chat </b></p>
+        <p style="font-size:17px;"> Segment your website visitors <br> and increase conversions <br> through live chat. </p>
+        <p style="font-size:15px;"> <a href="#">Learn More</a> </p>
+      </div>
+      <div class="col-md-3 col-sm-6" style="padding-top:30px;" >
+        <img src="/static/images/phone.png" alt="">
+        <p style="font-size:25px;"><b>Telephony </b></p>
+        <p style="font-size:17px;"> Make sales calls effective with <br> single click dialling, prompt <br> reminders and call analytics. </p>
+        <p style="font-size:15px;"> <a href="#">Learn More</a> </p>
+      </div>
+      <div class="col-md-3 col-sm-6" style="padding-top:30px;" >
+        <img src="/static/images/social.png" alt="">
+        <p style="font-size:25px;"><b>Social Media </b></p>
+        <p style="font-size:17px;"> Capture leads and manage <br> your brand's social media <br> interactions. </p>
+        <p style="font-size:15px;"> <a href="#">Learn More</a> </p>
+      </div>
+    </div>
+    <div class="row text-center" style="padding:20px;">
+      <img src="/static/images/bell.png" alt="">
+      <p style="font-size:25px;"><b>Realtime sales with Sales Signals </b></p>
+      <p style="font-size:17px;"> Streamline notifications across multiple channels and respond to customers in real time. </p>
+      <p style="font-size:15px;"> <a href="#">Learn More</a> </p>
+    </div>
+    <div class="row text-center" style="padding:15px;background-color:#C7E4FF">
+      <div class="container-fluid">
+        <img src="/static/images/signals-screen.png" alt="" style="width:70%;">
+      </div>
+    </div>
+
+    <div class="row text-center" style="padding:15px; padding-bottom:50px;  background-color:#C7E4FF">
+      <div class="container-fluid">
+        <h1 style="font-size:45px; color:#000000;"> <b> Analytics</b> </h1>
+        <p style="font-size:18px;"> In-depth analytics for every day sales success. </p>
+        <p style="font-size:16px;"> <a href="#">Learn More</a> </p>
+      </div>
+    </div>
+    <div class="row text-center" style="padding-bottom:180px; background-image: url('/static/images/home-analytics-bg.png') ; background-repeat: no-repeat, repeat;">
+      <div class="container-fluid">
+        <div class="col-md-2 col-sm-6" style="padding-top:20px;">
+          <img src="/static/images/bars.png" alt="">
+          <p style="font-size:25px; color:#000000;"> <b> Charts</b> </p>
+        </div>
+        <div class="col-md-2 col-sm-6" style="padding-top:20px;">
+          <img src="/static/images/triangle.png" alt="">
+          <p style="font-size:25px; color:#000000;"> <b> Funnels</b> </p>
+        </div>
+        <div class="col-md-2 col-sm-6" style="padding-top:20px;">
+          <img src="/static/images/target.png" alt="">
+          <p style="font-size:25px; color:#000000;"> <b> Targets</b> </p>
+        </div>
+        <div class="col-md-2 col-sm-6" style="padding-top:20px;">
+          <img src="/static/images/growth.png" alt="">
+          <p style="font-size:25px; color:#000000;"> <b> Anomalies</b> </p>
+        </div>
+        <div class="col-md-2 col-sm-6" style="padding-top:20px;">
+          <img src="/static/images/lines.png" alt="">
+          <p style="font-size:25px; color:#000000;"> <b> KPIs</b> </p>
+        </div>
+        <div class="col-md-2 col-sm-6" style="padding-top:20px;">
+          <img src="/static/images/twobars.png" alt="">
+          <p style="font-size:25px; color:#000000;"> <b>Comparator</b> </p>
+        </div>
+      </div>
+    </div>
+    <div class="row text-center">
+      <p class="lineBeside" style="font-size:20px;"> <b> Trusted by Great brands</b> </p>
+    </div>
+    <div class="row text-center" style="padding-top:50px; padding-bottom:25px;">
+      <div class="container-fluid">
+        <div class="col-md-3 col-sm-6">
+          <img src="/static/images/amazon.png" alt="" style="height:60%">
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <img src="/static/images/amad.png" alt="" style="height:60%">
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <img src="/static/images/benchmark.png" alt="" style="height:60%">
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <img src="/static/images/selectra.png" alt="" style="height:60%">
+        </div>
+      </div>
+    </div>
+    <div class="row text-center">
+      <p style="font-size:16px;"> <a href="#">More Customers</a> </p>
+    </div>
+
+    <div class="row text-center" style="padding:40px; background: linear-gradient( #FFFFFF, #a1f9fb); ">
+      <h1 style="font-size:35px; color:#000000;"> <b>Experience a smarter way to close deals.</b> </h1>
+      <div style="padding-top: 40px;">
+        <a style="padding: 18px 35px; font-size: 16px; font-weight: 700;  color: #fff; background-color: #F0483E; text-decoration: none;" href="">GET STARTED</a>
+      </div>
+    </div>
+
+    {% endblock %} {% block footer %} {% include "footer.html" %}
+  </div>
+</div>
+{% endblock %} {% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
+<script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+{% endblock %}
