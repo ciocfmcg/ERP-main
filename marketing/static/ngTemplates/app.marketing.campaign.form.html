@@ -1,0 +1,142 @@
+<div ng-controller="businessManagement.marketing.canpaign.form">
+  <!-- <div class="container-fluid">
+    <div class="col-md-7">
+      <h3>{{form.pk ? 'Edit Campaign' : 'Create New Campaign'}}</h3>
+    </div>
+    <div class="col-md-5">
+      <div class="row" ng-if="form.total > 0">
+        <h4>Total : {{form.total}}</h4>
+      </div>
+
+    </div>
+  </div> -->
+
+  <div class="container-fluid">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-7">
+          <h3>{{form.pk ? 'Edit Campaign' : 'Create New Campaign'}}</h3>
+        </div>
+        <div class="col-md-5">
+          <!-- <div class="row pull-right" ng-if="form.total > 0">
+            <h3>Total : {{form.total}}</h3>
+          </div> -->
+
+        </div>
+      </div><br>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Filter Date From</label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.filterFrom" is-open="status.fopened" ng-attr-timezone="{{jsTimeZone}}" ng-init="today" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status.fopened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Filter Date To</label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.filterTo" is-open="status.topened" ng-init="today" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status.topened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" ng-model="form.name">
+      </div>
+
+      <div class="form-group">
+        <label>Tags</label>
+        <div class="input-group">
+          <input type="text" class="form-control"  ng-model="form.tag" uib-typeahead="tag as tag.name for tag in tagSearch($viewValue)"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-success" ng-click="saveTags()">Add <i class="fa fa-plus"></i></button>
+          </span>
+        </div>
+      </div>
+
+      <div class="row" style="padding:15px 10px">
+        <div class="col-md-6" ng-repeat="t in form.tagsList">
+          <div class="container-fluid card">
+            <div class="row container-fluid" style="padding-top:10px;">
+              <div class="col-md-8">
+                <h4>{{t.name}}</h4>
+              </div>
+              <div class="col-md-2" style="padding-top:10px">
+                {{t.tagsCount}}
+              </div>
+              <div class="col-md-2">
+                <div class="row pull-right">
+                  <i class="fa fa-times fa-lg" style="cursor:pointer" ng-click="closeTags($index)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="form-group">
+        <label>Source</label>
+        <div class="input-group">
+          <input type="text" class="form-control"  ng-model="form.src" uib-typeahead="src as src.source for src in srcSearch($viewValue)"/>
+          <span class="input-group-btn" ng-if="form.src.pk">
+            <button type="button" class="btn btn-success" ng-click="saveSrc()">Add</button>
+          </span>
+        </div>
+      </div> -->
+
+      <div class="form-group">
+        <label>Source</label>
+        <div class="input-group">
+            <input type="text" class="form-control"  ng-model="form.src" uib-typeahead="src as src.source for src in srcSearch($viewValue)"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-success" ng-click="saveSrc()">Add <i class="fa fa-plus"></i></button>
+          </span>
+        </div>
+      </div>
+
+
+      <div class="row" style="padding:15px 10px">
+        <div class="col-md-6" ng-repeat="s in form.sourceList">
+          <div class="container-fluid card">
+            <div class="row container-fluid" style="padding-top:10px;">
+              <div class="col-md-8">
+                <h4>{{s.source}}</h4>
+              </div>
+              <div class="col-md-2" style="padding-top:10px">
+                {{s.sourceCount}}
+              </div>
+              <div class="col-md-2">
+                <div class="row pull-right">
+                  <i class="fa fa-times fa-lg" style="cursor:pointer" ng-click="closeSrc($index)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+        <div class="btn-group ">
+          <button type="button" class="btn btn-default" ng-click="resetForm()">
+            Reset
+          </button>
+          <button type="button" class="btn btn-primary pull-right" ng-click="createCampaign()" >Save</button>
+        </div>
+
+    </div>
+
+  </div>
+
+</div>

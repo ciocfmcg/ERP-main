@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^payroll/', include('payroll.urls')),
     url(r'^assets/', include('assets.urls')),
     url(r'^performance/', include('performance.urls')),
+    url(r'^marketing/', include('marketing.urls')),
 
 
 ]

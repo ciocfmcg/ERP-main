@@ -1,0 +1,58 @@
+<div ng-controller="businessManagement.marketing.bulkContacts">
+  <div class="modal-header text-center">
+    <h4>Bulk Contacts Creation </h4>
+  </div>
+  <div class="modal-body">
+
+    <!-- <p class="text-danger">Please check out a sample format before uploading any file</p>
+
+    <a href="/static/vamsoUser.xlsx" target="_blank">Download sample</a>
+    <br><br> -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Source</label>
+          <input type="text " class="form-control" ng-model="bulkform.source" placeholder="Please Mention The Source Type">
+        </div>
+        <div class="form-group">
+          <label>Tags</label>
+          <div class="input-group">
+            <input type="text" class="form-control"  ng-model="form.tags" uib-typeahead="tag as tag.name for tag in tagSearch($viewValue)"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn {{form.tags.pk == null ? 'btn-primary':'btn-success'}}" ng-click="saveTags()">{{form.tags.pk == null ? 'Create':'Add'}}</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row" style="padding:15px 10px">
+          <div class="col-md-12" ng-repeat="t in tagsList">
+            <div class="container-fluid card" style="margin-botttom:10px">
+              <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="closeTags($index)"></i>
+              <div class="row container-fluid">
+                <h4><b>{{t.name}}<b></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="form-group">
+      <label>Excel file</label>
+      <input type="file" file-model="bulkform.fil">
+    </div>
+
+    <div class="alert alert-success" role="alert" ng-if="bulkform.success" style="margin-bottom:20px;">
+      {{bulkform.usrCount}} Contacts Created !
+    </div>
+
+    <button type="button" class="btn btn-primary" ng-click="upload()">
+      Upload
+    </button>
+
+  </div>
+</div>

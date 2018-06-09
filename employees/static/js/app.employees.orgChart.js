@@ -7,7 +7,6 @@ app.config(function($stateProvider){
 });
 app.controller("workforceManagement.employees.orgChart", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
   $scope.me = $users.get('mySelf');
-  $scope.sai='kiran'
 
 
   $scope.showChart = function(pk) {

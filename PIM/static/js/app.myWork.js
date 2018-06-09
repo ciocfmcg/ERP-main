@@ -1,5 +1,7 @@
 app.controller("controller.home.myWork", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
+  $scope.me = $users.get('mySelf');
+
   $scope.items = []
 
   $scope.selectDate = function(indx) {
@@ -168,7 +170,7 @@ app.controller("controller.home.myWork", function($scope, $state, $users, $state
 
     $http({
       method: 'GET',
-      url: '/api/performance/timeSheet/?date=' + dt.toJSON().split('T')[0]
+      url: '/api/performance/timeSheet/?date=' + dt.toJSON().split('T')[0] + '&user=' + $scope.me.pk
     }).
     then(function(response) {
       if (response.data.length == 0) {

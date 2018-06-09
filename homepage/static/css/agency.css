@@ -55,6 +55,26 @@
    border:1px solid green;
  }
 
+ .lineBeside {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+ }
+
+ .lineBeside:before, .lineBeside:after {
+    position: absolute;
+    top: 51%;
+    overflow: hidden;
+    width: 50%;
+    height: 1px;
+    content: '\a0';
+    background-color: #888888;
+}
+.lineBeside:before {
+    margin-left: -50%;
+    text-align: right;
+}
+
 
 /*circular tab  -------------------------------------------*/
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700);
