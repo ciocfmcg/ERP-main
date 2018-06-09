@@ -1,9 +1,140 @@
 <div>
   <breadcrumb></breadcrumb>
-  <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-users fa-5x "></i>
-    <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for CRM</h3>
-  </p>
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-md-4">
+        <canvas id="chart-area" height="250"></canvas>
+      </div>
+
+      <div class="col-md-4" style="border-left:2px solid #eeeeee;">
+        <div class="row text-center">
+          <h3>1,200 $ <small>/ $ 2000</small> </h3>
+        </div>
+        <div class="row" style="padding-left:40px;">
+          <canvas width="400" height=200 id="select-1"></canvas>
+        </div>
+
+        <div class="row text-center">
+          <h3 class="text-center">Your target this month</h3>
+        </div>
+
+      </div>
+
+
+      <div class="col-md-4" style="border-left:2px solid #eeeeee;padding:30px;padding-top:0px;">
+
+        <div class="row" style="margin-bottom:20px;">
+          <input type="text" class="form-control" ng-model="form.usrSearch" ng-enter="searchContacts()">
+        </div>
+        <div class="row" ng-repeat="data in form.contacts" style="margin-bottom:10px;">
+
+          <div class="container-fluid card" style="padding:0px;">
+            <div class="col-md-3" style="padding:0px;">
+              <img style="width: 90px;height:90px;" class="img" ng-src="{{data | getCRMDP}}" >
+            </div>
+            <div class="col-md-7" style="position:relative;display:block;">
+              <div class="row" style="padding-left:0px;">
+                <span style="font-size:20px;" class="text-muted">{{data.name}}</span>
+              </div>
+              <div class="row">
+                <span style="position:absolute;left:0px;bottom:-55px;" class="text-muted">
+                  <span style="font-size:15px;">{{data.designation}}
+                    <br>
+                    {{data.company.name}}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2 text-center" style="padding-top:5px;cursor:pointer;">
+
+              <div class="row">
+                <i class="fa fa-phone fa-lg" ng-click="call(data)"></i>
+              </div>
+
+              <div class="row" style="padding-top:10px;">
+                <i class="fa fa-envelope fa-lg" ng-click="email(data)"></i>
+              </div>
+
+              <div class="row" style="padding-top:10px;">
+                <i class="fa fa-comment-o fa-lg" ng-click="sms(data)"></i>
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <h4>Today</h4>
+        <div class="row" style="padding-left:20px;">
+          <div class="container-fluid">
+            <div class="row">
+              <input type="checkbox" ng-model="item.check" class=""> Send revised quotation
+            </div>
+            <div class="row">
+              <strong>Opportunity : </strong> James garage Inc
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="col-md-4" style="border-right:2px solid #eeeeee;border-left:2px solid #eeeeee;">
+        <h4>Tomorrow</h4>
+        <div class="row">
+          <span class="text-muted">No activity planned</span>
+        </div>
+
+      </div>
+
+
+      <div class="col-md-4">
+        <div class="small-box bg-blue">
+          <div class="inner">
+            <h3>$ 15,950</h3>
+            <p>New relationships</p>
+          </div>
+          <div class="icon" style="font-size:70px;">
+            <i class="fa fa-usd"></i>
+          </div>
+        </div>
+
+        <div class="small-box bg-red">
+          <div class="inner">
+            <h3>$ 7,050</h3>
+            <p>Overdue</p>
+          </div>
+          <div class="icon" style="font-size:70px;">
+            <i class="fa fa-credit-card"></i>
+          </div>
+        </div>
+
+        <div class="small-box bg-green">
+          <div class="inner">
+            <h3>$ 34,000</h3>
+            <p>Recieved</p>
+          </div>
+          <div class="icon" style="font-size:70px;">
+            <i class="fa fa-diamond"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>

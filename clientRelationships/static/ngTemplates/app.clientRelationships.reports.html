@@ -1,0 +1,155 @@
+<div>
+  <breadcrumb></breadcrumb>
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-md-4">
+
+        <div class="form-group">
+          <label>Start date filter </label>
+          <div class="input-group">
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from" />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.from = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>End Date filter </label>
+          <div class="input-group">
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.to" is-open="status.end" />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.end = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="col-md-8">
+        <users-field url="/api/HR/userSearch/" data="form.users" col="4" label="Filters based on users"></users-field>
+      </div>
+
+
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+      <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
+
+        <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-blue':''}}" ng-click="form.reportType = 'call'">
+          <div class="inner" style="padding:20px;">
+            <h4>Call report</h4>
+          </div>
+          <div class="icon" style="font-size:50px;margin-top:10px;">
+            <i class="fa fa-phone" ></i>
+          </div>
+        </div>
+
+        <div style="cursor:pointer;" class="small-box {{form.reportType == 'leads'? 'bg-blue':''}}" ng-click="form.reportType = 'leads'">
+          <div class="inner" style="padding:20px;">
+            <h4>New leads report</h4>
+          </div>
+          <div class="icon" style="font-size:50px;margin-top:10px;">
+            <i class="fa fa-users" ></i>
+          </div>
+        </div>
+
+        <div style="cursor:pointer;" class="small-box {{form.reportType == 'conversion'? 'bg-blue':''}}" ng-click="form.reportType = 'conversion'">
+          <div class="inner" style="padding:20px;">
+            <h4>Conversion report</h4>
+          </div>
+          <div class="icon" style="font-size:50px;margin-top:10px;">
+            <i class="fa fa-shopping-cart" ></i>
+          </div>
+        </div>
+
+        <div style="cursor:pointer;" class="small-box {{form.reportType == 'pipeline'? 'bg-blue':''}}" ng-click="form.reportType = 'pipeline'">
+          <div class="inner" style="padding:20px;">
+            <h4>Pipeline report</h4>
+          </div>
+          <div class="icon" style="font-size:50px;margin-top:10px;">
+            <i class="fa fa-filter" ></i>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-9">
+        <div class="row">
+
+          <div class="col-md-10">
+
+            <div class="input-group">
+            <input type="text" class="form-control"  placeholder="Email ID to send the report">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.end = true;"><i class="fa fa-paper-plane"></i></button>
+            </span>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <button type="button" class="btn btn-success btn-block">
+              Download <i class="fa fa-download"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:20px;">
+          <div class="container-fluid" ng-if="form.reportType == 'call'">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Firstname</th>
+                  <th>Lastname</th>
+                  <th>Phone Number</th>
+                  <th>Duration</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>John</td>
+                  <td>Doe</td>
+                  <td>756455654</td>
+                  <td>2 Min 13 Seconds</td>
+                  <td>In-Comming</td>
+                  <td> <span class="text-warning">Call Later</span> </td>
+                </tr>
+                <tr>
+                  <td>Mary</td>
+                  <td>Moe</td>
+                  <td>45435321212</td>
+                  <td>8 Min 13 Seconds</td>
+                  <td>In-Comming</td>
+                  <td> <span class="text-success">Converted</span> </td>
+                </tr>
+                <tr>
+                  <td>July</td>
+                  <td>Dooley</td>
+                  <td>14545643543</td>
+                  <td>8 Min 9 Seconds</td>
+                  <td>Outgoing</td>
+                  <td> <span class="text-warning">Call Later</span> </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+</div>

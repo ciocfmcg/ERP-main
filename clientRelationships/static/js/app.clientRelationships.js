@@ -34,15 +34,154 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.clientRelationships.relationships.html',
       controller: 'businessManagement.clientRelationships.relationships'
     })
+    .state('businessManagement.clientRelationships.reports', {
+      url: "/reports",
+      templateUrl: '/static/ngTemplates/app.clientRelationships.reports.html',
+      controller: 'businessManagement.clientRelationships.reports'
+    })
 
 });
 
 
 
 
-app.controller("businessManagement.clientRelationships.default", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.clientRelationships.default", function($scope, $state, $users, $stateParams, $http, Flash, $timeout , $uibModal) {
 
-  
+
+  $scope.config = {
+  		type: 'funnel',
+  		data: {
+  			datasets: [{
+  				data: [30, 60, 90 , 120, 150, 180],
+  				backgroundColor: [
+  					"#16a085",
+  					"#af6a10",
+            "#FFB424",
+            "#2980b9",
+            "#27ae60",
+  					"#795F99"
+  				],
+  				hoverBackgroundColor: [
+            "#16a085",
+  					"#af6a10",
+            "#FFB424",
+            "#2980b9",
+            "#27ae60",
+  					"#795F99"
+  				]
+  			}],
+  			labels: [
+  				"Contacting",
+  				"Demo/POC",
+          "Requirements",
+          "Proposal",
+          "Negotiation",
+  				"Conclusion"
+  			]
+  		},
+  		options: {
+  			responsive: true,
+  			legend: {
+  				position: 'top'
+  			},
+  			title: {
+  				display: true,
+  				text: 'Sales pipeline'
+  			},
+  			animation: {
+  				animateScale: true,
+  				animateRotate: true
+  			}
+  		}
+  	};
+
+    var ctx = document.getElementById("chart-area").getContext("2d");
+    window.myDoughnut = new Chart(ctx, $scope.config);
+
+
+
+
+    selectGaguge1 = new Gauge(document.getElementById("select-1"));
+    selectGaguge1.maxValue = 3000;
+    selectGaguge1.set(1552);
+
+    $scope.form = {usrSearch : '' , contacts : []}
+
+
+    $scope.searchContacts = function() {
+      $http({method : 'GET' , url : '/api/clientRelationships/contact/?&name__contains='+ $scope.form.usrSearch +'&limit=3'}).
+      then(function(response) {
+        $scope.form.contacts = response.data.results;
+      })
+    }
+
+    $scope.searchContacts();
+
+    $scope.call = function(data) {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.clientRelationships.call.modal.html',
+        size: 'md',
+        backdrop: true,
+        resolve: {
+          data: function() {
+            return data;
+          }
+        },
+        controller: function($scope , data) {
+          $scope.data = data;
+        },
+      })
+    }
+
+    $scope.sms = function(data) {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.clientRelationships.message.modal.html',
+        size: 'md',
+        backdrop: true,
+        resolve: {
+          data: function() {
+            return data;
+          }
+        },
+        controller: function($scope , data) {
+          $scope.data = data;
+        },
+      })
+    }
+
+    $scope.email = function(data) {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.clientRelationships.email.modal.html',
+        size: 'lg',
+        backdrop: true,
+        resolve: {
+          data: function() {
+            return data;
+          }
+        },
+        controller: function($scope , data) {
+          $scope.data = data;
+
+
+          $scope.tinymceOptions = {
+            selector: 'textarea',
+            content_css: '/static/css/bootstrap.min.css',
+            inline: false,
+            plugins: 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+            skin: 'lightgray',
+            theme: 'modern',
+            height: 300,
+            toolbar: 'undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+            setup: function(editor) {
+              // editor.addButton();
+            },
+          };
+
+          $scope.form = {emailBody : '' , cc : [] }
+
+        },
+      })
+    }
 
 })
 

@@ -1,0 +1,22 @@
+<div class="modal-body" style="padding-bottom:0px;">
+
+  <div class="container-fluid">
+    <div class="row">
+      <strong>Email :</strong> {{data.email}}{{contact.email}}
+
+      <button type="button" class="btn btn-primary pull-right">
+        Send
+      </button>
+
+    </div>
+    <div class="row">
+      <users-Field data="form.cc" url="/api/HR/userSearch/" col="4" label="CC"></users-Field>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <textarea ui-tinymce="tinymceOptions" ng-model="form.emailBody"></textarea>
+  </div>
+
+</div>
