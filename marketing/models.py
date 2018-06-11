@@ -66,6 +66,6 @@ class CampaignLogs(models.Model):
     user = models.ForeignKey(User ,related_name="CampaignLogs", null = True)
     contact = models.ForeignKey(Contacts , related_name="CampaignLogs",null=True)
     campaign = models.ForeignKey(Campaign , related_name="CampaignLogs",null=True)
-    followupDate = models.DateField(null = True , blank = True)
+    followupDate = models.DateTimeField(null = True , blank = True)
     data = models.CharField(max_length = 1000 , null = True , blank = True)
     typ = models.CharField(choices = LOG_TYP , max_length = 20 , null=True)

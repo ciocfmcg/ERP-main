@@ -93,7 +93,8 @@ app.controller("businessManagement.marketing.canpaign.form", function($scope, $h
       tag: '',
       tagsList: [],
       filterFrom: '',
-      filterTo: ''
+      filterTo: '',
+      mode: 'new'
 
     }
   }
@@ -102,9 +103,19 @@ app.controller("businessManagement.marketing.canpaign.form", function($scope, $h
   if ($scope.tab != undefined) {
     console.log($scope.data.tableData[$scope.tab.data.index]);
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
-    $scope.form.tagsList = $scope.form.tags
+    $scope.copyData = JSON.parse(JSON.stringify($scope.data.tableData[$scope.tab.data.index]))
+    $scope.form.mode = 'edit'
+    if ($scope.form.tags != null && $scope.form.tags.length > 0) {
+      $scope.form.tagsList = $scope.form.tags
+    }else {
+      $scope.form.tagsList = []
+    }
     $scope.form.tag = ''
-    $scope.form.sourceList = JSON.parse($scope.form.source);
+    if ($scope.form.source != null && $scope.form.source.length > 0) {
+      $scope.form.sourceList = JSON.parse($scope.form.source);
+    }else {
+      $scope.form.sourceList = []
+    }
     $scope.src = ''
     if ($scope.form.filterFrom != null && $scope.form.filterTo != null && $scope.form.filterFrom.length > 0 && $scope.form.filterTo.length > 0) {
       console.log('s');
@@ -133,66 +144,102 @@ app.controller("businessManagement.marketing.canpaign.form", function($scope, $h
     // }
 
   }
-
+  $scope.refreshData = function() {
+    for (var i = 0; i < $scope.form.tagsList.length; i++) {
+      console.log(i, $scope.form.filterFrom);
+      console.log('yessss');
+      $http({
+        method: 'GET',
+        url: '/api/marketing/tag/?name=' + $scope.form.tagsList[i].name + '&fd=' + $scope.form.fd + '&td=' + $scope.form.td + '&fetch= ',
+      }).
+      then((function(i) {
+        return function(response) {
+          console.log('ressssssssss', response.data);
+          $scope.form.tagsList[i] = response.data[0];
+          console.log($scope.form);
+        }
+      })(i))
+    }
+    for (var i = 0; i < $scope.form.sourceList.length; i++) {
+      console.log(i, $scope.form.filterFrom);
+      console.log('yessss');
+      $http({
+        method: 'POST',
+        url: '/api/marketing/sourceSuggest/',
+        data: {
+          source: $scope.form.sourceList[i].source,
+          fd: $scope.form.fd,
+          td: $scope.form.td,
+          fetch: ''
+        }
+      }).
+      then((function(i) {
+        return function(response) {
+          console.log('ressssssssss', response.data);
+          $scope.form.sourceList[i] = response.data.val[0];
+          console.log($scope.form);
+        }
+      })(i))
+    }
+  }
   $scope.$watch('[form.filterFrom,form.filterTo]', function(newValue, oldValue) {
-    var d = new Date($scope.form.filterFrom)
-    console.log(new Date(d.setMinutes( d.getMinutes() + 480)));
-    console.log('watchhhhh',$scope.form.filterFrom);
+
+    console.log('watchhhhh', $scope.form.filterFrom, $scope.form.filterTo);
+    console.log($scope.form);
     if ($scope.form.filterFrom != null && $scope.form.filterTo != null && typeof $scope.form.filterFrom == 'object' && typeof $scope.form.filterTo == 'object') {
-      // var fromd = new Date($scope.form.filterFrom)
-      // var tod = new Date($scope.form.filterTo)
-      // $scope.form.filterFrom = new Date(fromd.setMinutes( fromd.getMinutes() + 480))
-      // $scope.form.filterTo = new Date(tod.setMinutes( tod.getMinutes() + 480))
-      $scope.form.fd = $scope.form.filterFrom.toJSON().split('T')[0]
-      $scope.form.td = $scope.form.filterTo.toJSON().split('T')[0]
+      if ($scope.form.mode == 'new') {
+        var fromd = new Date($scope.form.filterFrom)
+        var tod = new Date($scope.form.filterTo)
+        $scope.filterFrom = new Date(fromd.setDate(fromd.getDate() + 1))
+        $scope.filterTo = new Date(tod.setDate(tod.getDate() + 1))
+      } else {
+        $scope.filterFrom = new Date($scope.form.filterFrom)
+        $scope.filterTo = new Date($scope.form.filterTo)
+      }
+      console.log('twooooo',$scope.filterFrom,$scope.filterTo);
+      $scope.form.fd = $scope.filterFrom.toJSON().split('T')[0]
+      $scope.form.td = $scope.filterTo.toJSON().split('T')[0]
       // $scope.form.sourceList = []
       // $scope.form.tagsList = []
-      for (var i = 0; i < $scope.form.tagsList.length; i++) {
-        console.log(i, $scope.form.filterFrom);
-        console.log('yessss');
-        $http({
-          method: 'GET',
-          url: '/api/marketing/tag/?name=' + $scope.form.tagsList[i].name + '&fd=' + $scope.form.fd + '&td=' + $scope.form.td + '&fetch= ',
-        }).
-        then((function(i) {
-          return function(response) {
-            console.log('ressssssssss', response.data);
-            $scope.form.tagsList[i] = response.data[0];
-            console.log($scope.form);
-          }
-        })(i))
-      }
-      for (var i = 0; i < $scope.form.sourceList.length; i++) {
-        console.log(i, $scope.form.filterFrom);
-        console.log('yessss');
-        $http({
-          method: 'POST',
-          url: '/api/marketing/sourceSuggest/',
-          data: {
-            source: $scope.form.sourceList[i].source,
-            fd: $scope.form.fd,
-            td: $scope.form.td,
-            fetch: ''
-          }
-        }).
-        then((function(i) {
-          return function(response) {
-            console.log('ressssssssss', response.data);
-            $scope.form.sourceList[i] = response.data.val[0];
-            console.log($scope.form);
-          }
-        })(i))
-      }
+      $scope.refreshData()
+
     } else {
       if ($scope.form.filterFrom != null && $scope.form.filterTo != null && $scope.form.filterFrom.length > 0 && $scope.form.filterTo.length > 0) {
-        // $scope.form.fd = $scope.form.filterFrom
-        // $scope.form.td = $scope.form.filterTo
-        $scope.form.fd = new Date(new Date($scope.form.filterFrom).setDate(new Date($scope.form.filterFrom).getDate() - 1)).toJSON().split('T')[0]
-        $scope.form.td = new Date(new Date($scope.form.filterTo).setDate(new Date($scope.form.filterTo).getDate() - 1)).toJSON().split('T')[0]
-        console.log($scope.form.fd, $scope.form.td);
+        console.log('eliffffff', $scope.form.filterFrom, $scope.form.filterTo);
+        $scope.form.fd = $scope.form.filterFrom
+        $scope.form.td = $scope.form.filterTo
+        // $scope.form.fd = new Date(new Date($scope.form.filterFrom).setDate(new Date($scope.form.filterFrom).getDate() - 1)).toJSON().split('T')[0]
+        // $scope.form.td = new Date(new Date($scope.form.filterTo).setDate(new Date($scope.form.filterTo).getDate() - 1)).toJSON().split('T')[0]
+        // console.log($scope.form.fd, $scope.form.td);
       } else {
-        $scope.form.fd = ''
-        $scope.form.td = ''
+        console.log('elseeeeeeeeee',$scope.form);
+        if ($scope.form.mode == 'new') {
+          $scope.form.fd = ''
+          $scope.form.td = ''
+        } else {
+          $scope.form.fd = $scope.form.filterFrom
+          $scope.form.td = $scope.form.filterTo
+          if ($scope.copyData.filterTo != $scope.form.filterTo) {
+            if ($scope.copyData.filterFrom.length > 0) {
+              $scope.filterTo = new Date($scope.form.filterTo)
+            } else {
+              var tod = new Date($scope.form.filterTo)
+              $scope.filterTo = new Date(tod.setDate(tod.getDate() + 1))
+            }
+            $scope.form.td = $scope.filterTo.toJSON().split('T')[0]
+          }
+          if ($scope.copyData.filterFrom != $scope.form.filterFrom) {
+            if ($scope.copyData.filterFrom.length > 0) {
+              $scope.filterFrom = new Date($scope.form.filterFrom)
+            } else {
+              var tod = new Date($scope.form.filterFrom)
+              $scope.filterFrom = new Date(tod.setDate(tod.getDate() + 1))
+            }
+            $scope.form.fd = $scope.filterFrom.toJSON().split('T')[0]
+          }
+          console.log('oneeeeeeeeee',$scope.filterFrom,$scope.filterTo);
+          $scope.refreshData()
+        }
       }
     }
 
@@ -296,13 +343,49 @@ app.controller("businessManagement.marketing.canpaign.form", function($scope, $h
     var toSend = {
       name: f.name
     }
-    if (f.filterFrom != null && typeof f.filterFrom == 'object') {
-      toSend.filterFrom = f.filterFrom.toJSON().split('T')[0]
-    }
-    if (f.filterTo != null && typeof f.filterTo == 'object') {
-      toSend.filterTo = f.filterTo.toJSON().split('T')[0]
+
+
+    if ($scope.form.mode == 'new') {
+      console.log('newwwwwwww');
+      if (f.filterFrom != null && typeof f.filterFrom == 'object') {
+        var fromd = new Date(f.filterFrom)
+        $scope.filterFrom = new Date(fromd.setDate(fromd.getDate() + 1))
+        toSend.filterFrom = $scope.filterFrom.toJSON().split('T')[0]
+      }
+      if (f.filterTo != null && typeof f.filterTo == 'object') {
+        var tod = new Date(f.filterTo)
+        $scope.filterTo = new Date(tod.setDate(tod.getDate() + 1))
+        toSend.filterTo = $scope.filterTo.toJSON().split('T')[0]
+      }
+    } else {
+      console.log('edittttttttttt');
+      console.log($scope.copyData.filterFrom, $scope.form.filterFrom);
+      if ($scope.copyData.filterFrom != $scope.form.filterFrom) {
+        console.log('changeeeeeeeeeeee');
+        if ($scope.copyData.filterFrom.length > 0) {
+          console.log('olddddddddd');
+          $scope.filterFrom = new Date($scope.form.filterFrom)
+          toSend.filterFrom = $scope.filterFrom.toJSON().split('T')[0]
+        } else {
+          console.log('emptyyyyyyyyyyy');
+          var fromd = new Date(f.filterFrom)
+          $scope.filterFrom = new Date(fromd.setDate(fromd.getDate() + 1))
+          toSend.filterFrom = $scope.filterFrom.toJSON().split('T')[0]
+        }
+      }
+      if ($scope.copyData.filterTo != $scope.form.filterTo) {
+        if ($scope.copyData.filterFrom.length > 0) {
+          $scope.filterTo = new Date($scope.form.filterTo)
+          toSend.filterTo = $scope.filterTo.toJSON().split('T')[0]
+        } else {
+          var tod = new Date(f.filterTo)
+          $scope.filterTo = new Date(tod.setDate(tod.getDate() + 1))
+          toSend.filterTo = $scope.filterTo.toJSON().split('T')[0]
+        }
+      }
     }
 
+    toSend.tags = []
     if (f.tagsList.length > 0) {
       var tagsPk = []
       for (var i = 0; i < f.tagsList.length; i++) {
@@ -332,17 +415,12 @@ app.controller("businessManagement.marketing.canpaign.form", function($scope, $h
   }
 });
 
-app.controller("businessManagement.marketing.canpaign.explore", function($scope, $http, Flash, $uibModal , $sce) {
+app.controller("businessManagement.marketing.canpaign.explore", function($scope, $http, Flash, $uibModal, $sce) {
   $scope.sai = 'kiran'
   $scope.campaignData = []
   $scope.showPrev = false
   $scope.showNext = false
-  if ($scope.tab != undefined) {
-    console.log($scope.data.tableData[$scope.tab.data.index]);
-    $scope.data = $scope.data.tableData[$scope.tab.data.index]
-    if ($scope.data.directions.length > 0) {
-      $scope.data.directions  = $sce.trustAsHtml($scope.data.directions);
-    }
+  $scope.userDetails = function(){
     $http({
       method: 'GET',
       url: '/api/marketing/campaignDetails/?pk=' + $scope.data.pk,
@@ -354,12 +432,33 @@ app.controller("businessManagement.marketing.canpaign.explore", function($scope,
         console.log('calllllllllllll', $scope.campaignData);
         $scope.idx = 0
         $scope.userData = $scope.campaignData[$scope.idx]
+        $scope.userData.commentData = ''
+        $scope.fetchLogData($scope.userData.pk,$scope.data.pk)
         $scope.totalUsers = $scope.campaignData.length
         if ($scope.totalUsers > 1) {
           $scope.showNext = true
         }
       }
     })
+  }
+  if ($scope.tab != undefined) {
+    console.log($scope.data.tableData[$scope.tab.data.index]);
+    $scope.data = $scope.data.tableData[$scope.tab.data.index]
+    if ($scope.data.directions != null && $scope.data.directions.length > 0) {
+      $scope.data.directions = $sce.trustAsHtml($scope.data.directions);
+    }
+    $scope.fetchLogData = function(cont,camp){
+      console.log(cont,camp);
+      $http({
+        method: 'GET',
+        url: '/api/marketing/campaignLogs/?contact=' + cont,
+      }).
+      then(function(response) {
+        $scope.userData.logData = response.data
+      })
+    }
+    $scope.userDetails()
+
   }
 
 
@@ -369,7 +468,9 @@ app.controller("businessManagement.marketing.canpaign.explore", function($scope,
       $scope.showPrev = false
     }
     $scope.userData = $scope.campaignData[$scope.idx]
+    $scope.userData.commentData = ''
     $scope.showNext = true
+    $scope.fetchLogData($scope.userData.pk,$scope.data.pk)
   }
   $scope.next = function() {
     $scope.idx += 1
@@ -377,7 +478,34 @@ app.controller("businessManagement.marketing.canpaign.explore", function($scope,
       $scope.showNext = false
     }
     $scope.userData = $scope.campaignData[$scope.idx]
+    $scope.userData.commentData = ''
     $scope.showPrev = true
+    $scope.fetchLogData($scope.userData.pk,$scope.data.pk)
+  }
+  $scope.logInfo = function(log){
+    console.log(log);
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.marketing.logsDetails.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return log;
+        },
+      },
+      controller: function($scope, $http, Flash, $uibModal, data,$uibModalInstance) {
+        console.log('pppppppppp',data);
+        $scope.log = log
+        $http({
+          method: 'GET',
+          url: '/api/marketing/campaign/' + $scope.log.campaign,
+        }).
+        then(function(response) {
+          $scope.camp= response.data
+        })
+
+      },
+    });
   }
 
   $scope.changeStatus = function(typ) {
@@ -395,6 +523,31 @@ app.controller("businessManagement.marketing.canpaign.explore", function($scope,
           }
         },
         controller: "businessManagement.marketing.canpaign.typPopUp",
+      }).result.then(function () {
+
+      }, function () {
+        $scope.userDetails()
+        // console.log('doneeeeeeeeee');
+        // console.log($scope.campaignData,$scope.data);
+        // if ($scope.data.typ == 'email' || $scope.data.typ == 'sms') {
+        //   for (var i = 0; i < $scope.campaignData.length; i++) {
+        //     var data = {contact:$scope.campaignData[i].pk,campaign:$scope.data.pk}
+        //     if ($scope.data.typ == 'email') {
+        //       data.typ = 'emailSent'
+        //     }else if ($scope.data.typ == 'sms') {
+        //       data.typ = 'smsSent'
+        //     }
+        //     $http({
+        //       method: 'POST',
+        //       url: '/api/marketing/campaignLogs/',
+        //       data: data
+        //     }).
+        //     then(function(response) {
+        //       console.log(response.data);
+        //     })
+        //   }
+        // }
+
       });
 
     } else if ($scope.data.status == 'started') {
@@ -414,12 +567,72 @@ app.controller("businessManagement.marketing.canpaign.explore", function($scope,
 
   }
 
-  $scope.createLog = function(typ){
-    console.log('777777777',typ);
+  $scope.postData = function(data){
+    console.log('qqqqqqqqqq',data);
+    data.contact = $scope.userData.pk
+    data.campaign = $scope.data.pk
+    $http({
+      method: 'POST',
+      url: '/api/marketing/campaignLogs/',
+      data: data
+    }).
+    then(function(response) {
+      console.log(response.data);
+      $scope.fetchLogData($scope.userData.pk,$scope.data.pk)
+    })
+  }
+  $scope.createLog = function(typ) {
+    console.log('777777777', typ);
+
+    if (typ == 'remaind') {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.marketing.campaign.call.fallowupForm.html',
+        size: 'lg',
+        backdrop: true,
+        resolve: {
+          data: function() {
+            return $scope.postData;
+          },
+        },
+        controller: function($scope, $http, Flash, $uibModal, data, $uibModalInstance) {
+          console.log('pppppppppp',data);
+          $scope.postData = data
+          $scope.followupData = {followupDate : new Date(),data:''}
+          $scope.submit = function(){
+            console.log($scope.followupData.followupDate);
+            if ($scope.followupData.data.length == 0) {
+              Flash.create('warning','Please Mention Some Comment')
+              return
+            }
+            var dataSend = {typ : 'comment',followupDate:$scope.followupData.followupDate,data:$scope.followupData.data}
+            $scope.postData(dataSend)
+            $uibModalInstance.dismiss()
+          }
+        },
+      });
+    }else {
+      var dataSend = {}
+      if (typ == 'call') {
+        dataSend.typ = 'outbound'
+      }else if (typ == 'notInterest') {
+        dataSend.typ = 'closed'
+      }else if (typ == 'leads') {
+        dataSend.typ = 'converted'
+      }else if (typ == 'comment') {
+        if ($scope.userData.commentData.length == 0) {
+          Flash.create('warning','Please Mention Some Comment')
+          return
+        }
+        dataSend.typ = 'comment'
+        dataSend.data = $scope.userData.commentData
+        $scope.userData.commentData = ''
+      }
+      $scope.postData(dataSend)
+    }
   }
 })
 
-app.controller("businessManagement.marketing.canpaign.typPopUp", function($scope, $http, Flash, $uibModal, data, typ, $uibModalInstance) {
+app.controller("businessManagement.marketing.canpaign.typPopUp", function($scope, $http,$sce, Flash, $uibModal, data, typ, $uibModalInstance) {
 
   console.log('77777777', data, typ);
   $scope.data = data
@@ -458,6 +671,7 @@ app.controller("businessManagement.marketing.canpaign.typPopUp", function($scope
   $scope.submit = function() {
     console.log($scope.form.partList, $scope.form.PartPk);
     var toSend = {
+      logs:'create',
       status: 'started',
       typ: $scope.typ
     }
@@ -497,6 +711,7 @@ app.controller("businessManagement.marketing.canpaign.typPopUp", function($scope
       console.log(response.data);
       $scope.data.status = response.data.status
       $scope.data.typ = response.data.typ
+      $scope.data.directions = $sce.trustAsHtml(response.data.directions);
       $uibModalInstance.dismiss();
       Flash.create('success', 'Submitted')
     })

@@ -1,0 +1,101 @@
+<div class="" ng-controller="businessManagement.marketing.leads.Explore">
+  <div class="row" style="padding-top:35px;">
+    <div class="col-md-4">
+      <div class="row" style="padding-left:30px;padding-bottom:25px;">
+        <h2><i class="fa fa-user"></i> {{contactData.name ? contactData.name : 'None'}}</h2>
+        <span style="font-size:25px" ng-if="contactData.mobile != 'null'"> &nbsp;<i class="fa fa-mobile"></i> &nbsp;{{contactData.mobile}} <br></span>
+        <span style="font-size:25px" ng-if="contactData.email != 'null'"><i class="fa fa-envelope-o"></i> &nbsp;{{contactData.email}} <br></span>
+      </div>
+      <!-- <div class="row">
+        <div class="col-md-5" align="right">
+          <strong>Name :</strong>
+        </div>
+        <div class="col-md-7">
+          {{contactData.name ? contactData.name : 'None'}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5" align="right">
+          <strong>Email :</strong>
+        </div>
+        <div class="col-md-7">
+          {{contactData.email ? contactData.email : 'None'}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5" align="right">
+          <strong>Mobile :</strong>
+        </div>
+        <div class="col-md-7">
+          {{contactData.mobile ? contactData.mobile : 'None'}}
+        </div>
+      </div> -->
+      <div class="row" style="font-size:18px">
+        <div class="col-md-5" align="right">
+          <strong>Reference ID :</strong>
+        </div>
+        <div class="col-md-7">
+          {{contactData.referenceId ? contactData.referenceId : 'None'}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5" align="right">
+          <strong>Source :</strong>
+        </div>
+        <div class="col-md-7">
+          {{contactData.source ? contactData.source : 'None'}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5" align="right">
+          <strong>PinCode :</strong>
+        </div>
+        <div class="col-md-7">
+          {{contactData.pinCode ? contactData.pinCode : 'None'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-4" style="border-right:2px solid #eeeeee">
+      <h3 align="center" style="padding-bottom:20px">Logs</h3>
+      <div class="container-fluid card" ng-repeat="log in contactData.logs" style="padding:1px;margin:10px;cursor:pointer" ng-click="logInfo(log)">
+        <div class="col-md-3" style="padding-left:0px">
+          <img ng-src="{{log.user | getDP}}" class="img img-rounded" style="height:35px;width:35px">
+        </div>
+        <div class="col-md-7" >
+          <span style="font-size:18px">{{log.created | timeAgo}} ago</span>
+        </div>
+        <div class="col-md-2">
+          <span style="font-size:22px" ng-if="log.typ=='outbound'"><i class="fa fa-phone"></i></span>
+          <span style="font-size:22px" ng-if="log.typ=='emailSent'"><i class="fa fa-envelope-o"></i></span>
+          <span style="font-size:22px" ng-if="log.typ=='smsSent'"><i class="fa fa-mobile"></i></span>
+          <span style="font-size:22px" ng-if="log.typ=='comment'"><i class="fa fa-commenting-o"></i></span>
+          <span style="font-size:22px" ng-if="log.typ=='converted'"><i class="fa fa-thumbs-up"></i></span>
+          <span style="font-size:22px" ng-if="log.typ=='closed'"><i class="fa fa-thumbs-down"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <h3 align="center" style="padding-bottom:20px">Comments</h3>
+
+      <div class="container-fluid card" ng-repeat="log in contactData.logs" style="padding:1px;margin:10px 5px;" ng-if="log.typ=='comment'">
+        <div class="col-md-1" style="padding-left:0px">
+          <img ng-src="{{log.user | getDP}}" class="img img-rounded" style="height:30px;width:30px">
+        </div>
+        <div class="col-md-9" >
+          <span style="font-size:17px">{{log.data}}</span>
+        </div>
+        <div class="col-md-2">
+          <span style="font-size:15px">{{log.created | timeAgo}} ago</span>
+        </div>
+      </div>
+      </div>
+      <div class="row pull-right" style="padding:15px;position:fixed;bottom:1px;right:15px">
+        <div class="btn btn-primary" ng-click="close()">
+          <h4>Close</h4>
+        </div>
+      </div>
+    </div>
+</div>

@@ -20,16 +20,17 @@ app.controller("businessManagement.marketing.leads", function($scope, $state, $u
     itemsNumPerView: [12, 24, 48],
     filterSearch: true,
     searchField: 'Search..',
+
   };
 
   $scope.tableAction = function(target, action, mode) {
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
-        if (action == 'exploreSale') {
+        if (action == 'info') {
           $scope.addTab({
-            title: 'Explore Sale : ' + $scope.data.tableData[i].pk,
+            title: 'Explore Leads : ' + $scope.data.tableData[i].pk,
             cancel: true,
-            app: 'exploreSale',
+            app: 'leadsInfo',
             data: {
               pk: target,
               index: i
@@ -68,5 +69,40 @@ app.controller("businessManagement.marketing.leads", function($scope, $state, $u
   }
 
 
+
+})
+
+app.controller("businessManagement.marketing.leads.Explore", function($scope, $state, $users, $stateParams, $http, Flash , $uibModal) {
+
+  if ($scope.tab != undefined) {
+    console.log($scope.data.tableData[$scope.tab.data.index]);
+    $scope.contactData = $scope.data.tableData[$scope.tab.data.index]
+  }
+
+  $scope.logInfo = function(log){
+    console.log(log);
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.marketing.logsDetails.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return log;
+        },
+      },
+      controller: function($scope, $http, Flash, $uibModal, data,$uibModalInstance) {
+        console.log('pppppppppp',data);
+        $scope.log = log
+        $http({
+          method: 'GET',
+          url: '/api/marketing/campaign/' + $scope.log.campaign,
+        }).
+        then(function(response) {
+          $scope.camp= response.data
+        })
+
+      },
+    });
+  }
 
 })

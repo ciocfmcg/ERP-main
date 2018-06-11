@@ -8,6 +8,7 @@ router.register(r'contacts' , ContactsViewSet , base_name = 'contacts')
 router.register(r'tag' , TagViewSet , base_name = 'tag')
 router.register(r'campaign' , CampaignViewSet , base_name = 'campaign')
 router.register(r'campaignLogs' , CampaignLogsViewSet , base_name = 'campaignLogs')
+router.register(r'leads' , LeadsViewSet , base_name = 'leads')
 
 
 urlpatterns = [

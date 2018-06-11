@@ -1,4 +1,4 @@
-app.controller("businessManagement.marketing.contacts", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.marketing.contacts", function($scope, $state, $users, $stateParams, $http, Flash , $uibModal) {
 
   $scope.data = {
     tableData: []
@@ -47,6 +47,35 @@ app.controller("businessManagement.marketing.contacts", function($scope, $state,
             Flash.create('success', 'Deleted');
             $scope.$broadcast('forceRefetch', {})
           })
+        }else if (action == 'info') {
+
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.marketing.contact.logDetailsPopup.html',
+            size: 'xl',
+            backdrop: true,
+            resolve: {
+              data: function() {
+                return $scope.data.tableData[i];
+              },
+            },
+            controller: function($scope, $http, Flash, $uibModal, data, $uibModalInstance) {
+              console.log('pppppppppp',data);
+              $scope.contactData = data
+
+
+              $http({
+                method: 'GET',
+                url: '/api/marketing/campaignLogs/?contact=' + $scope.contactData.pk,
+              }).
+              then(function(response) {
+                $scope.contactData.logData = response.data
+              })
+              $scope.close = function(){
+                $uibModalInstance.dismiss()
+              }
+            },
+          });
+
         }
       }
     }

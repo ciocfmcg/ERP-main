@@ -24,6 +24,7 @@ from django.db.models import Case, IntegerField, Sum, When
 import json
 import operator
 from excel_response import ExcelResponse
+from .serializers import campaigncontactsList
 # Create your views here.
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -51,6 +52,16 @@ class CampaignLogsViewSet(viewsets.ModelViewSet):
     queryset = CampaignLogs.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user', 'contact' , 'campaign']
+
+class LeadsViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated ,)
+    serializer_class = LeadsSerializer    
+    def get_queryset(self):
+        print self.request.GET
+        leadsList = CampaignLogs.objects.filter(typ = 'converted').values_list('contact',flat=True)
+        print leadsList
+        print Contacts.objects.filter(pk__in = list(leadsList))
+        return Contacts.objects.filter(pk__in = list(leadsList))
 
 class ContactsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated ,)
@@ -146,16 +157,17 @@ class SourceSuggestAPIView(APIView):
             toDate = request.data['td'].split('-')
             fd = date(int(fromDate[0]), int(fromDate[1]), int(fromDate[2]))
             td = date(int(toDate[0]), int(toDate[1]), int(toDate[2]))
-            fromDate = fd + relativedelta(days=1)
-            toDate = td + relativedelta(days=1)
+            print fd,td
+            # fromDate = fd + relativedelta(days=1)
+            # toDate = td + relativedelta(days=1)
             if 'fetch' in request.data:
                 duplicates = Contacts.objects.filter(source=str(request.data['source'])).values('source').annotate(pk=models.Max('id'),sourceCount=models.Count(Case(
-                When(created__range=(str(fromDate),str(toDate)), then=1),
+                When(created__range=(str(fd),str(td)), then=1),
                 output_field=IntegerField()
                 )))
             else:
                 duplicates = Contacts.objects.filter(source__contains=str(request.data['source'])).values('source').annotate(pk=models.Max('id'),sourceCount=models.Count(Case(
-                When(created__range=(str(fromDate),str(toDate)), then=1),
+                When(created__range=(str(fd),str(td)), then=1),
                 output_field=IntegerField()
                 )))
             print list(duplicates)
@@ -171,32 +183,9 @@ class CampaignDetailsAPIView(APIView):
     def get(self, request, format=None):
         print 'infooooooooo',self.request.GET
         sendData = campaigncontactsList(int(self.request.GET['pk']))
+        print 'saiiiiiiiiii',sendData
         if 'typ' in self.request.GET :
-            return ExcelResponse(sendData)
+            excelData = sendData.values('name','email','mobile','source','pinCode')
+            return ExcelResponse(excelData)
         else:
             return Response(sendData)
-
-def campaigncontactsList(campId):
-    campObj = Campaign.objects.get(pk=campId)
-    tagsList = list(campObj.tags.all().values_list('id',flat=True))
-    sourceList = []
-    print tagsList
-    for i in json.loads(campObj.source):
-        # print i,type(i)
-        sourceList.append(str(i['source']))
-    print sourceList
-    if campObj.filterFrom and campObj.filterTo:
-        fromDate = str(campObj.filterFrom).split('-')
-        toDate = str(campObj.filterTo).split('-')
-        fd = date(int(fromDate[0]), int(fromDate[1]), int(fromDate[2]))
-        td = date(int(toDate[0]), int(toDate[1]), int(toDate[2]))
-        print fd,td
-        query = reduce(operator.or_, (Q(source = item) for item in sourceList))
-        dataSend = Contacts.objects.filter(query | Q(tags__in = tagsList) , created__range=(fd,td)).distinct().values('name','email','mobile','source','pinCode')
-        print dataSend
-        # print Contacts.objects.filter(query & Q(created__range=(fd,td)))
-    else:
-        query = reduce(operator.or_, (Q(source = item) for item in sourceList))
-        dataSend = Contacts.objects.filter(query | Q(tags__in = tagsList)).distinct().values('name','email','mobile','source','pinCode')
-        print dataSend
-    return dataSend
