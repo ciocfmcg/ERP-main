@@ -39,6 +39,11 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.clientRelationships.reports.html',
       controller: 'businessManagement.clientRelationships.reports'
     })
+    .state('businessManagement.clientRelationships.team', {
+      url: "/team",
+      templateUrl: '/static/ngTemplates/app.clientRelationships.team.html',
+      controller: 'businessManagement.clientRelationships.team'
+    })
 
 });
 

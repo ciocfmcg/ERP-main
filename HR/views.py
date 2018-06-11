@@ -381,6 +381,9 @@ def findChild(d, pk = None):
             role = ''
 
         if str(des.user.pk) == pk:
+            for tr in toReturn:
+                tr['className'] = 'rd-dept'
+
             clsName = 'middle-level'
             sameLevel = True
         else:
@@ -388,6 +391,7 @@ def findChild(d, pk = None):
             if sameLevel:
                 clsName = 'rd-dept'
 
+        print des.user , clsName
 
         toReturn.append({
             "id" : des.user.pk,
@@ -425,7 +429,7 @@ class OrgChartAPI(APIView):
         if str(d.user.pk) == request.GET['user']:
             clsName = 'middle-level'
         else:
-            clsName = 'frontend1'
+            clsName = 'product-dept'
 
 
         toReturn = {
@@ -435,10 +439,6 @@ class OrgChartAPI(APIView):
             "children" : findChild(d , pk = request.GET['user']),
             "role" : role,
             "className" :  clsName
-            # "parent" : findChild(d),
         }
-
-        print toReturn
-
 
         return Response(toReturn )

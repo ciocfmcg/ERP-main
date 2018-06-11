@@ -1,154 +1,200 @@
-<div>
-  <breadcrumb></breadcrumb>
-  <div class="container-fluid">
+<breadcrumb></breadcrumb>
+<div class="container-fluid">
 
-    <div class="row">
-      <div class="col-md-4">
 
-        <div class="form-group">
-          <label>Start date filter </label>
-          <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from" />
-            <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="status.from = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-          </span>
-          </div>
+  <!-- <div class="row ng-isolate-scope" style="padding-bottom:10px;" tabs="tabs" active="local.activeTab">
+    <div class="col-md-6 text-center text-muted bg-red" style="padding:10px;background: #eeeeee; cursor:pointer;{{page=='quick'? 'font-size:16px;':'font-size:13px;'}}" ng-click="page='quick'">
+      <i class="fa fa-th-large fa-2x" style="width:30px;"></i> Quick Reports
+    </div>
+    <div class="col-md-6 text-center text-muted bg-yellow" style="padding:10px;background: ; cursor:pointer;{{page=='scheduled'? 'font-size:16px;':'font-size:13px;'}}" ng-click="page='scheduled'">
+      <i class="fa fa-envelope-o fa-2x" style="width:30px;"></i> Scheduled Reports
+    </div>
+  </div> -->
+
+  <div class="row">
+
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
+
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-pink':''}}" ng-click="form.reportType = 'call'">
+        <div class="inner" style="padding:20px;">
+          <h4>Call report</h4>
         </div>
-
-        <div class="form-group">
-          <label>End Date filter </label>
-          <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.to" is-open="status.end" />
-            <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="status.end = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-          </span>
-          </div>
+        <div class="icon" style="font-size:50px;margin-top:10px;color:#F8BBD0;">
+          <i class="fa fa-phone" ></i>
         </div>
-
-
       </div>
 
-      <div class="col-md-8">
-        <users-field url="/api/HR/userSearch/" data="form.users" col="4" label="Filters based on users"></users-field>
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'leads'? 'bg-green':''}}" ng-click="form.reportType = 'leads'">
+        <div class="inner" style="padding:20px;">
+          <h4>New leads report</h4>
+        </div>
+        <div class="icon" style="font-size:50px;margin-top:10px;color:#DCEDC8;">
+          <i class="fa fa-users" ></i>
+        </div>
       </div>
 
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'conversion'? 'bg-red':''}}" ng-click="form.reportType = 'conversion'">
+        <div class="inner" style="padding:20px;">
+          <h4>Conversion report</h4>
+        </div>
+        <div class="icon" style="font-size:50px;margin-top:10px;color:#FFCCBC;">
+          <i class="fa fa-shopping-cart" ></i>
+        </div>
+      </div>
+
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'pipeline'? 'bg-blue':''}}" ng-click="form.reportType = 'pipeline'">
+        <div class="inner" style="padding:20px;">
+          <h4>Pipeline report</h4>
+        </div>
+        <div class="icon" style="font-size:50px;margin-top:10px;color:#D7CCC8;">
+          <i class="fa fa-filter" ></i>
+        </div>
+      </div>
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'salesInflow'? 'bg-black':''}}" ng-click="form.reportType = 'salesInflow'">
+        <div class="inner" style="padding:20px;">
+          <h4>Collection Report</h4>
+        </div>
+        <div class="icon" style="font-size:50px;margin-top:10px;color:#CFD8DC;">
+          <i class="fa fa-money" ></i>
+        </div>
+      </div>
+
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'contacts'? 'bg-yellow':''}}" ng-click="form.reportType = 'contacts'">
+        <div class="inner" style="padding:20px;">
+          <h4>New Contacts</h4>
+        </div>
+        <div class="icon" style="font-size:50px;margin-top:10px;color:#FFF59D;">
+          <i class="fa fa-users" ></i>
+        </div>
+      </div>
+
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'nonPerforming'? 'bg-blue':''}}" ng-click="form.reportType = 'nonPerforming'">
+        <div class="inner" style="padding:20px;">
+          <h4>Non performing accounts</h4>
+        </div>
+        <div class="icon" style="font-size:50px;margin-top:10px;color:#BBDEFB;">
+          <i class="fa fa-lock" ></i>
+        </div>
+      </div>
 
     </div>
 
-    <hr>
+    <div class="col-md-9">
 
-    <div class="row">
+      <div class="row" ng-if="form.filter" style="padding-bottom:20px;border-bottom:solid 2px #eeeeee;margin-bottom:10px;">
+        <div class="col-md-3">
 
-      <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
-
-        <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-blue':''}}" ng-click="form.reportType = 'call'">
-          <div class="inner" style="padding:20px;">
-            <h4>Call report</h4>
-          </div>
-          <div class="icon" style="font-size:50px;margin-top:10px;">
-            <i class="fa fa-phone" ></i>
-          </div>
-        </div>
-
-        <div style="cursor:pointer;" class="small-box {{form.reportType == 'leads'? 'bg-blue':''}}" ng-click="form.reportType = 'leads'">
-          <div class="inner" style="padding:20px;">
-            <h4>New leads report</h4>
-          </div>
-          <div class="icon" style="font-size:50px;margin-top:10px;">
-            <i class="fa fa-users" ></i>
-          </div>
-        </div>
-
-        <div style="cursor:pointer;" class="small-box {{form.reportType == 'conversion'? 'bg-blue':''}}" ng-click="form.reportType = 'conversion'">
-          <div class="inner" style="padding:20px;">
-            <h4>Conversion report</h4>
-          </div>
-          <div class="icon" style="font-size:50px;margin-top:10px;">
-            <i class="fa fa-shopping-cart" ></i>
-          </div>
-        </div>
-
-        <div style="cursor:pointer;" class="small-box {{form.reportType == 'pipeline'? 'bg-blue':''}}" ng-click="form.reportType = 'pipeline'">
-          <div class="inner" style="padding:20px;">
-            <h4>Pipeline report</h4>
-          </div>
-          <div class="icon" style="font-size:50px;margin-top:10px;">
-            <i class="fa fa-filter" ></i>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="col-md-9">
-        <div class="row">
-
-          <div class="col-md-10">
-
+          <div class="form-group">
+            <label>Start date filter </label>
             <div class="input-group">
-            <input type="text" class="form-control"  placeholder="Email ID to send the report">
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="status.end = true;"><i class="fa fa-paper-plane"></i></button>
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from" />
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.from = true;"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
             </div>
           </div>
+        </div>
 
-          <div class="col-md-2">
-            <button type="button" class="btn btn-success btn-block">
-              Download <i class="fa fa-download"></i>
-            </button>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>End Date filter </label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.to" is-open="status.end" />
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.end = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+            </div>
           </div>
         </div>
 
-        <div class="row" style="margin-top:20px;">
-          <div class="container-fluid" ng-if="form.reportType == 'call'">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Firstname</th>
-                  <th>Lastname</th>
-                  <th>Phone Number</th>
-                  <th>Duration</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>John</td>
-                  <td>Doe</td>
-                  <td>756455654</td>
-                  <td>2 Min 13 Seconds</td>
-                  <td>In-Comming</td>
-                  <td> <span class="text-warning">Call Later</span> </td>
-                </tr>
-                <tr>
-                  <td>Mary</td>
-                  <td>Moe</td>
-                  <td>45435321212</td>
-                  <td>8 Min 13 Seconds</td>
-                  <td>In-Comming</td>
-                  <td> <span class="text-success">Converted</span> </td>
-                </tr>
-                <tr>
-                  <td>July</td>
-                  <td>Dooley</td>
-                  <td>14545643543</td>
-                  <td>8 Min 9 Seconds</td>
-                  <td>Outgoing</td>
-                  <td> <span class="text-warning">Call Later</span> </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="col-md-6">
+          <users-field url="/api/HR/userSearch/" data="form.users" col="6" label="Filters based on users"></users-field>
         </div>
 
 
+      </div>
 
+      <div class="row">
+
+        <div class="col-md-6">
+
+          <div class="input-group">
+          <input type="text" class="form-control"  placeholder="Email ID to send the report">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.end = true;"> Send Email <i class="fa fa-paper-plane"></i></button>
+          </span>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <button type="button" class="btn btn-primary btn-block">
+            Download <i class="fa fa-download"></i>
+          </button>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-info btn-block">
+            Scheduled <i class="fa fa-clock-o"></i>
+          </button>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-default btn-block" ng-click="form.filter = !form.filter">
+            Filter <i class="fa fa-filter"></i>
+          </button>
+        </div>
+      </div>
+      <hr>
+      <div class="row" style="margin-top:20px;">
+        <div class="container-fluid" ng-if="form.reportType == 'call'">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Phone Number</th>
+                <th>Duration</th>
+                <th>Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td> <img src="{{1 | getDP}}" style="width:40px;height:40px;"> {{1 | getName}} </td>
+                <td>John</td>
+                <td>Doe</td>
+                <td>756455654</td>
+                <td>2 Min 13 Seconds</td>
+                <td>In-Comming</td>
+                <td> <span class="text-warning">Call Later</span> </td>
+              </tr>
+              <tr>
+                <td> <img src="{{1 | getDP}}" style="width:40px;height:40px;"> {{1 | getName}} </td>
+                <td>Mary</td>
+                <td>Moe</td>
+                <td>45435321212</td>
+                <td>8 Min 13 Seconds</td>
+                <td>In-Comming</td>
+                <td> <span class="text-success">Converted</span> </td>
+              </tr>
+              <tr>
+                <td> <img src="{{1 | getDP}}" style="width:40px;height:40px;"> {{1 | getName}} </td>
+                <td>July</td>
+                <td>Dooley</td>
+                <td>14545643543</td>
+                <td>8 Min 9 Seconds</td>
+                <td>Outgoing</td>
+                <td> <span class="text-warning">Call Later</span> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
 
 
     </div>
+
+
 
   </div>
 

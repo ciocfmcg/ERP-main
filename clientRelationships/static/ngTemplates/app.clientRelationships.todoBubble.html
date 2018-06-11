@@ -9,21 +9,21 @@
     <div class="timeline-body">
       {{data.text}}
     </div>
-    <div class="timeline-footer" >
-      <a style="text-decoration: none;" href="" ng-click="openPost('right', true , {data: data , onDelete: onDelete})">
-        {{data.likes.length==0? '':data.likes.length}} {{data.likes.length<=1? 'Like':'likes'}} <i class="fa fa-thumbs-o-up"></i>
-      </a>
-      <a href="" ng-click="openPost('right', true , {data: data , onDelete: onDelete})">
-        {{data.comments.length==0? '' :data.comments.length}} {{data.comments.length<=1? 'Comment':'Comments'}} <i class="fa fa-comment-o"></i>
-      </a>
-      <span class="pull-right" ng-if="data.attachment!=null" style="margin-left:10px;">
-        <a ng-href="{{data.attachment}}"><i class="fa fa-link"></i></a>
-      </span>
-      <div class="pull-right" style="display:inline;">
-        <div ng-repeat = "user in data.tagged" class="postTags">
-          {{user | getName:'short'}}
+    <div class="timeline-footer" style="padding-bottom:0px;">
+
+      <div class="row" ng-repeat="comment in [1,5]" style="margin:10px;">
+        <div class="col-md-3 text-right">
+          <img src="{{1 | getDP}}" style="width:50px;height:50px;">
+        </div>
+        <div class="col-md-9" style="border-bottom:2px solid #eeeeee">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
         </div>
       </div>
+
+      <div class="row" style="padding:10px;">
+        <input type="text" class="form-control" name="" value="">
+      </div>
+
     </div>
   </div>
 </li>

@@ -95,11 +95,19 @@ class BulkContactsAPIView(APIView):
         for row in reader:
             dat = row[0].split(',')
             print 'aaaaaaaaaaaaa',dat
-            check = Contacts.objects.filter(Q(email=dat[2]) | Q(mobile=dat[3]))
+            try:
+                check = Contacts.objects.filter(Q(email=dat[2]) | Q(mobile=dat[3]))
+            except:
+                check = Contacts.objects.filter(Q(email=dat[2]))
+
             if len(check)>0:
                 continue
             else:
-                contactData = {"name" : dat[1] ,  "email" : dat[2] ,"mobile" : dat[3] ,"referenceId" : dat[0] , "source" : str(request.POST['source'])}
+                contactData = {"name" : dat[1] ,  "email" : dat[2] ,"referenceId" : dat[0] , "source" : str(request.POST['source'])}
+
+                if len(dat)>3:
+                    contactData['mobile'] = dat[3]
+
                 if len(dat) >4:
                     contactData['pinCode'] = dat[4]
                 cObj = Contacts.objects.create(**contactData)
