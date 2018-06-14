@@ -1,13 +1,21 @@
-app.controller("businessManagement.clientRelationships.team", function($scope, $state, $users, $stateParams, $http, Flash , $timeout ) {
+app.controller("businessManagement.clientRelationships.team", function($scope, $state, $users, $stateParams, $http, Flash, $timeout) {
 
-  $scope.form = {userInView : null , active : 'task'}
+  $scope.form = {
+    userInView: null,
+    active: 'task',
+    today:new Date()
+  }
   $scope.active = 'task';
   $scope.me = $users.get('mySelf');
   $scope.form.userInView = $scope.me.pk;
-
+  $scope.timelineItems = [];
+  $scope.calendar = [];
   $scope.showChart = function(pk) {
     $scope.nodeInView = pk;
-    $http({method : 'GET' , url : '/api/HR/profileOrgCharts/?user=' + pk}).
+    $http({
+      method: 'GET',
+      url: '/api/HR/profileOrgCharts/?user=' + pk
+    }).
     then(function(response) {
       //
       //
@@ -19,7 +27,9 @@ app.controller("businessManagement.clientRelationships.team", function($scope, $
       //
       // $scope.colorCodeUnit($scope.form.datasource.children);
 
-      $scope.chart.init({data : response.data});
+      $scope.chart.init({
+        data: response.data
+      });
       $('.orgchart').addClass('noncollapsable');
 
     })
@@ -66,38 +76,154 @@ app.controller("businessManagement.clientRelationships.team", function($scope, $
 
   }
 
+
   $scope.buildChart();
   $scope.showChart($scope.me.pk);
 
 
+  //
+  // $scope.timelineItems = [
+  //   {
+  //     created : new Date(),
+  //     newMonth : false,
+  //     typ : 'todo',
+  //     user : 1, text : 'dsada'
+  //   },
+  //   {
+  //     created : new Date(),
+  //     newMonth : false,
+  //     typ : 'todo',
+  //     user : 1, text : 'dsada'
+  //   },
+  //   {
+  //     created : new Date(),
+  //     newMonth : true,
+  //     typ : 'todo',
+  //     user : 1, text : 'dsada'
+  //   },
+  //   {
+  //     created : new Date(),
+  //     newMonth : false,
+  //     typ : 'todo',
+  //     user : 1, text : 'dsada'
+  //   }
+  // ]
+  $scope.change = function() {
+    $scope.pageNo = 0;
+    if ($scope.form.active == "activity") {
+      $scope.nextPage = function() {
+        console.log($scope.pageNo, "aaaaaaa");
+        if ($scope.disableNext) {
+          return;
+        }
+        $scope.pageNo += 1;
+        $scope.retriveTimeline();
+      }
 
-  $scope.timelineItems = [
-    {
-      created : new Date(),
-      newMonth : false,
-      typ : 'todo',
-      user : 1, text : 'dsada'
-    },
-    {
-      created : new Date(),
-      newMonth : false,
-      typ : 'todo',
-      user : 1, text : 'dsada'
-    },
-    {
-      created : new Date(),
-      newMonth : true,
-      typ : 'todo',
-      user : 1, text : 'dsada'
-    },
-    {
-      created : new Date(),
-      newMonth : false,
-      typ : 'todo',
-      user : 1, text : 'dsada'
+      $scope.prevPage = function() {
+        if ($scope.pageNo == 0) {
+          return;
+        }
+        $scope.pageNo -= 1;
+        $scope.retriveTimeline();
+      }
+      $scope.analyzeTimeline = function() {
+        for (var i = 0; i < $scope.timelineItems.length; i++) {
+          $scope.timelineItems[i].created = new Date($scope.timelineItems[i].created);
+          if (i < $scope.timelineItems.length - 1 && $scope.timelineItems[i].created.getMonth() != new Date($scope.timelineItems[i + 1].created).getMonth()) {
+            $scope.timelineItems[i + 1].newMonth = true;
+          }
+        }
+      }
+      $scope.retriveTimeline = function() {
+        console.log($scope.pageNo, "a");
+        $http({
+          method: 'GET',
+          url: '/api/clientRelationships/activity/?contact=' + $scope.form.userInView + '&limit=5&offset=' + $scope.pageNo * 5
+        }).
+        then(function(response) {
+          $scope.timelineItems = response.data.results;
+          console.log($scope.timelineItems, "aaaaaaabbb");
+          if ($scope.timelineItems.length == 0 && $scope.pageNo != 0) {
+            $scope.prevPage();
+          }
+          $scope.disableNext = response.data.next == null;
+          $scope.analyzeTimeline();
+        })
+      }
+      $scope.retriveTimeline()
     }
-  ]
+    if ($scope.form.active == "task") {
 
+      $scope.pageNo = 0;
+      $scope.nxtPage = function() {
+        console.log($scope.pageNo, "aaaaaaa");
+        if ($scope.disableNext) {
+          return;
+        }
+        $scope.pageNo += 1;
+        $scope.retriveTimeline();
+      }
 
+      $scope.prePage = function() {
+        if ($scope.pageNo == 0) {
+          return;
+        }
+        $scope.pageNo -= 1;
+        $scope.retriveTimeline();
+      }
+      $scope.analyzeCalendar = function() {
+        for (var i = 0; i < $scope.calendar.length; i++) {
+          $scope.calendar[i].when = new Date($scope.calendar[i].when);
+          $scope.calendar[i].newDate = false;
+          if (i < $scope.calendar.length - 1) {
+            if ($scope.calendar[i].when.toDateString() != new Date($scope.calendar[i + 1].when).toDateString()) {
+              $scope.calendar[i].newDate = true;
+              if ($scope.calendar[i].when.toDateString() == new Date().toDateString()) {
+                $scope.calendar[i].today = true;
+              }
+            }
+          }
+        }
+      }
+      $scope.retriveTimeline = function() {
+        console.log($scope.form.userInView, "atask")
+        $http({
+          method: 'GET',
+          url: '/api/PIM/calendar/?user=' + $scope.form.userInView +'&originator='+'CRM'+ '&limit=5&offset=' + $scope.pageNo * 5
+        }).
+        then(function(response) {
+          $scope.calendar = response.data.results;
+          if ($scope.calendar.length == 0 && $scope.pageNo != 0) {
+            $scope.prePage();
+          }
+          $scope.disableNext = response.data.next == null;
+          $scope.analyzeCalendar();
+
+        })
+      }
+      $scope.markComplete = function(pk) {
+        for (var i = 0; i < $scope.calendar.length; i++) {
+          if ($scope.calendar[i].pk == pk) {
+            $scope.calendar[i].completed = true;
+            $http({
+              method: 'PATCH',
+              url: '/api/PIM/calendar/' + pk + '/',
+              data: {
+                completed: true
+              }
+            }).
+            then(function(response) {
+              Flash.create('success', 'Updated');
+            }, function(err) {
+              Flash.create('danger', 'Error while updating');
+            })
+          }
+        }
+      }
+      $scope.retriveTimeline()
+    }
+  }
+  $scope.change()
 
 });

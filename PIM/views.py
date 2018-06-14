@@ -20,7 +20,7 @@ class calendarViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = calendarSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['text' , 'originator' , 'data']
+    filter_fields = ['text' , 'originator' , 'data' , 'user', 'eventType']
     def get_queryset(self):
         qs1 = calendar.objects.filter(user =  self.request.user).order_by('when')
         qs2 = self.request.user.calendarItemsFollowing.all().order_by('when')

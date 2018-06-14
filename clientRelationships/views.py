@@ -481,7 +481,7 @@ class ActivityViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner , )
     serializer_class = ActivitySerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['contact' , 'deal', 'notes' , 'data']
+    filter_fields = ['contact' , 'deal', 'notes' , 'data' , 'typ',]
     def get_queryset(self):
         return Activity.objects.order_by('-created')
 
