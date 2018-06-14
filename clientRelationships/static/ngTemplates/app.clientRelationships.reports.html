@@ -107,13 +107,15 @@
           </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <users-field url="/api/HR/userSearch/"  data="form.users" col="6" label="Filters based on users" ></users-field>
-          <div class="btn btn-primary" ng-click ="datechange()">
-              Filter
-          </div>
         </div>
 
+        <div class="col-md-2" style="margin-top: 24px;">
+          <button type="button" class="btn btn-primary btn-block" ng-click ="datechange()" >
+            Filter <i class="fa fa-filter"></i>
+          </button>
+        </div>
 
       </div>
 
@@ -153,7 +155,7 @@
               <tr>
                 <th>User</th>
                 <th>Name</th>
-                <!-- <th>Phone Number</th> -->
+                <th>Phone Number</th>
                 <th>Duration</th>
                 <!-- <th>Type</th>
                 <th>Status</th> -->
@@ -161,9 +163,9 @@
             </thead>
             <tbody>
               <tr ng-repeat="x in callData">
-                <td> <img src="{{1 | getDP}}" style="width:40px;height:40px;"> {{1 | getName}} </td>
-                <td>{{x.contact}}</td>
-                <!-- <td>99900</td> -->
+                <td> <img src="{{x.user | getDP}}" style="width:40px;height:40px;"> {{x.user | getName}} </td>
+                <td>{{x.contact.name}}</td>
+                <td>{{x.contact.mobile}}</td>
                 <td>{{x.data}}</td>
                 <!-- <td>{{x.}}</td>
                 <td> <span class="text-warning">{{x.status}}</span> </td> -->

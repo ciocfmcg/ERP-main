@@ -118,6 +118,7 @@ class ContractSerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
     contacts = ContactLiteSerializer(many = True , read_only = True)
+    contact = ContactLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Activity
         fields = ('pk'  ,'user' , 'created' , 'typ' , 'data', 'deal', 'contact', 'notes', 'doc' , 'contacts' , 'internalUsers')
