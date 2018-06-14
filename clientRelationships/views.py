@@ -388,7 +388,7 @@ class DownloadInvoice(APIView):
         o = Contract.objects.get(id = request.GET['contract'])
         response['Content-Disposition'] = 'attachment; filename="CR_invoice%s_%s_%s.pdf"' %(o.deal.pk, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
         genInvoice(response , o , request)
-        f = open('./media_root/CR_invoice%s%s_%s.pdf'%(o.deal.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk) , 'wb')
+        f = open( os.path.join(globalSettings.BASE_DIR , 'media_root/CR_invoice%s%s_%s.pdf'%(o.deal.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)) , 'wb')
         f.write(response.content)
         f.close()
         if 'saveOnly' in request.GET:
