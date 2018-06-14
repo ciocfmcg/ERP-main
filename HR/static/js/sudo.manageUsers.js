@@ -288,6 +288,142 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
       Flash.create('success', response.status + ' : ' + response.statusText);
     }, function(err) {})
   }
+
+
+
+  // Kra controller
+  $scope.kraForm = {
+    responsibility: '',
+    target: 0,
+    period: 'yearly',
+    KRAs: []
+  }
+
+  $scope.resetForm = function() {
+    $scope.kraForm.responsibility = '';
+    $scope.kraForm.target = 0;
+    $scope.kraForm.period = 'yearly';
+  }
+
+  $http({
+    method: 'GET',
+    url: '/api/organization/KRA/?user=' + $scope.form.userPK
+  }).
+  then(function(response) {
+    $scope.kraForm.KRAs = response.data;
+    console.log('kraaaaaaaaaaaaaa', $scope.kraForm.KRAs);
+  })
+
+
+  $scope.responsibilitySearch = function(query) {
+    return $http.get('/api/organization/responsibility/?title__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
+  $scope.saveKra = function() {
+
+    var f = $scope.kraForm;
+    console.log('kraaaaaaaa',f);
+    if (f.responsibility ==null || f.responsibility.length == 0) {
+      Flash.create('warning', 'Responsibility Is required');
+      return
+    }
+    if (f.target ==null || f.target.length == 0) {
+      Flash.create('warning', 'Target Is required');
+      return
+    }
+    var toSend = {
+      target: f.target,
+      period: f.period,
+      user: $scope.form.userPK
+    }
+    if (typeof f.responsibility == 'object') {
+      toSend.responsibility = f.responsibility.pk
+    }
+
+    var method = 'POST';
+    var url = '/api/organization/KRA/';
+    if (typeof f.pk != 'undefined') {
+      method = 'PATCH';
+      url += f.pk + '/';
+    }
+    console.log(toSend);
+
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      $scope.kraForm.KRAs.push(response.data);
+      $scope.resetForm();
+      if ($scope.kraForm.pk) {
+        delete $scope.kraForm.pk
+      }
+
+    }, function(err) {
+      Flash.create('danger', 'Already assigned , Please edit if required');
+    });
+
+
+  }
+
+  $scope.saveWeightage = function() {
+    var a = 0
+    for (var i = 0; i < $scope.kraForm.KRAs.length; i++) {
+      console.log($scope.kraForm.KRAs[i].weightage,typeof $scope.kraForm.KRAs[i].weightage);
+      a = a + $scope.kraForm.KRAs[i].weightage
+    }
+    console.log(a);
+    if (a > 100) {
+      Flash.create('warning', 'Sum should be lessthan 100');
+      return
+    }else {
+      for (var i = 0; i < $scope.kraForm.KRAs.length; i++) {
+        console.log('weighttttttttttttt',$scope.kraForm.KRAs[i].weightage);
+        var toSend = {
+          target:$scope.kraForm.KRAs[i].target,
+          period:$scope.kraForm.KRAs[i].period,
+          weightage:$scope.kraForm.KRAs[i].weightage
+        }
+        $http({
+          method: 'PATCH',
+          url: '/api/organization/KRA/' + $scope.kraForm.KRAs[i].pk + '/',
+          data: toSend
+        }).
+        then(function(response) {
+          Flash.create('success', 'Saved');
+        });
+      }
+    }
+  }
+
+  $scope.deleteKRA = function(indx) {
+    $http({
+      method: 'DELETE',
+      url: '/api/organization/KRA/' + $scope.kraForm.KRAs[indx].pk
+    }).
+    then((function(indx) {
+      return function(response) {
+        $scope.kraForm.KRAs.splice(indx, 1);
+        Flash.create('danger', 'Removed');
+      }
+    })(indx))
+  }
+
+  $scope.editKRA = function(indx) {
+    $scope.kraForm.responsibility = $scope.kraForm.KRAs[indx].responsibility;
+    $scope.kraForm.target = $scope.kraForm.KRAs[indx].target;
+    $scope.kraForm.period = $scope.kraForm.KRAs[indx].period;
+    $scope.kraForm.pk = $scope.kraForm.KRAs[indx].pk;
+    $scope.kraForm.KRAs.splice(indx, 1);
+  }
+
+
+
 });
 
 

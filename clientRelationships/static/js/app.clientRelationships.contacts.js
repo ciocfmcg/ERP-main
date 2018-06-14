@@ -409,6 +409,8 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     activeTab: 0
   };
 
+  $scope.form = {cc : [] , emailBody : ''}
+
   $scope.resetEventScheduler = function() {
     $scope.eventScheduler = {
       internalUsers: [],

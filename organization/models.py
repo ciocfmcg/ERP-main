@@ -66,3 +66,40 @@ class Departments(models.Model):
 class Role(models.Model):
     name = models.CharField(max_length = 200 , null = False)
     department = models.ForeignKey(Departments , null = True , related_name = "department")
+
+class Responsibility(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User , related_name="responsibilitiesCreated" , null = False)
+    title = models.CharField(max_length = 200 , null = False)
+    departments = models.ManyToManyField(Departments , blank = True , related_name="responsibilities")
+    data = models.CharField(max_length = 200 , null = True ,blank = True )
+
+class KRAProgress(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    value = models.IntegerField(null=False)
+    source = models.CharField(null = False , max_length= 200)
+    user = models.ForeignKey(User , related_name="KRAAwarded")
+
+KRA_TARGET_CHOICES = (
+    ('yearly' , 'yearly'),
+    ('quaterly' , 'quaterly'),
+    ('monthly' , 'monthly'),
+    ('weekly' , 'weekly'),
+    ('daily' , 'daily'),
+)
+
+
+class KRA(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    responsibility = models.ForeignKey(Responsibility , null = False , related_name="KRAs")
+    target = models.PositiveIntegerField(null = False)
+    assignedBy = models.ForeignKey(User , related_name="KRAAssigned")
+    progress = models.ManyToManyField(KRAProgress , related_name="KRA" , blank = True)
+    user = models.ForeignKey(User , null = False , related_name="KRA")
+    period = models.CharField(max_length = 20 , default = 'yearly' , choices = KRA_TARGET_CHOICES)
+    weightage = models.IntegerField(null = True)
+    class Meta:
+        unique_together = ("user", "responsibility")

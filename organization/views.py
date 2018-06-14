@@ -64,3 +64,17 @@ class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
+
+class ResponsibilityViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Responsibility.objects.all()
+    serializer_class = ResponsibilitySerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
+
+class KRAViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = KRA.objects.all()
+    serializer_class = KRASerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user']

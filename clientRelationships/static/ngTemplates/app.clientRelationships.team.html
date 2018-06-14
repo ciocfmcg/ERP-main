@@ -1,0 +1,44 @@
+<breadcrumb></breadcrumb>
+<div class="container-fluid"  style="padding:0px !important;">
+
+  <div class="col-md-5">
+    <div id="chart-container"></div>
+  </div>
+
+  <div class="col-md-7" style="border-left:solid 2px #eeeeee;">
+
+    <div class="row">
+      <div class="col-md-2 text-right">
+        <img ng-src=" {{form.userInView | getDP}}" style="width:60px;height:60px;">
+      </div>
+      <div class="col-md-5">
+        <h3>{{form.userInView | getName}}</h3>
+      </div>
+      <div class="col-md-2 {{form.active == 'task'? 'text-primary':''}}" style="cursor:pointer;" ng-click="form.active = 'task'">
+        <h3> <i class="fa fa-calendar-check-o"></i> Tasks </h3>
+      </div>
+      <div class="col-md-3 {{form.active == 'activity'? 'text-primary':''}}" style="cursor:pointer;" ng-click="form.active = 'activity'">
+        <h3> <i class="fa fa-braille"></i> Activities </h3>
+      </div>
+    </div>
+    <div class="row" style="padding:30px;height:80vh;overflow:auto;border-top:2px solid #eeeeee;" >
+
+      <ul class="timeline timeline-inverse">
+        <div ng-repeat="feed in timelineItems">
+          <div ng-if="feed.newMonth || $first" style="position:absolute; margin-left:-130px;">
+            <span ng-if="!$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created | date:'MMM-yy'}}</span>
+            <span ng-if="$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created |timeAgo}} Ago</span>
+          </div>
+          <crm-Note ng-if="feed.typ == 'note'" data="feed"></crm-Note>
+          <crm-Call ng-if="feed.typ == 'call'" data="feed"></crm-Call>
+          <crm-Meeting ng-if="feed.typ == 'meeting'" data="feed"></crm-Meeting>
+          <crm-Mail ng-if="feed.typ == 'mail' && feed.data.length >0" data="feed"></crm-Mail>
+          <crm-Todo ng-if="feed.typ == 'todo'" data="feed"></crm-Todo>
+        </div>
+      </ul>
+
+    </div>
+
+  </div>
+
+</div>

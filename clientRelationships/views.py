@@ -16,7 +16,7 @@ from django.http import HttpResponse
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
-from ERP.models import service
+from ERP.models import service ,appSettingsField
 from HR.models import profile
 # Create your views here.
 from reportlab import *
@@ -31,11 +31,16 @@ from reportlab.graphics import barcode , renderPDF
 from reportlab.graphics.shapes import *
 from reportlab.graphics.barcode.qr import QrCodeWidget
 import datetime
+import calendar as pythonCal
 import json
 import pytz
 import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from django.db.models import Sum , Count
+from dateutil.relativedelta import relativedelta
+from PIM.models import calendar
+from organization.models import KRA,Responsibility
 
 
 
@@ -573,3 +578,110 @@ class SendNotificationAPIView(APIView):
             requests.get(url)
 
         return Response(status=status.HTTP_200_OK)
+
+class ClientHomeCalAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print '****** entered' , request.GET
+        # print 'dateeeeeeeeeeeeeee',
+        today = datetime.date.today()
+        # print today,today + relativedelta(days=1),today.month
+        todayTasks = calendar.objects.filter(eventType = 'Reminder',originator = 'CRM',when__contains=today).values('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'clients', 'data')
+        tomorrowTasks = calendar.objects.filter(eventType = 'Reminder',originator = 'CRM',when__contains=today + relativedelta(days=1)).values('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'clients', 'data')
+        print list(todayTasks),list(tomorrowTasks),
+        approvedAmount = list(Contract.objects.filter(status = 'approved').values('status').annotate(total=Sum('value')))
+        if len(approvedAmount) > 0:
+            approvedAmount = approvedAmount[0]['total']
+        else:
+            approvedAmount = 0
+        billedAmount = list(Contract.objects.filter(status = 'billed',dueDate__lt = today).values('status').annotate(total=Sum('value')))
+        if len(billedAmount) > 0:
+            billedAmount = billedAmount[0]['total']
+        else:
+            billedAmount = 0
+        monthdays=pythonCal.monthrange(today.year, today.month)
+        # print monthdays
+        FstDate = datetime.date(today.year,today.month,1)
+        lstDate = datetime.date(today.year,today.month,monthdays[1])
+        # print FstDate,lstDate
+        receivedAmount = list(Contract.objects.filter(status = 'received',recievedDate__gte = FstDate , recievedDate__lte = lstDate).values('status').annotate(total=Sum('value')))
+        if len(receivedAmount) > 0:
+            receivedAmount = receivedAmount[0]['total']
+        else:
+            receivedAmount = 0
+        # print '@@@@@@@@@@@',approvedAmount,billedAmount,receivedAmount
+        target = 0
+        complete = 0
+        period = 'yearly'
+        kraObj = KRA.objects.filter(responsibility__title='CRM.SalesTarget',user = request.user.pk)
+        if len(kraObj) > 0:
+            print 'kraaaaaaaaaaaaaaa*******************',kraObj[0].target,kraObj[0].pk
+            target = kraObj[0].target
+            period = kraObj[0].period
+            created = str(kraObj[0].created).split(' ')[0].split('-')
+            print created
+
+            if period == 'daily':
+                userTarget = list(Deal.objects.filter(result = 'won',user=request.user.pk,closeDate=today).values('result').annotate(sum_val=Sum('value')))
+            else:
+                if period == 'yearly':
+                    fDate = datetime.date(int(created[0]),1,1)
+                    lDate = datetime.date(int(created[0]),12,31)
+                elif period == 'monthly':
+                    mr = pythonCal.monthrange(int(created[0]),int(created[1]))
+                    fDate =datetime.date(int(created[0]),int(created[1]),1)
+                    lDate = datetime.date(int(created[0]),int(created[1]),mr[1])
+                elif period == 'quaterly':
+                    if int(created[1]) <= 3:
+                        fDate =datetime.date(int(created[0]),1,1)
+                        lDate = datetime.date(int(created[0]),3,31)
+                    elif int(created[1]) >3 and int(created[1]) <= 6:
+                        fDate =datetime.date(int(created[0]),4,1)
+                        lDate = datetime.date(int(created[0]),6,30)
+                    elif int(created[1]) >6 and int(created[1]) <= 9:
+                        fDate =datetime.date(int(created[0]),7,1)
+                        lDate = datetime.date(int(created[0]),9,30)
+                    elif int(created[1]) >9 and int(created[1]) <= 12:
+                        fDate =datetime.date(int(created[0]),10,1)
+                        lDate = datetime.date(int(created[0]),12,31)
+                elif period == 'weekly':
+                    dt = datetime.date(int(created[0]),int(created[1]),int(created[2]))
+                    fDate = dt - relativedelta(days=dt.weekday())
+                    lDate = fDate + relativedelta(days=6)
+                userTarget = list(Deal.objects.filter(result = 'won',user=request.user.pk,closeDate__range=(fDate,lDate)).values('result').annotate(sum_val=Sum('value')))
+            print 'resulttttttttttttt',userTarget
+            if len(userTarget) > 0:
+                complete = userTarget[0]['sum_val']
+        calLi = list(Deal.objects.filter(result = 'na').values('state').annotate(sum_val=Sum('value'),count_val = Count('state')))
+        # print calLi
+        sumLi = [0,0,0,0,0,0]
+        countLi = [0,0,0,0,0,0]
+        for i in calLi :
+            if i['state'] == 'contacted':
+                sumLi[0]= i['sum_val']
+                countLi[0] = i['count_val']
+            elif i['state'] == 'demo':
+                sumLi[1]= i['sum_val']
+                countLi[1] = i['count_val']
+            elif i['state'] == 'requirements':
+                sumLi[2]= i['sum_val']
+                countLi[2] = i['count_val']
+            elif i['state'] == 'proposal':
+                sumLi[3]= i['sum_val']
+                countLi[3] = i['count_val']
+            elif i['state'] == 'negotiation':
+                sumLi[4]= i['sum_val']
+                countLi[4] = i['count_val']
+            elif i['state'] == 'conclusion':
+                sumLi[5]= i['sum_val']
+                countLi[5] = i['count_val']
+        # print sumLi,countLi
+        currencyObj= appSettingsField.objects.filter(name = 'currency' , app = 69)
+        if len(currencyObj) > 0:
+            currencyTyp = currencyObj[0].value
+        else:
+            currencyTyp = ''
+        # print currencyTyp
+        toSend = {'sumLi':sumLi,'countLi':countLi,'todayTasks':list(todayTasks),'tomorrowTasks':list(tomorrowTasks),'approvedAmount':approvedAmount,'billedAmount':billedAmount,'receivedAmount':receivedAmount,'currencyTyp':currencyTyp,'target':target,'complete':complete,'period':period}
+
+        return Response(toSend,status=status.HTTP_200_OK)

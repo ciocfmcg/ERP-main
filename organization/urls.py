@@ -12,6 +12,8 @@ router.register(r'unitFull' , UnitFullViewSet , base_name = 'unitFull')
 router.register(r'unitSuperLite' , UnitSuperliteViewSet , base_name = 'unitSuperLite')
 router.register(r'departments' , DepartmentsViewSet , base_name = 'departments')
 router.register(r'role' , RoleViewSet , base_name = 'role')
+router.register(r'responsibility' , ResponsibilityViewSet , base_name = 'responsibility')
+router.register(r'KRA' , KRAViewSet , base_name = 'KRA')
 urlpatterns = [
      url(r'^', include(router.urls)),
  ]

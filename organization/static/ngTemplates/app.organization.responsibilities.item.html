@@ -1,0 +1,20 @@
+<div class="col-md-4">
+  <div class="container-fluid card" style="padding:20px;height:200px;">
+    <div class="row">
+      <div class="col-md-11" style="font-size:18px">
+        <strong>{{data.title}}</strong>
+      </div>
+      <div class="col-md-1">
+        <span style="cursor:pointer;" ng-click="rowActionClicked('editResponsibilities')">
+      <i class="fa fa-pencil fa-lg"></i>
+    </span>
+      </div>
+    </div>
+    <label ng-if="data.departments.length != 0">Departments : </label> <br>
+    <ul>
+      <div class="row" style="padding-left:50px;" ng-repeat="d in data.departments">
+        <li>{{d.dept_name}}</li>
+      </div>
+    </ul>
+  </div>
+</div>

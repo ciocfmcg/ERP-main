@@ -1,47 +1,140 @@
-<div class="col-md-6 col-md-offset-3" ng-controller="sudo.manageUsers.editDesignation">
-<br>
-<div class="text-center">  
-  <h3>Designation for {{form.user | getName}}</h3>
-</div>
+<div class="row" ng-controller="sudo.manageUsers.editDesignation">
 
-  <div class="form-group">
-    <label>ReportingTo</label>
-    <input uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.reportingTo" type="text" class="form-control" placeholder="Select division">
+  <div class="col-md-6">
+    <br>
+    <div class="text-center">
+      <h3>Designation For {{form.user | getName}}</h3>
+    </div>
+
+    <div class="form-group">
+      <label>ReportingTo</label>
+      <input uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.reportingTo" type="text" class="form-control" placeholder="Select division">
+    </div>
+
+    <div class="form-group">
+      <label>PrimaryApprover</label>
+      <input uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.primaryApprover" type="text" class="form-control" placeholder="Select Unit">
+    </div>
+
+    <div class="form-group">
+      <label>SecondaryApprover</label>
+      <input uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.secondaryApprover" type="text" class="form-control" placeholder="Select department">
+    </div>
+
+    <div class="form-group">
+      <label>Division</label>
+      <input uib-typeahead="div as div.name for div in divisionSearch($viewValue)" ng-model="form.division" type="text" class="form-control" placeholder="Add division name">
+    </div>
+
+    <div class="form-group">
+      <label>Unit</label>
+      <input uib-typeahead="units as units.name for units in unitSearch($viewValue)" ng-model="form.unit" type="text" class="form-control" placeholder="Select units">
+    </div>
+
+    <div class="form-group">
+      <label>Department</label>
+      <input uib-typeahead="department as department.dept_name for department in depSearch($viewValue)" ng-model="form.department" type="text" class="form-control" placeholder="Select department">
+    </div>
+
+    <div class="form-group">
+      <label>Roles</label>
+      <input uib-typeahead="div as div.name for div in roleSearch($viewValue)" ng-model="form.role" type="text" class="form-control" placeholder="Add division name">
+    </div>
+
+
+
+    <div class="btn-group ">
+      <button type="button" class="btn btn-primary " ng-click="save()">Save</button>
+    </div>
   </div>
 
-  <div class="form-group">
-    <label>PrimaryApprover</label>
-    <input  uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.primaryApprover" type="text" class="form-control" placeholder="Select Unit">
-  </div>
 
-  <div class="form-group">
-    <label>SecondaryApprover</label>
-    <input  uib-typeahead="Reporting as Reporting.username for Reporting in Reporting($viewValue)" ng-model="form.secondaryApprover"  type="text" class="form-control" placeholder="Select department">
-  </div>
+  <div class="col-md-6">
+    <div class="container-fluid">
+      <div class="row" style="margin-top:30px;">
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="text-center">
+              <h3>KRA For {{form.user | getName}}</h3>
+            </div>
 
-  <div class="form-group">
-    <label>Division</label>
-    <input uib-typeahead="div as div.name for div in divisionSearch($viewValue)" ng-model="form.division" type="text" class="form-control" placeholder="Add division name">
-  </div>
+            <div class="form-group">
+              <label>KRA</label>
+              <input type="text" class="form-control" ng-model="kraForm.responsibility" placeholder="Search using KRA name" uib-typeahead="res as res.title for res in responsibilitySearch($viewValue)">
+            </div>
 
-  <div class="form-group">
-    <label>Unit</label>
-    <input uib-typeahead="units as units.name for units in unitSearch($viewValue)" ng-model="form.unit" type="text" class="form-control" placeholder="Select units">
-  </div>
+            <div class="form-group">
+              <label>Target</label>
+              <input type="text" class="form-control" ng-model="kraForm.target" placeholder="Search using KRA name">
+            </div>
 
-  <div class="form-group">
-    <label>Department</label>
-    <input uib-typeahead="department as department.dept_name for department in depSearch($viewValue)" ng-model="form.department" type="text" class="form-control" placeholder="Select department">
-  </div>
+            <div class="form-group">
+              <label>Period</label>
+              <select class="form-control" ng-model="kraForm.period">
+                <option value="yearly">Yearly</option>
+                <option value="quaterly">Quaterly</option>
+                <option value="monthly">Monthly</option>
+                <option value="weekly">Weekly</option>
+                <option value="daily">Daily</option>
+              </select>
+            </div>
 
-  <div class="form-group">
-    <label>Roles</label>
-    <input uib-typeahead="div as div.name for div in roleSearch($viewValue)" ng-model="form.role" type="text" class="form-control" placeholder="Add division name">
-  </div>
+            <button type="button" class="btn btn-primary" ng-click="saveKra()">
+              Save Kra
+            </button>
+          </div>
+        </div>
 
 
+        <div class="container-fluid" style="padding:25px">
+          <div class="row" ng-repeat="kra in kraForm.KRAs" style="margin-bottom:20px;">
+            <div class="col-md-9">
+              <div class="container-fluid card" style="padding:20px;border-left:solid 2px #f0ac29;">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Responsibility : </label>
+                  </div>
+                  <div class="col-md-2">
+                    <label>Target : </label>
+                  </div>
+                  <div class="col-md-2">
+                    <label>Achieve : </label>
+                  </div>
+                  <div class="col-md-2">
+                    <i class="fa fa-trash fa-lg" style="cursor:pointer;" ng-click="deleteKRA($index)"></i>
+                    <i class="fa fa-pencil fa-lg" style="cursor:pointer;padding-left:15px" ng-click="editKRA($index)"></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    {{kra.responsibility.title}}
+                  </div>
+                  <div class="col-md-2">
+                    {{kra.target}}
+                  </div>
+                  <div class="col-md-2">
+                    {{kra.period}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Weightage</label>
+                <input type="number" class="form-control" ng-model="kra.weightage">
+                <p class="help-text">In percentage (%)</p>
+              </div>
+            </div>
+          </div>
+          <div class="row pull-right" style="margin-top:10px;margin-right:140px" ng-if="kraForm.KRAs[0]">
+            <button type="button" class="btn btn-primary" ng-click="saveWeightage()">
+            Save Weightage
+          </button>
+          </div>
+        </div>
 
-  <div class="btn-group ">
-    <button type="button" class="btn btn-primary " ng-click="save()">Save</button>
+      </div>
+    </div>
+
   </div>
 </div>
