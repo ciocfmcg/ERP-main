@@ -87,7 +87,7 @@
           <div class="form-group">
             <label>Start date filter </label>
             <div class="input-group">
-              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from" />
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from"/>
               <span class="input-group-btn">
               <button type="button" class="btn btn-default" ng-click="status.from = true;"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
@@ -108,7 +108,10 @@
         </div>
 
         <div class="col-md-6">
-          <users-field url="/api/HR/userSearch/" data="form.users" col="6" label="Filters based on users"></users-field>
+          <users-field url="/api/HR/userSearch/"  data="form.users" col="6" label="Filters based on users" ></users-field>
+          <div class="btn btn-primary" ng-click ="datechange()">
+              Filter
+          </div>
         </div>
 
 
@@ -149,41 +152,21 @@
             <thead>
               <tr>
                 <th>User</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Phone Number</th>
+                <th>Name</th>
+                <!-- <th>Phone Number</th> -->
                 <th>Duration</th>
-                <th>Type</th>
-                <th>Status</th>
+                <!-- <th>Type</th>
+                <th>Status</th> -->
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr ng-repeat="x in callData">
                 <td> <img src="{{1 | getDP}}" style="width:40px;height:40px;"> {{1 | getName}} </td>
-                <td>John</td>
-                <td>Doe</td>
-                <td>756455654</td>
-                <td>2 Min 13 Seconds</td>
-                <td>In-Comming</td>
-                <td> <span class="text-warning">Call Later</span> </td>
-              </tr>
-              <tr>
-                <td> <img src="{{1 | getDP}}" style="width:40px;height:40px;"> {{1 | getName}} </td>
-                <td>Mary</td>
-                <td>Moe</td>
-                <td>45435321212</td>
-                <td>8 Min 13 Seconds</td>
-                <td>In-Comming</td>
-                <td> <span class="text-success">Converted</span> </td>
-              </tr>
-              <tr>
-                <td> <img src="{{1 | getDP}}" style="width:40px;height:40px;"> {{1 | getName}} </td>
-                <td>July</td>
-                <td>Dooley</td>
-                <td>14545643543</td>
-                <td>8 Min 9 Seconds</td>
-                <td>Outgoing</td>
-                <td> <span class="text-warning">Call Later</span> </td>
+                <td>{{x.contact}}</td>
+                <!-- <td>99900</td> -->
+                <td>{{x.data}}</td>
+                <!-- <td>{{x.}}</td>
+                <td> <span class="text-warning">{{x.status}}</span> </td> -->
               </tr>
             </tbody>
           </table>

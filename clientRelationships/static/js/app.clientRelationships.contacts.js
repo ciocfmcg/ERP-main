@@ -274,6 +274,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   $scope.timelineItems = [];
 
   $scope.retriveTimeline = function() {
+    console.log($scope.pageNo,'aaaaaaaa');
     $http({
       method: 'GET',
       url: '/api/clientRelationships/activity/?contact=' + $scope.contact.pk + '&limit=5&offset=' + $scope.pageNo * 5
