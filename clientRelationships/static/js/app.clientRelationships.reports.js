@@ -9,23 +9,22 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
 
   $scope.callData=[]
 
-  // $http({
-  //   method: 'GET',
-  //   url: '/api/clientRelationships/activity/'
-  // }).
-  // then(function(response) {
-  //   for (i=0;i<response.data.length;i++){
-  //     if(response.data[i].typ=='call'){
-  //       $scope.callData.push(response.data[i])
-  //     }
-  //   }
-  // })
-  $scope.$watch('form.users', function(newValue, oldValue) {
-    console.log(newValue);
-  });
+  $http({
+    method: 'GET',
+    url: '/api/clientRelationships/activity/'
+  }).
+  then(function(response) {
+    for (i=0;i<response.data.length;i++){
+      if(response.data[i].typ=='call'){
+        $scope.callData.push(response.data[i])
+      }
+    }
+  })
+
   $scope.datechange=function(){
-    console.log($scope.form);
     $scope.callData=[]
+    console.log($scope.form.reportType);
+    if($scope.form.reportType == 'call'){
     $http({
       method: 'GET',
       url: '/api/clientRelationships/activity/'
@@ -33,19 +32,11 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
     then(function(response) {
       for (i=0;i<response.data.length;i++){
         if(response.data[i].typ=='call'){
-          // if($scope.form.from!=null&&$scope.form.to!=null&&$scope.form.users!=null){
-          //   console.log($scope.form.users,response.data[i].contact);
-          //   if($scope.form.from<new Date(response.data[i].created)&&new Date(response.data[i].created)<$scope.form.to&&response.data[i].contact==$scope.form.users){
-          //     $scope.callData.push(response.data[i])
-          //   }
-          // }
-          // else
           if($scope.form.from!=null&&$scope.form.to!=null){
             if($scope.form.from<new Date(response.data[i].created)&&new Date(response.data[i].created)<$scope.form.to){
-              // $scope.callData.push(response.data[i])
               if($scope.form.users.length>0){
-                for(j=0;j<$scope.form.users[i];j++){
-                  if(response.data[i].contact==$scope.form.users[i]){
+                for(j=0;j<$scope.form.users.length;j++){
+                  if(response.data[i].user==$scope.form.users[j]){
                     console.log(response.data[i],'aaaaaaaaa');
                     $scope.callData.push(response.data[i])
                   }
@@ -61,6 +52,5 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
       }
     })
   }
-    $scope.datechange()
-
+}
 });
