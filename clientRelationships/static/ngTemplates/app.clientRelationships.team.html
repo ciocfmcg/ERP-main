@@ -33,6 +33,9 @@
       <div class="text-center text-muted" ng-if="calendar.length == 0" style="padding-top:50px;">
         No entry in calendar!
       </div>
+
+    <div class="row" style="padding:30px;height:80vh;overflow:auto;border-top:2px solid #eeeeee;" >
+
       <ul class="timeline timeline-inverse">
       <div ng-repeat="c in calendar" >
         <div style="position:absolute; margin-left:-130px;">
@@ -88,6 +91,7 @@
         </ul>
       </nav>
     </div>
+  </div>
     <div class="row" style="padding:30px;height:80vh;overflow:auto;border-top:2px solid #eeeeee;"ng-if="form.active == 'activity'" >
       <!-- <ul class="timeline timeline-inverse">
         <div ng-repeat="feed in timelineItems">
