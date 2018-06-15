@@ -15,7 +15,7 @@
 
     <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
 
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-pink':''}}" ng-click="form.reportType = 'call'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-pink':''}}" ng-click="form.reportType = 'call';fetchdata()">
         <div class="inner" style="padding:20px;">
           <h4>Call report</h4>
         </div>
@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'contacts'? 'bg-yellow':''}}" ng-click="form.reportType = 'contacts'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'contacts'? 'bg-yellow':''}}" ng-click="form.reportType = 'contacts';fetchdata()">
         <div class="inner" style="padding:20px;">
           <h4>New Contacts</h4>
         </div>
@@ -107,15 +107,15 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
           <users-field url="/api/HR/userSearch/"  data="form.users" col="6" label="Filters based on users" ></users-field>
         </div>
 
-        <div class="col-md-2" style="margin-top: 24px;">
+        <!-- <div class="col-md-2" style="margin-top: 24px;">
           <button type="button" class="btn btn-primary btn-block" ng-click ="datechange()" >
             Filter <i class="fa fa-filter"></i>
           </button>
-        </div>
+        </div> -->
 
       </div>
 
@@ -132,9 +132,9 @@
         </div>
 
         <div class="col-md-2">
-          <button type="button" class="btn btn-primary btn-block">
+          <a  href="/api/clientRelationships/reportHomeCal/?fdate={{fd}}&tdate={{td}}&usr={{usr}}&typ={{form.reportType}}&download" target="_blank" ng-if="callData.length>0"><button type="button" class="btn btn-primary btn-block" >
             Download <i class="fa fa-download"></i>
-          </button>
+          </button> </a>
         </div>
         <div class="col-md-2">
           <button type="button" class="btn btn-info btn-block">
@@ -164,11 +164,36 @@
             <tbody>
               <tr ng-repeat="x in callData">
                 <td> <img src="{{x.user | getDP}}" style="width:40px;height:40px;"> {{x.user | getName}} </td>
-                <td>{{x.contact.name}}</td>
-                <td>{{x.contact.mobile}}</td>
+                <td>{{x.contact__name}}</td>
+                <td>{{x.contact__mobile}}</td>
                 <td>{{x.data}}</td>
                 <!-- <td>{{x.}}</td>
                 <td> <span class="text-warning">{{x.status}}</span> </td> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="container-fluid" ng-if="form.reportType == 'contacts'">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Company</th>
+                <th>Designation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="x in callData">
+                <td> <img src="{{x.user | getDP}}" style="width:40px;height:40px;"> {{x.user | getName}} </td>
+                <td>{{x.name}}</td>
+                <td>{{x.email}}</td>
+                <td>{{x.mobile}}</td>
+                <td>{{x.company__name}}</td>
+                <td>{{x.designation}}</td>
+
               </tr>
             </tbody>
           </table>

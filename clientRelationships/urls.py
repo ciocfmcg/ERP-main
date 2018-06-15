@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),
     url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
     url(r'clientHomeCal/$' , ClientHomeCalAPIView.as_view() ),
+    url(r'reportHomeCal/$' , ReportHomeCalAPIView.as_view() ),
 ]

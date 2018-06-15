@@ -41,6 +41,7 @@ from django.db.models import Sum , Count
 from dateutil.relativedelta import relativedelta
 from PIM.models import calendar
 from organization.models import KRA,Responsibility
+from excel_response import ExcelResponse
 
 
 
@@ -683,5 +684,56 @@ class ClientHomeCalAPIView(APIView):
             currencyTyp = ''
         # print currencyTyp
         toSend = {'sumLi':sumLi,'countLi':countLi,'todayTasks':list(todayTasks),'tomorrowTasks':list(tomorrowTasks),'approvedAmount':approvedAmount,'billedAmount':billedAmount,'receivedAmount':receivedAmount,'currencyTyp':currencyTyp,'target':target,'complete':complete,'period':period}
+
+        return Response(toSend,status=status.HTTP_200_OK)
+
+class ReportHomeCalAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print '****** entered' , request.GET
+        print '7777777777',request.GET['usr'],type(request.GET['usr'])
+        toSend = []
+        if len(request.GET['typ']) > 0:
+            fd = request.GET['fdate'].split('-')
+            td = request.GET['tdate'].split('-')
+            fd = datetime.date(int(fd[0]),int(fd[1]),int(fd[2]))
+            td = datetime.date(int(td[0]),int(td[1]),int(td[2]))
+            if 'download' in request.GET:
+                if len(request.GET['usr'])<3:
+                    usr=[]
+                else:
+                    usr=[]
+                    a = str(request.GET['usr'][1:-1]).split(',')
+                    print 'dddddddddddddddd',a,type(a),len(a)
+                    for i in a:
+                        print '................',i
+                        usr.append(int(i))
+            else:
+                if request.GET['usr'] == '':
+                    usr = []
+                else:
+                    ur = str(request.GET['usr']).split(',')
+                    print ur
+                    usr=[]
+                    for i in ur:
+                        usr.append(int(i))
+            print fd,td,usr
+            if request.GET['typ']=='call':
+                print '************ call'
+                if len(usr)==0:
+                    toSend = list(Activity.objects.filter(created__range=(fd,td)).values('user','contact__name','contact__mobile','data'))
+                else:
+                    toSend = list(Activity.objects.filter(created__range=(fd,td),user__in=usr).values('user','contact__name','contact__mobile','data'))
+            elif request.GET['typ']=='contacts':
+                print '************ contacts'
+                if len(usr)==0:
+                    toSend = list(Contact.objects.filter(created__range=(fd,td)).values('name','email','mobile','user','designation','company__name'))
+                else:
+                    toSend = list(Contact.objects.filter(created__range=(fd,td),user__in=usr).values('name','email','mobile','user','designation','company__name'))
+
+            print toSend
+            if 'download' in request.GET and len(toSend)>0:
+                print 'downloadddddddddddddddddddddddddd'
+                return ExcelResponse(toSend)
 
         return Response(toSend,status=status.HTTP_200_OK)
