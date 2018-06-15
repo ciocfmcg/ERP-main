@@ -94,7 +94,7 @@ class DealSerializer(serializers.ModelSerializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = ('pk' , 'user' , 'created','users' ,'slot','email')
+        fields = ('pk' , 'user' , 'created','users' ,'slot','email','typ')
         read_only_fields = ('user','users',)
     def create(self , validated_data):
         d = Schedule(**validated_data)
@@ -104,6 +104,20 @@ class ScheduleSerializer(serializers.ModelSerializer):
             for c in self.context['request'].data['users']:
                 d.users.add(User.objects.get(pk = c))
         return d
+    def update(self ,instance, validated_data):
+        for key in ['users' ,'slot','email','typ']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                print "Error while saving " , key
+                pass
+        if 'users' in self.context['request'].data:
+            instance.users.clear()
+            for c in self.context['request'].data['users']:
+                instance.users.add(User.objects.get(pk = c))
+        instance.save()
+        return instance
+
 
 class RelationshipSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)

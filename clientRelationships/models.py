@@ -155,7 +155,8 @@ class Schedule(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     users = models.ManyToManyField(User , related_name='scheduleUsers', blank=True)
     slot = models.CharField(choices = SCHEDULE_CHOICES , max_length =11 )
-    email = models.TextField(max_length= 500 , null = True)
+    email = models.TextField(max_length= 500 , null = True,blank=True)
+    typ = models.TextField(max_length=10000 , null=False)
 
 ACTIVITY_CHOICES = (
     ('call', 'call'),
