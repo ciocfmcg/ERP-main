@@ -125,6 +125,7 @@ class Contract(models.Model): # invoices actually
     grandTotal = models.PositiveIntegerField(default=0)
 
 SCHEDULE_CHOICES = (
+    ('N/A' , 'N/A'),
     ('1 AM' , '1 AM'),
     ('2 AM' , '2 AM'),
     ('3 AM' , '3 AM'),
@@ -155,8 +156,9 @@ class Schedule(models.Model):
     user = models.ForeignKey(User , related_name = 'schedule' , null = False)
     created = models.DateTimeField(auto_now_add = True)
     users = models.ManyToManyField(User , related_name='scheduleUsers', blank=True)
-    slot = models.CharField(choices = SCHEDULE_CHOICES , max_length =11 )
-    email = models.TextField(max_length= 500 , null = True)
+    slot = models.CharField(choices = SCHEDULE_CHOICES , max_length =11,default = 'N/A' )
+    email = models.TextField(max_length= 500 , null = True,blank=True)
+    typ = models.TextField(max_length=10000 , null=False)
 
 ACTIVITY_CHOICES = (
     ('call', 'call'),

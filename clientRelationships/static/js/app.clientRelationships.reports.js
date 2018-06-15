@@ -1,6 +1,5 @@
 app.controller("businessManagement.clientRelationships.reports", function($scope, $state, $users, $stateParams, $http, Flash, $timeout,$uibModal) {
   var date = new Date();
-
   $scope.form = {
     from: new Date(date.getFullYear(), date.getMonth(), 1),
     to: date,
@@ -17,6 +16,8 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
   $scope.fd = new Date(date.getFullYear(), date.getMonth(), 1)
   $scope.td = date
   $scope.usr = []
+
+
 
   $scope.fetchdata = function(){
     $http({
@@ -53,7 +54,10 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
         resolve: {
           data: function() {
             return $scope.me;
-          }
+          },
+          typ: function() {
+            return $scope.form.reportType;
+          },
         },
         controller: "report.schedule.modal",
       }).result.then(function() {
@@ -67,12 +71,24 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
 
 });
 
-app.controller("report.schedule.modal", function($scope, $state, $users, $stateParams, $http, Flash , $timeout, data,Flash ) {
+app.controller("report.schedule.modal", function($scope, $state, $users, $stateParams, $http, Flash , $timeout, data,Flash,typ) {
 
 $scope.me=data;
-console.log($scope.me,'aaaaaaaaa');
+$scope.reportType=typ;
 $scope.form = { users : []}
 var regExp = /^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$/;
+
+  $http({
+    method: 'GET',
+    url:'/api/clientRelationships/schedule/'
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data.length; i++) {
+      if($scope.reportType==response.data[i].typ)
+          $scope.form=response.data[i]
+    }
+  })
+
 $scope.saveSchedule=function(){
   var f = $scope.form
 
@@ -81,21 +97,31 @@ $scope.saveSchedule=function(){
     users.push(f.users[i]);
   }
 
-  var mail=f.email
-  if(mail.match(regExp)){
-    f.email=mail;
+  if(f.email==undefined||f.email==''||f.email.match(regExp)){
+    f.email=f.email;
+    var url='/api/clientRelationships/schedule/'
+    if(!$scope.form.pk){
+      method = 'POST';
+    }
+    else if($scope.form.pk) {
+      method = 'PATCH'
+      url += $scope.form.pk + '/'
+    }
+
     var dataToSend = {
       slot:f.slot,
       users:users,
-      email:f.email
+      email:f.email,
+      typ:$scope.reportType
     }
     $http({
-      method: 'POST',
-      url: '/api/clientRelationships/schedule/',
+      method: method,
+      url: url,
       data: dataToSend
     }).
     then(function(response) {
       Flash.create('success', 'Saved');
+      $scope.form=response.data
     });
   }
   else{
