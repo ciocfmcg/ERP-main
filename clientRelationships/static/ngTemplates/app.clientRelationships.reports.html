@@ -15,7 +15,7 @@
 
     <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
 
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-pink':''}}" ng-click="form.reportType = 'call'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-pink':''}}" ng-click="form.reportType = 'call';datechange()">
         <div class="inner" style="padding:20px;">
           <h4>Call report</h4>
         </div>
@@ -107,15 +107,15 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
           <users-field url="/api/HR/userSearch/"  data="form.users" col="6" label="Filters based on users" ></users-field>
         </div>
-
+<!--
         <div class="col-md-2" style="margin-top: 24px;">
           <button type="button" class="btn btn-primary btn-block" ng-click ="datechange()" >
             Filter <i class="fa fa-filter"></i>
           </button>
-        </div>
+        </div> -->
 
       </div>
 
@@ -132,12 +132,12 @@
         </div>
 
         <div class="col-md-2">
-          <button type="button" class="btn btn-primary btn-block">
+          <button type="button" class="btn btn-primary btn-block" ng-click="downloadData()">
             Download <i class="fa fa-download"></i>
           </button>
         </div>
         <div class="col-md-2">
-          <button type="button" class="btn btn-info btn-block">
+          <button type="button" class="btn btn-info btn-block" ng-click="scheduleModal()">
             Scheduled <i class="fa fa-clock-o"></i>
           </button>
         </div>

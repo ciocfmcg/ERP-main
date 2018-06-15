@@ -91,7 +91,19 @@ class DealSerializer(serializers.ModelSerializer):
                 instance.contacts.add(Contact.objects.get(pk = c))
         return instance
 
-
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = ('pk' , 'user' , 'created','users' ,'slot','email')
+        read_only_fields = ('user','users',)
+    def create(self , validated_data):
+        d = Schedule(**validated_data)
+        d.user = self.context['request'].user
+        d.save()
+        if 'users' in self.context['request'].data:
+            for c in self.context['request'].data['users']:
+                d.users.add(User.objects.get(pk = c))
+        return d
 
 class RelationshipSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
