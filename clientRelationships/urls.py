@@ -12,6 +12,7 @@ router.register(r'contract' , ContractViewSet , base_name = 'contract')
 router.register(r'activity' , ActivityViewSet , base_name = 'activity')
 router.register(r'relationships' , RelationshipViewSet , base_name = 'relationships')
 router.register(r'productMeta' , ProductMetaViewSet , base_name = 'productMeta')
+router.register(r'schedule' , ScheduleViewSet, base_name = 'schedule')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

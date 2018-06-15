@@ -123,6 +123,40 @@ class Contract(models.Model): # invoices actually
     archivedDate = models.DateTimeField(null = True)
     grandTotal = models.PositiveIntegerField(default=0)
 
+SCHEDULE_CHOICES = (
+    ('1 AM' , '1 AM'),
+    ('2 AM' , '2 AM'),
+    ('3 AM' , '3 AM'),
+    ('4 AM' , '4 AM'),
+    ('5 AM' , '5 AM'),
+    ('6 AM' , '6 AM'),
+    ('7 AM' , '7 AM'),
+    ('8 AM' , '8 AM'),
+    ('9 AM' , '9 AM'),
+    ('10 AM' , '10 AM'),
+    ('11 AM' , '11 AM'),
+    ('12 AM' , '12 AM'),
+    ('13 PM' , '13 PM'),
+    ('14 PM' , '14 PM'),
+    ('15 PM' , '15 PM'),
+    ('16 PM' , '16 PM'),
+    ('17 PM' , '17 PM'),
+    ('18 PM' , '18 PM'),
+    ('19 PM' , '19 PM'),
+    ('20 PM' , '20 PM'),
+    ('21 PM' , '21 PM'),
+    ('22 PM' , '22 PM'),
+    ('23 PM' , '23 PM'),
+    ('24 PM' , '24 PM'),
+)
+
+class Schedule(models.Model):
+    user = models.ForeignKey(User , related_name = 'schedule' , null = False)
+    created = models.DateTimeField(auto_now_add = True)
+    users = models.ManyToManyField(User , related_name='scheduleUsers', blank=True)
+    slot = models.CharField(choices = SCHEDULE_CHOICES , max_length =11 )
+    email = models.TextField(max_length= 500 , null = True)
+
 ACTIVITY_CHOICES = (
     ('call', 'call'),
     ('meeting', 'meeting'),

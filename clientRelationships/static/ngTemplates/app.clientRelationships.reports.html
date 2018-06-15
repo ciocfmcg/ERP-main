@@ -16,11 +16,12 @@
     <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
 
       <div style="cursor:pointer;" class="small-box {{form.reportType == 'call'? 'bg-pink':''}}" ng-click="form.reportType = 'call';fetchdata()">
+
         <div class="inner" style="padding:20px;">
           <h4>Call report</h4>
         </div>
         <div class="icon" style="font-size:50px;margin-top:10px;color:#F8BBD0;">
-          <i class="fa fa-phone" ></i>
+          <i class="fa fa-phone"></i>
         </div>
       </div>
 
@@ -29,7 +30,7 @@
           <h4>New leads report</h4>
         </div>
         <div class="icon" style="font-size:50px;margin-top:10px;color:#DCEDC8;">
-          <i class="fa fa-users" ></i>
+          <i class="fa fa-users"></i>
         </div>
       </div>
 
@@ -38,7 +39,7 @@
           <h4>Conversion report</h4>
         </div>
         <div class="icon" style="font-size:50px;margin-top:10px;color:#FFCCBC;">
-          <i class="fa fa-shopping-cart" ></i>
+          <i class="fa fa-shopping-cart"></i>
         </div>
       </div>
 
@@ -47,7 +48,7 @@
           <h4>Pipeline report</h4>
         </div>
         <div class="icon" style="font-size:50px;margin-top:10px;color:#D7CCC8;">
-          <i class="fa fa-filter" ></i>
+          <i class="fa fa-filter"></i>
         </div>
       </div>
       <div style="cursor:pointer;" class="small-box {{form.reportType == 'salesInflow'? 'bg-black':''}}" ng-click="form.reportType = 'salesInflow'">
@@ -55,7 +56,7 @@
           <h4>Collection Report</h4>
         </div>
         <div class="icon" style="font-size:50px;margin-top:10px;color:#CFD8DC;">
-          <i class="fa fa-money" ></i>
+          <i class="fa fa-money"></i>
         </div>
       </div>
 
@@ -64,7 +65,7 @@
           <h4>New Contacts</h4>
         </div>
         <div class="icon" style="font-size:50px;margin-top:10px;color:#FFF59D;">
-          <i class="fa fa-users" ></i>
+          <i class="fa fa-users"></i>
         </div>
       </div>
 
@@ -73,7 +74,7 @@
           <h4>Non performing accounts</h4>
         </div>
         <div class="icon" style="font-size:50px;margin-top:10px;color:#BBDEFB;">
-          <i class="fa fa-lock" ></i>
+          <i class="fa fa-lock"></i>
         </div>
       </div>
 
@@ -87,7 +88,7 @@
           <div class="form-group">
             <label>Start date filter </label>
             <div class="input-group">
-              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from"/>
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from" />
               <span class="input-group-btn">
               <button type="button" class="btn btn-default" ng-click="status.from = true;"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
@@ -108,14 +109,9 @@
         </div>
 
         <div class="col-md-6">
-          <users-field url="/api/HR/userSearch/"  data="form.users" col="6" label="Filters based on users" ></users-field>
+          <users-field url="/api/HR/userSearch/" data="form.users" col="6" label="Filters based on users"></users-field>
         </div>
 
-        <!-- <div class="col-md-2" style="margin-top: 24px;">
-          <button type="button" class="btn btn-primary btn-block" ng-click ="datechange()" >
-            Filter <i class="fa fa-filter"></i>
-          </button>
-        </div> -->
 
       </div>
 
@@ -124,20 +120,21 @@
         <div class="col-md-6">
 
           <div class="input-group">
-          <input type="text" class="form-control"  placeholder="Email ID to send the report">
-          <span class="input-group-btn">
+            <input type="text" class="form-control" placeholder="Email ID to send the report">
+            <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="status.end = true;"> Send Email <i class="fa fa-paper-plane"></i></button>
           </span>
           </div>
         </div>
 
         <div class="col-md-2">
-          <a  href="/api/clientRelationships/reportHomeCal/?fdate={{fd}}&tdate={{td}}&usr={{usr}}&typ={{form.reportType}}&download" target="_blank" ng-if="callData.length>0"><button type="button" class="btn btn-primary btn-block" >
+          <a href="/api/clientRelationships/reportHomeCal/?fdate={{fd}}&tdate={{td}}&usr={{usr}}&typ={{form.reportType}}&download" target="_blank" ng-if="callData.length>0"><button type="button" class="btn btn-primary btn-block" >
+
             Download <i class="fa fa-download"></i>
           </button> </a>
         </div>
         <div class="col-md-2">
-          <button type="button" class="btn btn-info btn-block">
+          <button type="button" class="btn btn-info btn-block" ng-click="scheduleModal()">
             Scheduled <i class="fa fa-clock-o"></i>
           </button>
         </div>
@@ -157,8 +154,7 @@
                 <th>Name</th>
                 <th>Phone Number</th>
                 <th>Duration</th>
-                <!-- <th>Type</th>
-                <th>Status</th> -->
+
               </tr>
             </thead>
             <tbody>
@@ -167,8 +163,7 @@
                 <td>{{x.contact__name}}</td>
                 <td>{{x.contact__mobile}}</td>
                 <td>{{x.data}}</td>
-                <!-- <td>{{x.}}</td>
-                <td> <span class="text-warning">{{x.status}}</span> </td> -->
+
               </tr>
             </tbody>
           </table>
@@ -200,11 +195,7 @@
         </div>
       </div>
 
-
-
     </div>
-
-
 
   </div>
 

@@ -427,6 +427,14 @@ class ContactViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Contact.objects.all()
 
+class ScheduleViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = ScheduleSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['users']
+    def get_queryset(self):
+        return Schedule.objects.all()
+
 class DealLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , readOnly, )
     serializer_class = DealLiteSerializer
