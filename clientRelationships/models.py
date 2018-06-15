@@ -121,6 +121,7 @@ class Contract(models.Model): # invoices actually
     billedDate = models.DateTimeField(null = True)
     recievedDate = models.DateTimeField(null = True)
     archivedDate = models.DateTimeField(null = True)
+    approvedDate = models.DateTimeField(null = True)
     grandTotal = models.PositiveIntegerField(default=0)
 
 SCHEDULE_CHOICES = (
@@ -187,3 +188,5 @@ def update_contract_details(sender, instance, **kwargs):
         instance.recievedDate = datetime.now(pytz.timezone('Asia/Kolkata'))
     elif instance.status == 'cancelled':
         instance.archivedDate = datetime.now(pytz.timezone('Asia/Kolkata'))
+    elif instance.status == 'approved':
+        instance.approvedDate = datetime.now(pytz.timezone('Asia/Kolkata'))

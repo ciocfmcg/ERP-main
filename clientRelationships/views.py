@@ -11,7 +11,7 @@ from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from django.db.models import Q
+from django.db.models import Q , F
 from django.http import HttpResponse
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
@@ -42,6 +42,8 @@ from dateutil.relativedelta import relativedelta
 from PIM.models import calendar
 from organization.models import KRA,Responsibility
 from excel_response import ExcelResponse
+from django.db.models.functions import Concat
+from django.db.models import Value
 
 
 
@@ -700,6 +702,7 @@ class ReportHomeCalAPIView(APIView):
     def get(self , request , format = None):
         print '****** entered' , request.GET
         print '7777777777',request.GET['usr'],type(request.GET['usr'])
+        today = datetime.date.today()
         toSend = []
         if len(request.GET['typ']) > 0:
             fd = request.GET['fdate'].split('-')
@@ -726,18 +729,55 @@ class ReportHomeCalAPIView(APIView):
                     for i in ur:
                         usr.append(int(i))
             print fd,td,usr
+
             if request.GET['typ']=='call':
                 print '************ call'
                 if len(usr)==0:
-                    toSend = list(Activity.objects.filter(created__range=(fd,td)).values('user','contact__name','contact__mobile','data'))
+                    toSend = list(Activity.objects.filter(typ='call',created__range=(fd,td)).values('data',name=F('contact__name'),mobile=F('contact__mobile'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
                 else:
-                    toSend = list(Activity.objects.filter(created__range=(fd,td),user__in=usr).values('user','contact__name','contact__mobile','data'))
+                    toSend = list(Activity.objects.filter(typ='call',created__range=(fd,td),user__in=usr).values('data',name=F('contact__name'),mobile=F('contact__mobile'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+
             elif request.GET['typ']=='contacts':
                 print '************ contacts'
                 if len(usr)==0:
-                    toSend = list(Contact.objects.filter(created__range=(fd,td)).values('name','email','mobile','user','designation','company__name'))
+                    toSend = list(Contact.objects.filter(created__range=(fd,td)).values('name','email','mobile','designation',comany = F('company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
                 else:
-                    toSend = list(Contact.objects.filter(created__range=(fd,td),user__in=usr).values('name','email','mobile','user','designation','company__name'))
+                    toSend = list(Contact.objects.filter(created__range=(fd,td),user__in=usr).values('name','email','mobile','designation',comany = F('company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+
+            elif request.GET['typ']=='leads':
+                print '************ leads'
+                if len(usr)==0:
+                    toSend = list(Deal.objects.filter(created__range=(fd,td)).values('name','state','result','value',comany = F('company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+                else:
+                    toSend = list(Deal.objects.filter(created__range=(fd,td),user__in=usr).values('name','state','result','value',comany = F('company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+
+            elif request.GET['typ']=='conversion':
+                print '************ conversion'
+                if len(usr)==0:
+                    toSend = list(Contract.objects.filter(status='approved',approvedDate__range=(fd,td)).values('status','value','grandTotal',dealName = F('deal__name'),dealCompany = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+                else:
+                    toSend = list(Contract.objects.filter(status='approved',approvedDate__range=(fd,td),user__in=usr).values('status','value','grandTotal',dealCompany = F('deal__name'),dealName = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+
+            elif request.GET['typ']=='pipeline':
+                print '************ pipeline'
+                if len(usr)==0:
+                    toSend = list(Deal.objects.filter(result = 'na',created__range=(fd,td)).values('state').annotate(totalValue=Sum('value'),count = Count('state')))
+                else:
+                    toSend = list(Deal.objects.filter(result = 'na',created__range=(fd,td),user__in=usr).values('state').annotate(totalValue=Sum('value'),count = Count('state')))
+
+            elif request.GET['typ']=='salesInflow':
+                print '************ salesInflow'
+                if len(usr)==0:
+                    toSend = list(Contract.objects.filter(status='received',recievedDate__range=(fd,td)).values('status','value','grandTotal',dealName = F('deal__name'),dealCompany = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+                else:
+                    toSend = list(Contract.objects.filter(status='received',recievedDate__range=(fd,td),user__in=usr).values('status','value','grandTotal',dealCompany = F('deal__name'),dealName = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+
+            elif request.GET['typ']=='nonPerforming':
+                print '************ nonPerforming'
+                if len(usr)==0:
+                    toSend = list(Contract.objects.filter(status = 'billed',dueDate__lt = today).values('status','value','grandTotal',dealName = F('deal__name'),dealCompany = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+                else:
+                    toSend = list(Contract.objects.filter(status = 'billed',dueDate__lt = today,user__in=usr).values('status','value','grandTotal',dealCompany = F('deal__name'),dealName = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
 
             print toSend
             if 'download' in request.GET and len(toSend)>0:

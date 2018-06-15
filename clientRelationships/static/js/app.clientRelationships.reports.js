@@ -5,7 +5,7 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
     from: new Date(date.getFullYear(), date.getMonth(), 1),
     to: date,
     users: [],
-    reportType: '',
+    reportType: 'call',
     filter: false
   }
 

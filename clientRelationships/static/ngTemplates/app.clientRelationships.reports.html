@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'leads'? 'bg-green':''}}" ng-click="form.reportType = 'leads'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'leads'? 'bg-green':''}}" ng-click="form.reportType = 'leads';fetchdata()">
         <div class="inner" style="padding:20px;">
           <h4>New leads report</h4>
         </div>
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'conversion'? 'bg-red':''}}" ng-click="form.reportType = 'conversion'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'conversion'? 'bg-red':''}}" ng-click="form.reportType = 'conversion';fetchdata()">
         <div class="inner" style="padding:20px;">
           <h4>Conversion report</h4>
         </div>
@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'pipeline'? 'bg-blue':''}}" ng-click="form.reportType = 'pipeline'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'pipeline'? 'bg-blue':''}}" ng-click="form.reportType = 'pipeline';fetchdata()">
         <div class="inner" style="padding:20px;">
           <h4>Pipeline report</h4>
         </div>
@@ -51,7 +51,7 @@
           <i class="fa fa-filter"></i>
         </div>
       </div>
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'salesInflow'? 'bg-black':''}}" ng-click="form.reportType = 'salesInflow'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'salesInflow'? 'bg-black':''}}" ng-click="form.reportType = 'salesInflow';fetchdata()">
         <div class="inner" style="padding:20px;">
           <h4>Collection Report</h4>
         </div>
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <div style="cursor:pointer;" class="small-box {{form.reportType == 'nonPerforming'? 'bg-blue':''}}" ng-click="form.reportType = 'nonPerforming'">
+      <div style="cursor:pointer;" class="small-box {{form.reportType == 'nonPerforming'? 'bg-blue':''}}" ng-click="form.reportType = 'nonPerforming';fetchdata()">
         <div class="inner" style="padding:20px;">
           <h4>Non performing accounts</h4>
         </div>
@@ -85,7 +85,7 @@
       <div class="row" ng-if="form.filter" style="padding-bottom:20px;border-bottom:solid 2px #eeeeee;margin-bottom:10px;">
         <div class="col-md-3">
 
-          <div class="form-group">
+          <div class="form-group" ng-if="form.reportType != 'nonPerforming'">
             <label>Start date filter </label>
             <div class="input-group">
               <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.from" is-open="status.from" />
@@ -97,7 +97,7 @@
         </div>
 
         <div class="col-md-3">
-          <div class="form-group">
+          <div class="form-group" ng-if="form.reportType != 'nonPerforming'">
             <label>End Date filter </label>
             <div class="input-group">
               <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.to" is-open="status.end" />
@@ -159,9 +159,9 @@
             </thead>
             <tbody>
               <tr ng-repeat="x in callData">
-                <td> <img src="{{x.user | getDP}}" style="width:40px;height:40px;"> {{x.user | getName}} </td>
-                <td>{{x.contact__name}}</td>
-                <td>{{x.contact__mobile}}</td>
+                <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
+                <td>{{x.name}}</td>
+                <td>{{x.mobile}}</td>
                 <td>{{x.data}}</td>
 
               </tr>
@@ -182,17 +182,142 @@
             </thead>
             <tbody>
               <tr ng-repeat="x in callData">
-                <td> <img src="{{x.user | getDP}}" style="width:40px;height:40px;"> {{x.user | getName}} </td>
+                <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
                 <td>{{x.name}}</td>
                 <td>{{x.email}}</td>
                 <td>{{x.mobile}}</td>
-                <td>{{x.company__name}}</td>
+                <td>{{x.comany}}</td>
                 <td>{{x.designation}}</td>
 
               </tr>
             </tbody>
           </table>
         </div>
+
+        <div class="container-fluid" ng-if="form.reportType == 'leads'">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Name</th>
+                <th>Company</th>
+                <th>Value</th>
+                <th>State</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="x in callData">
+                <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
+                <td>{{x.name}}</td>
+                <td>{{x.comany}}</td>
+                <td>{{x.value}}</td>
+                <td>{{x.state | humanize}}</td>
+                <td>{{x.result | humanize}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="container-fluid" ng-if="form.reportType == 'conversion'">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Deal Name</th>
+                <th>Company Name</th>
+                <th>Status</th>
+                <th>Value</th>
+                <th>GrandTotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="x in callData">
+                <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
+                <td>{{x.dealName}}</td>
+                <td>{{x.dealCompany}}</td>
+                <td>{{x.status | humanize}}</td>
+                <td>{{x.value}}</td>
+                <td>{{x.grandTotal}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="container-fluid" ng-if="form.reportType == 'pipeline'">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Deal State</th>
+                <th>Total Value</th>
+                <th>Total Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="x in callData">
+                <td>{{x.state | humanize}}</td>
+                <td>{{x.totalValue}}</td>
+                <td>{{x.count}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="container-fluid" ng-if="form.reportType == 'salesInflow'">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Deal Name</th>
+                <th>Company Name</th>
+                <th>Status</th>
+                <th>Value</th>
+                <th>GrandTotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="x in callData">
+                <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
+                <td>{{x.dealName}}</td>
+                <td>{{x.dealCompany}}</td>
+                <td>{{x.status | humanize}}</td>
+                <td>{{x.value}}</td>
+                <td>{{x.grandTotal}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="container-fluid" ng-if="form.reportType == 'nonPerforming'">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Deal Name</th>
+                <th>Company Name</th>
+                <th>Status</th>
+                <th>Value</th>
+                <th>GrandTotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="x in callData">
+                <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
+                <td>{{x.dealName}}</td>
+                <td>{{x.dealCompany}}</td>
+                <td>{{x.status | humanize}}</td>
+                <td>{{x.value}}</td>
+                <td>{{x.grandTotal}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
 
     </div>
