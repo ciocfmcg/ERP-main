@@ -194,6 +194,25 @@ app.controller("businessManagement.clientRelationships.team", function($scope, $
         }).
         then(function(response) {
           $scope.calendar = response.data.results;
+          console.log('7777777777777777777',$scope.calendar);
+          for (var i = 0; i < $scope.calendar.length; i++) {
+            if ($scope.calendar[i].data != null && $scope.calendar[i].data.length>0) {
+              var deal = JSON.parse($scope.calendar[i].data)
+              console.log(deal);
+              $http({
+                method: 'GET',
+                url: '/api/clientRelationships/deal/'+deal.deal + '/'
+              }).
+              then((function(i) {
+                return function(response) {
+                  console.log('ressssssssssss',response.data);
+                  $scope.calendar[i].data = response.data
+                }
+              })(i))
+            }
+            console.log('666666666666',$scope.calendar);
+
+          }
           if ($scope.calendar.length == 0 && $scope.pageNo != 0) {
             $scope.prePage();
           }

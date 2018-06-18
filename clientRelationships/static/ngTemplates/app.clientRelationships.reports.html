@@ -153,6 +153,7 @@
                 <th>User</th>
                 <th>Name</th>
                 <th>Phone Number</th>
+                <th>Date and Time</th>
                 <th>Duration</th>
 
               </tr>
@@ -162,7 +163,8 @@
                 <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
                 <td>{{x.name}}</td>
                 <td>{{x.mobile}}</td>
-                <td>{{x.data}}</td>
+                <td>{{x.created | date:'dd MMM yyyy, hh:mm a'}}</td>
+                <td>{{x.data.slice(12,-1)}}</td>
 
               </tr>
             </tbody>
@@ -247,6 +249,22 @@
         </div>
 
         <div class="container-fluid" ng-if="form.reportType == 'pipeline'">
+
+          <div class="row" ng-if="callData.length > 0" style="margin-bottom:35px">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="row text-center">
+                <strong style="margin-right:13px;">Value</strong>
+                <switch ng-model="dealGraph" class="neutral" ng-change="change()"></switch><strong style="margin-left:13px;">Count</strong>
+              </div>
+              <div class="row" ng-show="showtyp == 'val'">
+                <canvas id="chart-areaVal"></canvas>
+              </div>
+              <div class="row" ng-show="showtyp == 'count'">
+                <canvas id="chart-areaCount"></canvas>
+              </div>
+            </div>
+          </div>
+
           <table class="table table-striped">
             <thead>
               <tr>
@@ -271,21 +289,19 @@
             <thead>
               <tr>
                 <th>User</th>
-                <th>Deal Name</th>
+                <th>Deals Count</th>
                 <th>Company Name</th>
-                <th>Status</th>
-                <th>Value</th>
                 <th>GrandTotal</th>
+                <th>Details</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="x in callData">
                 <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
-                <td>{{x.dealName}}</td>
+                <td>{{x.dealCount}}</td>
                 <td>{{x.dealCompany}}</td>
-                <td>{{x.status | humanize}}</td>
-                <td>{{x.value}}</td>
                 <td>{{x.grandTotal}}</td>
+                <td><i class="fa fa-info fa-lg" ng-click="details(x)" style="cursor:pointer"></i></td>
 
               </tr>
             </tbody>
@@ -297,21 +313,19 @@
             <thead>
               <tr>
                 <th>User</th>
-                <th>Deal Name</th>
+                <th>Deals Count</th>
                 <th>Company Name</th>
-                <th>Status</th>
-                <th>Value</th>
                 <th>GrandTotal</th>
+                <th>Details</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="x in callData">
                 <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td>
-                <td>{{x.dealName}}</td>
+                <td>{{x.dealCount}}</td>
                 <td>{{x.dealCompany}}</td>
-                <td>{{x.status | humanize}}</td>
-                <td>{{x.value}}</td>
                 <td>{{x.grandTotal}}</td>
+                <td><i class="fa fa-info fa-lg" ng-click="details(x)" style="cursor:pointer"></i></td>
 
               </tr>
             </tbody>

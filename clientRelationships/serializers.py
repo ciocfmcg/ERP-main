@@ -152,6 +152,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         a = Activity(**validated_data)
         a.user = self.context['request'].user
+        a.contact = Contact.objects.get(pk=self.context['request'].data['contact'])
         a.save()
         if 'internalUsers' in self.context['request'].data:
             for c in self.context['request'].data['internalUsers']:

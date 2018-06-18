@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h3 class="text-center">{{data.comapnyName}}</h3>
+</div>
+<div class="modal-body">
+  <div class="row" ng-repeat="deal in data.details" style="padding:10px 30px">
+    <h3>Deal Name : {{deal.dealName}}</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Due Date</th>
+          <th>InvoiceNo</th>
+          <th>Amount</th>
+          <th>Owner</th>
+          <th>Customer Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="d in deal.data">
+          <!-- <td>{{d}}</td> -->
+          <!-- <td> <img src="{{x.userId | getDP}}" style="width:40px;height:40px;"> {{x.userId | getName}} </td> -->
+          <td>{{d.dueDate}}</td>
+          <td>{{d.pk}}</td>
+          <td>{{d.grandTotal}}</td>
+          <td>{{d.userName}}</td>
+          <td>{{d.deal__contacts__name}}<br>
+          {{d.deal__contacts__email}}<br>
+        {{d.deal__contacts__mobile}}</td>
+
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
