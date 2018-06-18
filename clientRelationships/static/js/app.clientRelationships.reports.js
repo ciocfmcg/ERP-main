@@ -4,7 +4,7 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
     from: new Date(date.getFullYear(), date.getMonth(), 1),
     to: date,
     users: [],
-    reportType: '',
+    reportType: 'call',
     filter: false
   }
 
@@ -16,8 +16,46 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
   $scope.fd = new Date(date.getFullYear(), date.getMonth(), 1)
   $scope.td = date
   $scope.usr = []
+  $scope.mail = []
+  $scope.users = []
 
 
+  $scope.sendMail = function(){
+    $http({
+      method: 'GET',
+      url: '/api/clientRelationships/schedule/'
+    }).
+    then(function(response) {
+      for (var i = 0; i < response.data.length; i++) {
+        if($scope.form.reportType==response.data[i].typ){
+          console.log(response.data[i].pk,'aaaaaaaaaaaaaaa');
+          $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/?user'+ response.data[i].pk}).
+          then(function() {
+            Flash.create('success', 'Email sent successfully')
+          })
+        }
+    }
+  })
+}
+  // $scope.mail=function(){
+  //
+  //   var cc = []
+  //   console.log( $scope.users,'aaaaaaaaa');
+  //   for (var i = 0; i < $scope.users.length; i++) {
+  //     cc.push($scope.users[i]);
+  //   }
+  //
+  //   var toSend = {
+  //     // contact :contact,
+  //     cc : cc,
+  //     emailbody :'',
+  //     emailSubject:''
+  //   }
+  //   $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/' }).
+  //   then(function() {
+  //     Flash.create('success', 'Email sent successfully')
+  //   })
+  // }
 
   $scope.fetchdata = function(){
     $http({

@@ -20,4 +20,6 @@ urlpatterns = [
     url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
     url(r'clientHomeCal/$' , ClientHomeCalAPIView.as_view() ),
     url(r'reportHomeCal/$' , ReportHomeCalAPIView.as_view() ),
+    url(r'sendEmail/$' , SendEmailAPIView.as_view() ),
+    url(r'scheduleReport/$' , SucheduleReportAPIView.as_view() ),
 ]

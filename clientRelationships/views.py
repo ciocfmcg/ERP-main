@@ -745,3 +745,79 @@ class ReportHomeCalAPIView(APIView):
                 return ExcelResponse(toSend)
 
         return Response(toSend,status=status.HTTP_200_OK)
+
+class SendEmailAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self, request, format=None):
+        cc = []
+        contactData=[]
+        for c in request.data['contact']:
+            u = Contact.objects.get(pk = c)
+            contactData.append(u.email)
+
+        for c in request.data['cc']:
+            u = User.objects.get(pk = c)
+            cc.append(str(u.email))
+        print cc
+
+        email_subject =request.data['emailSubject']
+
+        msgBody= request.data['emailbody']
+
+        ctx = {
+            'message': msgBody,
+            'linkUrl': 'cioc.co.in',
+            'linkText' : 'View Online',
+            'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+            'sendersPhone' : '841101',
+            'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+            'fbUrl' : 'facebook.com',
+            'twitterUrl' : 'twitter.com',
+        }
+
+        email_body = get_template('app.clientRelationships.email.html').render(ctx)
+        msg = EmailMessage(email_subject, msgBody,  to= contactData, cc= cc )
+
+        print msg,'senddddddddddddddddd'
+        msg.send()
+
+        return Response({}, status = status.HTTP_200_OK)
+
+
+class SucheduleReportAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self, request, format=None):
+        # print request.data['user'],'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        # cc = []
+        # contactData=[]
+        # for c in request.data['contact']:
+        #     u = Contact.objects.get(pk = c)
+        #     contactData.append(u.email)
+        #
+        # for c in request.data['cc']:
+        #     u = User.objects.get(pk = c)
+        #     cc.append(str(u.email))
+        # print cc
+        #
+        # email_subject =request.data['emailSubject']
+        #
+        # msgBody= request.data['emailbody']
+        #
+        # ctx = {
+        #     'message': msgBody,
+        #     'linkUrl': 'cioc.co.in',
+        #     'linkText' : 'View Online',
+        #     'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+        #     'sendersPhone' : '841101',
+        #     'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+        #     'fbUrl' : 'facebook.com',
+        #     'twitterUrl' : 'twitter.com',
+        # }
+        #
+        # email_body = get_template('app.clientRelationships.email.html').render(ctx)
+        # msg = EmailMessage(email_subject, msgBody,  to= contactData, cc= cc )
+        #
+        # print msg,'senddddddddddddddddd'
+        # msg.send()
+
+        return Response({}, status = status.HTTP_200_OK)
