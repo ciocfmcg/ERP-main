@@ -56,6 +56,17 @@
             <i class="fa fa-users" ng-if="c.eventType == 'Meeting'"></i>
           </div>
           <div class="col-md-10" >
+            <div class="row text-center">
+              <h3><span ng-if="c.data.pk != null">
+                <!-- <div class="col-md-1">
+                <div style="width:30px;height:30px;font-size:22px; background:#FCB95B;display:bolck;padding-bottom:5px;border-radius:7px;" class="text-center">
+                  <i class="fi-crown" style="color:white;"></i>
+                </div>
+              </div> -->
+              <i class="fa fa-handshake-o fa-lg"> &nbsp;</i>{{c.data.name}}</span></h3>
+              <h3><span ng-if="c.clients.length > 0"><img ng-src="{{c.clients[0].pk | getCRMDP}}" class="img img-circle" style="width:30px;height:30px;" alt="">
+              {{p.name}}{{c.clients[0].name}}</span></h3>
+            </div>
             <div class="row">
               <span style="{{c.completed ? 'text-decoration:line-through green;':''}}">{{c.text}}</span>
             </div>
