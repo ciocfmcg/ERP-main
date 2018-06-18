@@ -405,7 +405,7 @@ class DownloadInvoice(APIView):
 
 
 class ProductMetaViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     serializer_class = ProductMetaSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['description', 'code']
@@ -430,7 +430,7 @@ class ContactViewSet(viewsets.ModelViewSet):
         return Contact.objects.all()
 
 class ScheduleViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated , )
+    permission_classes = (permissions.AllowAny , )
     serializer_class = ScheduleSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['users']
@@ -446,7 +446,7 @@ class DealLiteViewSet(viewsets.ModelViewSet):
         return Deal.objects.filter(active = True)
 
 class DealViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated , )
+    permission_classes = (permissions.AllowAny , )
     serializer_class = DealSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name', 'state', 'result', 'company']
@@ -482,13 +482,13 @@ class DealViewSet(viewsets.ModelViewSet):
         return toReturn
 
 class RelationshipViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , readOnly , )
+    permission_classes = (permissions.AllowAny , readOnly , )
     serializer_class = RelationshipSerializer
     def get_queryset(self):
         return service.objects.filter(deals__in = Deal.objects.filter(active = True).filter(result='won')).distinct()
 
 class ContractViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated  , )
+    permission_classes = (permissions.AllowAny  , )
     serializer_class = ContractSerializer
     def get_queryset(self):
         return Contract.objects.all()

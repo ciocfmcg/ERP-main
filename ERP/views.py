@@ -153,7 +153,7 @@ class addressViewSet(viewsets.ModelViewSet):
         return address.objects.all()
 
 class serviceViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated , )
+    permission_classes = (permissions.AllowAny , )
     serializer_class = serviceSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
@@ -191,12 +191,12 @@ class registerDeviceApi(APIView):
             raise ValidationError(detail={'PARAMS' : 'No data provided'} )
 
 class deviceViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = deviceSerializer
     queryset = device.objects.all()
 
 class profileViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = profileSerializer
     queryset = profile.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -292,12 +292,12 @@ class groupPermissionViewSet(viewsets.ModelViewSet):
     serializer_class = groupPermissionSerializer
 
 class permissionViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     queryset = permission.objects.all()
     serializer_class = permissionSerializer
 
 class CompanyHolidayViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     queryset = CompanyHolidays.objects.all()
     serializer_class = CompanyHolidaySerializer
     filter_backends = [DjangoFilterBackend]
