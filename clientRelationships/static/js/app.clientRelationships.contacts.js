@@ -143,18 +143,6 @@ app.controller("businessManagement.clientRelationships.contacts.item", function(
 
 app.controller("businessManagement.clientRelationships.contacts.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  // $scope.sendEmail=function(){
-  //   console.log( $scope.contact.email,'email add');
-  //   console.log($scope.form.cc,'cc');
-  //   console.log($scope.form.emailSubject,'sub');
-  //   console.log($scope.form.emailBody,'body');
-  // $http({method : 'GET' , url : '/api/clientRelationships/scheduleReport/?email='+ $scope.contact.email+'&cc='+$scope.form.cc+'&subject='+$scope.form.emailSubject+'&body='+$scope.form.emailBo}).
-  // then(function(response) {
-  //   Flash.create('success' , 'Email sent')
-  // })
-  // }
-
-
   $scope.sendEmail = function() {
     var cc = []
     console.log( $scope.form.cc,'aaaaaaaaa');
@@ -164,10 +152,6 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
     var contact = []
     contact.push($scope.contact.pk);
-    // for (var i = 0; i < $scope.contact.length; i++) {
-    //   contact.push($scope.contact[i]);
-    //   console.log(contact,'aaaaaaaaaaaaaa');
-    // }
 
     var toSend = {
       contact :contact,
@@ -178,7 +162,8 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
 
     $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
     then(function() {
-        Flash.create('success', 'Email sent successfully')
+        Flash.create('success', 'Email sent successfully');
+        $scope.resetEmailForm();
     })
   }
   $scope.editContact = function() {
@@ -188,6 +173,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   if ($scope.data != undefined) {
     $scope.contact = $scope.data.tableData[$scope.tab.data.index]
   }
+
   $scope.disableNext = false;
   $scope.pageNo = 0;
 
@@ -448,7 +434,11 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
     activeTab: 0
   };
 
-  $scope.form = {cc : [] , emailBody : ''}
+  $scope.resetEmailForm = function() {
+    $scope.form = {cc : [] , emailBody : '' , emailSubject : ''};
+  }
+
+  $scope.resetEmailForm();
 
   $scope.resetEventScheduler = function() {
     $scope.eventScheduler = {

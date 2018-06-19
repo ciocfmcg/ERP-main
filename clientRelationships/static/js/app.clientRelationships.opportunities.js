@@ -747,19 +747,22 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
       $scope.noteEditor.doc = emptyFile;
     })
   }
-  $scope.form={cc:[],}
+
+  $scope.resetEmailForm = function() {
+    $scope.form={cc:[], emailBody : '' , emailSubject : ''}
+  }
+
+  $scope.resetEmailForm();
+
   $scope.sendEmail = function() {
     var cc = []
     for (var i = 0; i < $scope.form.cc.length; i++) {
       cc.push($scope.form.cc[i]);
     }
-
     var contact = []
-    console.log($scope.deal.contacts,'aaaaaaaaaaaaaa');
     for (var i = 0; i < $scope.deal.contacts.length; i++) {
       contact.push($scope.deal.contacts[i].pk);
     }
-
     var toSend = {
       contact :contact,
       cc : cc,
@@ -769,7 +772,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
     then(function() {
       Flash.create('success', 'Email sent successfully')
-
+      $scope.resetEmailForm();
     })
   }
 

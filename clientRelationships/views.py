@@ -964,8 +964,7 @@ class SendEmailAPIView(APIView):
 
         email_body = get_template('app.clientRelationships.email.html').render(ctx)
         msg = EmailMessage(email_subject, msgBody,  to= contactData, cc= cc )
-
-        print msg,'senddddddddddddddddd'
+        msg.content_subtype = 'html'
         msg.send()
 
         return Response({}, status = status.HTTP_200_OK)
