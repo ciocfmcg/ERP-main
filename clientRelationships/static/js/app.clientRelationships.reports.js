@@ -17,7 +17,7 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
   $scope.td = date
   $scope.usr = []
   $scope.mail = []
-  $scope.users = []
+  $scope.userData = {}
 
   $scope.valConfig = {
     type: 'funnel',
@@ -74,8 +74,17 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
     then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
         if($scope.form.reportType==response.data[i].typ){
-          console.log(response.data[i].pk,'aaaaaaaaaaaaaaa');
-          $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/?user'+ response.data[i].pk}).
+            $scope.userData.users =response.data[i].users,
+            $scope.userData.email = response.data[i].email,
+            $scope.userData.typ = response.data[i].typ
+            var toSend = {
+              cc:$scope.userData.users,
+              email:$scope.userData.email,
+              typ:$scope.userData.typ
+
+            }
+        console.log(toSend,'aaaaaaaaa');
+          $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/', data : toSend }).
           then(function() {
             Flash.create('success', 'Email sent successfully')
           })
