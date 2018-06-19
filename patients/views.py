@@ -8,21 +8,17 @@ from .models import *
 
 from reportlab import *
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import cm, mm
 from reportlab.lib import colors, utils
 from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
+from reportlab.platypus.flowables import HRFlowable
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
 from reportlab.graphics import barcode, renderPDF
-from reportlab.graphics.shapes import *
+# from reportlab.graphics.shapes import *
 from reportlab.graphics.barcode.qr import QrCodeWidget
 from reportlab.lib.pagesizes import letter, A5, A4, A3
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.colors import *
-from reportlab.lib.units import inch, cm
-from reportlab.lib.enums import TA_JUSTIFY
+from reportlab.lib.units import inch, cm ,mm
+from reportlab.lib.enums import TA_JUSTIFY,TA_LEFT, TA_CENTER
 import datetime
 import time
 import calendar
@@ -31,6 +27,7 @@ from forex_python.converter import CurrencyCodes
 from rest_framework.response import Response
 from django.http import HttpResponse
 from rest_framework.views import APIView
+from django.conf import settings as globalSettings
 # Create your views here.
 
 
@@ -63,186 +60,109 @@ class ActivePatientViewSet(viewsets.ModelViewSet):
     queryset = ActivePatient.objects.all()
     filter_backends = [DjangoFilterBackend]
 
+class PageNumCanvas(canvas.Canvas):
+    #----------------------------------------------------------------------
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self.pages = []
+    #----------------------------------------------------------------------
+    def showPage(self):
+        """
+        On a page break, add information to the list
+        """
+        self.pages.append(dict(self.__dict__))
+        self._startPage()
+    #----------------------------------------------------------------------
+    def save(self):
+        """
+        Add the page number to each page (page x of y)
+        """
+        page_count = len(self.pages)
+
+        for page in self.pages:
+            self.__dict__.update(page)
+            self.draw_page_number(page_count)
+            canvas.Canvas.showPage(self)
+
+        canvas.Canvas.save(self)
+    #----------------------------------------------------------------------
+    def draw_page_number(self, page_count):
+        """
+        Add the page number
+        """
+        styles = getSampleStyleSheet()
+        text = "<font size='8'>Page #%s of %s</font>" % (self._pageNumber , page_count)
+        p = Paragraph(text , styles['Normal'])
+        p.wrapOn(self , 50*mm , 10*mm)
+        p.drawOn(self , 100*mm , 10*mm)
 
 def invoice(response):
     print '999999999999999999999999999999999999999'
-    # now = datetime.datetime.now()
-    # monthdays=calendar.monthrange(now.year, now.month)[1]
-    # currencyType='INR'
-    # s=CurrencyCodes().get_symbol(currencyType) # currencysymbol
-    # if currencyType == 'INR':
-    #     s='Rs.'
-    # absent=3
-    # daysPresent=monthdays-absent
-    # paidHolidays=1
-    # accountNumber=paySlip.accountNumber
-    #
-    # print '99999999999999',paySlip.joiningDate.year
-    # print paySlip.joiningDate.year,userObj.pk
-    # print str(paySlip.joiningDate.year)+str(userObj.pk)
-    #
-    #
-    # (empCode,name,location,department,grade,designation,pfNo,escisNo,pan,sbs)=(str(paySlip.joiningDate.year)+str(userObj.pk) ,userObj.first_name+' '+userObj.last_name,'Bangalore','Software','A','Software developer','','','',paySlip.basic)
-    # (days,ml,al,cl,adHocLeaves,balanceSL,balanceCL,balanceCO)=(daysPresent+paidHolidays,paySlip.ml,paySlip.al,0,paySlip.adHocLeaves,0,0,0)
-    # # (basicSalary,hra,cn,cr,mr,oe)=(sbs,50000,40000,0,40000,0)
-    # (basic,hra,special,lta,adHoc,amount)=(paySlip.basic,paySlip.hra,paySlip.special,paySlip.lta,paySlip.adHoc,paySlip.amount)
-    # (spf,pdf,iol,od)=(10000,50000,0,0)
-    # totalEarnings,deductions=(0,0)
-    # # for i in (basicSalary,hra,cn,cr,oe):
-    # for i in (basic,hra,special,lta,adHoc,amount):
-    #     totalEarnings+=i
-    # for i in (spf,pdf,iol,od):
-    #     deductions+=i
-    # netpay=totalEarnings-deductions
-    #
-    # styles = getSampleStyleSheet()
-    # styledict={'center':ParagraphStyle(name='center', parent=styles['Normal'], alignment=TA_CENTER, fontSize=10)}
-    # doc = SimpleDocTemplate(response,pagesize=A3, topMargin=1*cm,)
-    # doc.request = request
-    # # container for the 'Flowable' objects
-    # elements = []
-    #
-    # a=[Paragraph("<para fontSize=25 alignment='Left' textColor=#6375d4><strong>CIOC</strong></para>",styles['Normal']),
-    #    Paragraph("<b>CIOC FMCG Pvt ltd.</b><br/>",styledict['center']),
-    #    Paragraph("<para fontSize=7 alignment='center'>4th Floor,Venkateshwara Heritage,Kudlu Hosa Road,opp Sai Purna Premium Apartment,Sai Meadows,Kudlu,Bengaluru,Karnataka-560068<br/> <b>www.cioc.co.in</b> </para>",styles['Normal']),
-    #    Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
-    #    ]
-    # p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To {0},ICICI Bank LTD.".format(accountNumber),styles['Normal'])
-    #
-    # data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
-    #       ['PF No : %s'%(pfNo),'ESIC No : %s'%(escisNo),'PAN : %s'%(pan),'Standard Basic Salary : %s %d'%(s,sbs)],['Days Paid : %d'%(days),'Days Present : %d'%(daysPresent),'Paid Holidays : %d'%(paidHolidays),'Lwp/Absent : %d'%(absent)],
-    #       ['Sick Leaves : %d'%(ml),'Annual Leaves : %d'%(al),'Compensatory Leaves : %d'%(cl),'AdHoc Leaves : %d'%(adHocLeaves)],['Balance SL : %d'%(balanceSL),'Balance CL : %d'%(balanceCL),'Balance CO : %d'%(balanceCO),''],['Earnings','Amount','Deductions','Amount'],
-    #       ['Basic Salary' ,s+' '+str(basic),'Saturatory Provident Fund',s+' '+str(spf)],['HRA',s+' '+str(hra),'Professional Tax Deduction',s+' '+str(pdf)],['Conveyance',s+' '+str(special),'Interest On Loan',s+' '+str(iol)],['Conveyance Reimbursement',s+' '+str(lta),'Other Deduction ',s+' '+str(od)],['Medical Reimbursement',s+' '+str(adHoc),'',''],['Other Earnings',s+' '+str(amount),'',''],
-    #       ['Total Earnings ',s+' '+str(totalEarnings),'Total Deduction',s+' '+str(deductions)],['','','','Net Pay : %s %d'%(s,netpay)],[p1,'','',''],]
-    #
-    # lines=[('LINEBELOW',(0,1),(-1,1),0.5,black),('LINEBELOW',(0,4),(-1,4),0.5,black),('LINEBELOW',(0,7),(-1,7),0.5,black),('LINEBELOW',(0,8),(-1,8),0.5,black),
-    #        ('LINEBELOW',(0,14),(-1,14),0.5,black),('LINEBELOW',(0,15),(-1,15),0.5,black),('LINEBELOW',(0,16),(-1,16),0.5,black),('LINEBEFORE',(2,8),(2,16),0.5,black)]
-    # spans=[('SPAN',(0,0),(-1,1)),('SPAN',(1,2),(-1,2)),('SPAN',(0,-1),(-1,-1))]
-    # aligns=[('ALIGN',(1,8),(1,15),'RIGHT'),('ALIGN',(-1,8),(-1,16),'RIGHT')]
-    # rheights=18*[0.3*inch]
-    # rheights[1]=0.5*inch
-    # t1=Table(data,rowHeights=rheights)
-    # t1.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.75, black),]+lines+spans+aligns))
-    # elements.append(t1)
-    # doc.build(elements)
-
-    # doc = SimpleDocTemplate("form_letter.pdf", pagesize=letter,
-    #                         rightMargin=72, leftMargin=72,
-    #                         topMargin=72, bottomMargin=18)
-    #
-    #
-    # Story = []
-    # # logo = "python_logo.png"
-    # magName = "Pythonista"
-    # issueNum = 12
-    # subPrice = "99.00"
-    # limitedDate = "03/05/2010"
-    # freeGift = "tin foil hat"
-    #
-    # formatted_time = time.ctime()
-    # full_name = "Mike Driscoll"
-    # address_parts = ["411 State St.", "Marshalltown, IA 50158"]
-    #
-    # # im = Image(logo, 2 * inch, 2 * inch)
-    # # Story.append(im)
-    #
-    # styles = getSampleStyleSheet()
-    # styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-    # ptext = '<font size=12>%s</font>' % formatted_time
-    #
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # Story.append(Spacer(1, 12))
-    #
-    # # Create return address
-    # ptext = '<font size=12>%s</font>' % full_name
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # for part in address_parts:
-    #     ptext = '<font size=12>%s</font>' % part.strip()
-    #     Story.append(Paragraph(ptext, styles["Normal"]))
-    #
-    # Story.append(Spacer(1, 12))
-    # ptext = '<font size=12>Dear %s:</font>' % full_name.split()[0].strip()
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # Story.append(Spacer(1, 12))
-    #
-    # ptext = '<font size=12>We would like to welcome you to our subscriber base for %s Magazine! \
-    #         You will receive %s issues at the excellent introductory price of $%s. Please respond by\
-    #         %s to start receiving your subscription and get the following free gift: %s.</font>' % (magName,
-    #                                                                                                 issueNum,
-    #                                                                                                 subPrice,
-    #                                                                                                 limitedDate,
-    #                                                                                                 freeGift)
-    # Story.append(Paragraph(ptext, styles["Justify"]))
-    # Story.append(Spacer(1, 12))
-    #
-    #
-    # ptext = '<font size=12>Thank you very much and we look forward to serving you.</font>'
-    # Story.append(Paragraph(ptext, styles["Justify"]))
-    # Story.append(Spacer(1, 12))
-    # ptext = '<font size=12>Sincerely,</font>'
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # Story.append(Spacer(1, 48))
-    # ptext = '<font size=12>Ima Sucker</font>'
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # Story.append(Spacer(1, 12))
-    # doc.build(Story)
     now = datetime.datetime.now()
-    monthdays=calendar.monthrange(now.year, now.month)[1]
-    currencyType='INR'
-    s=CurrencyCodes().get_symbol(currencyType) # currencysymbol
-    if currencyType == 'INR':
-        s='Rs.'
-    absent=3
-    daysPresent=monthdays-absent
-    paidHolidays=1
-    accountnumber=7341
-    (empCode,name,location,department,grade,designation,pfNo,escisNo,pan,sbs)=('E1002','Saikiran pothuri','Bangalore','Software','A','Software developer','','','',10000)
-    (daysPaid,sickleaves,casualleaves,cl,pl,balanceSL,balanceCL,balanceCO)=(daysPresent+paidHolidays,1,0,0,0,0,0,0)
-    (basicSalary,hra,cn,cr,mr,oe)=(sbs,4000,2000,0,0,0)
-    (spf,pdf,iol,od)=(1000,500,0,0)
-    totalEarnings,deductions=(0,0)
-    for i in (basicSalary,hra,cn,cr,oe):
-        totalEarnings+=i
-    for i in (spf,pdf,iol,od):
-        deductions+=i
-    netpay=totalEarnings-deductions
 
+    (invDate,refid,name,admitDate,dischargeDate,total) = ('19-06-2018','RR/0236/18','priyanka','15-06-2018','19-06-2018',20000)
+    # originalData = {'grandTotal':25000,'rfid':}
+    details = [{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757}]
+    totalRows = len(details)
 
     styles = getSampleStyleSheet()
-    styledict={'center':ParagraphStyle(name='center', parent=styles['Normal'], alignment=TA_CENTER, fontSize=10)}
-    doc = SimpleDocTemplate("finalpayslip.pdf",pagesize=A4, topMargin=1*cm,)
-    # container for the 'Flowable' objects
+    doc = SimpleDocTemplate(response,pagesize=A4, topMargin=0.5*cm,leftMargin=1*cm,rightMargin=1*cm)
     elements = []
+    logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'hospital_logo.png')
+    im = Image(logo,height=0.8*inch ,width=0.6*inch)
 
-    a=[Paragraph("<para fontSize=35 alignment='Left' textColor=skyblue><strong>CIOC</strong></para>",styles['Normal']),
-       Paragraph("<b>CIOC FMCG Pvt Ltd</b><br/>",styledict['center']),
-       Paragraph("<para fontSize=7 alignment='center'>G-162, Splendid Times Square, Pattandur Agrahara, Behind Brigade Tech Park, Whitefield Bangalore - 560066. <br/> <b>www.cioc.co.in</b> </para>",styles['Normal']),
-       Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
+    p1=[
+       Paragraph("<para fontSize=20 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
+       Paragraph("<para fontSize=10 textColor=darkblue spaceBefore=3 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
+       Paragraph("<para fontSize=8 alignment='left' textColor=darkblue spaceBefore=3 leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
        ]
-    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To {0},ICICI Bank LTD.".format(accountnumber),styles['Normal'])
+    # Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
 
-    data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
-          ['PF No : %s'%(pfNo),'ESIC No : %s'%(escisNo),'PAN : %s'%(pan),'Standard Basic Salary : %s %d'%(s,sbs)],['Days Paid : %d'%(daysPaid),'Days Present : %d'%(daysPresent),'Paid Holidays : %d'%(paidHolidays),'Lwp/Absent : %d'%(absent)],
-          ['Sick Leaves : %d'%(sickleaves),'Casual Leaves : %d'%(casualleaves),'Compensatory Leaves : %d'%(cl),'Priviledge Leaves : %d'%(pl)],['Balance SL : %d'%(balanceSL),'Balance CL : %d'%(balanceCL),'Balance CO : %d'%(balanceCO),''],['Earnings','Amount','Deductions','Amount'],
-          ['Basic Salary' ,s+' '+str(basicSalary),'Saturatory Provident Fund',s+' '+str(spf)],['HRA',s+' '+str(hra),'Professional Tax Deduction',s+' '+str(pdf)],['Conveyance',s+' '+str(cn),'Interest On Loan',s+' '+str(iol)],['Conveyance Reimbursement',s+' '+str(cr),'Other Deduction ',s+' '+str(od)],['Medical Reimbursement',s+' '+str(mr),'',''],['Other Earninga',s+' '+str(oe),'',''],
-          ['Total Earnings ',s+' '+str(totalEarnings),'Total Deduction',s+' '+str(deductions)],['','','','Net Pay : %s %d'%(s,netpay)],[p1,'','',''],]
-
-    lines=[('LINEBELOW',(0,1),(-1,1),0.5,black),('LINEBELOW',(0,4),(-1,4),0.5,black),('LINEBELOW',(0,7),(-1,7),0.5,black),('LINEBELOW',(0,8),(-1,8),0.5,black),
-           ('LINEBELOW',(0,14),(-1,14),0.5,black),('LINEBELOW',(0,15),(-1,15),0.5,black),('LINEBELOW',(0,16),(-1,16),0.5,black),('LINEBEFORE',(2,8),(2,16),0.5,black)]
-    spans=[('SPAN',(0,0),(-1,1)),('SPAN',(1,2),(-1,2)),('SPAN',(0,-1),(-1,-1))]
-    aligns=[('ALIGN',(1,8),(1,15),'RIGHT'),('ALIGN',(-1,8),(-1,16),'RIGHT')]
-    rheights=18*[0.3*inch]
-    rheights[1]=0.5*inch
-    t1=Table(data,rowHeights=rheights)
-    t1.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.75, black),]+lines+spans+aligns))
+    data1=[[im,p1]]
+    rheights=1*[0.8*inch]
+    cwidths=2*[0.7*inch]
+    cwidths[1]=6.5*inch
+    t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
     elements.append(t1)
-    doc.build(elements)
+    elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
+    elements.append(Spacer(1, 6))
+    elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> RECEIPT / BILL </b></para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=8 alignment='right' rightIndent=15><b> Date : {0} </b></para>".format(invDate),styles['Normal']))
+    elements.append(Spacer(1, 12))
+    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
+    rheights=2*[0.2*inch]
+    cwidths=2*[2.1*inch]
+    cwidths[1]=3.5*inch
+    t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
+    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'), ]))
+    elements.append(t2)
+    elements.append(Spacer(1, 12))
+    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
+    rheights=(totalRows+1)*[0.25*inch]
+    cwidths=4*[0.5*inch]
+    cwidths[1]=4*inch
+    data3=[]
+    for i,j in enumerate(range(totalRows+1)):
+        # print i,j
+        if i==0:
+            data3.append(['SL No.','Particulars','Qty','Amount '])
+        else:
+            data3.append([i,details[i-1]['name'].upper(),details[i-1]['qty'],details[i-1]['rate']])
+
+    t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
+    t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
+    elements.append(t3)
+    elements.append(Spacer(1, 7))
+    # elements.append(HRFlowable(width="20%", thickness=1, color=black ,hAlign='RIGHT',spaceBefore=12))
+    elements.append(Paragraph("<para fontSize=8 alignment='right' rightIndent=75><b> Total : {0} </b></para>".format(total),styles['Normal']))
+
+    doc.build(elements,canvasmaker=PageNumCanvas)
 
 
 class InvoiceSlip(APIView):
     def get(self , request , format = None):
         print 'enterrrrrrrrrrrrrrrrrr'
-
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="invoice.pdf"'
         invoice(response)
