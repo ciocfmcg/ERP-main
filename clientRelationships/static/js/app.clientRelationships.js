@@ -229,7 +229,8 @@ app.controller("businessManagement.clientRelationships.default", function($scope
             }
             $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
             then(function() {
-              Flash.create('success', 'Email sent successfully')
+              Flash.create('success', 'Email sent successfully');
+              $scope.resetEmailForm();
             })
           }
 
@@ -247,7 +248,11 @@ app.controller("businessManagement.clientRelationships.default", function($scope
             },
           };
 
-          $scope.form = {emailBody : '' , cc : [] }
+          $scope.resetEmailForm = function() {
+            $scope.form = {emailBody : '' , cc : [] , emailSubject : ''}
+          }
+
+          $scope.resetEmailForm();
 
         },
       })
