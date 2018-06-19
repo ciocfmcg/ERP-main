@@ -207,6 +207,31 @@ app.controller("businessManagement.clientRelationships.default", function($scope
         controller: function($scope , data) {
           $scope.data = data;
 
+          $scope.sendEmail = function() {
+
+            var cc = []
+            for (var i = 0; i < $scope.form.cc.length; i++) {
+              cc.push($scope.form.cc[i]);
+            }
+
+            // var contact = []
+            // for (var i = 0; i < $scope.data.length; i++) {
+            //   contact.push($scope.data[i]);
+            // }
+            var contact = []
+            contact.push($scope.data.pk);
+
+            var toSend = {
+              contact :contact,
+              cc : cc,
+              emailbody :$scope.form.emailBody,
+              emailSubject:$scope.form.emailSubject
+            }
+            $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
+            then(function() {
+              Flash.create('success', 'Email sent successfully')
+            })
+          }
 
           $scope.tinymceOptions = {
             selector: 'textarea',

@@ -122,7 +122,7 @@
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Email ID to send the report">
             <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="status.end = true;"> Send Email <i class="fa fa-paper-plane"></i></button>
+            <button type="button" class="btn btn-default" ng-click="status.end = true;sendMail()"> Send Email <i class="fa fa-paper-plane" ></i></button>
           </span>
           </div>
         </div>
@@ -134,7 +134,7 @@
           </button> </a>
         </div>
         <div class="col-md-2">
-          <button type="button" class="btn btn-info btn-block" ng-click="scheduleModal()">
+          <button type="button" class="btn btn-info btn-block" ng-click="scheduleModal()" ng-if="form.reportType">
             Scheduled <i class="fa fa-clock-o"></i>
           </button>
         </div>
