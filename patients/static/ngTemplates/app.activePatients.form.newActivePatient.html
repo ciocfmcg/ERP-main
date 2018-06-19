@@ -1,48 +1,40 @@
-<div class="col-md-6" ng-controller="hospitalManagement.activePatients.form">
-  <form>
-    <div class="form-group">
-      <label>Patient Name</label>
-      <input type="text" class="form-control" ng-model="activePatientsForm.patient" uib-typeahead="patient as patient.firstName for patient in patientSearch($viewValue)">
-    </div>
-    <div class="form-group">
-      <label>In Time</label>
-      <div class="input-group">
-        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="activePatientsForm.inTime" is-open="inTime.opened" ng-init="today" />
-        <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-click="inTime.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-      </span>
+<div class="row" ng-controller="hospitalManagement.activePatients.form">
+  <div class="col-md-6" >
+    <form>
+      <div class="form-group">
+        <label>Patient Name</label>
+        <div class="{{addNewPatient==true ? 'input-group': ''}}">
+            <input type="text" class="form-control" ng-model="activePatientsForm.patient" uib-typeahead="patient as patient.firstName for patient in patientSearch($viewValue)">
+            <div ng-if="addNewPatient" class="input-group-addon" style="cursor:pointer;" ng-click="addNewActivePatient(activePatientsForm.patient)">Add</div>
+        </div>
       </div>
-      <!-- <input type="text" class="form-control" ng-model="activePatientsForm.inTime" required placeholder="Last Name"> -->
-    </div>
-    <div class="form-group">
-      <label>Out Time</label>
-      <div class="input-group">
-        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="activePatientsForm.outTime" is-open="outTime.opened" ng-init="today" />
-        <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-click="outTime.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-      </span>
+      <div class="form-group">
+        <label>In Time</label>
+        <div class="input-group">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="activePatientsForm.inTime" is-open="inTime.opened" ng-init="today" />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="inTime.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label>Status</label>
-      <select class="form-control">
-        <option ng-model="activePatientsForm.status" value="checkedIn" >Checked In</option>
-        <option ng-model="activePatientsForm.status" value="onGoingTreatment" >Treatment On going</option>
-        <option ng-model="activePatientsForm.status" value="operation" >Operation</option>
-        <option ng-model="activePatientsForm.status" value="observation" >Observation</option>
-        <option ng-model="activePatientsForm.status" value="readyToDischarged" >Ready To Discharge</option>
-        <option ng-model="activePatientsForm.status" value="dishcharged" >Discharged</option>
-        <option ng-model="activePatientsForm.status" value="settled" >Settled</option>
-      </select>
-      <!-- <input type="text" class="form-control" ng-model="activePatientsForm.status" placeholder="status"> -->
-    </div>
-    <div class="form-group">
-      <label>Comments</label> <br>
-      <input type="text" class="form-control" ng-model="activePatientsForm.comments" placeholder="comments">
-    </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select class="form-control" ng-model="selectedStatus">
+          <option ng-repeat="s in statusList" value="{{s.value}}">{{s.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Comments</label> <br>
+        <textarea class="form-control" rows="3" ng-model="activePatientsForm.comments" placeholder="comments..."></textarea>
+      </div>
 
-    <div class="form-group">
-      <button type="submit" class="btn btn-primary" ng-click="createActivePatient()">Save</button>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-click="createActivePatient()">Create</button>
+      </div>
+    </form>
+  </div>
+  <div ng-if="addForm==true && addNewPatient==true ">
+    <div ng-include="'/static/ngTemplates/app.patients.form.newPatient.html'">
     </div>
-  </form>
+  </div>
 </div>

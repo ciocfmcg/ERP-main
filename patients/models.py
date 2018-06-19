@@ -12,8 +12,8 @@ class Patient(models.Model):
     updated = models.DateField(auto_now=True)
     firstName = models.CharField(max_length = 100 , null = False)
     lastName = models.CharField(max_length = 100 , null = False)
-    age = models.PositiveIntegerField(null=True)
     gender = models.CharField(max_length = 100 , null = False)
+    dateOfBirth = models.DateField( null= True )
     uniqueId = models.CharField(max_length = 100 , null = False)
     email = models.CharField(max_length = 100 , null = True)
     phoneNo = models.PositiveIntegerField(null=True)
@@ -42,8 +42,8 @@ STATUS_CHOICES = (
 
 class ActivePatient(models.Model):
     patient = models.ForeignKey(Patient , related_name='patient')
-    inTime = models.DateField( null= True )
-    outTime = models.DateField( null= True )
+    inTime = models.DateTimeField( null= True )
+    outTime = models.DateTimeField( null= True )
     status = models.CharField(choices = STATUS_CHOICES , max_length = 100 , null = False ,default='checkedIn')
     comments = models.ManyToManyField(PatientComments , related_name='comments' , blank = True)
 

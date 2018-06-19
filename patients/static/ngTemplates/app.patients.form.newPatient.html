@@ -9,8 +9,13 @@
       <input type="text" class="form-control" ng-model="newPatient.lastName" required placeholder="Last Name">
     </div>
     <div class="form-group">
-      <label>Age</label>
-      <input type="number" class="form-control" ng-model="newPatient.age" required value="0">
+      <label>Date Of Birth</label>
+      <div class="input-group">
+        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="newPatient.dateOfBirth" is-open="dob.opened" ng-init="today" />
+        <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="dob.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+      </div>
     </div>
     <div class="form-group">
       <label>Unique Id</label>
