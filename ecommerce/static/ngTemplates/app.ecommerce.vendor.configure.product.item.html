@@ -1,0 +1,15 @@
+<div class="col-md-3" >
+  <div class="card card-cascade">
+    <div class="card-body text-center">
+      <h4 class="" style="padding:20px;"><strong>{{data.name | humanize}}</strong></h4>
+    </div>
+    <div class="container-fluid">
+      <strong>Minimum Cost : </strong> {{data.minCost}}<br>
+      <strong>Total Fields : </strong> {{data.fields.length }}<br>
+    </div>
+    <div class="row" style="margin:10px 15px;margin-bottom:5px">
+      <i class="fa fa-pencil fa-lg" style="cursor:pointer" ng-click="rowActionClicked('edit',data)"></i>
+      <i class="fa fa-info fa-lg pull-right" style="cursor:pointer" ng-click="rowActionClicked('info')"></i>
+    </div>
+  </div>
+</div>

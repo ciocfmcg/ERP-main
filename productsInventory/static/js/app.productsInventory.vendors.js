@@ -245,7 +245,7 @@ app.controller("businessManagement.productsInventory.vendors.explore", function(
 
   $scope.productSearch = function(query) {
     console.log("called");
-    return $http.get('/api/POS/product/?limit=10&name__contains=' + query).
+    return $http.get('/api/POS/product/?limit=10&search=' + query).
     then(function(response) {
       return response.data.results;
     })

@@ -1,6 +1,6 @@
 <div class="form-group">
   <label>Type</label>
-  <select class="form-control" ng-model="data.fieldType" >
+  <select class="form-control" ng-model="form.fieldType" >
     <option value="char">char</option>
     <option value="boolean">boolean</option>
     <option value="float">float</option>
@@ -10,27 +10,41 @@
   <p class="help-block">Select the type of this field.</p>
 </div>
 
-<div class="form-group" ng-if="data.fieldType=='choice'">
-  <label > Parent fieldType</label>
-  <input uib-typeahead="label as label.name for label in parentLabelSearch($viewValue)" ng-model="data.choiceLabel" type="text" class="form-control" placeholder="Select the choice label">
-</div>
 
 <div class="form-group">
   <label > Name</label>
-  <input type="text" class="form-control" ng-model="data.name" placeholder="Name of this field , For eg. Length">
+  <input type="text" class="form-control" ng-model="form.name" placeholder="Name of this field , For eg. Length">
 </div>
 
-<div class="form-group" ng-if="data.fieldType!='choice'">
+<div class="form-group" ng-if="form.fieldType=='choice'">
+  <label > Choice Value</label>
+  <!-- <input uib-typeahead="label as label.name for label in parentLabelSearch($viewValue)" ng-model="form.choiceLabel" type="text" class="form-control" placeholder="Select the choice label"> -->
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Add The Choices" ng-model="form.choiceLabel" />
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-success" ng-click="addChoice()">Add &nbsp;<i class="fa fa-plus"></i></button>
+    </span>
+  </div>
+</div>
+<div class="row" ng-if="form.fieldType=='choice'" >
+  <div class="col-md-6" ng-repeat="c in ChoiceValues">
+    <span class="fa fa-times-circle fa-lg pull-right" style="cursor:pointer" ng-click="removeChoice($index)"></span>
+    <div class="row well"  style="margin:10px;padding:10px;font-size:15px">
+      <b>{{c}}</b>
+    </div>
+  </div>
+</div>
+<div class="form-group" ng-if="form.fieldType!='choice'">
   <label > Unit</label>
-  <input type="text" class="form-control" ng-model="data.unit" placeholder="Unit of this field , For eg. mm">
+  <input type="text" class="form-control" ng-model="form.unit" placeholder="Unit of this field , For eg. mm">
 </div>
 
 <div class="form-group">
   <label > Help text</label>
-  <textarea rows="8" cols="40" class="form-control" ng-model="data.helpText"></textarea>
+  <textarea rows="8" cols="40" class="form-control" ng-model="form.helpText"></textarea>
 </div>
 
-<div ng-if="['choice' , 'date'].indexOf(data.fieldType) == -1" class="form-group">
+<div ng-if="['choice' , 'date'].indexOf(form.fieldType) == -1" class="form-group">
   <label > Default</label>
-  <input type="text" class="form-control" ng-model="data.default" placeholder="Default value for this field of this field , For eg. mm">
+  <input type="text" class="form-control" ng-model="form.default" placeholder="Default value for this field of this field , For eg. mm">
 </div>
