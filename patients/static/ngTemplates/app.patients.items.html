@@ -1,0 +1,53 @@
+<div class="col-md-3 animated fadeIn" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="container-fluid card" style="padding-bottom:0px;">
+        <div class="row" style="border-bottom: 1px solid #dedede;">
+          <div class="col-md-4" style="padding:0px;">
+            <img style="width: 80px;height:80px;" class="img" ng-if="data.profile.displayPicture != null" ng-src="{{data.profile.displayPicture}}">
+            <img style="width: 80px;height:80px;" class="img" ng-if="data.profile.displayPicture == null" src="/static/images/userIcon.png">
+          </div>
+          <div class="col-md-8" style="position:relative;display:block;">
+            <div class="row" style="padding-left:10px;">
+              <h3>{{data.firstName + ' ' + data.lastName}}</h3>
+              <span class="text-muted" style="position:absolute; top:10px;right:10px;">
+                <i class="fa fa-hashtag"></i> <span style="font-size:14px;">{{data.pk}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row container-fluid" style="padding-top:10px;height:70px;border-bottom: 1px solid #dedede">
+          <div class="container-fluid">
+            <span ng-if="data.phoneNo != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{data.phoneNo}}</span> <br>
+            <span ng-if="data.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{data.email}}</span>
+            <span ng-if="data.profile.mobile == null && data.email == null" class="text-muted">No contact details</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row " style="background:#1e5071;color:white;">
+      <div class="col-md-6" style="padding:10px;  padding-left:40px;">
+        <span style="cursor:pointer;" ng-click="rowActionClicked('editDetails')">
+          <i class="fa fa-pencil fa-lg" ></i>
+        </span>
+      </div>
+      <div class="col-md-6" style="padding:10px; padding-right:40px;">
+        <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('viewDetails')">
+             <i class="fa fa-info fa-lg" ></i>
+        </span>
+      </div>
+      <!-- <div class="col-md-8 " style="padding:10px;">
+          <span style="cursor:pointer;" ng-click="rowActionClicked('editDetails')">
+            <i class="fa fa-pencil fa-lg" ></i>
+          </span>
+      </div>
+      <div class="col-md-4 text-center" style="background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;padding:10px;">
+        <span style="cursor:pointer;" ng-click="rowActionClicked('viewDetails')">
+           View Profile
+        </span>
+      </div> -->
+    </div>
+  </div>
+
+
+</div>
