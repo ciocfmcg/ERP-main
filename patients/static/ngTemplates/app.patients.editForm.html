@@ -51,14 +51,33 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
-            <label>Emergency contact 1</label>
+            <label>Emergency Contact 1</label>
             <input type="text" class="form-control" ng-model="editForm.emergencyContact1" placeholder="">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label>Emergency contact 2</label>
+            <label>Emergency Contact 2</label>
             <input type="text" class="form-control" ng-model="editForm.emergencyContact2" placeholder="">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Unique Id</label>
+            <input type="text" class="form-control" ng-model="editForm.uniqueId" placeholder="" disabled>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Date Of Birth</label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="editForm.dateOfBirth" is-open="dob.opened" ng-init="today" />
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="dob.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+            </div>
           </div>
         </div>
       </div>
@@ -99,31 +118,12 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label>Unique Id</label>
-            <input type="text" class="form-control" ng-model="editForm.uniqueId" placeholder="" disabled>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Age </label>
-            <input type="number" class="form-control" ng-model="editForm.age" required value="0">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
             <label>Gender</label> <br>
             <input type="radio" ng-model="editForm.gender" value="Male"> Male
             <input type="radio" ng-model="editForm.gender" value="Female"> Female
           </div>
-          <!-- <div class="form-group">
-            <label>Display Picture</label>
-            <input type="file" name="DP" file-model="editForm.displayPicture">
-          </div> -->
         </div>
       </div>
-
     </div>
   </div>
   <div class="row" style="margin-top:25px;margin-bottom:25px">

@@ -56,5 +56,6 @@ class Product(models.Model):
 class Invoice(models.Model):
     activePatient = models.ForeignKey(ActivePatient , related_name='activePatient')
     invoiceName = models.CharField(max_length = 20 , null= True )
-    grandTotal = models.PositiveIntegerField(null=True)
-    items = models.ManyToManyField(Product , related_name='items' , blank = True)
+    grandTotal = models.PositiveIntegerField(null=True, default = 0)
+    quantity = models.CharField(max_length = 100 , default=1)
+    products = models.CharField(max_length=10000,null=True)
