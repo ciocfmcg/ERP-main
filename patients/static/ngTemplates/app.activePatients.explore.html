@@ -1,9 +1,9 @@
 <div class="container-fluid" ng-controller="hospitalManagement.activePatient.explore" style="margin-top:20px;">
   <div class="row">
-    <div class="col-md-8">
+
+    <div class="col-md-6">
       <div class="container-fluid">
         <div class="row">
-          <!-- {{data}} -->
           <label>Status : </label>
           <span ng-if="data.status=='checkedIn'">Checked In</span>
           <span ng-if="data.status=='onGoingTreatment'">Treatment On Going</span>
@@ -14,28 +14,27 @@
           <span ng-if="data.status=='settled'"> Settled </span>
         </div>
         <div class="row">
-          <label>In Time : </label>
-          {{data.inTime | date: 'dd-MM-yyyy:hh:mm a'}}
+          <label>In Time : </label> {{data.inTime | date: 'dd-MM-yyyy:hh:mm a'}}
         </div>
         <div class="row">
-          <label>Patient Id : </label>
-          {{data.patient.uniqueId}}
+          <label>Patient Id : </label> {{data.patient.uniqueId}}
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="row pull-right" style="padding:15px;">
-        <!-- <button type="button" name="button" class="btn btn-default" ng-click="checkOut()">Check Out</button> -->
-        <div class="btn-group btn-group-md pull-right">
-          <button type="button" class="btn btn-default"
-           mwl-confirm title="Confirm"
-           message="Are you sure?"
-           confirm-text="Yes <i class='fa fa-check'></i>"
-           cancel-text="No" on-confirm="checkOut()"
-           confirm-button-type="success"
-           cancel-button-type="default"
-           style="">Check Out</button>
+    <div class="col-md-6">
+      <div class="container-fluid">
+
+        <div class="col-md-6" style="padding-left:60px;">
+          <a href="/api/patients/downloaddischargeSummary/" target="_blank">
+          <button type="button" class="btn btn-default" >
+            Discharge Summary <i class="fa fa-download"></i>
+          </button> </a>
         </div>
+
+        <button type="button" class="btn btn-default" >
+          Check Out
+        </button>
+
       </div>
     </div>
 
