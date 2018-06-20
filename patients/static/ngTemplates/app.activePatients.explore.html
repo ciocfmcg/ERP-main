@@ -1,65 +1,24 @@
 <div class="container-fluid" ng-controller="hospitalManagement.activePatient.explore" style="margin-top:20px;">
-  <div class="row">
-    <div class="col-md-8">
-      <div class="container-fluid">
-        <div class="row">
-          <!-- {{data}} -->
-          <label>Status : </label>
-          <span ng-if="data.status=='checkedIn'">Checked In</span>
-          <span ng-if="data.status=='onGoingTreatment'">Treatment On Going</span>
-          <span ng-if="data.status=='operation'">Operation</span>
-          <span ng-if="data.status=='observation'">Observation</span>
-          <span ng-if="data.status=='readyToDischarged'">Ready To Discharged</span>
-          <span ng-if="data.status=='dishcharged'">Discharged</span>
-          <span ng-if="data.status=='settled'"> Settled </span>
-        </div>
-        <div class="row">
-          <label>In Time : </label>
-          {{data.inTime | date: 'dd-MM-yyyy:hh:mm a'}}
-        </div>
-        <div class="row">
-          <label>Patient Id : </label>
-          {{data.patient.uniqueId}}
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="row pull-right" style="padding:15px;">
-        <!-- <button type="button" name="button" class="btn btn-default" ng-click="checkOut()">Check Out</button> -->
-        <div class="btn-group btn-group-md pull-right">
-          <button type="button" class="btn btn-default"
-           mwl-confirm title="Confirm"
-           message="Are you sure?"
-           confirm-text="Yes <i class='fa fa-check'></i>"
-           cancel-text="No" on-confirm="checkOut()"
-           confirm-button-type="success"
-           cancel-button-type="default"
-           style="">Check Out</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
   <div class="row text-center">
     <h3>Invoices of {{data.patient.firstName}} {{data.patient.lastName}}</h3>
   </div>
   <div class="row" style="margin-top:20px">
 
-    <div ng-if="invoices.length!=0" class="col-md-3" ng-repeat="i in invoices">
+    <div ng-if="invoices.length!=0" class="col-md-3" ng-repeat="i in invoices" >
       <div class="container-fluid bg-green card" style="border-radius:5px;height:165px; margin-top:25px;">
 
         <div class="row text-center">
           <h2>{{i.invoiceName}}</h2>
         </div>
         <div class="row text-center">
-          <span style="font-size:20px;"> ₹ {{i.grandTotal}} </span>
+         <span style="font-size:20px;"> ₹ {{i.grandTotal}} </span>
         </div>
         <div class="row">
-          <span style="cursor:pointer; padding:15px;" ng-click="invoiceInfo($index)">
+          <span  style="cursor:pointer; padding:15px;" ng-click="invoiceInfo($index)">
               <i class="fa fa-info fa-lg" ></i>
           </span>
         </div>
-        <div class="row pull-right" style="margin-top:20px">
+        <div class="row pull-right" style="margin-top:20px" ng-if="i.grandTotal>0">
           <a href="/api/patients/downloadInvoice/" target="_blank"><button type="button" class="btn btn-default" >
             Download <i class="fa fa-download"></i>
           </button> </a>
@@ -70,7 +29,7 @@
 
     <div class="col-md-3">
       <div class="container-fluid bg-blue card" style=" margin-top:25px;border-radius:5px;">
-        <div class="row text-center" style="padding-top:15px; ">
+        <div class="row text-center" style="padding-top:15px; " >
           <i class="fa fa-plus" style="font-size:140px; cursor:pointer;" aria-hidden="true" ng-click="createInvoice()"></i>
         </div>
       </div>

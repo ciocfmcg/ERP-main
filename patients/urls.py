@@ -10,6 +10,7 @@ router.register(r'activePatient' , ActivePatientViewSet , base_name = 'activePat
 router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
 
 urlpatterns = [
-     url(r'^', include(router.urls)),
-     url(r'^downloadInvoice/', InvoiceSlip.as_view() , name ='downloadInvoice'),
+    url(r'^', include(router.urls)),
+    url(r'^downloadInvoice/', InvoiceSlip.as_view() , name ='downloadInvoice'),
+    url(r'^downloaddischargeSummary/', DischargeSummary.as_view() , name ='downloaddischargeSummary'),
  ]
