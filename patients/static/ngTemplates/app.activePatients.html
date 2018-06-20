@@ -27,7 +27,7 @@
             <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
           <div ng-if="tab.app == 'patientEditor'">
-            <div ng-include="'/static/ngTemplates/app.activePatients.editForm.html'"></div>
+            <div ng-include="'/static/ngTemplates/app.activePatients.editDetails.html'"></div>
           </div>
           <div ng-if="tab.app == 'patientDetails'">
             <div ng-include="'/static/ngTemplates/app.activePatients.explore.html'"></div>

@@ -7,7 +7,7 @@ from .models import *
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ('pk' , 'firstName','lastName','age','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' )
+        fields = ('pk' , 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' )
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,14 +25,13 @@ class ActivePatientSerializer(serializers.ModelSerializer):
         print validated_data , self.context['request'].data
         a = ActivePatient(**validated_data)
 
-        # if 'patient' in self.context['request'].data:
-        #     a.patient_id = int(self.context['request'].data['patient'])
         a.patient = Patient.objects.get(pk=int(self.context['request'].data['patient']))
         a.save()
         return a
 
 class InvoiceSerializer(serializers.ModelSerializer):
     # activePatient = ActivePatientSerializer(many=False , read_only=True)
+    items = ProductSerializer(many=True , read_only=True)
     class Meta:
         model = Invoice
         fields = ('pk' , 'activePatient','invoiceName','grandTotal','items')
@@ -41,3 +40,21 @@ class InvoiceSerializer(serializers.ModelSerializer):
         i.activePatient = ActivePatient.objects.get(pk=int(self.context['request'].data['activePatient']))
         i.save()
         return i
+    def update(self ,instance, validated_data):
+        print validated_data , self.context['request'].data
+        for key in ['invoiceName', 'grandTotal']:
+            try:
+                setattr(instance , key , validated_data[key])
+                print self.context['request'].data['grandTotal']
+            except:
+                print "Error while saving " , key
+                pass
+        if 'activePatient' in self.context['request'].data:
+            instance.activePatient = ActivePatient.objects.get(pk=int(self.context['request'].data['activePatient']))
+        instance.save()
+        if 'items' in self.context['request'].data:
+            instance.items.clear()
+            for c in self.context['request'].data['items']:
+                print 'cccc',c
+                instance.items.add(Product.objects.get(pk = c))
+        return instance

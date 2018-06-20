@@ -108,7 +108,7 @@ app.controller("hospitalManagement.patients", function($scope, $rootScope, $stat
   $scope.config = {
     views: views,
     url: '/api/patients/patient/',
-    searchField: 'name',
+    searchField: 'firstName',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
   }
@@ -172,7 +172,7 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
   $scope.newPatient = {
     firstName: '',
     lastName: '',
-    age: 0,
+    dateOfBirth: '',
     gender: '',
     uniqueId: ''
   };
@@ -192,7 +192,7 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
     dataToSend = {
       firstName: $scope.newPatient.firstName,
       lastName: $scope.newPatient.lastName,
-      age: $scope.newPatient.age,
+      dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
       gender: $scope.newPatient.gender,
       uniqueId: $scope.newPatient.uniqueId
     };
@@ -201,7 +201,7 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
 
     $http({
       method: 'POST',
-      url: '/api/patients/patients/',
+      url: '/api/patients/patient/',
       data: dataToSend
     }).
     then(function(response) {
@@ -209,7 +209,7 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
       $scope.newPatient = {
         firstName: '',
         lastName: '',
-        age: 0,
+        dateOfBirth: '',
         gender: '',
         uniqueId: ''
       };
