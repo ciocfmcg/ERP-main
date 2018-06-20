@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h3 class="text-center">{{invoiceData.invoiceName}}</h3>
+  <h3 class="text-center">{{form.invoiceName}}</h3>
 </div>
 <div class="modal-body">
   <div class="container-fluid" style="margin-top:30px">
@@ -7,19 +7,24 @@
       <tr style="background-color: #eeeeee;height: 96px;">
         <th>S.No</th>
         <th>Name</th>
-        <!-- <th>Quantity</th> -->
+        <th>Quantity</th>
         <th>Rate(₹)</th>
+        <th>Subtotal</th>
       </tr>
-      <tr ng-repeat="item in items">
+      <tr ng-repeat="item in form.productsList">
         <td>{{$index + 1}}</td>
         <td>
-          <input ng-model="item.name" type="text" class="form-control-pos">
+          <!-- <input ng-model="item.name" type="text" class="form-control-pos"> -->
+          <input type="text" class="form-control-pos" ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
         </td>
-        <!-- <td>
-            <input type="number" class="form-control-pos" ng-model="item.qty">
-          </td> -->
         <td>
-          <input type="number" class="form-control-pos" ng-model="item.rate">
+          <input type="number" class="form-control-pos" ng-model="item.quantity">
+        </td>
+        <td>
+          <input type="float" class="form-control-pos" ng-model="item.data.rate">
+        </td>
+        <td>
+        <span ng-if="item.data.pk" > {{(item.quantity*(item.data.rate)).toFixed(2)}}</span>
         </td>
         <td>
           <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
@@ -33,15 +38,16 @@
           </div>
         </td>
         <td style="border:none;"></td>
-        <!-- <td style="border:none;"></td> -->
-        <td>₹ {{calcTotalRate()}}</td>
+        <td style="border:none;"></td>
+        <td style="border:none;"></td>
+        <td ng-if="form.productsList[0].data.pk" >{{subTotal()}}</td>
       </tr>
     </table>
 
   </div>
   <div class="row text-center">
     <div class="container-fluid" style="padding-top:20px">
-      <button type="button" class="btn btn-success" ng-click="save()">Save</button>
+      <button type="button" class="btn btn-success" ng-click="saveInvoiceForm()">Save</button>
     </div>
   </div>
 </div>

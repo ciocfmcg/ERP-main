@@ -19,15 +19,18 @@ app.controller('hospitalManagement.activePatient.explore', function($scope, $htt
 
   $scope.invoices = [];
 
+  $scope.fetchInvoices = function() {
+    $http({
+      method: 'GET',
+      url: '/api/patients/invoice/?activePatient=' + $scope.data.pk
+    }).
+    then(function(response) {
+      console.log('invoicesss', response.data);
+      $scope.invoices = response.data
+    })
+  }
 
-  $http({
-    method: 'GET',
-    url: '/api/patients/invoice/?activePatient=' + $scope.data.pk
-  }).
-  then(function(response) {
-    console.log('invoicesss', response.data);
-    $scope.invoices = response.data
-  })
+  $scope.fetchInvoices();
 
 
 
@@ -71,7 +74,7 @@ app.controller('hospitalManagement.activePatient.explore', function($scope, $htt
           dataToSend = {
             activePatient: patientData.pk,
             invoiceName: $scope.invoiceForm.name,
-            grandTotal:0
+            grandTotal: 0
           };
 
           console.log(dataToSend);
@@ -106,132 +109,101 @@ app.controller('hospitalManagement.activePatient.explore', function($scope, $htt
       resolve: {
         invoiceData: function() {
           return $scope.invoices[idx];
+        },
+        indx: function() {
+          return idx;
         }
       },
-      controller: function($scope, invoiceData, $uibModalInstance) {
-        $scope.invoiceData = invoiceData;
-        console.log('invoice infoooooo', $scope.invoiceData);
-        $scope.items = $scope.invoiceData.items;
-        console.log($scope.products);
+      controller: function($scope,indx, invoiceData, $uibModalInstance) {
+
+        $scope.indx = indx;
+        $scope.form = invoiceData;
+        $scope.form.productsList = [];
+        console.log($scope.form);
+        if ($scope.form.products!=null && typeof $scope.form.products=='string') {
+          $scope.form.productsList = JSON.parse($scope.form.products);
+        }
+
+        console.log('formmmmmm', $scope.form);
+
+        // if (typeof $scope.form.products == 'string') {
+        //   $scope.form.products = JSON.parse($scope.form.products)
+        //   console.log('iiii',$scope.invoice);
+        // }
 
         $scope.addTableRow = function() {
-          $scope.items.push({
-            name: '',
-            rate: 0,
-            created: true
+          $scope.form.productsList.push({
+            data: "",
+            quantity: 1
           });
-        }
-
-        $scope.calcTotalRate = function() {
-          if ($scope.items == undefined) {
-            return 0;
-          }
-          var total = 0;
-          for (var i = 0; i < $scope.items.length; i++) {
-            if ($scope.items[i].rate != undefined) {
-              total += $scope.items[i].rate;
-            }
-          }
-          invoiceData.grandTotal = total;
-          return total;
+          console.log($scope.form.productsList);
         }
 
         $scope.deleteTable = function(index) {
-          $scope.items.splice(index, 1);
+          $scope.form.productsList.splice(index, 1);
         };
 
-        $scope.deleteTable = function(index) {
-
-          // if ($scope.items[index].created) {
-          //   console.log('new');
-          //   $scope.items.splice(index, 1);
-          // }else {
-          //   console.log('delete from backend');
-          //   $scope.items.splice(index, 1);
-          // }
-
-          if ($scope.items[index].pk != undefined) {
-            $http({
-              method: 'DELETE',
-              // url: '/api/performance/timeSheetItem/' + $scope.items[index].pk + '/'
-              url: '/api/patients/product/' + $scope.items[index].pk + '/'
-            }).
-            then((function(index) {
-              return function(response) {
-                $scope.items.splice(index, 1);
-                Flash.create('success', 'Deleted');
-              }
-            })(index))
-
-          } else {
-            $scope.items.splice(index, 1);
-          }
-        };
-
-        $scope.save = function() {
-
-          // dataToSend = {
-          //   name: $scope.items.name,
-          //   rate: $scope.items.rate
-          // };
-          $scope.itemsPkTopatch = [];
-
-          for (var i = 0; i < $scope.items.length; i++) {
-            if ($scope.items[i].created) {
-              dataToSend = {
-                name: $scope.items[i].name,
-                rate: $scope.items[i].rate
-              };
-              $http({
-                method: 'POST',
-                url: '/api/patients/product/',
-                data: dataToSend
-              }).
-              then(function(response) {
-                Flash.create('success', 'post new product');
-                $scope.itemsPkTopatch.push(response.data.pk)
-              });
-            }
-          }
-
-          for (var i = 0; i < $scope.items.length; i++) {
-            if ($scope.items[i].pk!=undefined) {
-              $scope.itemsPkTopatch.push($scope.items[i].pk)
-            }
-            console.log($scope.itemsPkTopatch);
-          }
-
-
-
-          $timeout(function () {
-            console.log($scope.totalRateToPatch);
-            console.log('jjjjjjjjj',$scope.itemsPkTopatch);
-            $http({
-               method: 'PATCH',
-               url: '/api/patients/invoice/'+ $scope.invoiceData.pk + '/' ,
-               data: {items: $scope.itemsPkTopatch , grandTotal : invoiceData.grandTotal }
-             }).
-             then(function(response) {
-                 // Flash.create('success');
-             });
-          }, 2000);
-
-
-
-          console.log('coming here...', $scope.items);
-          console.log('patch request', invoiceData);
-          $uibModalInstance.dismiss();
+        $scope.subTotal = function() {
+          var subTotal = 0;
+          angular.forEach($scope.form.productsList, function(item) {
+              subTotal += (item.quantity *item.data.rate);
+          })
+          return subTotal.toFixed(2);
         }
+
+        $scope.productSearch = function(query) {
+          console.log("called");
+          return $http.get('/api/patients/product/?name__contains=' + query).
+          then(function(response) {
+            return response.data;
+          })
+        }
+
+        $scope.saveInvoiceForm = function() {
+          console.log('************');
+          console.log($scope.form);
+          var f = $scope.form;
+          console.log(f);
+          console.log(f.productsList);
+          if (f.productsList.length==0) {
+            Flash.create('danger', 'Please add product');
+            return ;
+          }
+          var gtotal = $scope.subTotal()
+          console.log(gtotal , typeof gtotal);
+          if (gtotal=='NaN') {
+            Flash.create('danger', 'Please delete empty row');
+            return ;
+          }
+          var toSend = {
+            products: JSON.stringify(f.productsList),
+            grandTotal: gtotal
+          }
+          console.log(toSend);
+
+          $http({
+            method: 'PATCH',
+            url: '/api/patients/invoice/' + f.pk + '/',
+            data: toSend
+          }).
+          then(function(response) {
+            // $scope.form.pk = response.data.pk;
+            Flash.create('success', 'Saved');
+            $uibModalInstance.dismiss();
+          })
+
+        }
+
 
       },
     }).result.then(function() {
 
     }, function() {
-
+      $scope.fetchInvoices();
     });
   }
 
-  $scope.checkOut = function () {
+  $scope.checkOut = function() {
     console.log('checkout');
     console.log($scope.data);
     var date = new Date()
@@ -324,27 +296,47 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
   $scope.patientSearch = function(query) {
     return $http.get('/api/patients/patient/?firstName__contains=' + query).
     then(function(response) {
-      if (response.data.length==0) {
+      if (response.data.length == 0) {
         $scope.addNewPatient = true;
-      }else {
+      } else {
         $scope.addNewPatient = false;
       }
-      console.log('patient search.',response.data);
+      console.log('patient search.', response.data);
       return response.data;
     })
   };
 
 
 
-  $scope.statusList = [
-    {name : "Checked In", value : "checkedIn"},
-    {name : "Treatment ongoing", value : "onGoingTreatment"},
-    {name : "Operation", value : "operation"},
-    {name : "Observation", value : "observation"},
-    {name : "Ready to discharged", value : "readyToDischarged"},
-    {name : "Discharged", value : "dishcharged"},
-    {name : "Settled", value : "settled"}
-];
+  $scope.statusList = [{
+      name: "Checked In",
+      value: "checkedIn"
+    },
+    {
+      name: "Treatment ongoing",
+      value: "onGoingTreatment"
+    },
+    {
+      name: "Operation",
+      value: "operation"
+    },
+    {
+      name: "Observation",
+      value: "observation"
+    },
+    {
+      name: "Ready to discharged",
+      value: "readyToDischarged"
+    },
+    {
+      name: "Discharged",
+      value: "dishcharged"
+    },
+    {
+      name: "Settled",
+      value: "settled"
+    }
+  ];
 
 
   $scope.activePatientsForm = {
@@ -355,100 +347,108 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
   };
 
 
-  $scope.addNewActivePatient = function (name) {
-      // $scope.addForm = true;
-      $uibModal.open({
-        templateUrl: '/static/ngTemplates/app.activePatients.addNewPatient.html',
-        size: 'lg',
-        backdrop: true,
-        resolve: {
-          name: function() {
-            return name;
-          },
-          form: function() {
-            return $scope.activePatientsForm;
-          }
+  $scope.addNewActivePatient = function(name) {
+    // $scope.addForm = true;
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.activePatients.addNewPatient.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        name: function() {
+          return name;
         },
-        controller: function($scope, name , form ,$uibModalInstance) {
-          $scope.name = name
-          $scope.newPatient = {
-            firstName: '',
-            lastName: '',
-            dateOfBirth: '',
-            gender: '',
-            uniqueId: ''
+        form: function() {
+          return $scope.activePatientsForm;
+        }
+      },
+      controller: function($scope, name, form, $uibModalInstance) {
+        $scope.name = name
+        $scope.newPatient = {
+          firstName: '',
+          lastName: '',
+          dateOfBirth: '',
+          gender: '',
+          uniqueId: ''
+        };
+
+        $scope.newPatient.firstName = $scope.name;
+
+        $scope.generateUniqueId = function() {
+          $scope.newPatient.uniqueId = new Date().getTime()
+          console.log('generateeeee....');
+        }
+
+        $scope.createPatient = function() {
+
+          dataToSend = {
+            firstName: $scope.newPatient.firstName,
+            lastName: $scope.newPatient.lastName,
+            dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
+            gender: $scope.newPatient.gender,
+            uniqueId: $scope.newPatient.uniqueId
           };
 
-          $scope.newPatient.firstName = $scope.name;
+          console.log('lklklkllklklklklkl', dataToSend);
 
-          $scope.generateUniqueId = function() {
-            $scope.newPatient.uniqueId = new Date().getTime()
-            console.log('generateeeee....');
-          }
-
-          $scope.createPatient = function() {
-
-            dataToSend = {
-              firstName: $scope.newPatient.firstName,
-              lastName: $scope.newPatient.lastName,
-              dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
-              gender: $scope.newPatient.gender,
-              uniqueId: $scope.newPatient.uniqueId
+          $http({
+            method: 'POST',
+            url: '/api/patients/patient/',
+            data: dataToSend
+          }).
+          then(function(response) {
+            Flash.create('success', response.status + ' : ' + response.statusText);
+            $scope.newPatient = {
+              firstName: '',
+              lastName: '',
+              dateOfBirth: '',
+              gender: '',
+              uniqueId: ''
             };
+            console.log('rrreeessss', response.data);
+            form.patient = response.data;
+            console.log(addNewPatient);
+            console.log(form);
+          }, function(response) {
+            Flash.create('danger', response.status + ' : ' + response.statusText);
+          });
 
-            console.log('lklklkllklklklklkl', dataToSend);
-
-            $http({
-              method: 'POST',
-              url: '/api/patients/patient/',
-              data: dataToSend
-            }).
-            then(function(response) {
-              Flash.create('success', response.status + ' : ' + response.statusText);
-              $scope.newPatient = {
-                firstName: '',
-                lastName: '',
-                dateOfBirth: '',
-                gender: '',
-                uniqueId: ''
-              };
-              console.log('rrreeessss',response.data);
-              form.patient = response.data;
-              console.log(addNewPatient);
-              console.log(form);
-            }, function(response) {
-              Flash.create('danger', response.status + ' : ' + response.statusText);
-            });
-
-            $uibModalInstance.dismiss('removeAdd');
-          }
-
-
-
-        },
-      }).result.then(function() {
-
-      }, function(c) {
-        console.log(c);
-        if (c == 'removeAdd') {
-          $scope.addNewPatient = false;
+          $uibModalInstance.dismiss('removeAdd');
         }
-      });
+
+
+
+      },
+    }).result.then(function() {
+
+    }, function(c) {
+      console.log(c);
+      if (c == 'removeAdd') {
+        $scope.addNewPatient = false;
+      }
+    });
 
   }
 
 
   $scope.createActivePatient = function() {
 
-    if ($scope.activePatientsForm.patient =='') {
-      Flash.create('danger','please fill patient name');
+    if ($scope.activePatientsForm.patient == '') {
+      Flash.create('danger', 'please fill patient name');
+      return
+    }
+    if ($scope.activePatientsForm.inTime == '') {
+      Flash.create('danger', 'please fill In Time');
+      return
+    }
+    if ($scope.selectedStatus == undefined) {
+      Flash.create('danger', 'please select status');
       return
     }
 
     dataToSend = {
       patient: $scope.activePatientsForm.patient.pk,
       inTime: $scope.activePatientsForm.inTime,
-      status : $scope.selectedStatus
+      status: $scope.selectedStatus
     };
     console.log(dataToSend);
 

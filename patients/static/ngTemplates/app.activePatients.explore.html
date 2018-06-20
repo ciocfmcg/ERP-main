@@ -54,17 +54,18 @@
         <div class="row text-center">
           <span style="font-size:20px;"> ₹ {{i.grandTotal}} </span>
         </div>
-        <div class="row">
-          <span style="cursor:pointer; padding:15px;" ng-click="invoiceInfo($index)">
-              <i class="fa fa-info fa-lg" ></i>
-          </span>
+        <div class="row" style="padding-top:40px;">
+          <div class="col-md-6">
+            <span style="cursor:pointer;" ng-click="invoiceInfo($index)">
+                <i class="fa fa-info fa-lg" ></i>
+            </span>
+          </div>
+          <div class="col-md-6" style="padding-left:60px;">
+            <a href="/api/patients/downloadInvoice/" target="_blank"><button type="button" class="btn btn-default" >
+              Download <i class="fa fa-download"></i>
+            </button> </a>
+          </div>
         </div>
-        <div class="row pull-right" style="margin-top:20px">
-          <a href="/api/patients/downloadInvoice/" target="_blank"><button type="button" class="btn btn-default" >
-            Download <i class="fa fa-download"></i>
-          </button> </a>
-        </div>
-
       </div>
     </div>
 

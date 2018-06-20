@@ -26,6 +26,8 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
 
   $scope.editForm = $scope.form;
 
+  console.log(typeof $scope.editForm.dateOfBirth == 'object');
+
   $scope.saveDetails = function() {
     console.log('it comes here');
     var fd = new FormData()
@@ -47,8 +49,8 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
     if ($scope.editForm.emergencyContact2 != null && $scope.editForm.emergencyContact2.length != 0) {
       fd.append('emergencyContact2', $scope.editForm.emergencyContact2);
     }
-    if ($scope.editForm.age != null && $scope.editForm.age > 0) {
-      fd.append('age', $scope.editForm.age);
+    if (typeof $scope.editForm.dateOfBirth == 'object') {
+      fd.append('dateOfBirth', $scope.editForm.dateOfBirth.toJSON().split('T')[0]);
     }
     if ($scope.editForm.uniqueId != null && $scope.editForm.uniqueId.length != 0) {
       fd.append('uniqueId', $scope.editForm.uniqueId);
