@@ -44,6 +44,7 @@ from organization.models import KRA, Responsibility
 from excel_response import ExcelResponse
 from django.db.models.functions import Concat
 from django.db.models import Value
+import xlsxwriter
 
 
 themeColor = colors.HexColor('#227daa')
@@ -975,20 +976,241 @@ class SucheduleReportAPIView(APIView):
     def post(self, request, format=None):
         cc = []
         contactData=[]
-        print request.data['typ']
-
-        word = request.data['email'].split(",")
-        contactData.append(word)
-
-        for c in request.data['cc']:
-            u = User.objects.get(pk = c)
-            print u.email
-            cc.append(str(u.email))
-
-        email_subject =str(request.data['typ'])
-
+        contact=[]
         msgBody=''
+        print request.data,'****************calllll'
+        data = request.data['dataExcel']
+        workbook = xlsxwriter.Workbook('Expenses03.xlsx')
+        worksheet = workbook.add_worksheet()
+        bold = workbook.add_format({'bold': 1})
+        worksheet.set_column(200, 200, 200)
+        print request.data['typ'],'typeeeeeeeeeeeeeeeeeee'
+        if request.data['typ']=="call":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'NAME', bold)
+            worksheet.write('C1', 'DATE AND TIME', bold)
+            worksheet.write('D1', 'PHONE NO', bold)
+            worksheet.write('E1', 'DURATION', bold)
+            row = 1
+            col = 0
+            for item in data:
+                worksheet.write_string(row, col,item[u'userName'])
+                if item[u'name']==None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'name'])
+                worksheet.write_string(row, col+2,item[u'created'])
+                if item[u'mobile']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'mobile'])
+                if item[u'data']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'data'])
+                row += 1
+        if request.data['typ']=="leads":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'NAME', bold)
+            worksheet.write('C1', 'VALUE', bold)
+            worksheet.write('D1', 'COMPANY', bold)
+            worksheet.write('E1', 'STATE', bold)
+            worksheet.write('F1', 'RESULT', bold)
+            row = 1
+            col = 0
+            for item in data:
+                worksheet.write_string(row, col,item[u'userName'])
+                if item[u'name']==None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'name'])
+                if item[u'value']==None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,str(item[u'value']))
+                if item[u'comany']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'comany'])
+                if item[u'state']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'state'])
+                if item[u'result']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+5,item[u'result'])
+                row += 1
+        if request.data['typ']=="conversion":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'STATUS', bold)
+            worksheet.write('C1', 'GRAND TOTAL', bold)
+            worksheet.write('D1', 'DEAL COMPANY', bold)
+            worksheet.write('E1', 'DEAL NAME', bold)
+            row = 1
+            col = 0
+            for item in data:
+                worksheet.write_string(row, col,item[u'userName'])
+                if item[u'status']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'status'])
+                if item[u'grandTotal']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,str(item[u'grandTotal']))
+                if item[u'dealCompany']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'dealCompany'])
+                if item[u'dealName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'dealName'])
+                row += 1
+        if request.data['typ']=="pipeline":
+            worksheet.write('A1', 'STATE', bold)
+            worksheet.write('B1', 'TOTAL VALUE', bold)
+            worksheet.write('C1', 'COUNT', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item['state']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item['state'])
+                if item['totalValue']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,str(item['totalValue']))
+                if item['count']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,str(item['count']))
+                row += 1
+        if request.data['typ']=="salesInflow":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'DEAL COUNT', bold)
+            worksheet.write('C1', 'COMPANY', bold)
+            worksheet.write('D1', 'GRAND TOTAL', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item[u'userName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item[u'userName'])
+                if item[u'dealCount']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,str(item[u'dealCount']))
+                if item[u'comapnyName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,item[u'comapnyName'])
+                if item[u'grandTotal']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,str(item[u'grandTotal']))
+                row += 1
+        if request.data['typ']=="contacts":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'NAME', bold)
+            worksheet.write('C1', 'EMAIL', bold)
+            worksheet.write('D1', 'PHONE NO', bold)
+            worksheet.write('E1', 'COMANY', bold)
+            worksheet.write('F1', 'DESIGNATION', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item[u'userName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item[u'userName'])
+                if item[u'name']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'name'])
+                if item[u'email']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,item[u'email'])
+                if item[u'mobile']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'mobile'])
+                if item[u'comany']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'comany'])
+                if item[u'designation']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+5,item[u'designation'])
+                row += 1
+        if request.data['typ']=="nonPerforming":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'DEAL COUNT', bold)
+            worksheet.write('C1', 'COMPANY', bold)
+            worksheet.write('D1', 'GRAND TOTAL', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item[u'userName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item[u'userName'])
+                if item[u'dealCount']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,str(item[u'dealCount']))
+                if item[u'comapnyName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,item[u'comapnyName'])
+                if item[u'grandTotal']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,str(item[u'grandTotal']))
+                row += 1
 
+        workbook.close()
+        # if not request.data['emailID']:
+        #     word = request.data['email'].split(",")
+        #     for a in word:
+        #         contact.append(str(a))
+        #     print contact
+        #     for c in request.data['cc']:
+        #         u = User.objects.get(pk = c)
+        #         print u.email
+        #         cc.append(str(u.email))
+        #     email_subject = str(request.data['typ'])
+        #     msgBody=''
+        #     ctx = {
+        #         'message': msgBody,
+        #         'linkUrl': 'cioc.co.in',
+        #         'linkText' : 'View Online',
+        #         'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+        #         'sendersPhone' : '841101',
+        #         'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+        #         'fbUrl' : 'facebook.com',
+        #         'twitterUrl' : 'twitter.com',
+        #     }
+        #     email_body = get_template('app.clientRelationships.email.html').render(ctx)
+        #     msg = EmailMessage(email_subject, msgBody,  to= contact, cc=cc )
+        #     msg.send()
+        # else:
+        print request.data['cc'],'aaaaaaaa'
+        if request.data['cc']!=[]:
+            for c in request.data['cc']:
+                u = User.objects.get(pk = c)
+                print u.email
+            cc.append(str(u.email))
+        word = request.data['emailID'].split(",")
+        for a in word:
+            contactData.append(str(a))
+        email_subject =str(request.data['typ'])
+        msgBody=''
         ctx = {
             'message': msgBody,
             'linkUrl': 'cioc.co.in',
@@ -999,9 +1221,14 @@ class SucheduleReportAPIView(APIView):
             'fbUrl' : 'facebook.com',
             'twitterUrl' : 'twitter.com',
         }
-        #
         email_body = get_template('app.clientRelationships.email.html').render(ctx)
-        msg = EmailMessage(email_subject, msgBody,  to= contactData, cc= cc )
+        msg = EmailMessage(email_subject, msgBody,  to= contactData, cc=cc)
+        fp = open('Expenses03.xlsx', 'rb')
+        att = MIMEApplication(fp.read(), _subtype="xlsx")
+        fp.close()
+        att.add_header('Content-Disposition', 'attachment',
+                       filename=fp.name.split('/')[-1])
+        msg.attach(att)
         msg.send()
 
         return Response({},status=status.HTTP_200_OK)
