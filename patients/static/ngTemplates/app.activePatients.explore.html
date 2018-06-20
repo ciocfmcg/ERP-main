@@ -1,4 +1,45 @@
 <div class="container-fluid" ng-controller="hospitalManagement.activePatient.explore" style="margin-top:20px;">
+
+  <div class="row">
+
+    <div class="col-md-6">
+      <div class="container-fluid">
+        <div class="row">
+          <label>Status : </label>
+          <span ng-if="data.status=='checkedIn'">Checked In</span>
+          <span ng-if="data.status=='onGoingTreatment'">Treatment On Going</span>
+          <span ng-if="data.status=='operation'">Operation</span>
+          <span ng-if="data.status=='observation'">Observation</span>
+          <span ng-if="data.status=='readyToDischarged'">Ready To Discharged</span>
+          <span ng-if="data.status=='dishcharged'">Discharged</span>
+          <span ng-if="data.status=='settled'"> Settled </span>
+        </div>
+        <div class="row">
+          <label>In Time : </label> {{data.inTime | date: 'dd-MM-yyyy:hh:mm a'}}
+        </div>
+        <div class="row">
+          <label>Patient Id : </label> {{data.patient.uniqueId}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="container-fluid">
+
+        <div class="col-md-6" style="padding-left:60px;">
+          <a href="/api/patients/downloaddischargeSummary/" target="_blank">
+          <button type="button" class="btn btn-default" >
+            Discharge Summary <i class="fa fa-download"></i>
+          </button> </a>
+        </div>
+
+        <button type="button" class="btn btn-default" >
+          Check Out
+        </button>
+
+      </div>
+    </div>
+
+  </div>
   <div class="row text-center">
     <h3>Invoices of {{data.patient.firstName}} {{data.patient.lastName}}</h3>
   </div>
