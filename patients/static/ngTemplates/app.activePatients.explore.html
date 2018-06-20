@@ -21,7 +21,7 @@
             </span>
           </div>
           <div class="col-md-6" style="padding-left:60px;">
-            <a href="/api/patients/downloadInvoice/" target="_blank" ng-if="i.grandTotal>0"><button type="button" class="btn btn-default" >
+            <a href="/api/patients/downloadInvoice/?invoicePk={{i.pk}}" target="_blank" ng-if="i.grandTotal>0"><button type="button" class="btn btn-default" >
               Download <i class="fa fa-download"></i>
             </button> </a>
           </div>

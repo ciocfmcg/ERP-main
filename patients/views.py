@@ -28,6 +28,10 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from django.conf import settings as globalSettings
+from django.db.models import Q, F
+from django.db.models.functions import Concat
+from django.db.models import Value
+import json
 # Create your views here.
 
 
@@ -44,7 +48,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -97,13 +101,18 @@ class PageNumCanvas(canvas.Canvas):
         p.wrapOn(self , 50*mm , 10*mm)
         p.drawOn(self , 100*mm , 10*mm)
 
-def invoice(response):
+def invoice(response,inv):
     print '999999999999999999999999999999999999999'
     now = datetime.datetime.now()
 
-    (refid,name,admitDate,dischargeDate,total) = ('RR/0236/18','priyanka','15-06-2018','19-06-2018',20000)
-    # originalData = {'grandTotal':25000,'rfid':}
-    details = [{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757},{'name':'name1','qty':7,'rate':77},{'name':'name2','qty':5,'rate':130},{'name':'name3','qty':4,'rate':2500},{'name':'name4','qty':10,'rate':3750},{'name':'name5','qty':2,'rate':785},{'name':'name6','qty':5,'rate':1000},{'name':'name7','qty':7,'rate':757}]
+    ad = str(inv['adDate']).split(' ')[0].split('-')
+    (refid,name,admitDate,dischargeDate,total) = (inv['refId'],inv['name'],ad[2]+'-'+ad[1]+'-'+ad[0],'',inv['grandTotal'])
+    data = json.loads(inv['products'])
+    details = []
+    for i in data:
+        details.append({'name':i['data']['name'],'qty':i['quantity'],'rate':i['data']['rate']})
+    print details
+
     totalRows = len(details)
 
     styles = getSampleStyleSheet()
@@ -125,37 +134,48 @@ def invoice(response):
     cwidths[1]=6.5*inch
     t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
     elements.append(t1)
+
     elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
+
     elements.append(Spacer(1, 6))
+
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> RECEIPT / BILL </b></para>",styles['Normal']))
+
     elements.append(Paragraph("<para fontSize=8 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
+
     elements.append(Spacer(1, 12))
-    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
+
+    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}-{1}-{2}'.format(now.day,now.month,now.year)]]
+
     rheights=2*[0.2*inch]
-    cwidths=2*[2.1*inch]
+    cwidths=2*[2.8*inch]
     cwidths[1]=3.5*inch
     t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
     t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'), ]))
     elements.append(t2)
+
     elements.append(Spacer(1, 12))
-    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
+
     rheights=(totalRows+1)*[0.25*inch]
-    cwidths=4*[0.5*inch]
+    cwidths=5*[0.4*inch]
+    cwidths[0]=0.5*inch
     cwidths[1]=4*inch
+    cwidths[3]=0.6*inch
+    cwidths[4]=0.8*inch
     data3=[]
     for i,j in enumerate(range(totalRows+1)):
         # print i,j
         if i==0:
-            data3.append(['SL No.','Particulars','Qty','Amount '])
+            data3.append(['SL No.','Particulars','Qty','Price','Amount '])
         else:
-            data3.append([i,details[i-1]['name'].upper(),details[i-1]['qty'],details[i-1]['rate']])
+            data3.append([i,details[i-1]['name'].upper(),details[i-1]['qty'],details[i-1]['rate'],details[i-1]['qty']*details[i-1]['rate']])
 
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
     t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
     elements.append(t3)
     elements.append(Spacer(1, 7))
     # elements.append(HRFlowable(width="20%", thickness=1, color=black ,hAlign='RIGHT',spaceBefore=12))
-    elements.append(Paragraph("<para fontSize=8 alignment='right' rightIndent=75><b> Total : {0} </b></para>".format(total),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=8 alignment='right' rightIndent=70><b> Total : {0} </b></para>".format(total),styles['Normal']))
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
@@ -292,9 +312,11 @@ def dischargeSummary(response):
 class InvoiceSlip(APIView):
     def get(self , request , format = None):
         print 'invoiceeeeeeeee'
+        print request.GET['invoicePk']
+        inv = list(Invoice.objects.filter(pk = request.GET['invoicePk']).values('grandTotal','products',refId = F('activePatient__patient__uniqueId'),adDate = F('activePatient__inTime'),name = Concat('activePatient__patient__firstName', Value(' '), 'activePatient__patient__lastName')))
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="invoice.pdf"'
-        invoice(response)
+        invoice(response,inv[0])
         return response
 
 class DischargeSummary(APIView):
