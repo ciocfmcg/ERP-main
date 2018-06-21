@@ -117,10 +117,22 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div class="form-group">
-            <label>Gender</label> <br>
-            <input type="radio" ng-model="editForm.gender" value="Male"> Male
-            <input type="radio" ng-model="editForm.gender" value="Female"> Female
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Mode of Payment</label> <br>
+                <div ng-repeat ="m in modeOfPay ">
+                  <input type="checkbox" id="myCheck" ng-model="m.value" /> {{m.name}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Gender</label> <br>
+                <input type="radio" ng-model="editForm.gender" value="Male"> Male
+                <input type="radio" ng-model="editForm.gender" value="Female"> Female
+              </div>
+            </div>
           </div>
         </div>
       </div>

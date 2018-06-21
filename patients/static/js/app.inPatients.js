@@ -1,8 +1,8 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('hospitalManagement.activePatients', {
-      url: "/activePatients",
+    .state('hospitalManagement.inPatients', {
+      url: "/inPatients",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.activePatients.html',
@@ -14,23 +14,98 @@ app.config(function($stateProvider) {
 
 app.controller('hospitalManagement.activePatient.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout, $uibModal) {
 
-  $scope.data = $scope.tab.data;
-  console.log('exploreee', $scope.data);
+console.log('coming in explooreeee');
 
-  $scope.invoices = [];
+$scope.data = $scope.tab.data;
+console.log('exploreee', $scope.data);
 
-  $scope.fetchInvoices = function() {
-    $http({
-      method: 'GET',
-      url: '/api/patients/invoice/?activePatient=' + $scope.data.pk
-    }).
-    then(function(response) {
-      console.log('invoicesss', response.data);
-      $scope.invoices = response.data
-    })
+$scope.invoices = [];
+
+$scope.fetchInvoices = function() {
+  $http({
+    method: 'GET',
+    url: '/api/patients/invoice/?activePatient=' + $scope.data.pk
+  }).
+  then(function(response) {
+    console.log('invoicesss', response.data);
+    $scope.invoices = response.data
+  })
+}
+
+$scope.fetchInvoices();
+
+  //form for discharge summary
+
+  $scope.refresh = function () {
+
+    $scope.dischargeSummForm = {
+      patientName  :$scope.data.patient,
+      age:'',
+      sex:'',
+      telephoneNo  :'',
+      uhidNo  :'',
+      ipNo  :'',
+      treatingConsultantName  :'',
+      treatingConsultantContact  :'',
+      treatingConsultantDept  :'',
+      dateOfAdmission  :new Date(),
+      dateOfDischarge  :new Date(),
+      mlcNo  :'',
+      firNo  :'',
+      provisionalDiagnosis  :'',
+      finalDiagnosis  :'',
+      complaintsAndReason  :'',
+      summIllness  :'',
+      keyFindings  :'',
+      historyOfAlchohol  :'',
+      pastHistory  :'',
+      familyHistory  :'',
+      courseInHospital  :'',
+      patientCondition  :'',
+      advice  :'',
+      reviewOn  :'',
+      complications  :'',
+      doctorName  :'',
+      regNo  :''
+    }
   }
 
-  $scope.fetchInvoices();
+  $scope.refresh();
+  
+
+
+
+
+  $scope.saveDischargeSumm = function() {
+
+    console.log('here...');
+    console.log($scope.dischargeSummForm);
+    // if ($scope.dischargeSummForm.patientName.length==0) {
+    //   Flash.create('warning', 'Please fill patient name');
+    //   return
+    // }
+
+    var toSend = $scope.dischargeSummForm
+    toSend.patientName = $scope.dischargeSummForm.patientName.pk
+
+
+      $http({
+        method: 'POST',
+        url: '/api/patients/dischargeSummary/',
+        data: $scope.dischargeSummForm,
+
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved');
+        console.log('dataaaa', response.data);
+        $scope.refresh();
+      })
+
+
+
+  }
+
+
 
 
 
@@ -209,6 +284,10 @@ app.controller('hospitalManagement.activePatient.explore', function($scope, $htt
     var date = new Date()
     console.log(date);
   }
+
+
+
+
 
 
 });

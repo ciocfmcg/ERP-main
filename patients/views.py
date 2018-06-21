@@ -49,6 +49,12 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend]
 
+class DishchargeSummaryViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = DishchargeSummarySerializer
+    queryset = DischargeSummary.objects.all()
+    filter_backends = [DjangoFilterBackend]
+
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -324,6 +330,7 @@ class InvoiceSlip(APIView):
 class DischargeSummary(APIView):
     def get(self , request , format = None):
         print 'dischargeeeeeeeeeee'
+        print request.GET['pPk']
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="dischargeSummery.pdf"'
         dischargeSummary(response)
