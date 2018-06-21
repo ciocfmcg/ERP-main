@@ -104,14 +104,15 @@ class PageNumCanvas(canvas.Canvas):
 def invoice(response,inv):
     print '999999999999999999999999999999999999999'
     now = datetime.datetime.now()
+    print inv
 
-    ad = str(inv['adDate']).split(' ')[0].split('-')
-    (refid,name,admitDate,dischargeDate,total) = (inv['refId'],inv['name'],ad[2]+'-'+ad[1]+'-'+ad[0],'',inv['grandTotal'])
-    data = json.loads(inv['products'])
+    ad = str(inv.activePatient.inTime).split(' ')[0].split('-')
+    (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,ad[2]+'-'+ad[1]+'-'+ad[0],'',inv.grandTotal)
+    data = json.loads(inv.products)
     details = []
     for i in data:
         details.append({'name':i['data']['name'],'qty':i['quantity'],'rate':i['data']['rate']})
-    print details
+    print '************',details
 
     totalRows = len(details)
 
@@ -313,10 +314,11 @@ class InvoiceSlip(APIView):
     def get(self , request , format = None):
         print 'invoiceeeeeeeee'
         print request.GET['invoicePk']
-        inv = list(Invoice.objects.filter(pk = request.GET['invoicePk']).values('grandTotal','products',refId = F('activePatient__patient__uniqueId'),adDate = F('activePatient__inTime'),name = Concat('activePatient__patient__firstName', Value(' '), 'activePatient__patient__lastName')))
+        # inv = list(Invoice.objects.filter(pk = request.GET['invoicePk']).values('grandTotal','products',refId = F('activePatient__patient__uniqueId'),adDate = F('activePatient__inTime'),name = Concat('activePatient__patient__firstName', Value(' '), 'activePatient__patient__lastName')))
+        inv = Invoice.objects.get(pk = request.GET['invoicePk'])
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="invoice.pdf"'
-        invoice(response,inv[0])
+        invoice(response,inv)
         return response
 
 class DischargeSummary(APIView):
