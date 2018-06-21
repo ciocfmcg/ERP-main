@@ -8,7 +8,7 @@ from .models import *
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ('pk' , 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' )
+        fields = ('pk' , 'firstName','lastName','dateOfBirth','modeOfPayment','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' )
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,3 +51,14 @@ class InvoiceSerializer(serializers.ModelSerializer):
             instance.activePatient = ActivePatient.objects.get(pk=int(self.context['request'].data['activePatient']))
         instance.save()
         return instance
+
+class DishchargeSummarySerializer(serializers.ModelSerializer):
+    patientName = PatientSerializer(many=False , read_only=True)
+    class Meta:
+        model = DischargeSummary
+        fields = ('pk' , 'patientName','age','sex','telephoneNo','uhidNo','ipNo','treatingConsultantName','treatingConsultantContact','treatingConsultantDept','dateOfAdmission','dateOfDischarge','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','courseInHospital','patientCondition','advice','reviewOn','complications','doctorName','regNo','date')
+    def create(self , validated_data):
+        i = DischargeSummary(**validated_data)
+        i.patientName = Patient.objects.get(pk=int(self.context['request'].data['patientName']))
+        i.save()
+        return i

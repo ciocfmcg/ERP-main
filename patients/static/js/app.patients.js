@@ -26,11 +26,48 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
 
   $scope.editForm = $scope.form;
 
-  console.log(typeof $scope.editForm.dateOfBirth == 'object');
+  $scope.modeOfPay = [ {name: 'MLC' , value : false }, {name: 'Insurance' , value : false } , {name: 'Cash' , value : false }]
+
+  // $scope.mode = false ,
+  if ($scope.editForm.modeOfPayment!=null && $scope.editForm.modeOfPayment.length>0) {
+    var m = $scope.editForm.modeOfPayment.split(',');
+    for (var i = 0; i < m.length; i++) {
+      if (m[i]=='MLC') {
+        $scope.modeOfPay[0].value = true
+      }else if (m[i]=='Insurance') {
+        $scope.modeOfPay[1].value = true
+      }else {
+        $scope.modeOfPay[2].value = true
+      }
+    }
+  }
+
+  $scope.$watch('modeOfPay' , function(newValue , oldValue) {
+    console.log('########',newValue);
+  },true)
+
+
 
   $scope.saveDetails = function() {
     console.log('it comes here');
+
+    var v = "";
+    for (var i = 0; i < $scope.modeOfPay.length; i++) {
+      if ($scope.modeOfPay[i].value) {
+        if (v.length>0) {
+          v += ',' + $scope.modeOfPay[i].name
+        }else {
+          v = $scope.modeOfPay[i].name
+        }
+      }
+    }
+
+    console.log(v);
+
     var fd = new FormData()
+    if (v.length>0) {
+      fd.append('modeOfPayment', v);
+    }
     if ($scope.editForm.firstName != null && $scope.editForm.firstName.length != 0) {
       fd.append('firstName', $scope.editForm.firstName);
     }
@@ -49,7 +86,7 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
     if ($scope.editForm.emergencyContact2 != null && $scope.editForm.emergencyContact2.length != 0) {
       fd.append('emergencyContact2', $scope.editForm.emergencyContact2);
     }
-    if (typeof $scope.editForm.dateOfBirth == 'object') {
+    if (typeof $scope.editForm.dateOfBirth == 'object' && $scope.editForm.dateOfBirth!=null ) {
       fd.append('dateOfBirth', $scope.editForm.dateOfBirth.toJSON().split('T')[0]);
     }
     if ($scope.editForm.uniqueId != null && $scope.editForm.uniqueId.length != 0) {
@@ -75,7 +112,10 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
     }
 
 
+
+
     console.log('gggggggggggggggggg', fd);
+    console.log($scope.editForm);
     $http({
       method: 'PATCH',
       url: '/api/patients/patient/' + $scope.form.pk + '/',

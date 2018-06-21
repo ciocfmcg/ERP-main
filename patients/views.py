@@ -49,6 +49,14 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend]
 
+class DishchargeSummaryViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = DishchargeSummarySerializer
+    queryset = DischargeSummary.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['patientName']
+
+
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -180,8 +188,9 @@ def invoice(response,inv):
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
-def dischargeSummary(response):
+def dischargeSummary(response,dis):
     print '77777777777777777'
+    print dis
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=A4, topMargin=0.5*cm,leftMargin=1*cm,rightMargin=1*cm)
     elements = []
@@ -211,13 +220,16 @@ def dischargeSummary(response):
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> DISCHARGE SUMMARY </b></para>",styles['Normal']))
 
     elements.append(Spacer(1, 15))
-
-    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno,)=('a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a')
+    ad = str(dis.dateOfAdmission).split('.')[0]
+    dd = str(dis.dateOfDischarge).split('.')[0]
+    d = str(dis.date)
+    print d
+    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno,)=(dis.patientName.firstName+' '+dis.patientName.lastName,dis.age,dis.sex,dis.telephoneNo,dis.uhidNo,dis.ipNo,dis.treatingConsultantName,dis.treatingConsultantContact,dis.treatingConsultantDept,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,'a',dis.familyHistory,'a',dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,dis.doctorName,d,dis.regNo)
 
     # a = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv'
 
     p1_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Patient's Name</b></para>",styles['Normal']),
-    p1_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
+    p1_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
 
     p2_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Telephone No / Mobile No.</b></para>",styles['Normal'])
     p2_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} </para>".format(mob),styles['Normal'])
@@ -351,10 +363,12 @@ class InvoiceSlip(APIView):
         invoice(response,inv)
         return response
 
-class DischargeSummary(APIView):
+class DischargeSummarys(APIView):
     def get(self , request , format = None):
         print 'dischargeeeeeeeeeee'
+        print request.GET['pPk']
+        dis = DischargeSummary.objects.get(pk = request.GET['pPk'])
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="dischargeSummery.pdf"'
-        dischargeSummary(response)
+        dischargeSummary(response,dis)
         return response
