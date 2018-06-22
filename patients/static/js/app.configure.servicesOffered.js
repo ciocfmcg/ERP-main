@@ -20,7 +20,7 @@ app.controller("hospitalManagement.configure.servicesOffered", function($scope, 
   $scope.config = {
     views: views,
     url: '/api/patients/product/',
-    searchField: 'Name',
+    searchField: 'name',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
   }

@@ -1,10 +1,14 @@
 <div class="row" ng-controller="hospitalManagement.outPatient.form">
+  <div class="row" ng-if="activePatientsForm.pk" style="padding-left:30px">
+    <h1>Edit Out Patient</h1>
+  </div>
   <div class="col-md-6">
     <form>
       <div class="form-group">
         <label>Patient Name</label>
         <div class="{{addNewPatient==true ? 'input-group': ''}}">
-          <input type="text" class="form-control" ng-model="activePatientsForm.patient" uib-typeahead="patient as patient.firstName for patient in patientSearch($viewValue)">
+          <input ng-if="activePatientsForm.pk==null" type="text" class="form-control" ng-model="activePatientsForm.patient" uib-typeahead="patient as patient.firstName for patient in patientSearch($viewValue)" >
+          <input ng-if="activePatientsForm.pk" type="text" class="form-control" ng-model="activePatientsForm.patient" uib-typeahead="patient as patient.firstName for patient in patientSearch($viewValue)" disabled>
           <div ng-if="addNewPatient" class="input-group-addon" style="cursor:pointer;" ng-click="addNewActivePatient(activePatientsForm.patient)">Add</div>
         </div>
       </div>

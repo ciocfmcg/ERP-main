@@ -654,15 +654,19 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       $scope.addNewPatient = false;
       $scope.displayDetails = true;
       console.log('obbjjj' );
-      $http.get('/api/patients/activePatient/?patient=' + newValue.pk + '&outPatient=false' ).
-      then(function(response) {
-        console.log(response.data);
-        if (response.data.length>0) {
-          Flash.create('danger', 'This patient is already added');
-          $scope.activePatientsForm.patient = '';
-          return ;
-        }
-      })
+      if ($scope.activePatientsForm.pk==undefined) {
+        $http.get('/api/patients/activePatient/?patient=' + newValue.pk + '&outPatient=false' ).
+        then(function(response) {
+          console.log(response.data);
+          if (response.data.length>0) {
+            Flash.create('danger', 'This patient is already added');
+            $scope.activePatientsForm.patient = '';
+            return ;
+          }
+        })
+      }
+
+
 
     }else{
       $scope.addNewPatient = true;
