@@ -136,36 +136,38 @@ def invoice(response,inv):
     totalRows = len(details)
 
     styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(response,pagesize=A4, topMargin=0.5*cm,leftMargin=1*cm,rightMargin=1*cm)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     elements = []
     logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'hospital_logo.png')
-    im = Image(logo,height=0.8*inch ,width=0.6*inch)
+    im = Image(logo,height=1*inch ,width=0.6*inch)
 
     p1=[
-       Paragraph("<para fontSize=20 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
-       Paragraph("<para fontSize=10 textColor=darkblue spaceBefore=3 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
-       Paragraph("<para fontSize=8 alignment='left' textColor=darkblue spaceBefore=3 leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
+       Paragraph("<para fontSize=30 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
+       Paragraph("<para fontSize=11 textColor=darkblue spaceBefore=12 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
+       Paragraph("<para fontSize=11 alignment='left' textColor=darkblue leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
        ]
     # Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
 
     data1=[[im,p1]]
-    rheights=1*[0.8*inch]
-    cwidths=2*[0.7*inch]
-    cwidths[1]=6.5*inch
+    rheights=1*[1.1*inch]
+    cwidths=2*[0.8*inch]
+    cwidths[1]=7*inch
     t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
     elements.append(t1)
 
+    elements.append(Spacer(1, 8))
+
     elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
 
-    elements.append(Spacer(1, 6))
+    elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> RECEIPT / BILL </b></para>",styles['Normal']))
 
     elements.append(Paragraph("<para fontSize=8 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
 
-    elements.append(Spacer(1, 12))
+    elements.append(Spacer(1, 15))
 
-    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
+    data2=[['Patient Name : {0}'.format(name.upper()),'UHID Id : {0}'.format(refid)],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
 
     rheights=2*[0.2*inch]
     cwidths=2*[2.8*inch]
@@ -199,35 +201,38 @@ def invoice(response,inv):
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
+
 def dischargeSummary(response,dis):
     print '77777777777777777'
     print dis
     now = datetime.datetime.now()
     styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(response,pagesize=A4, topMargin=0.5*cm,leftMargin=1*cm,rightMargin=1*cm)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     elements = []
 
     # logo = "hospital_logo.png"
     logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'hospital_logo.png')
-    im = Image(logo,height=0.8*inch ,width=0.6*inch)
+    im = Image(logo,height=1*inch ,width=0.6*inch)
 
     p1=[
-       Paragraph("<para fontSize=20 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
-       Paragraph("<para fontSize=10 textColor=darkblue spaceBefore=3 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
-       Paragraph("<para fontSize=8 alignment='left' textColor=darkblue spaceBefore=3 leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
+       Paragraph("<para fontSize=30 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
+       Paragraph("<para fontSize=11 textColor=darkblue spaceBefore=12 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
+       Paragraph("<para fontSize=11 alignment='left' textColor=darkblue leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
        ]
     # Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
 
     data1=[[im,p1]]
-    rheights=1*[0.8*inch]
-    cwidths=2*[0.7*inch]
-    cwidths[1]=6.5*inch
+    rheights=1*[1.1*inch]
+    cwidths=2*[0.8*inch]
+    cwidths[1]=7*inch
     t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
     elements.append(t1)
 
+    elements.append(Spacer(1, 8))
+
     elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
 
-    elements.append(Spacer(1, 6))
+    elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> DISCHARGE SUMMARY </b></para>",styles['Normal']))
 
@@ -249,70 +254,68 @@ def dischargeSummary(response,dis):
 
     (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,page,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dis.treatingConsultant.username,dis.treatingConsultant.profile.mobile,dep,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,dis.pastHistory,dis.familyHistory,dis.summaryKeyInvestigation,dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,dis.treatingConsultant.username,d,dis.treatingConsultant.profile.note1)
 
-    # a = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv'
+    p1_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Patient's Name</b></para>",styles['Normal']),
+    p1_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
 
-    p1_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Patient's Name</b></para>",styles['Normal']),
-    p1_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
+    p2_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Telephone No / Mobile No.</b></para>",styles['Normal'])
+    p2_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} </para>".format(mob),styles['Normal'])
 
-    p2_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Telephone No / Mobile No.</b></para>",styles['Normal'])
-    p2_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} </para>".format(mob),styles['Normal'])
+    p3_1= Paragraph("<para fontSize=8 textColor=darkblue><b>UHID No.</b></para>",styles['Normal']),
+    p3_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>4.IP No</b>. : {1}</para>".format(uhid,ipno),styles['Normal'])
 
-    p3_1= Paragraph("<para fontSize=7 textColor=darkblue><b>UHID No.</b></para>",styles['Normal']),
-    p3_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>4.IP No</b>. : {1}</para>".format(uhid,ipno),styles['Normal'])
+    p5_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Treating Consultant/s Name<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Contact Numbers <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Department/ Specialty </b></para>",styles['Normal']),
+    p5_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} <br/><br/>: {1} <br/><br/>:{2}</para>".format(tcname,cno,dep),styles['Normal'])
 
-    p5_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Treating Consultant/s Name<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Contact Numbers <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Department/ Specialty </b></para>",styles['Normal']),
-    p5_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} <br/><br/>: {1} <br/><br/>:{2}</para>".format(tcname,cno,dep),styles['Normal'])
+    p6_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Date Of Admission With Time</b></para>",styles['Normal']),
+    p6_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} </para>".format(doa),styles['Normal'])
 
-    p6_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Date Of Admission With Time</b></para>",styles['Normal']),
-    p6_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} </para>".format(doa),styles['Normal'])
+    p7_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Date Of Discharge With Time</b></para>",styles['Normal']),
+    p7_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} </para>".format(dod),styles['Normal'])
 
-    p7_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Date Of Discharge With Time</b></para>",styles['Normal']),
-    p7_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} </para>".format(dod),styles['Normal'])
+    p8_1= Paragraph("<para fontSize=8 textColor=darkblue><b>MLC No.</b></para>",styles['Normal']),
+    p8_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>FIR No.</b> : {1}</para>".format(mlc,fir),styles['Normal'])
 
-    p8_1= Paragraph("<para fontSize=7 textColor=darkblue><b>MLC No.</b></para>",styles['Normal']),
-    p8_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>FIR No.</b> : {1}</para>".format(mlc,fir),styles['Normal'])
+    p9_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Provisional Diagnosis<br/>At The Time Of Admission</b></para>",styles['Normal'])
+    p9_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p9),styles['Normal'])
 
-    p9_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Provisional Diagnosis<br/>At The Time Of Admission</b></para>",styles['Normal'])
-    p9_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p9),styles['Normal'])
+    p10_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Final Diagnosis<br/>At The Time Of Discharge</b></para>",styles['Normal'])
+    p10_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p10),styles['Normal'])
 
-    p10_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Final Diagnosis<br/>At The Time Of Discharge</b></para>",styles['Normal'])
-    p10_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p10),styles['Normal'])
+    p11_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Presenting Complaints With Duration And Reason For Admission</b></para>",styles['Normal'])
+    p11_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p11),styles['Normal'])
 
-    p11_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Presenting Complaints With Duration And Reason For Admission</b></para>",styles['Normal'])
-    p11_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p11),styles['Normal'])
+    p12_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Summary Of Presenting Illness</b></para>",styles['Normal'])
+    p12_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} </para>".format(p12),styles['Normal'])
 
-    p12_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Summary Of Presenting Illness</b></para>",styles['Normal'])
-    p12_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} </para>".format(p12),styles['Normal'])
+    p13_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Key Findings, On Physical Examination At The Time Of Admission</b></para>",styles['Normal'])
+    p13_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p13),styles['Normal'])
 
-    p13_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Key Findings, On Physical Examination At The Time Of Admission</b></para>",styles['Normal'])
-    p13_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p13),styles['Normal'])
+    p14_1= Paragraph("<para fontSize=8 textColor=darkblue><b>History Of Alcoholism, Tobacco Or Substance Abuse, If Any</b></para>",styles['Normal'])
+    p14_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p14),styles['Normal'])
 
-    p14_1= Paragraph("<para fontSize=7 textColor=darkblue><b>History Of Alcoholism, Tobacco Or Substance Abuse, If Any</b></para>",styles['Normal'])
-    p14_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p14),styles['Normal'])
+    p15_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Significant Past Medical And Surgical History, If Any</b></para>",styles['Normal'])
+    p15_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p15),styles['Normal'])
 
-    p15_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Significant Past Medical And Surgical History, If Any</b></para>",styles['Normal'])
-    p15_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p15),styles['Normal'])
+    p16_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Family History If Significant / Relevent To Diagnosis Or Treatment</b></para>",styles['Normal'])
+    p16_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p16),styles['Normal'])
 
-    p16_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Family History If Significant / Relevent To Diagnosis Or Treatment</b></para>",styles['Normal'])
-    p16_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p16),styles['Normal'])
+    p17_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Summary Of Key Investigations During Hospitalization</b></para>",styles['Normal'])
+    p17_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p17),styles['Normal'])
 
-    p17_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Summary Of Key Investigations During Hospitalization</b></para>",styles['Normal'])
-    p17_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p17),styles['Normal'])
+    p18_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Course In The Hospital Including Complications, If Any</b></para>",styles['Normal'])
+    p18_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p18),styles['Normal'])
 
-    p18_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Course In The Hospital Including Complications, If Any</b></para>",styles['Normal'])
-    p18_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p18),styles['Normal'])
+    p19_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Patient Condition At The Time Of Discharge</b></para>",styles['Normal'])
+    p19_2=Paragraph("<para textColor=darkblue fontSize=8><br/>: {0} </para>".format(p19),styles['Normal'])
 
-    p19_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Patient Condition At The Time Of Discharge</b></para>",styles['Normal'])
-    p19_2=Paragraph("<para textColor=darkblue fontSize=7><br/>: {0} </para>".format(p19),styles['Normal'])
+    p20_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Advice On Discharge</b></para>",styles['Normal'])
+    p20_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} </para>".format(p20),styles['Normal'])
 
-    p20_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Advice On Discharge</b></para>",styles['Normal'])
-    p20_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} </para>".format(p20),styles['Normal'])
+    p21_1= Paragraph("<para fontSize=8 textColor=darkblue><b>Review On</b></para>",styles['Normal'])
+    p21_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} </para>".format(p21),styles['Normal'])
 
-    p21_1= Paragraph("<para fontSize=7 textColor=darkblue><b>Review On</b></para>",styles['Normal'])
-    p21_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} </para>".format(p21),styles['Normal'])
-
-    p22_1= Paragraph("<para fontSize=7 textColor=darkblue><b>In Case Of Complications Such As</b></para>",styles['Normal'])
-    p22_2=Paragraph("<para textColor=darkblue fontSize=7>: {0} &nbsp;&nbsp;&nbsp;&nbsp;<b>Contact The Consultant</b></para>".format(p22),styles['Normal'])
+    p22_1= Paragraph("<para fontSize=8 textColor=darkblue><b>In Case Of Complications Such As</b></para>",styles['Normal'])
+    p22_2=Paragraph("<para textColor=darkblue fontSize=8>: {0} &nbsp;&nbsp;&nbsp;&nbsp;<b>Contact The Consultant</b></para>".format(p22),styles['Normal'])
 
     l1=['1.',p1_1,p1_2]
     l2=['2.',p2_1,p2_2]
@@ -355,7 +358,7 @@ def dischargeSummary(response,dis):
     rheights[20]=0.7*inch if len(p22)<200 else (1*inch if len(p22)<500 else (1.5*inch if len(p22)<800 else 1.9*inch))
     print 'hhhhhhhhhhhhhhhh',rheights[9],rheights[17],len(p19)
     # rheights=[0.3*inch,0.3*inch,0.3*inch,1*inch,0.3*inch,0.3*inch,0.3*inch,0.5*inch,0.5*inch,0.4*inch if len(a)<200 else 1.2*inch,0.8*inch,1.2*inch,1*inch,1*inch,1*inch,1*inch,1.7*inch,1*inch,1.5*inch,0.8*inch,0.6*inch,]
-    cwidths=[0.25*inch , 2*inch , 5*inch]
+    cwidths=[0.25*inch , 2.25*inch , 5.5*inch]
     t2=Table(data,rowHeights=rheights,colWidths=cwidths)
     t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),darkblue),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),]))
     elements.append(t2)
@@ -364,14 +367,14 @@ def dischargeSummary(response,dis):
     print docname,dt,mob,pname
     data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date&Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+str(mob)],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
     rheights=5*[0.3*inch]
-    cwidths=[1.8*inch , 0.7*inch , 3*inch , 2.0*inch]
+    cwidths=[2.2*inch , 0.7*inch , 2.8*inch , 2*inch]
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
-    t3.setStyle(TableStyle([('SPAN',(2,0),(3,0)),('SPAN',(2,1),(3,1)),('SPAN',(2,3),(3,3)),('SPAN',(2,4),(3,4)),('SPAN',(0,0),(0,1)),('SPAN',(0,3),(0,4)),('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),darkblue),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('GRID',(0,0),(-1,-1),1,darkblue),]))
+    t3.setStyle(TableStyle([('SPAN',(2,0),(3,0)),('SPAN',(2,1),(3,1)),('SPAN',(2,3),(3,3)),('SPAN',(2,4),(3,4)),('SPAN',(0,0),(0,1)),('SPAN',(0,3),(0,4)),('FONTSIZE', (0, 0), (-1, -1), 9),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),darkblue),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('GRID',(0,0),(-1,-1),1,darkblue),]))
     elements.append(t3)
 
     elements.append(Spacer(1,8))
 
-    elements.append(Paragraph("<para fontSize=7 textColor=darkblue leftIndent=10><b>In Case Of Emergency - Contact No. of The Hospital</b></para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=8 textColor=darkblue leftIndent=10><b>In Case Of Emergency - Contact No. of The Hospital</b></para>",styles['Normal']))
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
