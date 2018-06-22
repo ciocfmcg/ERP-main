@@ -208,6 +208,11 @@ app.controller("hospitalManagement.patients", function($scope, $rootScope, $stat
 
 });
 
+app.controller("hospitalManagement.patient.explore", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+  $scope.patient = $scope.tab.data;
+
+});
+
 app.controller("hospitalManagement.patients.form", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 

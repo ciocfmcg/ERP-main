@@ -385,18 +385,10 @@ app.controller("hospitalManagement.activePatients", function($scope, $rootScope,
 
 app.controller("hospitalManagement.activePatients.form", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
-  $scope.addNewPatient = false;
-  // $scope.addForm = false;
 
   $scope.patientSearch = function(query) {
     return $http.get('/api/patients/patient/?firstName__contains=' + query).
     then(function(response) {
-      if (response.data.length == 0) {
-        $scope.addNewPatient = true;
-      } else {
-        $scope.addNewPatient = false;
-      }
-      console.log('patient search.', response.data);
       return response.data;
     })
   };
@@ -499,15 +491,12 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
               gender: '',
               uniqueId: ''
             };
-            console.log('rrreeessss', response.data);
             form.patient = response.data;
-            console.log(addNewPatient);
-            console.log(form);
+            $uibModalInstance.dismiss(form.patient);
           }, function(response) {
             Flash.create('danger', response.status + ' : ' + response.statusText);
           });
 
-          $uibModalInstance.dismiss('removeAdd');
         }
 
 
@@ -516,13 +505,18 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
     }).result.then(function() {
 
     }, function(c) {
-      console.log(c);
-      if (c == 'removeAdd') {
-        $scope.addNewPatient = false;
-      }
+      $scope.activePatientsForm.patient = c;
     });
 
   }
+
+  $scope.$watch('activePatientsForm.patient' , function(newValue , oldValue) {
+    if (typeof newValue == 'object' || newValue.length == 0) {
+      $scope.addNewPatient = false;
+    }else{
+      $scope.addNewPatient = true;
+    }
+  })
 
 
   $scope.createActivePatient = function() {

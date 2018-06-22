@@ -1,0 +1,32 @@
+<div class="container-fluid" ng-controller="hospitalManagement.patient.explore" style="margin-top:20px;">
+
+  <div class="row">
+    <h3>{{patient.firstName}} {{patient.lastName}}</h3>
+  </div>
+
+  {{patient}}
+
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-4 text-right">
+        <strong>UHID :</strong>
+      </div>
+      <div class="col-md-8">
+        {{patient.uniqueId}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-right">
+        <strong>Date of Birth :</strong>
+      </div>
+      <div class="col-md-8">
+        {{patient.dateOfBirth}}
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+</div>
