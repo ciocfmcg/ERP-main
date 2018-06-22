@@ -56,6 +56,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
 
 class DishchargeSummaryViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
