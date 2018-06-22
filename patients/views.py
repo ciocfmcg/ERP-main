@@ -113,10 +113,12 @@ class PageNumCanvas(canvas.Canvas):
 def invoice(response,inv):
     print '999999999999999999999999999999999999999'
     now = datetime.datetime.now()
-    print inv
+    print inv.activePatient.dateOfDischarge
 
     ad = str(inv.activePatient.inTime).split(' ')[0].split('-')
-    (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,ad[2]+'-'+ad[1]+'-'+ad[0],'',inv.grandTotal)
+    dd = str(inv.activePatient.dateOfDischarge).split(' ')[0].split('-')
+    print dd
+    (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,ad[2]+'-'+ad[1]+'-'+ad[0],dd[2]+'-'+dd[1]+'-'+dd[0],inv.grandTotal)
     data = json.loads(inv.products)
     details = []
     for i in data:
@@ -155,7 +157,7 @@ def invoice(response,inv):
 
     elements.append(Spacer(1, 12))
 
-    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}-{1}-{2}'.format(now.day,now.month,now.year)]]
+    data2=[['Ref Id : {0}'.format(refid),'Patient Name : {0}'.format(name.upper())],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
 
     rheights=2*[0.2*inch]
     cwidths=2*[2.8*inch]

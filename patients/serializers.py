@@ -53,13 +53,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
         return instance
 
 class DishchargeSummarySerializer(serializers.ModelSerializer):
-    patientName = PatientSerializer(many=False , read_only=True)
+    patient = ActivePatientSerializer(many=False , read_only=True)
     class Meta:
         model = DischargeSummary
         fields = ('pk' , 'patient','ipNo','treatingConsultant','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications')
     def create(self , validated_data):
         i = DischargeSummary(**validated_data)
-        i.patientName = Patient.objects.get(pk=int(self.context['request'].data['patientName']))
+        i.patient = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
         i.save()
         return i
 

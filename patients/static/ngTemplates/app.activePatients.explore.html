@@ -25,7 +25,7 @@
               <label>Discharge Time : </label> {{data.dateOfDischarge | date: 'dd-MM-yyyy:hh:mm a'}}
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6" ng-if="data.status!='dishcharged'">
             <button type="button" class="btn btn-primary pull-right" ng-click="chageStatus()">
               Dishcharge
             </button>
@@ -58,7 +58,7 @@
                   </span>
                 </div>
                 <div class="col-md-6" style="padding-right:0px;">
-                  <a href="/api/patients/downloadInvoice/?invoicePk={{i.pk}}" target="_blank" ng-if="i.grandTotal>0" ><button type="button" class="btn btn-default pull-right" >
+                  <a href="/api/patients/downloadInvoice/?invoicePk={{i.pk}}" target="_blank" ng-if="i.grandTotal>0&&data.status=='dishcharged'" ><button type="button" class="btn btn-default pull-right" >
                     Download <i class="fa fa-download"></i>
                   </button> </a>
                 </div>
@@ -93,8 +93,8 @@
         <button type="button" class="btn btn-default" >
           Check Out
         </button> -->
-        <div class="row">
-          <a href="/api/patients/downloaddischargeSummary/?pPk={{dischargeSummForm.pk}}" target="_blank"target="_blank" mg-if="dischargeSummForm.pk">
+        <div class="row" ng-if="dischargeSummForm.pk&&data.status=='dishcharged'">
+          <a href="/api/patients/downloaddischargeSummary/?pPk={{dischargeSummForm.pk}}" target="_blank"target="_blank">
            <button  type="button" class="btn btn-primary pull-right" >
              Discharge Summary <i class="fa fa-download"></i>
            </button> </a>
