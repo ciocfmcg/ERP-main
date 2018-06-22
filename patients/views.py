@@ -32,8 +32,16 @@ from django.db.models import Q, F
 from django.db.models.functions import Concat
 from django.db.models import Value
 import json
+from dateutil.relativedelta import relativedelta
 # Create your views here.
 
+
+class ActivePatientLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ActivePatientLiteSerializer
+    queryset = ActivePatient.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['patient']
 
 class PatientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -54,7 +62,7 @@ class DishchargeSummaryViewSet(viewsets.ModelViewSet):
     serializer_class = DishchargeSummarySerializer
     queryset = DischargeSummary.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['patientName']
+    filter_fields = ['patient']
 
 
 
@@ -194,6 +202,7 @@ def invoice(response,inv):
 def dischargeSummary(response,dis):
     print '77777777777777777'
     print dis
+    now = datetime.datetime.now()
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=A4, topMargin=0.5*cm,leftMargin=1*cm,rightMargin=1*cm)
     elements = []
@@ -223,11 +232,22 @@ def dischargeSummary(response,dis):
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> DISCHARGE SUMMARY </b></para>",styles['Normal']))
 
     elements.append(Spacer(1, 15))
-    ad = str(dis.dateOfAdmission).split('.')[0]
-    dd = str(dis.dateOfDischarge).split('.')[0]
-    d = str(dis.date)
+    print dis.patient.patient
+    ad = str(dis.patient.inTime).split('.')[0]
+    dd = str(dis.patient.dateOfDischarge).split('.')[0]
+    d = str(now).split('.')[0]
     print d
-    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno,)=(dis.patientName.firstName+' '+dis.patientName.lastName,dis.age,dis.sex,dis.telephoneNo,dis.uhidNo,dis.ipNo,dis.treatingConsultantName,dis.treatingConsultantContact,dis.treatingConsultantDept,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,'a',dis.familyHistory,'a',dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,dis.doctorName,d,dis.regNo)
+    page= int(d.split('-')[0])-int(str(dis.patient.patient.dateOfBirth).split('-')[0])
+    print 'ageeeeeeeeeeee',page
+    if dis.treatingConsultant.designation.department:
+        dep = dis.treatingConsultant.designation.department.dept_name
+    else:
+        dep = ''
+    print dep
+    print 'advv',dis.advice
+    print 'revvvvvvvvvv',dis.reviewOn
+
+    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,page,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dis.treatingConsultant.username,dis.treatingConsultant.profile.mobile,dep,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,dis.pastHistory,dis.familyHistory,dis.summaryKeyInvestigation,dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,dis.treatingConsultant.username,d,dis.treatingConsultant.profile.note1)
 
     # a = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv'
 
@@ -312,7 +332,7 @@ def dischargeSummary(response,dis):
     l17=['17.',p17_1,p17_2]
     l18=['18.',p18_1,p18_2]
     l19=['19.',p19_1,p19_2]
-    l20=['20.',p20_1,p2_2]
+    l20=['20.',p20_1,p20_2]
     l21=['21.',p21_1,p21_2]
     l22=['22.',p22_1,p22_2]
 
@@ -321,18 +341,19 @@ def dischargeSummary(response,dis):
     rheights[3]=1*inch
     rheights[7]=0.7*inch
     rheights[8]=0.7*inch
-    rheights[9]=0.7*inch if len(p11)<300 else 1.2*inch
-    rheights[10]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[11]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[12]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[13]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[14]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[15]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[16]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[17]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[18]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[19]=0.7*inch if len(p11)<300 else 1*inch
-    rheights[20]=0.7*inch if len(p11)<300 else 1*inch
+    rheights[9]=0.7*inch if len(p11)<200 else (1*inch if len(p11)<500 else (1.5*inch if len(p11)<800 else 1.9*inch))
+    rheights[10]=0.7*inch if len(p12)<200 else (1*inch if len(p12)<500 else (1.5*inch if len(p12)<800 else 1.9*inch))
+    rheights[11]=0.7*inch if len(p13)<200 else (1*inch if len(p13)<500 else (1.5*inch if len(p13)<800 else 1.9*inch))
+    rheights[12]=0.7*inch if len(p14)<200 else (1*inch if len(p14)<500 else (1.5*inch if len(p14)<800 else 1.9*inch))
+    rheights[13]=0.7*inch if len(p15)<200 else (1*inch if len(p15)<500 else (1.5*inch if len(p15)<800 else 1.9*inch))
+    rheights[14]=0.7*inch if len(p16)<200 else (1*inch if len(p16)<500 else (1.5*inch if len(p16)<800 else 1.9*inch))
+    rheights[15]=0.7*inch if len(p17)<200 else (1*inch if len(p17)<500 else (1.5*inch if len(p17)<800 else 1.9*inch))
+    rheights[16]=0.7*inch if len(p18)<200 else (1*inch if len(p18)<500 else (1.5*inch if len(p18)<800 else 1.9*inch))
+    rheights[17]=0.7*inch if len(p19)<200 else (1*inch if len(p19)<500 else (1.5*inch if len(p19)<800 else 1.9*inch))
+    rheights[18]=0.7*inch if len(p20)<200 else (1*inch if len(p20)<500 else (1.5*inch if len(p20)<800 else 1.9*inch))
+    rheights[19]=0.7*inch if len(p21)<200 else (1*inch if len(p21)<500 else (1.5*inch if len(p21)<800 else 1.9*inch))
+    rheights[20]=0.7*inch if len(p22)<200 else (1*inch if len(p22)<500 else (1.5*inch if len(p22)<800 else 1.9*inch))
+    print 'hhhhhhhhhhhhhhhh',rheights[9],rheights[17],len(p19)
     # rheights=[0.3*inch,0.3*inch,0.3*inch,1*inch,0.3*inch,0.3*inch,0.3*inch,0.5*inch,0.5*inch,0.4*inch if len(a)<200 else 1.2*inch,0.8*inch,1.2*inch,1*inch,1*inch,1*inch,1*inch,1.7*inch,1*inch,1.5*inch,0.8*inch,0.6*inch,]
     cwidths=[0.25*inch , 2*inch , 5*inch]
     t2=Table(data,rowHeights=rheights,colWidths=cwidths)
@@ -340,8 +361,8 @@ def dischargeSummary(response,dis):
     elements.append(t2)
 
     elements.append(Spacer(1,6))
-
-    data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date & Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+mob],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
+    print docname,dt,mob,pname
+    data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date&Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+str(mob)],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
     rheights=5*[0.3*inch]
     cwidths=[1.8*inch , 0.7*inch , 3*inch , 2.0*inch]
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)

@@ -16,6 +16,9 @@ app.controller('hospitalManagement.patients.explore', function($scope, $http, $a
 
   $scope.data = $scope.tab.data;
 
+  // $http({method : 'GET' , url : '/api/activePatientLite/?patient=' + $scope.})
+
+
 });
 
 app.controller('hospitalManagement.patients.edit', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
@@ -63,6 +66,7 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
     }
 
     console.log(v);
+    console.log($scope.editForm);
 
     var fd = new FormData()
     if (v.length>0) {
@@ -213,9 +217,10 @@ app.controller("hospitalManagement.patient.explore", function($scope, $rootScope
 
 
   $scope.visits = [];
-  $http({method : 'GET' , url : '/api/patients/activePatient/?patient=' + $scope.patient.pk}).
+  $http({method : 'GET' , url : '/api/patients/activePatientLite/?patient=' + $scope.patient.pk}).
   then(function(response) {
     console.log(response.data);
+    $scope.visits = response.data;
   })
 
 

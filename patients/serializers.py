@@ -52,20 +52,43 @@ class InvoiceSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class treatingConsultantSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('pk','username' , 'email' , 'first_name' , 'last_name' , )
+
 class DishchargeSummarySerializer(serializers.ModelSerializer):
     patient = ActivePatientSerializer(many=False , read_only=True)
+    treatingConsultant = treatingConsultantSerializer(many=False , read_only=True)
     class Meta:
         model = DischargeSummary
         fields = ('pk' , 'patient','ipNo','treatingConsultant','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications')
     def create(self , validated_data):
         i = DischargeSummary(**validated_data)
         i.patient = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
+        i.treatingConsultant = User.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
         i.save()
         return i
+    def update(self ,instance, validated_data):
+        print validated_data , self.context['request'].data
+        for key in ['ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'treatingConsultant' in self.context['request'].data:
+            instance.treatingConsultant = User.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
+        instance.save()
+        return instance
 
+class DishchargeSummaryLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DischargeSummary
+        fields = ('pk' ,'ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications' , 'treatingConsultant')
 
 class ActivePatientLiteSerializer(serializers.ModelSerializer):
     invoices = InvoiceSerializer(many = True , read_only = True)
+    # dischargeSummary = DishchargeSummaryLiteSerializer(many = False , read_only = True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices')
