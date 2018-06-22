@@ -46,26 +46,19 @@ class ActivePatient(models.Model):
     outTime = models.DateTimeField( null= True )
     status = models.CharField(choices = STATUS_CHOICES , max_length = 100 , null = False ,default='checkedIn')
     comments = models.ManyToManyField(PatientComments , related_name='inPatientComments' , blank = True)
-
-class OutPatient(models.Model):
-    patient = models.ForeignKey(Patient , related_name='patientOut')
-    inTime = models.DateTimeField( null= True )
-    outTime = models.DateTimeField( null= True )
-    particular = models.CharField(max_length = 100 , null = False)
-    comments = models.ManyToManyField(PatientComments , related_name='outPatientComments' , blank = True)
+    outPatient = models.BooleanField(default = False)
+    modeOfPayment = models.CharField(max_length = 100 , null = True)
+    created = models.DateTimeField(auto_now_add = True , null= True)
+    dateOfDischarge = models.DateTimeField( null= True  , blank = True)
 
 class DischargeSummary(models.Model):
-    patientName = models.ForeignKey(Patient , related_name='dischargeSummary')
-    age = models.CharField(max_length = 100 , null = True , blank = True)
-    sex = models.CharField(max_length = 100 , null = True  , blank = True)
-    telephoneNo = models.CharField(max_length = 100 , null = True  , blank = True)
-    uhidNo = models.CharField(max_length = 100 , null = True  , blank = True)
+    patient = models.ForeignKey(ActivePatient , related_name='dischargeSummary', null= True)
     ipNo = models.CharField(max_length = 100 , null = True  , blank = True)
-    treatingConsultantName = models.CharField(max_length = 100 , null = True  , blank = True)
-    treatingConsultantContact = models.CharField(max_length = 100 , null = True  , blank = True)
-    treatingConsultantDept = models.CharField(max_length = 100 , null = True  , blank = True)
-    dateOfAdmission = models.DateTimeField( null= True  , blank = True)
-    dateOfDischarge = models.DateTimeField( null= True  , blank = True)
+    # treatingConsultantName = models.CharField(max_length = 100 , null = True  , blank = True)
+    # treatingConsultantContact = models.CharField(max_length = 100 , null = True  , blank = True)
+    # treatingConsultantDept = models.CharField(max_length = 100 , null = True  , blank = True)
+    treatingConsultant = models.ForeignKey(User , null= True , related_name='hmsPatients')
+
     mlcNo = models.CharField(max_length = 100 , null = True  , blank = True)
     firNo = models.CharField(max_length = 100 , null = True  , blank = True)
     provisionalDiagnosis = models.CharField(max_length = 500 , null = True , blank = True)
@@ -76,14 +69,14 @@ class DischargeSummary(models.Model):
     historyOfAlchohol = models.CharField(max_length = 500 , null = True , blank = True)
     pastHistory = models.CharField(max_length = 500 , null = True , blank = True)
     familyHistory = models.CharField(max_length = 500 , null = True , blank = True)
+    summaryKeyInvestigation = models.CharField(max_length = 500 , null = True , blank = True)
     courseInHospital = models.CharField(max_length = 500 , null = True , blank = True)
     patientCondition= models.CharField(max_length = 500 , null = True , blank = True)
     advice = models.CharField(max_length =500 , null = True , blank = True)
     reviewOn = models.CharField(max_length = 500 , null = True , blank = True)
     complications = models.CharField(max_length = 500 , null = True , blank = True)
-    doctorName = models.CharField(max_length = 100 , null = True , blank = True)
-    regNo = models.CharField(max_length = 100 , null = True , blank = True)
-    date = models.DateField(auto_now=True)
+    # doctorName = models.CharField(max_length = 100 , null = True , blank = True)
+    # regNo = models.CharField(max_length = 100 , null = True , blank = True)
 
 class Product(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -92,7 +85,7 @@ class Product(models.Model):
     rate = models.PositiveIntegerField(null=True)
 
 class Invoice(models.Model):
-    activePatient = models.ForeignKey(ActivePatient , related_name='activePatient')
+    activePatient = models.ForeignKey(ActivePatient , related_name='invoices')
     invoiceName = models.CharField(max_length = 20 , null= True )
     grandTotal = models.PositiveIntegerField(null=True, default = 0)
     quantity = models.CharField(max_length = 100 , default=1)

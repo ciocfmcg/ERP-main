@@ -71,6 +71,7 @@ class ActivePatientViewSet(viewsets.ModelViewSet):
     serializer_class = ActivePatientSerializer
     queryset = ActivePatient.objects.all()
     filter_backends = [DjangoFilterBackend]
+    filter_fields = ['patient']
 
 class PageNumCanvas(canvas.Canvas):
     #----------------------------------------------------------------------

@@ -86,7 +86,19 @@ $scope.fetchInvoices();
     }
   }
 
+  $scope.chageStatus = function () {
+    $http({
+      method: 'PATCH',
+      url: '/api/patients/activePatient/' + $scope.data.pk + '/' ,
+      data: {status: 'dishcharged' , dateOfDischarge: new Date() },
 
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      console.log('dataaaa', response.data);
+      $scope.data = response.data
+    })
+  }
 
 
 
@@ -529,16 +541,18 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       Flash.create('danger', 'please fill In Time');
       return
     }
-    if ($scope.selectedStatus == undefined) {
-      Flash.create('danger', 'please select status');
-      return
-    }
+
+
 
     dataToSend = {
       patient: $scope.activePatientsForm.patient.pk,
       inTime: $scope.activePatientsForm.inTime,
-      status: $scope.selectedStatus
+      // status: $scope.selectedStatus
     };
+    if ($scope.activePatientsForm.pk!=undefined) {
+      dataToSend.status = $scope.selectedStatus
+    }
+
     console.log(dataToSend);
 
     $http({

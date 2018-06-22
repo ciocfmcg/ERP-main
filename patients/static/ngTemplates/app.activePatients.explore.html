@@ -6,14 +6,14 @@
         <div class="row">
           <div class="col-md-6">
             <div class="row">
-              <label>Status : </label>
-              <span ng-if="data.status=='checkedIn'">Checked In</span>
-              <span ng-if="data.status=='onGoingTreatment'">Treatment On Going</span>
-              <span ng-if="data.status=='operation'">Operation</span>
-              <span ng-if="data.status=='observation'">Observation</span>
-              <span ng-if="data.status=='readyToDischarged'">Ready To Discharged</span>
-              <span ng-if="data.status=='dishcharged'">Discharged</span>
-              <span ng-if="data.status=='settled'"> Settled </span>
+              <!-- <label>Status : </label> -->
+              <h2 ng-if="data.status=='checkedIn'">Checked In</h2>
+              <h2 ng-if="data.status=='onGoingTreatment'">Treatment On Going</h2>
+              <h2 ng-if="data.status=='operation'">Operation</h2>
+              <h2 ng-if="data.status=='observation'">Observation</h2>
+              <h2 ng-if="data.status=='readyToDischarged'">Ready To Discharged</h2>
+              <h2 ng-if="data.status=='dishcharged'">Discharged</h2>
+              <h2 ng-if="data.status=='settled'"> Settled </h2>
             </div>
             <div class="row">
               <label>In Time : </label> {{data.inTime | date: 'dd-MM-yyyy:hh:mm a'}}
@@ -21,10 +21,13 @@
             <div class="row">
               <label>Patient Id : </label> {{data.patient.uniqueId}}
             </div>
+            <div class="row" ng-if="data.status=='dishcharged'">
+              <label>Discharge Time : </label> {{data.dateOfDischarge | date: 'dd-MM-yyyy:hh:mm a'}}
+            </div>
           </div>
           <div class="col-md-6">
-            <button type="button" class="btn btn-primary pull-right" >
-              Check Out
+            <button type="button" class="btn btn-primary pull-right" ng-click="chageStatus()">
+              Dishcharge
             </button>
           </div>
         </div>
