@@ -8,7 +8,7 @@ from .models import *
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ('pk' , 'firstName','lastName','dateOfBirth','modeOfPayment','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' )
+        fields = ('pk' , 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' )
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:

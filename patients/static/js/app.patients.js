@@ -216,13 +216,26 @@ app.controller("hospitalManagement.patient.explore", function($scope, $rootScope
 app.controller("hospitalManagement.patients.form", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
-  $scope.newPatient = {
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    gender: '',
-    uniqueId: ''
-  };
+  $scope.formRefresh = function() {
+    $scope.newPatient = {
+      firstName: '',
+      lastName: '',
+      gender:'',
+      dateOfBirth:'',
+      uniqueId: '',
+      email: '',
+      phoneNo: '',
+      emergencyContact1:'',
+      emergencyContact2:'',
+      street:'',
+      city:'',
+      pin:'',
+      state:'',
+      country:''
+    };
+  }
+  $scope.formRefresh();
+
 
   $scope.generateUniqueId = function() {
     $scope.newPatient.uniqueId = new Date().getTime()
@@ -231,35 +244,50 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
 
   $scope.createPatient = function() {
 
-    // if ($scope.newPatient.gender=='') {
-    //   Flash.create('danger', 'please select gender');
-    //   return
-    // }
+    if ($scope.newPatient.firstName=='') {
+      Flash.create('warning', 'Please fill First Name');
+      return
+    }
 
-    dataToSend = {
-      firstName: $scope.newPatient.firstName,
-      lastName: $scope.newPatient.lastName,
-      dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
-      gender: $scope.newPatient.gender,
-      uniqueId: $scope.newPatient.uniqueId
-    };
+    if ($scope.newPatient.phoneNo=='') {
+      Flash.create('warning', 'Please enter mobile no');
+      return
+    }
+    if ($scope.newPatient.emergencyContact1=='') {
+      Flash.create('warning', 'Please enter emergency Contact 1');
+      return
+    }
+    if ($scope.newPatient.dateOfBirth=='') {
+      Flash.create('warning', 'Please enter DOB');
+      return
+    }else {
+      $scope.newPatient.dateOfBirth = $scope.newPatient.dateOfBirth.toJSON().split('T')[0]
+    }
+    if ($scope.newPatient.emergencyContact2=='') {
+      $scope.newPatient.emergencyContact2 = 0
+    }
+    if ($scope.newPatient.pin=='') {
+      $scope.newPatient.pin = 0
+    }
 
-    console.log('lklklkllklklklklkl', dataToSend);
+    // dataToSend = {
+    //   firstName: $scope.newPatient.firstName,
+    //   lastName: $scope.newPatient.lastName,
+    //   dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
+    //   gender: $scope.newPatient.gender,
+    //   uniqueId: $scope.newPatient.uniqueId
+    // };
+
+    console.log('lklklkllklklklklkl', $scope.newPatient);
 
     $http({
       method: 'POST',
       url: '/api/patients/patient/',
-      data: dataToSend
+      data: $scope.newPatient
     }).
     then(function(response) {
       Flash.create('success', response.status + ' : ' + response.statusText);
-      $scope.newPatient = {
-        firstName: '',
-        lastName: '',
-        dateOfBirth: '',
-        gender: '',
-        uniqueId: ''
-      };
+        $scope.formRefresh()
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
