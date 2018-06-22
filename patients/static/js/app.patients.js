@@ -211,6 +211,16 @@ app.controller("hospitalManagement.patients", function($scope, $rootScope, $stat
 app.controller("hospitalManagement.patient.explore", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {
   $scope.patient = $scope.tab.data;
 
+
+  $scope.visits = [];
+  $http({method : 'GET' , url : '/api/patients/activePatient/?patient=' + $scope.patient.pk}).
+  then(function(response) {
+    console.log(response.data);
+  })
+
+
+
+
 });
 
 app.controller("hospitalManagement.patients.form", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {

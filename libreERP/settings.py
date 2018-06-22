@@ -120,7 +120,6 @@ INSTALLED_APPS = (
 	'assets',# assets
 	'hospitalManagement',# hospitalManagement
 	'patients',# patients
-	'outPatients',# out patient
 )
 
 

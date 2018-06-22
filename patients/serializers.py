@@ -56,9 +56,16 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
     patientName = PatientSerializer(many=False , read_only=True)
     class Meta:
         model = DischargeSummary
-        fields = ('pk' , 'patientName','age','sex','telephoneNo','uhidNo','ipNo','treatingConsultantName','treatingConsultantContact','treatingConsultantDept','dateOfAdmission','dateOfDischarge','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','courseInHospital','patientCondition','advice','reviewOn','complications','doctorName','regNo','date')
+        fields = ('pk' , 'patient','age','sex','telephoneNo','uhidNo','ipNo','treatingConsultantName','treatingConsultantContact','treatingConsultantDept','dateOfAdmission','dateOfDischarge','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','courseInHospital','patientCondition','advice','reviewOn','complications','doctorName','regNo','date')
     def create(self , validated_data):
         i = DischargeSummary(**validated_data)
         i.patientName = Patient.objects.get(pk=int(self.context['request'].data['patientName']))
         i.save()
         return i
+
+
+class ActivePatientLiteSerializer(serializers.ModelSerializer):
+    invoices = InvoiceSerializer(many = True , read_only = True)
+    class Meta:
+        model = ActivePatient
+        fields = ('pk' , 'patient','inTime','outTime','status','comments')
