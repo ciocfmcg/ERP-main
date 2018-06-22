@@ -54,11 +54,7 @@ class ActivePatient(models.Model):
 class DischargeSummary(models.Model):
     patient = models.ForeignKey(ActivePatient , related_name='dischargeSummary', null= True)
     ipNo = models.CharField(max_length = 100 , null = True  , blank = True)
-    # treatingConsultantName = models.CharField(max_length = 100 , null = True  , blank = True)
-    # treatingConsultantContact = models.CharField(max_length = 100 , null = True  , blank = True)
-    # treatingConsultantDept = models.CharField(max_length = 100 , null = True  , blank = True)
     treatingConsultant = models.ForeignKey(User , null= True , related_name='hmsPatients')
-
     mlcNo = models.CharField(max_length = 100 , null = True  , blank = True)
     firNo = models.CharField(max_length = 100 , null = True  , blank = True)
     provisionalDiagnosis = models.CharField(max_length = 500 , null = True , blank = True)
@@ -75,8 +71,6 @@ class DischargeSummary(models.Model):
     advice = models.CharField(max_length =500 , null = True , blank = True)
     reviewOn = models.CharField(max_length = 500 , null = True , blank = True)
     complications = models.CharField(max_length = 500 , null = True , blank = True)
-    # doctorName = models.CharField(max_length = 100 , null = True , blank = True)
-    # regNo = models.CharField(max_length = 100 , null = True , blank = True)
 
 class Product(models.Model):
     created = models.DateTimeField(auto_now_add = True)
