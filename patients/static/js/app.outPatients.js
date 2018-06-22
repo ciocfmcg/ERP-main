@@ -583,6 +583,22 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
   //     $scope.addNewPatient = true;
   //   }
   // })
+  // $scope.$watch('activePatientsForm.patient' , function(newValue , oldValue) {
+  //   if (newValue.length ==0) {
+  //     $scope.displayDetails = false;
+  //     $scope.addNewPatient = false;
+  //     return
+  //   }
+  //   console.log(newValue.length);
+  //   if (typeof newValue == 'object') {
+  //     $scope.addNewPatient = false;
+  //     $scope.displayDetails = true;
+  //   }else{
+  //     $scope.addNewPatient = true;
+  //     $scope.displayDetails = false;
+  //   }
+  // })
+
   $scope.$watch('activePatientsForm.patient' , function(newValue , oldValue) {
     if (newValue.length ==0) {
       $scope.displayDetails = false;
@@ -593,6 +609,17 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
     if (typeof newValue == 'object') {
       $scope.addNewPatient = false;
       $scope.displayDetails = true;
+      console.log('obbjjj' );
+      $http.get('/api/patients/activePatient/?patient=' + newValue.pk + '&outPatient=true' ).
+      then(function(response) {
+        console.log(response.data);
+        if (response.data.length>0) {
+          Flash.create('danger', 'This patient is already added');
+          $scope.activePatientsForm.patient = '';
+          return ;
+        }
+      })
+
     }else{
       $scope.addNewPatient = true;
       $scope.displayDetails = false;

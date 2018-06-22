@@ -66,6 +66,7 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
     }
 
     console.log(v);
+    console.log($scope.editForm);
 
     var fd = new FormData()
     if (v.length>0) {

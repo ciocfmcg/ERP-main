@@ -21,6 +21,13 @@ console.log('exploreee', $scope.data);
 
 $scope.invoices = [];
 
+$scope.userSearch = function(query) {
+  return $http.get('/api/HR/userSearch/?username__contains=' + query).
+  then(function(response) {
+    return response.data;
+  })
+};
+
 $scope.fetchInvoices = function() {
   $http({
     method: 'GET',
@@ -32,7 +39,7 @@ $scope.fetchInvoices = function() {
   })
   $http({
     method: 'GET',
-    url: '/api/patients/dischargeSummary/?patientName=' + $scope.data.patient.pk
+    url: '/api/patients/dischargeSummary/?patient=' + $scope.data.pk
   }).
   then(function(response) {
     console.log('dissssssssss', response.data);
@@ -43,9 +50,13 @@ $scope.fetchInvoices = function() {
     }else {
       console.log('newwwwwwwwwwwwwwww');
       $scope.refresh();
-      $scope.dischargeSummForm.patientName = $scope.data.patient
+      $scope.dischargeSummForm.patient = $scope.data
     }
     console.log(777777777777777777777,$scope.dischargeSummForm);
+    var d = new Date()
+    console.log(d.getFullYear(),parseInt($scope.dischargeSummForm.patient.patient.dateOfBirth.split('-')[0]));
+    $scope.age = d.getFullYear() - parseInt($scope.dischargeSummForm.patient.patient.dateOfBirth.split('-')[0])
+    console.log('ageeeeeeeeeee',$scope.age );
   })
 }
 
@@ -56,16 +67,8 @@ $scope.fetchInvoices();
   $scope.refresh = function () {
 
     $scope.dischargeSummForm = {
-      age:'',
-      sex:'',
-      telephoneNo  :'',
-      uhidNo  :'',
       ipNo  :'',
-      treatingConsultantName  :'',
-      treatingConsultantContact  :'',
-      treatingConsultantDept  :'',
-      dateOfAdmission  :new Date(),
-      dateOfDischarge  :new Date(),
+      treatingConsultant  :'',
       mlcNo  :'',
       firNo  :'',
       provisionalDiagnosis  :'',
@@ -76,13 +79,12 @@ $scope.fetchInvoices();
       historyOfAlchohol  :'',
       pastHistory  :'',
       familyHistory  :'',
+      summaryKeyInvestigation : '',
       courseInHospital  :'',
       patientCondition  :'',
       advice  :'',
       reviewOn  :'',
       complications  :'',
-      doctorName  :'',
-      regNo  :''
     }
   }
 
@@ -108,25 +110,33 @@ $scope.fetchInvoices();
 
     console.log('here...');
     console.log($scope.dischargeSummForm);
-    // if ($scope.dischargeSummForm.patientName.length==0) {
-    //   Flash.create('warning', 'Please fill patient name');
-    //   return
-    // }
+    if (typeof $scope.dischargeSummForm.treatingConsultant == 'string') {
+      Flash.create('warning', 'Please Fill Treating Consultants');
+      return
+    }
 
     var toSend = $scope.dischargeSummForm
-    toSend.patientName = $scope.dischargeSummForm.patientName.pk
+    toSend.patient = $scope.dischargeSummForm.patient.pk
+    toSend.treatingConsultant = $scope.dischargeSummForm.treatingConsultant.pk
+    console.log(toSend);
 
-
+    if ($scope.dischargeSummForm.pk) {
+      var method = 'PATCH'
+      var url = '/api/patients/dischargeSummary/'+$scope.dischargeSummForm.pk +'/'
+    }else {
+      var method = 'POST'
+      var url = '/api/patients/dischargeSummary/'
+    }
       $http({
-        method: 'POST',
-        url: '/api/patients/dischargeSummary/',
-        data: $scope.dischargeSummForm,
+        method: method,
+        url: url,
+        data: toSend,
 
       }).
       then(function(response) {
         Flash.create('success', 'Saved');
         console.log('dataaaa', response.data);
-        $scope.refresh();
+        $scope.dischargeSummForm = response.data
       })
 
 
@@ -643,6 +653,17 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
     if (typeof newValue == 'object') {
       $scope.addNewPatient = false;
       $scope.displayDetails = true;
+      console.log('obbjjj' );
+      $http.get('/api/patients/activePatient/?patient=' + newValue.pk + '&outPatient=false' ).
+      then(function(response) {
+        console.log(response.data);
+        if (response.data.length>0) {
+          Flash.create('danger', 'This patient is already added');
+          $scope.activePatientsForm.patient = '';
+          return ;
+        }
+      })
+
     }else{
       $scope.addNewPatient = true;
       $scope.displayDetails = false;

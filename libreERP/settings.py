@@ -120,6 +120,7 @@ INSTALLED_APPS = (
 	'assets',# assets
 	'hospitalManagement',# hospitalManagement
 	'patients',# patients
+	'configure',# hospital configure
 )
 
 
