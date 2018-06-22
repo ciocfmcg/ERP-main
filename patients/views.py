@@ -35,6 +35,13 @@ import json
 # Create your views here.
 
 
+class ActivePatientLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ActivePatientLiteSerializer
+    queryset = ActivePatient.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['patient']
+
 class PatientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = PatientSerializer
