@@ -6,8 +6,8 @@
           <uib-tab-heading>
             New <i class="fa fa-plus"></i>
           </uib-tab-heading>
-          <h1>Create new Active Patient</h1>
-          <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.activePatients.form.newActivePatient.html'">
+          <h1 class="text-center">Create new Product</h1>
+          <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.configure.services.form.html'">
           </div>
         </uib-tab>
         <uib-tab active="searchTabActive">
@@ -26,12 +26,12 @@
             {{tab.title}}
             <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
-          <div ng-if="tab.app == 'patientEditor'">
-            <div ng-include="'/static/ngTemplates/app.activePatients.form.newActivePatient.html'"></div>
+          <div ng-if="tab.app == 'productEditor'">
+            <div ng-include="'/static/ngTemplates/app.configure.services.form.html'"></div>
           </div>
-          <div ng-if="tab.app == 'patientDetails'">
-            <div ng-include="'/static/ngTemplates/app.activePatients.explore.html'"></div>
-          </div>
+          <!-- <div ng-if="tab.app == 'productDetails'">
+            <div ng-include="'/static/ngTemplates/app.services.details.html'"></div>
+          </div> -->
         </uib-tab>
       </uib-tabset>
     </div>

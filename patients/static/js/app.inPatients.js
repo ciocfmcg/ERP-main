@@ -346,6 +346,7 @@ app.controller("hospitalManagement.activePatients", function($scope, $rootScope,
   $scope.config = {
     views: views,
     url: '/api/patients/activePatient/',
+    getParams: [{key : 'outPatient' , value : false}],
     searchField: 'Name',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
@@ -415,53 +416,73 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
     })
   };
 
+  // console.log('kkkkkkkkkkk',$scope.data);
+  // console.log('kkkkkk',$scope.tab);
+
+  if ($scope.tab!=undefined) {
+    console.log('yesssss');
+    $scope.statusList = [{
+        name: "Checked In",
+        value: "checkedIn"
+      },
+      {
+        name: "Treatment ongoing",
+        value: "onGoingTreatment"
+      },
+      {
+        name: "Operation",
+        value: "operation"
+      },
+      {
+        name: "Observation",
+        value: "observation"
+      },
+      {
+        name: "Ready to discharged",
+        value: "readyToDischarged"
+      },
+      {
+        name: "Discharged",
+        value: "dishcharged"
+      },
+      {
+        name: "Settled",
+        value: "settled"
+      }
+    ];
+
+    // $scope.mode = 'edit'
+    console.log('jjjjjjjjjjjjj',$scope.tab.data);
+    $scope.activePatientsForm = $scope.tab.data;
+    // $scope.selectedStatus = $scope.activePatientsForm.status
+
+  }else {
+    $scope.activePatientsForm = {
+      patient: '',
+      inTime: '',
+      status: '',
+      comments: ''
+    };
+  }
+
+  $scope.$watch('activePatientsForm.status' , function(newValue , oldValue) {
+    console.log('newValue',newValue);
+  })
 
 
-  $scope.statusList = [{
-      name: "Checked In",
-      value: "checkedIn"
-    },
-    {
-      name: "Treatment ongoing",
-      value: "onGoingTreatment"
-    },
-    {
-      name: "Operation",
-      value: "operation"
-    },
-    {
-      name: "Observation",
-      value: "observation"
-    },
-    {
-      name: "Ready to discharged",
-      value: "readyToDischarged"
-    },
-    {
-      name: "Discharged",
-      value: "dishcharged"
-    },
-    {
-      name: "Settled",
-      value: "settled"
-    }
-  ];
 
 
-  $scope.activePatientsForm = {
-    patient: '',
-    inTime: '',
-    status: '',
-    comments: ''
-  };
+
+
+
 
 
   $scope.addNewActivePatient = function(name) {
     // $scope.addForm = true;
     $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.activePatients.addNewPatient.html',
+      templateUrl: '/static/ngTemplates/app.activePatients.addNewPatientModal.html',
       size: 'lg',
-      backdrop: true,
+      backdrop: false,
       resolve: {
         name: function() {
           return name;
@@ -472,15 +493,77 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       },
       controller: function($scope, name, form, $uibModalInstance) {
         $scope.name = name
-        $scope.newPatient = {
-          firstName: '',
-          lastName: '',
-          dateOfBirth: '',
-          gender: '',
-          uniqueId: ''
-        };
+        // $scope.newPatient = {
+        //   firstName: '',
+        //   lastName: '',
+        //   dateOfBirth: '',
+        //   gender: '',
+        //   uniqueId: ''
+        // };
+        //
+        // $scope.newPatient.firstName = $scope.name;
+        //
+        // $scope.generateUniqueId = function() {
+        //   $scope.newPatient.uniqueId = new Date().getTime()
+        //   console.log('generateeeee....');
+        // }
+        //
+        // $scope.createPatient = function() {
+        //
+        //   dataToSend = {
+        //     firstName: $scope.newPatient.firstName,
+        //     lastName: $scope.newPatient.lastName,
+        //     dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
+        //     gender: $scope.newPatient.gender,
+        //     uniqueId: $scope.newPatient.uniqueId
+        //   };
+        //
+        //   console.log('lklklkllklklklklkl', dataToSend);
+        //
+        //   $http({
+        //     method: 'POST',
+        //     url: '/api/patients/patient/',
+        //     data: dataToSend
+        //   }).
+        //   then(function(response) {
+        //     Flash.create('success', response.status + ' : ' + response.statusText);
+        //     $scope.newPatient = {
+        //       firstName: '',
+        //       lastName: '',
+        //       dateOfBirth: '',
+        //       gender: '',
+        //       uniqueId: ''
+        //     };
+        //     form.patient = response.data;
+        //     $uibModalInstance.dismiss(form.patient);
+        //   }, function(response) {
+        //     Flash.create('danger', response.status + ' : ' + response.statusText);
+        //   });
+        //
+        // }
 
-        $scope.newPatient.firstName = $scope.name;
+        $scope.formRefresh = function() {
+          $scope.newPatient = {
+            firstName: $scope.name ,
+            lastName: '',
+            gender:'',
+            dateOfBirth:'',
+            uniqueId: '',
+            email: '',
+            phoneNo: '',
+            emergencyContact1:'',
+            emergencyContact2:'',
+            street:'',
+            city:'',
+            pin:'',
+            state:'',
+            country:''
+          };
+        }
+        $scope.formRefresh();
+
+
+
 
         $scope.generateUniqueId = function() {
           $scope.newPatient.uniqueId = new Date().getTime()
@@ -489,35 +572,59 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
 
         $scope.createPatient = function() {
 
-          dataToSend = {
-            firstName: $scope.newPatient.firstName,
-            lastName: $scope.newPatient.lastName,
-            dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
-            gender: $scope.newPatient.gender,
-            uniqueId: $scope.newPatient.uniqueId
-          };
+          if ($scope.newPatient.firstName=='') {
+            Flash.create('warning', 'Please fill First Name');
+            return
+          }
 
-          console.log('lklklkllklklklklkl', dataToSend);
+          if ($scope.newPatient.uniqueId=='') {
+            Flash.create('warning', 'Please generate unique ID');
+            return
+          }
+          if ($scope.newPatient.phoneNo=='') {
+            Flash.create('warning', 'Please enter mobile no');
+            return
+          }
+          if ($scope.newPatient.emergencyContact1=='') {
+            Flash.create('warning', 'Please enter emergency Contact 1');
+            return
+          }
+          if ($scope.newPatient.dateOfBirth=='') {
+            Flash.create('warning', 'Please enter DOB');
+            return
+          }else {
+            $scope.newPatient.dateOfBirth = $scope.newPatient.dateOfBirth.toJSON().split('T')[0]
+          }
+          if ($scope.newPatient.emergencyContact2=='') {
+            $scope.newPatient.emergencyContact2 = 0
+          }
+          if ($scope.newPatient.pin=='') {
+            $scope.newPatient.pin = 0
+          }
+
+          // dataToSend = {
+          //   firstName: $scope.newPatient.firstName,
+          //   lastName: $scope.newPatient.lastName,
+          //   dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
+          //   gender: $scope.newPatient.gender,
+          //   uniqueId: $scope.newPatient.uniqueId
+          // };
+
+          console.log('lklklkllklklklklkl', $scope.newPatient);
 
           $http({
             method: 'POST',
             url: '/api/patients/patient/',
-            data: dataToSend
+            data: $scope.newPatient
           }).
           then(function(response) {
             Flash.create('success', response.status + ' : ' + response.statusText);
-            $scope.newPatient = {
-              firstName: '',
-              lastName: '',
-              dateOfBirth: '',
-              gender: '',
-              uniqueId: ''
-            };
-            form.patient = response.data;
-            $uibModalInstance.dismiss(form.patient);
+              $scope.formRefresh()
+              $uibModalInstance.dismiss(response.data);
           }, function(response) {
             Flash.create('danger', response.status + ' : ' + response.statusText);
           });
+
 
         }
 
@@ -526,17 +633,40 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       },
     }).result.then(function() {
 
-    }, function(c) {
-      $scope.activePatientsForm.patient = c;
+    }, function(res) {
+      console.log('ressssssssssssss', res);
+      $scope.activePatientsForm.patient = res
+      // $scope.activePatientsForm.patient = c;
     });
 
   }
 
+  $scope.displayDetails = false;
+
   $scope.$watch('activePatientsForm.patient' , function(newValue , oldValue) {
-    if (typeof newValue == 'object' || newValue.length == 0) {
+    if (newValue.length ==0) {
+      $scope.displayDetails = false;
       $scope.addNewPatient = false;
+      return
+    }
+    console.log(newValue.length);
+    if (typeof newValue == 'object') {
+      $scope.addNewPatient = false;
+      $scope.displayDetails = true;
+      console.log('obbjjj' );
+      $http.get('/api/patients/activePatient/?patient=' + newValue.pk + '&outPatient=false' ).
+      then(function(response) {
+        console.log(response.data);
+        if (response.data.length>0) {
+          Flash.create('danger', 'This patient is already added');
+          $scope.activePatientsForm.patient = '';
+          return ;
+        }
+      })
+
     }else{
       $scope.addNewPatient = true;
+      $scope.displayDetails = false;
     }
   })
 
@@ -552,6 +682,13 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       return
     }
 
+    // if ($scope.mode=='edit') {
+    //   console.log('ffffffffffff');
+    //   console.log('patchhhhh');
+    // }else {
+    //   console.log('postttttt');
+    // }
+
 
 
     dataToSend = {
@@ -559,15 +696,21 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       inTime: $scope.activePatientsForm.inTime,
       // status: $scope.selectedStatus
     };
+
     if ($scope.activePatientsForm.pk!=undefined) {
-      dataToSend.status = $scope.selectedStatus
+      dataToSend.status = $scope.activePatientsForm.status
+      var m = 'PATCH'
+      var url = '/api/patients/activePatient/'+ $scope.activePatientsForm.pk +'/'
+    }else {
+      var m = 'POST'
+      var url = '/api/patients/activePatient/'
     }
 
     console.log(dataToSend);
 
     $http({
-      method: 'POST',
-      url: '/api/patients/activePatient/',
+      method: m,
+      url: url,
       data: dataToSend
     }).
     then(function(response) {

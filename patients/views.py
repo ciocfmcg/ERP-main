@@ -41,7 +41,7 @@ class ActivePatientLiteViewSet(viewsets.ModelViewSet):
     serializer_class = ActivePatientLiteSerializer
     queryset = ActivePatient.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['patient']
+    filter_fields = ['patient','outPatient']
 
 class PatientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -56,6 +56,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
 
 class DishchargeSummaryViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -79,7 +80,7 @@ class ActivePatientViewSet(viewsets.ModelViewSet):
     serializer_class = ActivePatientSerializer
     queryset = ActivePatient.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['patient']
+    filter_fields = ['patient','outPatient']
 
 class PageNumCanvas(canvas.Canvas):
     #----------------------------------------------------------------------
@@ -126,7 +127,15 @@ def invoice(response,inv):
     ad = str(inv.activePatient.inTime).split(' ')[0].split('-')
     dd = str(inv.activePatient.dateOfDischarge).split(' ')[0].split('-')
     print dd
-    (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,ad[2]+'-'+ad[1]+'-'+ad[0],dd[2]+'-'+dd[1]+'-'+dd[0],inv.grandTotal)
+    if inv.activePatient.outPatient:
+        a = ''
+        d = ''
+        sad = ['','']
+    else:
+        a = ad[2]+'-'+ad[1]+'-'+ad[0]
+        d = dd[2]+'-'+dd[1]+'-'+dd[0]
+        sad = ['Admitted on : {0}'.format(a),'Discharged on : {0}'.format(d)]
+    (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,a,d,inv.grandTotal)
     data = json.loads(inv.products)
     details = []
     for i in data:
@@ -167,7 +176,7 @@ def invoice(response,inv):
 
     elements.append(Spacer(1, 15))
 
-    data2=[['Patient Name : {0}'.format(name.upper()),'UHID Id : {0}'.format(refid)],['Admitted on : {0}'.format(admitDate),'Discharged on : {0}'.format(dischargeDate)]]
+    data2=[['Patient Name : {0}'.format(name.upper()),'UHID Id : {0}'.format(refid)],sad]
 
     rheights=2*[0.2*inch]
     cwidths=2*[2.8*inch]
@@ -238,10 +247,10 @@ def dischargeSummary(response,dis):
 
     elements.append(Spacer(1, 15))
     print dis.patient.patient
-    ad = str(dis.patient.inTime).split('.')[0]
+    ad = str(dis.patient.inTime).split('+')[0]
     dd = str(dis.patient.dateOfDischarge).split('.')[0]
     d = str(now).split('.')[0]
-    print d
+    print d, ad , dd
     page= int(d.split('-')[0])-int(str(dis.patient.patient.dateOfBirth).split('-')[0])
     print 'ageeeeeeeeeeee',page
     if dis.treatingConsultant.designation.department:
