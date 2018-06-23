@@ -19,8 +19,8 @@
         <div class="row container-fluid" style="padding-top:10px;height:70px;border-bottom: 1px solid #dedede">
           <div class="container-fluid">
             <span ng-if="data.patient.phoneNo != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{data.patient.phoneNo}}</span> <br>
-            <span ng-if="data.patient.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{data.patient.email}}</span>
-            <span ng-if="data.patient.phoneNo == null && data.patient.email == null" class="text-muted">No contact details</span>
+            <span><strong>UHID :</strong>{{data.patient.uniqueId}}</span>
+
           </div>
         </div>
       </div>

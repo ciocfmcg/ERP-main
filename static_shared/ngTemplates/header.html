@@ -15,7 +15,7 @@
       <a class="navbar-brand" href="/" style="margin-left:50px;">
         <img ng-src="{{brandLogo}}" height="40" style="margin-top:-10px;max-width:100px;" />
       </a>
-      <div class="navbar-brand" style="margin-right:30px;"><i class="fa fa-angle-right"></i> ERP  </div>
+      <div class="navbar-brand" style="margin-right:30px;"><i class="fa fa-angle-right"></i> HMS  </div>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navBar" style="height:5vh;">
@@ -42,7 +42,7 @@
   			  </ul>
   			</li>
   		</ul>
-      <ul class = "nav navbar-nav navbar-right" style="height:5vh;">
+      <ul class = "nav navbar-nav navbar-right" style="height:5vh;" ng-if="false">
         <li class="dropdown" style="height:100%;">
           <a class="dropdown-toggle" data-toggle="dropdown" style="width:55px;padding-top:1.5vh;" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-envelope-o fa-lg"></i>
@@ -78,7 +78,7 @@
           </ul>
         </li>
       </ul> <!-- /. notification icons group -->
-      <div style="position:relative;padding-top:0.5vh;">
+      <div style="position:relative;padding-top:0.5vh;" ng-if="false">
         <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;">
           <i style="margin:10px;" ng-click="terminal.show = !terminal.show;" class="fa fa-terminal noselect"></i>
           <input ng-if="terminal.show" focus-me="terminal.show" type="text" class="form-control animated fadeIn" placeholder="Enter command" ng-enter="parseCommand()" ng-blur="closeTerminal()" ng-model = "terminal.command" style="width:500px;" uib-typeahead="user as getName(user) for user in userSearch($viewValue)">

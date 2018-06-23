@@ -3,10 +3,10 @@
     <div class="row">
       <div class="container-fluid card" style="padding-bottom:0px;">
         <div class="row" style="border-bottom: 1px solid #dedede;">
-          <div class="col-md-4" style="padding:0px;">
+          <!-- <div class="col-md-4" style="padding:0px;">
             <img style="width: 80px;height:80px;" class="img" ng-if="data.patient.displayPicture != null" ng-src="{{data.patient.displayPicture}}">
             <img style="width: 80px;height:80px;" class="img" ng-if="data.patient.displayPicture == null" src="/static/images/userIcon.png">
-          </div>
+          </div> -->
           <div class="col-md-8" style="position:relative;display:block;">
             <div class="row" style="padding-left:10px;">
               <h3>{{data.patient.firstName + ' ' + data.patient.lastName}}</h3>
@@ -19,7 +19,8 @@
         <div class="row container-fluid" style="padding-top:10px;height:70px;border-bottom: 1px solid #dedede">
           <div class="container-fluid">
             <span ng-if="data.patient.phoneNo != null"><strong><i style="width:30px;" class="fa fa-mobile"></i> </strong>{{data.patient.phoneNo}}</span> <br>
-            <span ng-if="data.patient.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{data.patient.email}}</span>
+            <!-- <span ng-if="data.patient.email != null"><strong><i style="width:30px;" class="fa fa-envelope"></i> </strong>{{data.patient.email}}</span> -->
+            <span><strong>UHID :</strong>{{data.patient.uniqueId}}</span>
             <span ng-if="data.patient.phoneNo == null && data.patient.email == null" class="text-muted">No contact details</span>
           </div>
         </div>

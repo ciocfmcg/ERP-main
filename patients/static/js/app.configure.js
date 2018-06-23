@@ -29,10 +29,14 @@ app.config(function($stateProvider){
         },
         "@hospitalManagement.configure": {
           templateUrl: '/static/ngTemplates/app.configure.dash.html',
-          // controller : 'projectManagement.LMS.default',
+          controller : 'hospitalManagement.configure',
         }
     }
   })
 });
- app.controller("workforceManagement.configure", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+ app.controller("hospitalManagement.configure", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+
+   $state.go('hospitalManagement.configure.servicesOffered')
+
+
  });
