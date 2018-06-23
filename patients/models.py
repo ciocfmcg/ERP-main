@@ -91,3 +91,5 @@ class Invoice(models.Model):
     grandTotal = models.PositiveIntegerField(null=True, default = 0)
     quantity = models.CharField(max_length = 100 , default=1)
     products = models.CharField(max_length=10000,null=True)
+    billed = models.BooleanField(default = False)
+    discount = models.PositiveIntegerField(default=0)

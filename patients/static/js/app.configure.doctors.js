@@ -77,7 +77,7 @@ app.controller("hospitalManagement.configure.doctors", function($scope, $state, 
   }
 });
 
-app.controller("hospitalManagement.configure.services.form", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("hospitalManagement.configure.doctors.form", function($scope, $rootScope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   console.log('gggggggggggg',$scope.tab);
 

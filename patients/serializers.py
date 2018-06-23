@@ -38,7 +38,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     # activePatient = ActivePatientSerializer(many=False , read_only=True)
     class Meta:
         model = Invoice
-        fields = ('pk' , 'activePatient','invoiceName','grandTotal','products','quantity')
+        fields = ('pk' , 'activePatient','invoiceName','grandTotal','products','quantity' , 'billed' , 'discount')
     def create(self , validated_data):
         i = Invoice(**validated_data)
         i.activePatient = ActivePatient.objects.get(pk=int(self.context['request'].data['activePatient']))
@@ -46,7 +46,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         return i
     def update(self ,instance, validated_data):
         print validated_data , self.context['request'].data
-        for key in ['invoiceName', 'grandTotal' ,'quantity','products']:
+        for key in ['invoiceName', 'grandTotal' ,'quantity','products' , 'billed' , 'discount']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

@@ -90,7 +90,8 @@ app.controller("hospitalManagement.configure.services.form", function($scope, $r
     }
   }
 
-  $scope.saveProduct = function () {
+  $scope.save = function () {
+    console.log("will save");
     if ($scope.productForm.pk) {
       $http({
         method: 'PATCH',

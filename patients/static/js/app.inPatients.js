@@ -44,21 +44,15 @@ $scope.fetchInvoices = function() {
     url: '/api/patients/dischargeSummary/?patient=' + $scope.data.pk
   }).
   then(function(response) {
-    console.log('dissssssssss', response.data);
     $scope.dis = response.data
     if ($scope.dis.length>0) {
-      console.log('thteeeeeeeeeee');
+      // console.log('thteeeeeeeeeee');
       $scope.dischargeSummForm=$scope.dis[0]
     }else {
-      console.log('newwwwwwwwwwwwwwww');
+      // console.log('newwwwwwwwwwwwwwww');
       $scope.refresh();
       $scope.dischargeSummForm.patient = $scope.data
     }
-    console.log(777777777777777777777,$scope.dischargeSummForm);
-    var d = new Date()
-    console.log(d.getFullYear(),parseInt($scope.dischargeSummForm.patient.patient.dateOfBirth.split('-')[0]));
-    $scope.age = d.getFullYear() - parseInt($scope.dischargeSummForm.patient.patient.dateOfBirth.split('-')[0])
-    console.log('ageeeeeeeeeee',$scope.age );
   })
 }
 
@@ -100,7 +94,8 @@ $scope.fetchInvoices();
     then(function(response) {
       Flash.create('success', 'Saved');
       console.log('dataaaa', response.data);
-      $scope.data = response.data
+      // $scope.data = response.data;
+      $scope.dischargeSummForm.patient.dateOfDischarge = new Date();
     })
   }
 
@@ -213,6 +208,61 @@ $scope.fetchInvoices();
     }, function() {
 
     });
+  }
+
+  $scope.updatePayment = function(idx) {
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.activePatients.makePayment.html',
+      size: 'sm',
+      backdrop: true,
+      resolve: {
+        invoiceData: function() {
+          console.log($scope.invoices);
+          console.log(idx);
+          return $scope.invoices[idx];
+        },
+        indx: function() {
+          return idx;
+        }
+      },
+      controller: function($scope,indx, invoiceData, $uibModalInstance) {
+        $scope.indx = indx;
+        $scope.invoice = invoiceData;
+
+        $scope.form = {
+          discount : 0
+        }
+
+        $scope.saveInvoiceForm = function() {
+
+          var toSend = {
+            discount : $scope.form.discount,
+            billed : true,
+          }
+
+          $http({
+            method: 'PATCH',
+            url: '/api/patients/invoice/' + $scope.invoice.pk + '/',
+            data: toSend
+          }).
+          then(function(response) {
+            // $scope.form.pk = response.data.pk;
+            Flash.create('success', 'Saved');
+            $uibModalInstance.dismiss();
+          })
+
+
+        }
+      }
+    }).result.then(function() {
+
+    }, function() {
+      $scope.fetchInvoices();
+    });
+
+
+
   }
 
   $scope.openInvoice =function(pk) {

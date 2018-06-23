@@ -126,6 +126,17 @@ class PageNumCanvas(canvas.Canvas):
         p.wrapOn(self , 50*mm , 10*mm)
         p.drawOn(self , 100*mm , 10*mm)
 
+# def myFirstPage(canvas, doc):
+#     canvas.saveState()
+#     # canvas.rotate(90)
+#     canvas.restoreState()
+#
+#
+# def myLaterPages(canvas, doc):
+#     canvas.saveState()
+#     # canvas.rotate(90)
+#     canvas.restoreState()
+
 def invoice(response,inv):
     print '999999999999999999999999999999999999999'
     now = datetime.datetime.now()
@@ -183,6 +194,7 @@ def invoice(response,inv):
     # elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> RECEIPT / BILL </b></para>",styles['Normal']))
 
     elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=13 alignment='left' leftIndent=15><b> Invoice No. : {0}</b></para>".format(inv.pk),styles['Normal']))
 
     elements.append(Spacer(1, 20))
 
@@ -192,7 +204,7 @@ def invoice(response,inv):
     cwidths=2*[2.8*inch]
     cwidths[1]=3.5*inch
     t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
-    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'times-roman'), ]))
+    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'Courier'), ]))
     elements.append(t2)
 
     elements.append(Spacer(1, 50))
@@ -212,7 +224,7 @@ def invoice(response,inv):
             data3.append([i,details[i-1]['name'].upper(),details[i-1]['qty'],details[i-1]['rate'],details[i-1]['qty']*details[i-1]['rate']])
 
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
-    t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'times-roman'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
+    t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'Courier'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
     elements.append(t3)
     elements.append(Spacer(1, 7))
     # elements.append(HRFlowable(width="20%", thickness=1, color=black ,hAlign='RIGHT',spaceBefore=12))

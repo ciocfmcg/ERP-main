@@ -1,7 +1,7 @@
 <div class="container-fluid" ng-controller="hospitalManagement.activePatient.explore" style="margin-top:20px;">
   <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-6">
@@ -34,9 +34,9 @@
               <label>Discharge Time : </label> {{data.dateOfDischarge | date: 'dd-MM-yyyy:hh:mm a'}}
             </div>
           </div>
-          <div class="col-md-6" ng-if="data.status!='dishcharged'">
+          <div class="col-md-6">
             <button type="button" class="btn btn-primary pull-right" ng-click="chageStatus()">
-              Dishcharge
+              {{ data.status!='dishcharged' ? 'Dishcharge': 'Update Discharge date'}}
             </button>
           </div>
         </div>
@@ -52,7 +52,7 @@
         <div class="row" style="margin-top:20px">
 
           <div ng-if="invoices.length!=0" class="col-md-6" ng-repeat="i in invoices" ng-click="invoiceInfo($index)">
-            <div class="container-fluid bg-green card" style="border-radius:5px;height:165px; margin-top:25px;">
+            <div class="container-fluid card" style="border-radius:5px;margin-top:25px;">
 
               <div class="row text-center">
                 <h2>{{i.invoiceName}}</h2>
@@ -60,13 +60,19 @@
               <div class="row text-center">
                 <span style="font-size:20px;"> ₹ {{i.grandTotal}} </span>
               </div>
-              <div class="row" style="padding-top:40px;" >
+              <div class="row text-center" ng-if="i.billed">
+                <span style="font-size:16px;"> Bill Generated <br> (Discount : {{i.discount}}  <i class="fa fa-inr"></i> ) </span>
+              </div>
+              <div class="row" style="padding-top:40px;margin-bottom:20px;" >
                 <!-- <div class="col-md-6">
                   <span style="cursor:pointer;" >
                       <i class="fa fa-info fa-lg" ></i>
                   </span>
                 </div> -->
-                <div class="col-md-6 pull-right" style="padding-right:0px;">
+                <div class="col-md-6">
+                  <button ng-click="updatePayment($index);$event.stopPropagation();" ng-if="i.grandTotal>0" class="btn btn-info btn-block">Generate </button>
+                </div>
+                <div class="col-md-6 pull-right">
                   <button ng-click="openInvoice(i.pk);$event.stopPropagation();" ng-if="i.grandTotal>0" class="btn btn-default btn-block">Print <i class="fa fa-download"></i> </button>
                 </div>
               </div>
@@ -86,7 +92,7 @@
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
       <div class="container-fluid">
 
 
@@ -100,7 +106,7 @@
         <button type="button" class="btn btn-default" >
           Check Out
         </button> -->
-        <div class="row" ng-if="dischargeSummForm.pk&&data.status=='dishcharged'">
+        <div class="row" ng-if="dischargeSummForm.pk">
           <a href="/api/patients/downloaddischargeSummary/?pPk={{dischargeSummForm.pk}}" target="_blank"target="_blank">
            <button  type="button" class="btn btn-primary pull-right" >
              Discharge Summary <i class="fa fa-download"></i>
@@ -169,7 +175,7 @@
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>IP No.</label>
-            <input type="text" class="form-control" ng-model="dischargeSummForm.ipNo" placeholder="">
+            <span> {{dischargeSummForm.patient.pk}} </span>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
@@ -192,7 +198,7 @@
         <div class="row text-center" ng-if="dischargeSummForm.treatingConsultant.pk">
           <strong>Doctor : </strong> {{dischargeSummForm.treatingConsultant.name}} <br>
           <strong>Department : </strong> {{dischargeSummForm.treatingConsultant.department}} <br>
-          <strong>Education : </strong> {{dischargeSummForm.treatingConsultant.education}} <br>
+          <strong>Qualification : </strong> {{dischargeSummForm.treatingConsultant.education}} <br>
 
           <hr>
         </div>
