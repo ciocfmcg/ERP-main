@@ -12,24 +12,11 @@
           <div ng-if="addNewPatient" class="input-group-addon" style="cursor:pointer;" ng-click="addNewActivePatient(activePatientsForm.patient)">Add</div>
         </div>
       </div>
-      <div class="form-group">
-        <label>In Time</label>
-        <div class="input-group">
-          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="activePatientsForm.inTime" is-open="inTime.opened" ng-init="today" />
-          <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="inTime.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-        </span>
-        </div>
-      </div>
       <div class="form-group" ng-if="activePatientsForm.pk">
         <label>Status</label>
         <select class="form-control" ng-model="activePatientsForm.status">
           <option ng-repeat="s in statusList" value="{{s.value}}">{{s.name}}</option>
         </select>
-      </div>
-      <div class="form-group">
-        <label>Comments</label> <br>
-        <textarea class="form-control" rows="3" ng-model="activePatientsForm.comments" placeholder="comments..."></textarea>
       </div>
 
       <div class="form-group">

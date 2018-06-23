@@ -1,5 +1,5 @@
 <div class="col-md-3 animated fadeIn" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
-  <div class="container-fluid">
+  <div class="container-fluid" ng-click="rowActionClicked('viewDetails')">
     <div class="row">
       <div class="container-fluid card" style="padding-bottom:0px;">
         <div class="row" style="border-bottom: 1px solid #dedede;">
@@ -27,15 +27,15 @@
     </div>
     <div class="row " style="background:#1e5071;color:white;">
       <div class="col-md-6" style="padding:10px;  padding-left:40px;">
-        <span style="cursor:pointer;" ng-click="rowActionClicked('editDetails')">
+        <span style="cursor:pointer;" ng-click="rowActionClicked('editDetails');$event.stopPropagation();">
           <i class="fa fa-pencil fa-lg" ></i>
         </span>
       </div>
-      <div class="col-md-6" style="padding:10px; padding-right:40px;">
-        <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('viewDetails')">
+      <!-- <div class="col-md-6" style="padding:10px; padding-right:40px;">
+        <span class="pull-right" style="cursor:pointer;" >
              <i class="fa fa-info fa-lg" ></i>
         </span>
-      </div>
+      </div> -->
     </div>
   </div>
 

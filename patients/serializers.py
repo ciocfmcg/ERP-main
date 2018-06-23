@@ -8,19 +8,23 @@ from .models import *
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ('pk' , 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' )
+        fields = ('pk' , 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' , 'age' )
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('pk' , 'name','rate')
 
+class DoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ('pk' , 'name','department', 'education')
 
 class ActivePatientSerializer(serializers.ModelSerializer):
     patient = PatientSerializer(many=False , read_only=True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','modeOfPayment','created','dateOfDischarge')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','created','dateOfDischarge', 'mlc' , 'cash' , 'insurance')
     def create(self , validated_data):
         print '**********************************'
         print validated_data , self.context['request'].data
@@ -52,32 +56,28 @@ class InvoiceSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class treatingConsultantSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('pk','username' , 'email' , 'first_name' , 'last_name' , )
-
 class DishchargeSummarySerializer(serializers.ModelSerializer):
     patient = ActivePatientSerializer(many=False , read_only=True)
-    treatingConsultant = treatingConsultantSerializer(many=False , read_only=True)
+    treatingConsultant = DoctorSerializer(many=False , read_only=True)
     class Meta:
         model = DischargeSummary
         fields = ('pk' , 'patient','ipNo','treatingConsultant','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications')
     def create(self , validated_data):
         i = DischargeSummary(**validated_data)
         i.patient = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
-        i.treatingConsultant = User.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
+        i.treatingConsultant = Doctor.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
         i.save()
         return i
     def update(self ,instance, validated_data):
-        print validated_data , self.context['request'].data
+        print "will update"
+
         for key in ['ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
         if 'treatingConsultant' in self.context['request'].data:
-            instance.treatingConsultant = User.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
+            instance.treatingConsultant = Doctor.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
         instance.save()
         return instance
 

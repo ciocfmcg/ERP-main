@@ -5,7 +5,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-
+class Doctor(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    name = models.CharField(max_length = 100 , null = False)
+    department = models.CharField(max_length = 100 , null = False)
+    education = models.CharField(max_length = 100 , null = False)
 
 class Patient(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -13,17 +17,18 @@ class Patient(models.Model):
     firstName = models.CharField(max_length = 100 , null = False)
     lastName = models.CharField(max_length = 100 , null = False, blank = True)
     gender = models.CharField(max_length = 100 , null = False, blank = True)
-    dateOfBirth = models.DateField( null= False )
+    dateOfBirth = models.DateField( null= True)
+    age = models.CharField(max_length = 150, null = True )
     uniqueId = models.CharField(max_length = 100 , null = False, blank = True)
     email = models.CharField(max_length = 100 , null = True, blank = True)
-    phoneNo = models.PositiveIntegerField(null=False)
-    emergencyContact1 = models.PositiveIntegerField(null=False)
-    emergencyContact2 = models.PositiveIntegerField(null=True, blank = True)
+    phoneNo = models.CharField(null=False , max_length = 100)
+    emergencyContact1 = models.CharField(null=True , max_length = 100)
+    emergencyContact2 = models.CharField(null=True , max_length = 100)
     street = models.TextField(max_length = 100 , null= True, blank = True )
     city = models.CharField(max_length = 15 , null= True, blank = True )
     pin = models.IntegerField(null= True , blank = True)
     state = models.CharField(max_length = 20 , null= True, blank = True )
-    country = models.CharField(max_length = 20 , null= True, blank = True )
+    country = models.CharField(max_length = 20 , null= True, blank = True , default = 'India')
 
 class PatientComments(models.Model):
     heading = models.CharField(max_length = 100 , null = False)
@@ -47,14 +52,16 @@ class ActivePatient(models.Model):
     status = models.CharField(choices = STATUS_CHOICES , max_length = 100 , null = False ,default='checkedIn')
     comments = models.ManyToManyField(PatientComments , related_name='inPatientComments' , blank = True)
     outPatient = models.BooleanField(default = False)
-    modeOfPayment = models.CharField(max_length = 100 , null = True)
     created = models.DateTimeField(auto_now_add = True , null= True)
     dateOfDischarge = models.DateTimeField( null= True  , blank = True)
+    mlc = models.BooleanField(default = False)
+    cash = models.BooleanField(default = False)
+    insurance = models.BooleanField(default = False)
 
 class DischargeSummary(models.Model):
     patient = models.ForeignKey(ActivePatient , related_name='dischargeSummary', null= True)
     ipNo = models.CharField(max_length = 100 , null = True  , blank = True)
-    treatingConsultant = models.ForeignKey(User , null= True , related_name='hmsPatients')
+    treatingConsultant = models.ForeignKey(Doctor , null= True , related_name='patients')
     mlcNo = models.CharField(max_length = 100 , null = True  , blank = True)
     firNo = models.CharField(max_length = 100 , null = True  , blank = True)
     provisionalDiagnosis = models.CharField(max_length = 2000 , null = True , blank = True)

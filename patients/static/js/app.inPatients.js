@@ -21,8 +21,10 @@ console.log('exploreee', $scope.data);
 
 $scope.invoices = [];
 
-$scope.userSearch = function(query) {
-  return $http.get('/api/HR/userSearch/?username__contains=' + query).
+// /api/patients/downloadInvoice/?invoicePk={{i.pk}}
+
+$scope.doctorSearch = function(query) {
+  return $http.get('/api/patients/doctor/?name__contains=' + query).
   then(function(response) {
     return response.data;
   })
@@ -213,6 +215,9 @@ $scope.fetchInvoices();
     });
   }
 
+  $scope.openInvoice =function(pk) {
+    window.open('/api/patients/downloadInvoice/?invoicePk=' + pk , '_blank');
+  }
 
   $scope.invoiceInfo = function(idx) {
     $uibModal.open({
@@ -347,7 +352,7 @@ app.controller("hospitalManagement.activePatients", function($scope, $rootScope,
     views: views,
     url: '/api/patients/activePatient/',
     getParams: [{key : 'outPatient' , value : false}],
-    searchField: 'Name',
+    searchField: 'patient__firstName',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
   }
@@ -459,23 +464,18 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
   }else {
     $scope.activePatientsForm = {
       patient: '',
-      inTime: '',
+      inTime: new Date(),
       status: '',
-      comments: ''
+      comments: '',
+      mlc : false,
+      cash : false,
+      insurance : false,
     };
   }
 
   $scope.$watch('activePatientsForm.status' , function(newValue , oldValue) {
     console.log('newValue',newValue);
   })
-
-
-
-
-
-
-
-
 
   $scope.addNewActivePatient = function(name) {
     // $scope.addForm = true;
@@ -545,19 +545,20 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
         $scope.formRefresh = function() {
           $scope.newPatient = {
             firstName: $scope.name ,
-            lastName: '',
+            // lastName: '',
             gender:'',
-            dateOfBirth:'',
+            // dateOfBirth:'',
             uniqueId: '',
-            email: '',
+            age : '',
+            // email: '',
             phoneNo: '',
-            emergencyContact1:'',
-            emergencyContact2:'',
+            // emergencyContact1:'',
+            // emergencyContact2:'',
             street:'',
-            city:'',
+            city:'Bangalore',
             pin:'',
-            state:'',
-            country:''
+            state:'Karnataka',
+            country:'India'
           };
         }
         $scope.formRefresh();
@@ -584,22 +585,6 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
           if ($scope.newPatient.phoneNo=='') {
             Flash.create('warning', 'Please enter mobile no');
             return
-          }
-          if ($scope.newPatient.emergencyContact1=='') {
-            Flash.create('warning', 'Please enter emergency Contact 1');
-            return
-          }
-          if ($scope.newPatient.dateOfBirth=='') {
-            Flash.create('warning', 'Please enter DOB');
-            return
-          }else {
-            $scope.newPatient.dateOfBirth = $scope.newPatient.dateOfBirth.toJSON().split('T')[0]
-          }
-          if ($scope.newPatient.emergencyContact2=='') {
-            $scope.newPatient.emergencyContact2 = 0
-          }
-          if ($scope.newPatient.pin=='') {
-            $scope.newPatient.pin = 0
           }
 
           // dataToSend = {
@@ -694,11 +679,12 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
     // }
 
 
-
     dataToSend = {
       patient: $scope.activePatientsForm.patient.pk,
       inTime: $scope.activePatientsForm.inTime,
-      // status: $scope.selectedStatus
+      mlc: $scope.activePatientsForm.mlc,
+      cash: $scope.activePatientsForm.cash,
+      insurance: $scope.activePatientsForm.insurance,
     };
 
     if ($scope.activePatientsForm.pk!=undefined) {
@@ -721,7 +707,7 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       Flash.create('success', response.status + ' : ' + response.statusText);
       $scope.activePatientsForm = {
         patient: '',
-        inTime: '',
+        inTime: new Date(),
         status: '',
         comments: ''
       };

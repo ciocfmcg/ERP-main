@@ -10,6 +10,7 @@ router.register(r'activePatient' , ActivePatientViewSet , base_name = 'activePat
 router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
 router.register(r'dischargeSummary' , DishchargeSummaryViewSet , base_name = 'dischargeSummary')
 router.register(r'activePatientLite' , ActivePatientLiteViewSet , base_name = 'activePatientLite')
+router.register(r'doctor' , DoctorViewSet , base_name = 'doctor')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

@@ -234,27 +234,27 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
   $scope.formRefresh = function() {
     $scope.newPatient = {
       firstName: '',
-      lastName: '',
+      // lastName: '',
       gender:'',
-      dateOfBirth:'',
+      // dateOfBirth:'',
       uniqueId: '',
-      email: '',
+      // email: '',
       phoneNo: '',
-      emergencyContact1:'',
-      emergencyContact2:'',
+      // emergencyContact1:'',
+      // emergencyContact2:'',
+      age : '',
       street:'',
-      city:'',
+      city:'Bangalore',
       pin:'',
-      state:'',
-      country:''
+      state:'Karnataka',
+      country:'India'
     };
   }
   $scope.formRefresh();
 
 
   $scope.generateUniqueId = function() {
-    $scope.newPatient.uniqueId = new Date().getTime()
-    console.log('generateeeee....');
+    $scope.newPatient.uniqueId = parseInt( new Date().getTime()/1000)
   }
 
   $scope.createPatient = function() {
@@ -272,19 +272,7 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
       Flash.create('warning', 'Please enter mobile no');
       return
     }
-    if ($scope.newPatient.emergencyContact1=='') {
-      Flash.create('warning', 'Please enter emergency Contact 1');
-      return
-    }
-    if ($scope.newPatient.dateOfBirth=='') {
-      Flash.create('warning', 'Please enter DOB');
-      return
-    }else {
-      $scope.newPatient.dateOfBirth = $scope.newPatient.dateOfBirth.toJSON().split('T')[0]
-    }
-    if ($scope.newPatient.emergencyContact2=='') {
-      $scope.newPatient.emergencyContact2 = 0
-    }
+
     if ($scope.newPatient.pin=='') {
       $scope.newPatient.pin = 0
     }

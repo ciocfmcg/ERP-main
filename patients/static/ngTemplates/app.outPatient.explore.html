@@ -30,7 +30,7 @@
       </div>
       <div class="row" style="margin-top:20px">
 
-        <div ng-if="invoices.length!=0" class="col-md-3" ng-repeat="i in invoices">
+        <div ng-if="invoices.length!=0" class="col-md-3" ng-repeat="i in invoices" ng-click="invoiceInfo($index)">
           <div class="container-fluid bg-green card" style="border-radius:5px;height:165px; margin-top:25px;">
 
             <div class="row text-center">
@@ -40,15 +40,8 @@
               <span style="font-size:20px;"> ₹ {{i.grandTotal}} </span>
             </div>
             <div class="row" style="padding-top:40px;">
-              <div class="col-md-6">
-                <span style="cursor:pointer;" ng-click="invoiceInfo($index)">
-                      <i class="fa fa-info fa-lg" ></i>
-                  </span>
-              </div>
-              <div class="col-md-6" style="padding-right:0px;">
-                <a href="/api/patients/downloadInvoice/?invoicePk={{i.pk}}" target="_blank" ng-if="i.grandTotal>0"><button type="button" class="btn btn-default pull-right" >
-                    Download <i class="fa fa-download"></i>
-                  </button> </a>
+              <div class="col-md-6 pull-right" style="padding-right:0px;">
+                <button ng-click="openInvoice(i.pk);$event.stopPropagation();" class="btn btn-default btn-block">Print <i class="fa fa-download"></i> </button>
               </div>
             </div>
           </div>

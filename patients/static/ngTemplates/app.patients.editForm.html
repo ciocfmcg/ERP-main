@@ -28,58 +28,28 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label>Last Name</label>
-            <input class="form-control" type="text" ng-model="editForm.lastName">
+            <label>Mobile</label>
+            <input type="text" class="form-control" ng-model="editForm.phoneNo" placeholder="">
           </div>
         </div>
       </div>
 
       <div class="row">
+
         <div class="col-md-6">
           <div class="form-group">
-            <label>Mobile</label>
-            <input type="text" class="form-control" ng-model="editForm.phoneNo" placeholder="">
+            <label>Age</label>
+            <input class="form-control" type="text" ng-model="editForm.age">
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Email</label>
-            <input class="form-control" type="email" ng-model="editForm.email">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Emergency Contact 1</label>
-            <input type="text" class="form-control" ng-model="editForm.emergencyContact1" placeholder="">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Emergency Contact 2</label>
-            <input type="text" class="form-control" ng-model="editForm.emergencyContact2" placeholder="">
-          </div>
-        </div>
-      </div>
-      <div class="row">
+
         <div class="col-md-6">
           <div class="form-group">
             <label>Unique Id</label>
             <input type="text" class="form-control" ng-model="editForm.uniqueId" placeholder="" disabled>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Date Of Birth</label>
-            <div class="input-group">
-              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="editForm.dateOfBirth" is-open="dob.opened" ng-init="today" />
-              <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="dob.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-            </div>
-          </div>
-        </div>
+      </div>
       </div>
       <hr>
 

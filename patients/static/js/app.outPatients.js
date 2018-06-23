@@ -206,6 +206,10 @@ app.controller('hospitalManagement.outPatient.explore', function($scope, $http, 
     });
   }
 
+  $scope.openInvoice =function(pk) {
+    window.open('/api/patients/downloadInvoice/?invoicePk=' + pk , '_blank');
+  }
+
 
   $scope.invoiceInfo = function(idx) {
     $uibModal.open({
@@ -344,7 +348,7 @@ app.controller("hospitalManagement.outPatient", function($scope, $rootScope, $st
       key: 'outPatient',
       value: true
     }],
-    searchField: 'Name',
+    searchField: 'patient__firstName',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
   }
@@ -456,7 +460,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
   } else {
     $scope.activePatientsForm = {
       patient: '',
-      inTime: '',
+      inTime: new Date(),
       status: '',
       comments: ''
     };
@@ -492,17 +496,18 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
             firstName: $scope.name,
             lastName: '',
             gender: '',
-            dateOfBirth: '',
+            // dateOfBirth: '',
+            age : '',
             uniqueId: '',
-            email: '',
+            // email: '',
             phoneNo: '',
-            emergencyContact1: '',
-            emergencyContact2: '',
+            // emergencyContact1: '',
+            // emergencyContact2: '',
             street: '',
-            city: '',
+            city: 'Bangalore',
             pin: '',
-            state: '',
-            country: ''
+            state: 'Karnataka',
+            country: 'India'
           };
         }
         $scope.formRefresh();
@@ -511,7 +516,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
 
 
         $scope.generateUniqueId = function() {
-          $scope.newPatient.uniqueId = new Date().getTime()
+          $scope.newPatient.uniqueId = parseInt(new Date().getTime()/1000)
           console.log('generateeeee....');
         }
 
@@ -530,24 +535,6 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
             Flash.create('warning', 'Please enter mobile no');
             return
           }
-          if ($scope.newPatient.emergencyContact1 == '') {
-            Flash.create('warning', 'Please enter emergency Contact 1');
-            return
-          }
-          if ($scope.newPatient.dateOfBirth == '') {
-            Flash.create('warning', 'Please enter DOB');
-            return
-          } else {
-            $scope.newPatient.dateOfBirth = $scope.newPatient.dateOfBirth.toJSON().split('T')[0]
-          }
-          if ($scope.newPatient.emergencyContact2 == '') {
-            $scope.newPatient.emergencyContact2 = 0
-          }
-          if ($scope.newPatient.pin == '') {
-            $scope.newPatient.pin = 0
-          }
-
-          console.log('lklklkllklklklklkl', $scope.newPatient);
 
           $http({
             method: 'POST',
