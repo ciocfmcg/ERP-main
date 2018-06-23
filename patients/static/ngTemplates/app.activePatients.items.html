@@ -7,12 +7,12 @@
             <img style="width: 80px;height:80px;" class="img" ng-if="data.patient.displayPicture != null" ng-src="{{data.patient.displayPicture}}">
             <img style="width: 80px;height:80px;" class="img" ng-if="data.patient.displayPicture == null" src="/static/images/userIcon.png">
           </div> -->
-          <div class="col-md-8" style="position:relative;display:block;">
+          <div class="col-md-12" style="position:relative;display:block;">
             <div class="row" style="padding-left:10px;">
               <h3>{{data.patient.firstName + ' ' + data.patient.lastName}}</h3>
-              <span class="text-muted" style="position:absolute; top:10px;right:10px;">
+              <!-- <span class="text-muted" style="position:absolute; top:10px;right:10px;">
                 <i class="fa fa-hashtag"></i> <span style="font-size:14px;">{{data.pk}}</span>
-              </span>
+              </span> -->
             </div>
           </div>
         </div>

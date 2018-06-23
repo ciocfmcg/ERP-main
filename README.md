@@ -142,3 +142,6 @@ I want to thank the following people for their kind support through sponsored de
 
 1. Pravin Kumar (assignmenthouse.com)
 2. Sagar Agarwal (goryd.in)
+
+
+INSERT INTO `ERP_application` (id,created,name,icon,haveCss,haveJs,inMenu,description,module_id,canConfigure_id) VALUES (143,'2018-06-18 11:11:26.056790','app.configure.doctors','fa-users',0,1,1,'doctors master list',12,NULL);
