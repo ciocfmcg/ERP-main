@@ -230,6 +230,10 @@ def invoice(response,inv):
     # elements.append(HRFlowable(width="20%", thickness=1, color=black ,hAlign='RIGHT',spaceBefore=12))
     elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Total : {0} </b></para>".format(total),styles['Normal']))
 
+    if inv.billed:
+        elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Discount : {0} </b></para>".format(inv.discount),styles['Normal']))
+        elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Amount recieved : {0} </b></para>".format(total-inv.discount),styles['Normal']))
+
     doc.build(elements,canvasmaker=PageNumCanvas)
 
 
