@@ -254,7 +254,7 @@ def dischargeSummary(response,dis):
 
     elements.append(Spacer(1, 15))
     print dis.patient.patient
-    ad = str(dis.patient.inTime).split('+')[0]
+    ad = str(dis.patient.inTime).split('.')[0]
     dd = str(dis.patient.dateOfDischarge).split('.')[0]
     d = str(now).split('.')[0]
     print d, ad , dd
