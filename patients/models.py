@@ -10,6 +10,7 @@ class Doctor(models.Model):
     name = models.CharField(max_length = 100 , null = False)
     department = models.CharField(max_length = 100 , null = False)
     education = models.CharField(max_length = 100 , null = False)
+    mobile = models.CharField(max_length = 15 , null = True)
 
 class Patient(models.Model):
     created = models.DateTimeField(auto_now_add = True)

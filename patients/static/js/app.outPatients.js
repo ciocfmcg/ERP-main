@@ -663,12 +663,15 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
     }).
     then(function(response) {
       Flash.create('success', response.status + ' : ' + response.statusText);
-      $scope.activePatientsForm = {
-        patient: '',
-        inTime: '',
-        status: '',
-        comments: ''
-      };
+
+      if ($scope.activePatientsForm.pk == undefined) {
+        $scope.activePatientsForm = {
+          patient: '',
+          inTime: '',
+          status: '',
+          comments: ''
+        };
+      }
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });

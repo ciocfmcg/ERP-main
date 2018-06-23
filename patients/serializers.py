@@ -18,7 +18,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ('pk' , 'name','department', 'education')
+        fields = ('pk' , 'name','department', 'education' , 'mobile')
 
 class ActivePatientSerializer(serializers.ModelSerializer):
     patient = PatientSerializer(many=False , read_only=True)

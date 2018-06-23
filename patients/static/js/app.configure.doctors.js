@@ -88,6 +88,7 @@ app.controller("hospitalManagement.configure.doctors.form", function($scope, $ro
       name:'',
       department:'',
       education:'',
+      mobile : ''
     }
   }
 
@@ -96,7 +97,7 @@ app.controller("hospitalManagement.configure.doctors.form", function($scope, $ro
       $http({
         method: 'PATCH',
         url: '/api/patients/doctor/' + $scope.doctorForm.pk + '/',
-        data: {name : $scope.doctorForm.name , department:$scope.doctorForm.department ,education:$scope.doctorForm.education }
+        data: {name : $scope.doctorForm.name , department:$scope.doctorForm.department ,education:$scope.doctorForm.education , mobile : $scope.doctorForm.mobile }
       }).
       then(function(response) {
         console.log('product', response.data);

@@ -14,6 +14,33 @@ app.config(function($stateProvider) {
 
 app.controller('hospitalManagement.activePatient.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout, $uibModal) {
 
+
+  $scope.$watch('dischargeSummForm.patient.dateOfDischarge' , function(newValue , oldValue) {
+
+    if (newValue == '' || newValue == undefined) {
+      $scope.dischargeSummForm.patient.dateOfDischarge = new Date();
+    }else{
+      if (typeof newValue == 'string') {
+        $scope.dischargeSummForm.patient.dateOfDischarge = new Date($scope.dischargeSummForm.patient.dateOfDischarge);
+      }
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/patients/activePatient/' + $scope.data.pk + '/' ,
+      data: {status: 'dishcharged' , dateOfDischarge: newValue },
+
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+    })
+
+
+
+  })
+
+
+
 console.log('coming in explooreeee');
 
 $scope.data = $scope.tab.data;
@@ -401,7 +428,7 @@ app.controller("hospitalManagement.activePatients", function($scope, $rootScope,
   $scope.config = {
     views: views,
     url: '/api/patients/activePatient/',
-    getParams: [{key : 'outPatient' , value : false}],
+    getParams: [{key : 'outPatient' , value : false } , {key : 'status__ne' , value : 'settled'}],
     searchField: 'patient__firstName',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
@@ -755,12 +782,17 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
     }).
     then(function(response) {
       Flash.create('success', response.status + ' : ' + response.statusText);
-      $scope.activePatientsForm = {
-        patient: '',
-        inTime: new Date(),
-        status: '',
-        comments: ''
-      };
+
+      if ($scope.activePatientsForm.pk==undefined) {
+
+        $scope.activePatientsForm = {
+          patient: '',
+          inTime: new Date(),
+          status: '',
+          comments: ''
+        };
+      }
+
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });

@@ -41,7 +41,7 @@ class ActivePatientLiteViewSet(viewsets.ModelViewSet):
     serializer_class = ActivePatientLiteSerializer
     queryset = ActivePatient.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['patient','outPatient']
+    filter_fields = ['patient','outPatient' , 'status']
 
 class PatientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -87,7 +87,13 @@ class ActivePatientViewSet(viewsets.ModelViewSet):
     serializer_class = ActivePatientSerializer
     queryset = ActivePatient.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['patient','outPatient']
+    filter_fields = ['patient','outPatient' , 'status']
+
+    def get_queryset(self):
+        return ActivePatient.objects.filter( ~Q(status = 'settled')).order_by('-created')
+
+
+
 
 class PageNumCanvas(canvas.Canvas):
     #----------------------------------------------------------------------
@@ -183,11 +189,11 @@ def invoice(response,inv):
     cwidths=2*[0.8*inch]
     cwidths[1]=7*inch
     t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
-    # elements.append(t1)
+    elements.append(t1)
 
-    elements.append(Spacer(1, 150))
+    elements.append(Spacer(1, 10))
 
-    # elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
+    elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
 
     elements.append(Spacer(1, 12))
 
@@ -231,8 +237,8 @@ def invoice(response,inv):
     elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Total : {0} </b></para>".format(total),styles['Normal']))
 
     if inv.billed:
-        elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Discount : {0} </b></para>".format(inv.discount),styles['Normal']))
         elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Amount recieved : {0} </b></para>".format(total-inv.discount),styles['Normal']))
+        elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Discount Amount / Due amount: {0} </b></para>".format(inv.discount),styles['Normal']))
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
@@ -242,7 +248,7 @@ def dischargeSummary(response,dis):
     print dis
     now = datetime.datetime.now()
     styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     elements = []
 
     # logo = "hospital_logo.png"
@@ -263,7 +269,7 @@ def dischargeSummary(response,dis):
     t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
     # elements.append(t1)
 
-    elements.append(Spacer(1, 150))
+    # elements.append(Spacer(1, 150))
 
     # elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
 
@@ -283,11 +289,17 @@ def dischargeSummary(response,dis):
         dep = dis.treatingConsultant.department
     else:
         dep = ''
+
+    if dis.treatingConsultant.mobile:
+        docMobile = dis.treatingConsultant.mobile
+    else:
+        docMobile = ''
+
     print dep
     print 'advv',dis.advice
     print 'revvvvvvvvvv',dis.reviewOn
 
-    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dis.treatingConsultant.name,'9844032989',dep,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,dis.pastHistory,dis.familyHistory,dis.summaryKeyInvestigation,dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,dis.treatingConsultant.name,d,dis.treatingConsultant.education)
+    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dis.treatingConsultant.name, docMobile ,dep,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,dis.pastHistory,dis.familyHistory,dis.summaryKeyInvestigation,dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,dis.treatingConsultant.name,d,dis.treatingConsultant.education)
 
     p1_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Patient's Name</b></para>",styles['Normal']),
     p1_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
@@ -401,7 +413,7 @@ def dischargeSummary(response,dis):
 
     elements.append(Spacer(1,6))
     print docname,dt,mob,pname
-    data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date&Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+str(mob)],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
+    data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date&Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+str(docMobile)],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
     rheights=5*[0.3*inch]
     cwidths=[2.2*inch , 0.7*inch , 2.8*inch , 2*inch]
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
@@ -410,7 +422,7 @@ def dischargeSummary(response,dis):
 
     elements.append(Spacer(1,8))
 
-    elements.append(Paragraph("<para fontSize=11  leftIndent=10><b>In Case Of Emergency - Contact No. of The Hospital</b></para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=11  leftIndent=10><b>In Case Of Emergency - Contact No. of The Hospital (Casualty : 7022161297)</b></para>",styles['Normal']))
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
