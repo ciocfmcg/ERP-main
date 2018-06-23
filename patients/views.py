@@ -140,7 +140,10 @@ def invoice(response,inv):
         sad = ['','']
     else:
         a = ad[2]+'-'+ad[1]+'-'+ad[0]
-        d = dd[2]+'-'+dd[1]+'-'+dd[0]
+        try:
+            d = dd[2]+'-'+dd[1]+'-'+dd[0]
+        except:
+            d = ''
         sad = ['Admitted on : {0}'.format(a),'Discharged on : {0}'.format(d)]
     (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,a,d,inv.grandTotal)
     data = json.loads(inv.products)
