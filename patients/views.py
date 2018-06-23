@@ -183,13 +183,13 @@ def invoice(response,inv):
 
     elements.append(Spacer(1, 20))
 
-    data2=[['Patient Name : {0}'.format(name.upper()),'UHID Id : {0}'.format(refid)],sad]
+    data2=[['Patient Name : {0}'.format(name.upper()),'UHID : {0}'.format(refid)],sad]
 
     rheights=2*[0.2*inch]
     cwidths=2*[2.8*inch]
     cwidths[1]=3.5*inch
     t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
-    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'), ]))
+    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'times-roman'), ]))
     elements.append(t2)
 
     elements.append(Spacer(1, 50))
@@ -209,7 +209,7 @@ def invoice(response,inv):
             data3.append([i,details[i-1]['name'].upper(),details[i-1]['qty'],details[i-1]['rate'],details[i-1]['qty']*details[i-1]['rate']])
 
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
-    t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
+    t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'times-roman'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
     elements.append(t3)
     elements.append(Spacer(1, 7))
     # elements.append(HRFlowable(width="20%", thickness=1, color=black ,hAlign='RIGHT',spaceBefore=12))
@@ -276,7 +276,7 @@ def dischargeSummary(response,dis):
     p2_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Telephone No / Mobile No.</b></para>",styles['Normal'])
     p2_2=Paragraph("<para  fontSize=11>: {0} </para>".format(mob),styles['Normal'])
 
-    p3_1= Paragraph("<para fontSize=11 textColor=darkblue><b>UHID No.</b></para>",styles['Normal']),
+    p3_1= Paragraph("<para fontSize=11 textColor=darkblue><b>UHID : </b></para>",styles['Normal']),
     p3_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>4.IP No</b>. : {1}</para>".format(uhid,ipno),styles['Normal'])
 
     p5_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Treating Consultant/s Name<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Contact Numbers <br/><br/>&nbsp;&nbsp;&nbsp;b. Department/ Specialty </b></para>",styles['Normal']),
