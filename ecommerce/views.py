@@ -50,10 +50,7 @@ from django.core import serializers
 from django.http import JsonResponse
 
 def ecommerceHome(request):
-    if globalSettings.ECOMMERCE_APP['ui'] == 'rental':
-        return render(request , 'ngEcommerce.rental.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
-    elif globalSettings.ECOMMERCE_APP['ui'] == 'food':
-        return render(request , 'ngEcommerce.food.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
+    return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
 
 class fieldViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin , )
