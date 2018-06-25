@@ -130,3 +130,16 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ( 'pk', 'created' , 'title' ,'dp' , 'parent')
+
+
+class offerBannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = offerBanner
+        fields = ('pk' , 'user' , 'created'  , 'level' , 'image' , 'title' , 'subtitle' , 'state' , 'params' , 'active')
+        read_only_fields = ('user',)
+    def create(self ,  validated_data):
+        u = self.context['request'].user
+        b = offerBanner(**validated_data)
+        b.user = u
+        b.save()
+        return b

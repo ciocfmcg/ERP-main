@@ -109,6 +109,17 @@ app.controller('businessManagement.ecommerce.configure', function($scope,$uibMod
     itemsNumPerView: [12, 24, 48],
   }
 
+
+  $scope.offerBannersConfig = {
+    views : [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'}, ],
+    url : '/api/ecommerce/offerBanner/',
+    deletable : true,
+    searchField: 'name',
+    canCreate : true,
+    editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.html',
+  }
+
+
   $scope.editorTemplateField = '/static/ngTemplates/app.ecommerce.vendor.form.field.html';
 
   $scope.editorTemplateGenericProduct = '/static/ngTemplates/app.ecommerce.vendor.form.genericProduct.html';

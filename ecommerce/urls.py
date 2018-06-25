@@ -9,7 +9,8 @@ router.register(r'media' , mediaViewSet , base_name = 'media')
 router.register(r'listing' , listingViewSet , base_name = 'listing')
 router.register(r'listingLite' , listingLiteViewSet , base_name = 'listing')
 router.register(r'category' , CategoryViewSet , base_name = 'category')
-
+router.register(r'category' , CategoryViewSet , base_name = 'category')
+router.register(r'offerBanner' , offerBannerViewSet , base_name='offerBanner')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

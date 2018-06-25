@@ -21,12 +21,12 @@
       </uib-tab-heading>
       <generic-Table data="data.tableproductData" config-Obj="{{genericProductConfig}}" callback-Fn="tableProductAction"></generic-Table>
     </uib-tab>
-    <!-- <uib-tab>
+    <uib-tab>
       <uib-tab-heading>
         Offer Banners
       </uib-tab-heading>
       <generic-Table data="tableData.offerBanners" config-Obj="{{offerBannersConfig}}" callback-Fn="tableAction"></generic-Table>
-    </uib-tab> -->
+    </uib-tab>
 
     <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
       <uib-tab-heading>
