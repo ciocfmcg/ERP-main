@@ -93,11 +93,12 @@ app.controller("hospitalManagement.configure.doctors.form", function($scope, $ro
   }
 
   $scope.saveDoctor = function () {
+    var toSend = {name : $scope.doctorForm.name , department:$scope.doctorForm.department ,education:$scope.doctorForm.education , mobile : $scope.doctorForm.mobile }
     if ($scope.doctorForm.pk) {
       $http({
         method: 'PATCH',
         url: '/api/patients/doctor/' + $scope.doctorForm.pk + '/',
-        data: {name : $scope.doctorForm.name , department:$scope.doctorForm.department ,education:$scope.doctorForm.education , mobile : $scope.doctorForm.mobile }
+        data: toSend
       }).
       then(function(response) {
         console.log('product', response.data);
@@ -109,7 +110,7 @@ app.controller("hospitalManagement.configure.doctors.form", function($scope, $ro
       $http({
         method: 'POST',
         url: '/api/patients/doctor/',
-        data: {name : $scope.doctorForm.name , department:$scope.doctorForm.department ,education:$scope.doctorForm.education }
+        data: toSend
       }).
       then(function(response) {
         console.log('product', response.data);

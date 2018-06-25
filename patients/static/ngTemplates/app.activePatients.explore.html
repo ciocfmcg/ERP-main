@@ -138,7 +138,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-top:25px;">
           <div class="col-md-6">
             <div class="form-group">
               <!-- <label>UHID No.</label>
@@ -156,18 +156,18 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6" style="margin-top:35px;">
             <div class="form-group">
               <!-- <label>UHID No.</label>
               <input type="text" class="form-control" ng-model="dischargeSummForm.uhidNo" placeholder=""> -->
               <h4><small><b>Date of Admission : </b></small>{{dischargeSummForm.patient.inTime | date: 'dd-MM-yyyy:hh:mm a'}}</h4>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6" style="padding-right:50px">
 
 
             <div class="form-group">
-              <label class="control-label col-sm-3" style="margin-top:35px;padding:0px;">Discharge date & time</label>
+              <label class="control-label col-sm-4" style="margin-top:40px;padding:0px;">Discharge date & time</label>
               <div class="col-md-5">
                 <div class="input-group" style="margin-top:35px;">
                   <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dischargeSummForm.patient.dateOfDischarge " is-open="status.opened" />
@@ -176,7 +176,7 @@
                   </span>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="row container-fluid">
                   <uib-timepicker ng-model="dischargeSummForm.patient.dateOfDischarge " hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
                 </div>

@@ -58,6 +58,7 @@ class ActivePatient(models.Model):
     mlc = models.BooleanField(default = False)
     cash = models.BooleanField(default = False)
     insurance = models.BooleanField(default = False)
+    opNo = models.CharField(max_length = 100 , null = True  , blank = True)
 
 class DischargeSummary(models.Model):
     patient = models.ForeignKey(ActivePatient , related_name='dischargeSummary', null= True)

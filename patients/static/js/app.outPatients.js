@@ -518,6 +518,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
   } else {
     $scope.activePatientsForm = {
       patient: '',
+      opNo: '',
       inTime: new Date(),
       status: '',
       comments: ''
@@ -682,6 +683,10 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
       Flash.create('danger', 'please fill patient name');
       return
     }
+    if ($scope.activePatientsForm.opNo == '') {
+      Flash.create('danger', 'please fill Ref ID');
+      return
+    }
     if ($scope.activePatientsForm.inTime == '') {
       Flash.create('danger', 'please fill In Time');
       return
@@ -698,6 +703,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
 
     dataToSend = {
       patient: $scope.activePatientsForm.patient.pk,
+      opNo: $scope.activePatientsForm.opNo,
       inTime: $scope.activePatientsForm.inTime,
       outPatient: true
       // status: $scope.selectedStatus
@@ -725,6 +731,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
       if ($scope.activePatientsForm.pk == undefined) {
         $scope.activePatientsForm = {
           patient: '',
+          opNo: '',
           inTime: '',
           status: '',
           comments: ''

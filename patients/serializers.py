@@ -24,7 +24,7 @@ class ActivePatientSerializer(serializers.ModelSerializer):
     patient = PatientSerializer(many=False , read_only=True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','created','dateOfDischarge', 'mlc' , 'cash' , 'insurance')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','created','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo')
     def create(self , validated_data):
         print '**********************************'
         print validated_data , self.context['request'].data
@@ -91,4 +91,4 @@ class ActivePatientLiteSerializer(serializers.ModelSerializer):
     # dischargeSummary = DishchargeSummaryLiteSerializer(many = False , read_only = True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices', 'opNo')

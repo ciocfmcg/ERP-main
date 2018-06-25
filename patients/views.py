@@ -152,16 +152,16 @@ def invoice(response,inv):
     dd = str(inv.activePatient.dateOfDischarge).split(' ')[0].split('-')
     print dd
     if inv.activePatient.outPatient:
+        refId = inv.activePatient.opNo
         a = ''
         d = ''
-        sad = ['','']
     else:
+        refId = inv.activePatient.dischargeSummary.get().ipNo
         a = ad[2]+'-'+ad[1]+'-'+ad[0]
         try:
             d = dd[2]+'-'+dd[1]+'-'+dd[0]
         except:
             d = ''
-        sad = ['Admitted on : {0}'.format(a),'Discharged on : {0}'.format(d)]
     (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,a,d,inv.grandTotal)
     data = json.loads(inv.products)
     details = []
@@ -180,8 +180,9 @@ def invoice(response,inv):
     p1=[
        Paragraph("<para fontSize=30 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
        Paragraph("<para fontSize=11  spaceBefore=12 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
-       Paragraph("<para fontSize=11 alignment='left'  leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
+       Paragraph("<para fontSize=11 alignment='left'  leftIndent=5><strong>Reg. No. 711 / 95-96 </strong></para>",styles['Normal']),
        ]
+        # &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001
     # Paragraph("<para fontSize=13 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
 
     data1=[[im,p1]]
@@ -197,29 +198,34 @@ def invoice(response,inv):
 
     elements.append(Spacer(1, 12))
 
-    # elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> RECEIPT / BILL </b></para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=13 alignment='center'textColor=darkblue><b> RECEIPT / BILL </b></para>",styles['Normal']))
+    elements.append(Spacer(1, 10))
+    elements.append(Paragraph("<para fontSize=12 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=12 alignment='left' leftIndent=30><b> Bill No. : {0}</b></para>".format(inv.pk),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=12 alignment='left' leftIndent=30><b> Ref ID. : {0}</b></para>".format(refId),styles['Normal']))
 
-    elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
-    elements.append(Paragraph("<para fontSize=13 alignment='left' leftIndent=15><b> Bill No. : {0}</b></para>".format(inv.pk),styles['Normal']))
-    elements.append(Paragraph("<para fontSize=13 alignment='left' leftIndent=15><b> Ref ID. : {0}</b></para>".format(  inv.activePatient.dischargeSummary.get().ipNo ),styles['Normal']))
+    elements.append(Spacer(1, 15))
 
-    elements.append(Spacer(1, 20))
+    if inv.activePatient.outPatient:
+        data2=[['Patient Name : {0}'.format(name.upper()),'UHID : {0}'.format(refid)]]
+        rheights=1*[0.3*inch]
+    else:
+        data2=[['Patient Name : {0}'.format(name.upper()),'UHID : {0}'.format(refid)],['Admitted on : {0}'.format(a),'Discharged on : {0}'.format(d)]]
+        rheights=2*[0.3*inch]
 
-    data2=[['Patient Name : {0}'.format(name.upper()),'UHID : {0}'.format(refid)],sad]
 
-    rheights=2*[0.2*inch]
-    cwidths=2*[2.8*inch]
-    cwidths[1]=3.5*inch
+    cwidths=2*[5*inch]
+    cwidths[1]=2.5*inch
     t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
-    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'Courier'), ]))
+    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 12),('TEXTFONT', (0, 0), (-1, -1), 'Courier'), ]))
     elements.append(t2)
 
     elements.append(Spacer(1, 50))
 
     rheights=(totalRows+1)*[0.25*inch]
     cwidths=5*[0.4*inch]
-    cwidths[0]=1*inch
-    cwidths[1]=4*inch
+    cwidths[0]=0.8*inch
+    cwidths[1]=4.5*inch
     cwidths[3]=0.6*inch
     cwidths[4]=0.8*inch
     data3=[]
@@ -311,8 +317,8 @@ def dischargeSummary(response,dis):
     p3_1= Paragraph("<para fontSize=11 textColor=darkblue><b>UHID : </b></para>",styles['Normal']),
     p3_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>4.IP No</b>. : {1}</para>".format(uhid,ipno),styles['Normal'])
 
-    p5_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Treating Consultant/s Name<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Contact Numbers <br/><br/>&nbsp;&nbsp;&nbsp;b. Department/ Specialty </b></para>",styles['Normal']),
-    p5_2=Paragraph("<para  fontSize=11>: {0} <br/><br/>: {1} <br/><br/>:{2}</para>".format(tcname,cno,dep),styles['Normal'])
+    p5_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Treating Consultant/s Name<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Contact Numbers <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Department/ Specialty </b></para>",styles['Normal']),
+    p5_2=Paragraph("<para  fontSize=11>: {0} <br/><br/>: {1} <br/><br/>: {2}</para>".format(tcname,cno,dep),styles['Normal'])
 
     p6_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Date Of Admission With Time</b></para>",styles['Normal']),
     p6_2=Paragraph("<para  fontSize=11>: {0} </para>".format(doa),styles['Normal'])
@@ -391,23 +397,24 @@ def dischargeSummary(response,dis):
     rheights=21*[0.3*inch]
     rheights[3]=1.0*inch
     # rheights[4]=1.3*inch
-    rheights[7]=0.7*inch
-    rheights[8]=0.7*inch
-    rheights[9]=0.7*inch if len(p11)<200 else (1*inch if len(p11)<500 else (1.5*inch if len(p11)<800 else 1.9*inch))
-    rheights[10]=0.7*inch if len(p12)<200 else (1*inch if len(p12)<500 else (1.5*inch if len(p12)<800 else 1.9*inch))
-    rheights[11]=0.7*inch if len(p13)<200 else (1*inch if len(p13)<500 else (1.5*inch if len(p13)<800 else 1.9*inch))
-    rheights[12]=0.7*inch if len(p14)<200 else (1*inch if len(p14)<500 else (1.5*inch if len(p14)<800 else 1.9*inch))
-    rheights[13]=0.7*inch if len(p15)<200 else (1*inch if len(p15)<500 else (1.5*inch if len(p15)<800 else 1.9*inch))
-    rheights[14]=0.7*inch if len(p16)<200 else (1*inch if len(p16)<500 else (1.5*inch if len(p16)<800 else 1.9*inch))
-    rheights[15]=0.8*inch if len(p17)<200 else (1*inch if len(p17)<500 else (1.5*inch if len(p17)<800 else 1.9*inch))
-    rheights[16]=0.7*inch if len(p18)<200 else (1*inch if len(p18)<500 else (1.5*inch if len(p18)<800 else 1.9*inch))
-    rheights[17]=0.7*inch if len(p19)<200 else (1*inch if len(p19)<500 else (1.5*inch if len(p19)<800 else 1.9*inch))
-    rheights[18]=0.7*inch if len(p20)<200 else (1*inch if len(p20)<500 else (1.5*inch if len(p20)<800 else 1.9*inch))
-    rheights[19]=0.7*inch if len(p21)<200 else (1*inch if len(p21)<500 else (1.5*inch if len(p21)<800 else 1.9*inch))
-    rheights[20]=0.7*inch if len(p22)<200 else (1*inch if len(p22)<500 else (1.5*inch if len(p22)<800 else 1.9*inch))
+    print len(p11)
+    rheights[7]=0.7*inch if len(p9)<130 else (1.4*inch if len(p9)<390 else (2.1*inch if len(p9)<650 else (2.8*inch if len(p9)<910 else (3.5*inch if len(p9)<1170 else (4.2*inch if len(p9)<1330 else (4.9*inch if len(p9)<1600 else 5.2*inch))))))
+    rheights[8]=0.7*inch if len(p10)<130 else (1.4*inch if len(p10)<390 else (2.1*inch if len(p10)<650 else (2.8*inch if len(p10)<910 else (3.5*inch if len(p10)<1170 else (4.2*inch if len(p10)<1330 else (4.9*inch if len(p10)<1600 else 5.2*inch))))))
+    rheights[9]=0.7*inch if len(p11)<130 else (1.4*inch if len(p11)<390 else (2.1*inch if len(p11)<650 else (2.8*inch if len(p11)<910 else (3.5*inch if len(p11)<1170 else (4.2*inch if len(p11)<1330 else (4.9*inch if len(p11)<1600 else 5.2*inch))))))
+    rheights[10]=0.7*inch if len(p12)<130 else (1.4*inch if len(p12)<390 else (2.1*inch if len(p12)<650 else (2.8*inch if len(p12)<910 else (3.5*inch if len(p12)<1170 else (4.2*inch if len(p12)<1330 else (4.9*inch if len(p12)<1600 else 5.2*inch))))))
+    rheights[11]=0.7*inch if len(p13)<130 else (1.4*inch if len(p13)<390 else (2.1*inch if len(p13)<650 else (2.8*inch if len(p13)<910 else (3.5*inch if len(p13)<1170 else (4.2*inch if len(p13)<1330 else (4.9*inch if len(p13)<1600 else 5.2*inch))))))
+    rheights[12]=0.7*inch if len(p14)<130 else (1.4*inch if len(p14)<390 else (2.1*inch if len(p14)<650 else (2.8*inch if len(p14)<910 else (3.5*inch if len(p14)<1170 else (4.2*inch if len(p14)<1330 else (4.9*inch if len(p14)<1600 else 5.2*inch))))))
+    rheights[13]=0.7*inch if len(p15)<130 else (1.4*inch if len(p15)<390 else (2.1*inch if len(p15)<650 else (2.8*inch if len(p15)<910 else (3.5*inch if len(p15)<1170 else (4.2*inch if len(p15)<1330 else (4.9*inch if len(p15)<1600 else 5.2*inch))))))
+    rheights[14]=0.7*inch if len(p16)<130 else (1.4*inch if len(p16)<390 else (2.1*inch if len(p16)<650 else (2.8*inch if len(p16)<910 else (3.5*inch if len(p16)<1170 else (4.2*inch if len(p16)<1330 else (4.9*inch if len(p16)<1600 else 5.2*inch))))))
+    rheights[15]=0.8*inch if len(p17)<130 else (1.4*inch if len(p17)<390 else (2.1*inch if len(p17)<650 else (2.8*inch if len(p17)<910 else (3.5*inch if len(p17)<1170 else (4.2*inch if len(p17)<1330 else (4.9*inch if len(p17)<1600 else 5.2*inch))))))
+    rheights[16]=0.7*inch if len(p18)<130 else (1.4*inch if len(p18)<390 else (2.1*inch if len(p18)<650 else (2.8*inch if len(p18)<910 else (3.5*inch if len(p18)<1170 else (4.2*inch if len(p18)<1330 else (4.9*inch if len(p18)<1600 else 5.2*inch))))))
+    rheights[17]=0.7*inch if len(p19)<130 else (1.4*inch if len(p19)<390 else (2.1*inch if len(p19)<650 else (2.8*inch if len(p19)<910 else (3.5*inch if len(p19)<1170 else (4.2*inch if len(p19)<1330 else (4.9*inch if len(p19)<1600 else 5.2*inch))))))
+    rheights[18]=0.7*inch if len(p20)<130 else (1.4*inch if len(p20)<390 else (2.1*inch if len(p20)<650 else (2.8*inch if len(p20)<910 else (3.5*inch if len(p20)<1170 else (4.2*inch if len(p20)<1330 else (4.9*inch if len(p20)<1600 else 5.2*inch))))))
+    rheights[19]=0.7*inch if len(p21)<130 else (1.4*inch if len(p21)<390 else (2.1*inch if len(p21)<650 else (2.8*inch if len(p21)<910 else (3.5*inch if len(p21)<1170 else (4.2*inch if len(p21)<1330 else (4.9*inch if len(p21)<1600 else 5.2*inch))))))
+    rheights[20]=0.7*inch if len(p22)<130 else (1.4*inch if len(p22)<390 else (2.1*inch if len(p22)<650 else (2.8*inch if len(p22)<910 else (3.5*inch if len(p22)<1170 else (4.2*inch if len(p22)<1330 else (4.9*inch if len(p22)<1600 else 5.2*inch))))))
     print 'hhhhhhhhhhhhhhhh',rheights[9],rheights[17],len(p19)
     # rheights=[0.3*inch,0.3*inch,0.3*inch,1*inch,0.3*inch,0.3*inch,0.3*inch,0.5*inch,0.5*inch,0.4*inch if len(a)<200 else 1.2*inch,0.8*inch,1.2*inch,1*inch,1*inch,1*inch,1*inch,1.7*inch,1*inch,1.5*inch,0.8*inch,0.6*inch,]
-    cwidths=[0.25*inch , 2.25*inch , 5.5*inch]
+    cwidths=[0.25*inch , 2.4*inch , 5.5*inch]
     t2=Table(data,rowHeights=rheights,colWidths=cwidths)
     t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),darkblue),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),]))
     elements.append(t2)
