@@ -158,7 +158,11 @@ def invoice(response,inv):
         a = ''
         d = ''
     else:
-        refId = inv.activePatient.dischargeSummary.get().ipNo
+        try:
+            refId = inv.activePatient.dischargeSummary.get().ipNo
+        except DischargeSummary.DoesNotExist:
+            refId = ''
+
         a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('+')[0]
         try:
             d = dd[2]+'-'+dd[1]+'-'+dd[0]+' '+ dd1[1].split('.')[0]
