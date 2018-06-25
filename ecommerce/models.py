@@ -73,3 +73,19 @@ class Category(models.Model):
     title = models.CharField( null = False , max_length = 50)
     dp = models.ImageField(upload_to=getEcommerceCategoryDpPath , null = True)
     parent = models.ForeignKey('self' , related_name='parentCategory' , null= True)
+
+
+def getEcommerceBannerUploadPath(instance , filename ):
+    return 'ecommerce/bannerUploads/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+
+
+class offerBanner(models.Model):
+    user = models.ForeignKey(User, null = False)
+    created = models.DateTimeField(auto_now_add = True)
+    level = models.PositiveIntegerField(null = False) # level indicates the position of display , 1 means the main banner , 2 for side and 3 for flash messages
+    image = models.ImageField(null = False , upload_to = getEcommerceBannerUploadPath)
+    title = models.CharField(max_length = 20 , null = True)
+    subtitle = models.CharField(max_length = 20 , null = True)
+    state = models.CharField(max_length = 20 , null = True)
+    params = models.CharField(max_length = 200 , null = True) # string repr of json obj to be passed as params
+    active = models.BooleanField(default = False)

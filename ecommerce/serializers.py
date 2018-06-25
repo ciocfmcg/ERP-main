@@ -103,31 +103,43 @@ class listingSerializer(serializers.ModelSerializer):
                 l.files.add(media.objects.get(pk = m))
         l.save()
         return l
-    #
-    # def update(self , instance , validated_data):
-    #     u = self.context['request'].user
-    #     has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
-    #     for key in ['title' , 'description' , 'priceModel' , 'category' , 'specifications' , 'source' ]:
-    #         try:
-    #             setattr(instance , key , validated_data[key])
-    #         except:
-    #             pass
-    #     instance.files.clear()
-    #     if 'files' in self.context['request'].data:
-    #         for m in self.context['request'].data['files']:
-    #             instance.files.add(media.objects.get(pk = m))
-    #     instance.save()
-    #     return instance
+
+    def update(self , instance , validated_data):
+        u = self.context['request'].user
+        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+
+        instance.parentType = genericProduct.objects.get(pk = self.context['request'].data['parentType'])
+        instance.product = Product.objects.get(pk = self.context['request'].data['product'])
+        instance.save()
+
+        if 'files' in self.context['request'].data:
+            for m in self.context['request'].data['files']:
+                instance.files.add(media.objects.get(pk = m))
+        instance.save()
+        return instance
 
 class listingLiteSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
-    # providerOptions = offeringLiteSerializer(many = True , read_only = True)
+    product = POSProductSerializer(many = False , read_only = True)
     parentType = genericProductSerializer(many = False , read_only = True)
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product')
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ( 'pk', 'created' , 'title' ,'dp' , 'parent')
+
+
+class offerBannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = offerBanner
+        fields = ('pk' , 'user' , 'created'  , 'level' , 'image' , 'title' , 'subtitle' , 'state' , 'params' , 'active')
+        read_only_fields = ('user',)
+    def create(self ,  validated_data):
+        u = self.context['request'].user
+        b = offerBanner(**validated_data)
+        b.user = u
+        b.save()
+        return b

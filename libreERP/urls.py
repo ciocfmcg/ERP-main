@@ -13,7 +13,7 @@ from ERP.views import PaymentResponse
 
 app_name="libreERP"
 urlpatterns = [
-    url(r'^$', index , name ='root'),
+    url(r'^$', ecommerceHome , name ='root'),
     url(r"^ecommerce/", ecommerceHome , name = 'ecommerce'), # public  ecommerce app
     url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),
