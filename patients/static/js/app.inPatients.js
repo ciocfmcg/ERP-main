@@ -15,29 +15,7 @@ app.config(function($stateProvider) {
 app.controller('hospitalManagement.activePatient.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout, $uibModal) {
 
 
-  $scope.$watch('dischargeSummForm.patient.dateOfDischarge' , function(newValue , oldValue) {
 
-    if (newValue == '' || newValue == undefined) {
-      $scope.dischargeSummForm.patient.dateOfDischarge = new Date();
-    }else{
-      if (typeof newValue == 'string') {
-        $scope.dischargeSummForm.patient.dateOfDischarge = new Date($scope.dischargeSummForm.patient.dateOfDischarge);
-      }
-    }
-
-    $http({
-      method: 'PATCH',
-      url: '/api/patients/activePatient/' + $scope.data.pk + '/' ,
-      data: {status: 'dishcharged' , dateOfDischarge: newValue },
-
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
-    })
-
-
-
-  })
 
 
 
@@ -73,10 +51,16 @@ $scope.fetchInvoices = function() {
   then(function(response) {
     $scope.dis = response.data
     if ($scope.dis.length>0) {
-      // console.log('thteeeeeeeeeee');
+      console.log('thteeeeeeeeeee');
       $scope.dischargeSummForm=$scope.dis[0]
+      $scope.dischargeSummForm.docList = $scope.dischargeSummForm.treatingConsultant
+      $scope.dischargeSummForm.docListPk = []
+      for (var i = 0; i < $scope.dischargeSummForm.docList.length; i++) {
+        $scope.dischargeSummForm.docListPk.push($scope.dischargeSummForm.docList[i].pk)
+      }
+      $scope.dischargeSummForm.treatingConsultant = ''
     }else {
-      // console.log('newwwwwwwwwwwwwwww');
+      console.log('newwwwwwwwwwwwwwww');
       $scope.refresh();
       $scope.dischargeSummForm.patient = $scope.data
     }
@@ -108,8 +92,34 @@ $scope.fetchInvoices();
       advice  :'',
       reviewOn  :'',
       complications  :'',
+      docList: [],
+      docListPk: [],
     }
   }
+
+  $scope.$watch('dischargeSummForm.patient.dateOfDischarge' , function(newValue , oldValue) {
+
+    if (newValue == '' || newValue == undefined) {
+      $scope.dischargeSummForm.patient.dateOfDischarge = new Date();
+    }else{
+      if (typeof newValue == 'string') {
+        $scope.dischargeSummForm.patient.dateOfDischarge = new Date($scope.dischargeSummForm.patient.dateOfDischarge);
+      }
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/patients/activePatient/' + $scope.data.pk + '/' ,
+      data: {status: 'dishcharged' , dateOfDischarge: newValue },
+
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+    })
+
+
+
+  })
 
   $scope.chageStatus = function () {
     $http({
@@ -127,22 +137,40 @@ $scope.fetchInvoices();
   }
 
 
-
+  $scope.addDoctor = function(){
+    if ($scope.dischargeSummForm.treatingConsultant.pk == undefined) {
+      Flash.create('warning', 'Please Select Suggested Doctors');
+      return
+    }
+    if ($scope.dischargeSummForm.docListPk.indexOf($scope.dischargeSummForm.treatingConsultant.pk) >= 0) {
+      Flash.create('warning', 'This Doctor Has Already Added');
+      $scope.dischargeSummForm.treatingConsultant = ''
+      return
+    }
+    $scope.dischargeSummForm.docList.push($scope.dischargeSummForm.treatingConsultant)
+    $scope.dischargeSummForm.docListPk.push($scope.dischargeSummForm.treatingConsultant.pk)
+    $scope.dischargeSummForm.treatingConsultant = ''
+  }
+  $scope.removeDoctor = function(idx){
+    $scope.dischargeSummForm.docList.splice(idx,1)
+    $scope.dischargeSummForm.docListPk.splice(idx,1)
+  }
 
 
   $scope.saveDischargeSumm = function() {
 
     console.log('here...');
     console.log($scope.dischargeSummForm);
-    if (typeof $scope.dischargeSummForm.treatingConsultant == 'string') {
+    if (typeof $scope.dischargeSummForm.docList.length == 0) {
       Flash.create('warning', 'Please Fill Treating Consultants');
       return
     }
 
     var toSend = $scope.dischargeSummForm
     toSend.patient = $scope.dischargeSummForm.patient.pk
-    toSend.treatingConsultant = $scope.dischargeSummForm.treatingConsultant.pk
-    console.log(toSend);
+    delete toSend['treatingConsultant']
+    delete toSend['docList']
+    console.log('******************',toSend);
 
     if ($scope.dischargeSummForm.pk) {
       var method = 'PATCH'
@@ -161,6 +189,12 @@ $scope.fetchInvoices();
         Flash.create('success', 'Saved');
         console.log('dataaaa', response.data);
         $scope.dischargeSummForm = response.data
+        $scope.dischargeSummForm.docList = $scope.dischargeSummForm.treatingConsultant
+        $scope.dischargeSummForm.docListPk = []
+        for (var i = 0; i < $scope.dischargeSummForm.docList.length; i++) {
+          $scope.dischargeSummForm.docListPk.push($scope.dischargeSummForm.docList[i].pk)
+        }
+        $scope.dischargeSummForm.treatingConsultant = ''
       })
 
 

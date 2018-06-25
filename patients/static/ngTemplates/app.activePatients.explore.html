@@ -199,20 +199,28 @@
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
+          <!-- <div class="form-group">
+            <label>Treating Consultant/s</label>
+            <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Name Here...">
+          </div> -->
+
           <div class="form-group">
             <label>Treating Consultant/s</label>
-            <!-- <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" placeholder=""> -->
-            <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Name Here...">
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Name Here...">
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="addDoctor()">Add <i class="fa fa-plus"></i></button>
+            </span>
+            </div>
           </div>
         </div>
-
-
-        <div class="row text-center" ng-if="dischargeSummForm.treatingConsultant.pk">
-          <strong>Doctor : </strong> {{dischargeSummForm.treatingConsultant.name}} <br>
-          <strong>Department : </strong> {{dischargeSummForm.treatingConsultant.department}} <br>
-          <strong>Qualification : </strong> {{dischargeSummForm.treatingConsultant.education}} <br>
-
-          <hr>
+        <div class="row" ng-if="dischargeSummForm.docList.length>0">
+          <div class="col-md-5 container-fluid card" ng-repeat="d in dischargeSummForm.docList" style="padding:20px 10px;margin-left:30px;margin-bottom:10px">
+            <i class="fa fa-times fa-lg pull-right" ng-click="removeDoctor($index)" style="cursor:pointer"></i>
+            <strong>Doctor : </strong> {{d.name}} <br>
+            <strong>Department : </strong> {{d.department}} <br>
+            <strong>Qualification : </strong> {{d.education}} <br>
+          </div>
         </div>
 
         <div class="row">

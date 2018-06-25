@@ -72,7 +72,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 class DishchargeSummarySerializer(serializers.ModelSerializer):
     patient = ActivePatientSerializer(many=False , read_only=True)
-    treatingConsultant = DoctorSerializer(many=False , read_only=True)
+    treatingConsultant = DoctorSerializer(many=True , read_only=True)
     class Meta:
         model = DischargeSummary
         fields = ('pk' , 'patient','ipNo','treatingConsultant','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications')
@@ -80,18 +80,27 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
         i = DischargeSummary(**validated_data)
         i.patient = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
         i.treatingConsultant = Doctor.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
+        if 'docListPk' in self.context['request'].data:
+            for p in self.context['request'].data['docListPk']:
+                i.treatingConsultant = Doctor.objects.get(pk=int(p))
         i.save()
         return i
     def update(self ,instance, validated_data):
         print "will update"
-
+        print validated_data
+        print self.context['request'].data
         for key in ['ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        if 'treatingConsultant' in self.context['request'].data:
-            instance.treatingConsultant = Doctor.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
+        print 'came'
+        if 'docListPk' in self.context['request'].data:
+            print 'innnn'
+            instance.treatingConsultant.clear()
+            for p in self.context['request'].data['docListPk']:
+                print 'forrrrrrrrrrr',p,type(p)
+                instance.treatingConsultant.add(Doctor.objects.get(pk=int(p)))
         instance.save()
         return instance
 

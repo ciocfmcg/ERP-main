@@ -69,7 +69,7 @@ class ActivePatient(models.Model):
 class DischargeSummary(models.Model):
     patient = models.ForeignKey(ActivePatient , related_name='dischargeSummary', null= True)
     ipNo = models.CharField(max_length = 100 , null = True  , blank = True)
-    treatingConsultant = models.ForeignKey(Doctor , null= True , related_name='patients')
+    treatingConsultant = models.ManyToManyField(Doctor , related_name='patients')
     mlcNo = models.CharField(max_length = 100 , null = True  , blank = True)
     firNo = models.CharField(max_length = 100 , null = True  , blank = True)
     provisionalDiagnosis = models.CharField(max_length = 2000 , null = True , blank = True)

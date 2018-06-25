@@ -294,28 +294,59 @@ def dischargeSummary(response,dis):
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> DISCHARGE SUMMARY </b></para>",styles['Normal']))
 
     elements.append(Spacer(1, 15))
-    print dis.patient.patient
-    ad = str(dis.patient.inTime).split('.')[0]
+    print dis.patient.patient,dis.patient.inTime,dis.patient.dateOfDischarge
+    ad = str(dis.patient.inTime).split('+')[0]
     dd = str(dis.patient.dateOfDischarge).split('.')[0]
     d = str(now).split('.')[0]
     print d, ad , dd
     # page= int(d.split('-')[0])-int(str(dis.patient.patient.dateOfBirth).split('-')[0])
     # print 'ageeeeeeeeeeee',page
-    if dis.treatingConsultant.department:
-        dep = dis.treatingConsultant.department
-    else:
-        dep = ''
-
-    if dis.treatingConsultant.mobile:
-        docMobile = dis.treatingConsultant.mobile
-    else:
+    print 'disssssssssssssssss',dis.treatingConsultant.all()
+    dList = dis.treatingConsultant.all()
+    if len(dList)==0:
+        dName = ''
         docMobile = ''
+        dep = ''
+        bottomDName = ''
+        bottomDMob = ''
+        bottomDRegNo = ''
+    elif len(dList)==0:
+        dName = dis.treatingConsultant.name
+        docMobile = dis.treatingConsultant.mobile if dis.treatingConsultant.mobile else ''
+        bottomDMob = dis.treatingConsultant.mobile if dis.treatingConsultant.mobile else ''
+        dep = dis.treatingConsultant.department
+        bottomDName = dis.treatingConsultant.name
+        bottomDRegNo = dis.treatingConsultant.education
+    else:
+        for idx,i in enumerate(dList):
+            print i,idx
+            if idx == 0:
+                dName = i.name
+                docMobile = i.mobile if i.mobile else ''
+                dep = i.department
+            else:
+                dName += ' , ' + i.name
+                docMobile += ' , ' + i.mobile if i.mobile else ''
+                dep += ' , ' + i.department
+        bottomDName = dList[0].name
+        bottomDRegNo = dList[0].education
+        bottomDMob = dList[0].mobile
+
+        # if dis.treatingConsultant.department:
+        #     dep = dis.treatingConsultant.department
+        # else:
+        #     dep = ''
+        #
+        # if dis.treatingConsultant.mobile:
+        #     docMobile = dis.treatingConsultant.mobile
+        # else:
+        #     docMobile = ''
 
     print dep
     print 'advv',dis.advice
     print 'revvvvvvvvvv',dis.reviewOn
 
-    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dis.treatingConsultant.name, docMobile ,dep,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,dis.pastHistory,dis.familyHistory,dis.summaryKeyInvestigation,dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,dis.treatingConsultant.name,d,dis.treatingConsultant.education)
+    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno,docMob)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dName, docMobile ,dep,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,dis.pastHistory,dis.familyHistory,dis.summaryKeyInvestigation,dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,bottomDName,d,bottomDRegNo,bottomDMob)
 
     p1_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Patient's Name</b></para>",styles['Normal']),
     p1_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
@@ -430,7 +461,7 @@ def dischargeSummary(response,dis):
 
     elements.append(Spacer(1,6))
     print docname,dt,mob,pname
-    data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date&Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+str(docMobile)],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
+    data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date&Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+str(docMob)],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
     rheights=5*[0.3*inch]
     cwidths=[2.2*inch , 0.7*inch , 2.8*inch , 2*inch]
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
