@@ -200,7 +200,8 @@ def invoice(response,inv):
     # elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> RECEIPT / BILL </b></para>",styles['Normal']))
 
     elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
-    elements.append(Paragraph("<para fontSize=13 alignment='left' leftIndent=15><b> Invoice No. : {0}</b></para>".format(inv.pk),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=13 alignment='left' leftIndent=15><b> Bill No. : {0}</b></para>".format(inv.pk),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=13 alignment='left' leftIndent=15><b> Ref ID. : {0}</b></para>".format(  inv.activePatient.dischargeSummary.get().ipNo ),styles['Normal']))
 
     elements.append(Spacer(1, 20))
 

@@ -14,6 +14,64 @@ app.config(function($stateProvider) {
 
 app.controller('hospitalManagement.outPatient.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout, $uibModal) {
 
+  $scope.updatePayment = function(idx) {
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.activePatients.makePayment.html',
+      size: 'sm',
+      backdrop: true,
+      resolve: {
+        invoiceData: function() {
+          console.log($scope.invoices);
+          console.log(idx);
+          return $scope.invoices[idx];
+        },
+        indx: function() {
+          return idx;
+        }
+      },
+      controller: function($scope,indx, invoiceData, $uibModalInstance) {
+        $scope.indx = indx;
+        $scope.invoice = invoiceData;
+
+        $scope.form = {
+          discount : 0
+        }
+
+        $scope.saveInvoiceForm = function() {
+
+          var toSend = {
+            discount : $scope.form.discount,
+            billed : true,
+          }
+
+          $http({
+            method: 'PATCH',
+            url: '/api/patients/invoice/' + $scope.invoice.pk + '/',
+            data: toSend
+          }).
+          then(function(response) {
+            // $scope.form.pk = response.data.pk;
+            Flash.create('success', 'Saved');
+            $uibModalInstance.dismiss();
+          })
+
+
+        }
+      }
+    }).result.then(function() {
+
+    }, function() {
+      $scope.fetchInvoices();
+    });
+
+
+
+  }
+
+
+
+
   console.log('coming in explooreeee');
 
   $scope.data = $scope.tab.data;

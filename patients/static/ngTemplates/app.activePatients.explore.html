@@ -195,7 +195,7 @@
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>IP No.</label>
-            <span> {{dischargeSummForm.patient.pk}} </span>
+            <input type="text" class="form-control" ng-model="dischargeSummForm.ipNo" placeholder="">
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
@@ -204,14 +204,6 @@
             <!-- <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" placeholder=""> -->
             <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Name Here...">
           </div>
-          <!-- <div class="form-group" style="margin-left:100px;">
-            <label>(a) Contact Number</label>
-            <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultantContact" placeholder="">
-          </div>
-          <div class="form-group" style="margin-left:100px;">
-            <label>b. Department / Speciality</label>
-            <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultantDept" placeholder="">
-          </div> -->
         </div>
 
 

@@ -31,7 +31,7 @@
       <div class="row" style="margin-top:20px">
 
         <div ng-if="invoices.length!=0" class="col-md-3" ng-repeat="i in invoices" ng-click="invoiceInfo($index)">
-          <div class="container-fluid bg-green card" style="border-radius:5px;height:165px; margin-top:25px;">
+          <div class="container-fluid card" style="border-radius:5px; margin-top:25px;">
 
             <div class="row text-center">
               <h2>{{i.invoiceName}}</h2>
@@ -39,9 +39,20 @@
             <div class="row text-center">
               <span style="font-size:20px;"> ₹ {{i.grandTotal}} </span>
             </div>
-            <div class="row" style="padding-top:40px;">
-              <div class="col-md-6 pull-right" style="padding-right:0px;">
-                <button ng-click="openInvoice(i.pk);$event.stopPropagation();" class="btn btn-default btn-block">Print <i class="fa fa-download"></i> </button>
+            <div class="row text-center" ng-if="i.billed">
+              <span style="font-size:16px;"> Bill Generated <br> (Discount : {{i.discount}}  <i class="fa fa-inr"></i> ) </span>
+            </div>
+            <div class="row" style="padding-top:40px;margin-bottom:20px;" >
+              <!-- <div class="col-md-6">
+                <span style="cursor:pointer;" >
+                    <i class="fa fa-info fa-lg" ></i>
+                </span>
+              </div> -->
+              <div class="col-md-6">
+                <button ng-click="updatePayment($index);$event.stopPropagation();" ng-if="i.grandTotal>0" class="btn btn-info btn-block">Generate </button>
+              </div>
+              <div class="col-md-6 pull-right">
+                <button ng-click="openInvoice(i.pk);$event.stopPropagation();" ng-if="i.grandTotal>0" class="btn btn-default btn-block">Print <i class="fa fa-download"></i> </button>
               </div>
             </div>
           </div>
