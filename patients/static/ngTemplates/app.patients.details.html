@@ -1,29 +1,157 @@
 <div class="container-fluid" ng-controller="hospitalManagement.patient.explore" style="margin-top:20px;">
 
-  <div class="row">
-    <h3>{{patient.firstName}} {{patient.lastName}}</h3>
+  <div class="row" style="padding-left:20px">
+    <h2>{{patient.firstName}} {{patient.lastName}}</h2>
+    <div class="col-md-6" style="font-size:20px">
+      <div class="row">
+        <div class="col-md-2 text-right">
+          <strong>Age :</strong>
+        </div>
+        <div class="col-md-10">
+          {{patient.age}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2 text-right">
+          <strong>Gender :</strong>
+        </div>
+        <div class="col-md-10">
+          {{patient.gender}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2 text-right">
+          <strong>Mobile :</strong>
+        </div>
+        <div class="col-md-10">
+          {{patient.phoneNo}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2 text-right">
+          <strong>UHID :</strong>
+        </div>
+        <div class="col-md-10">
+          {{patient.uniqueId}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2 text-right">
+          <strong>Address :</strong>
+        </div>
+        <div class="col-md-10">
+          {{patient.street}}<br> {{patient.city}} , {{patient.pin}}<br> {{patient.state}} , {{patient.country}}
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  {{patient}}
+  <div class="row" style="margin:50px 20px">
 
-  <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-4 text-right">
-        <strong>UHID :</strong>
+  <div class="row" ng-repeat="v in visits">
+    <div class="container-fluid card animated fadeIn" style="padding-top:15px;border-left:4px solid #4192cd;margin-bottom:15px">
+      <div class="row">
+        <div class="col-md-4">
+          <h2>
+            <span ng-if="v.outPatient == true">Out Patient Visit</span>
+            <span ng-if="v.outPatient == false">In Patient Visit</span>
+          </h2>
+        </div>
+        <div class="col-md-8">
+          <div class="col-md-3">
+            <div class="row" ng-if="v.outPatient == false">
+              <span class="text-muted" style="font-size:15px;">Admitted Date</span> <br>
+              <span style="font-size:17px;"> {{v.inTime | date : 'dd MMM yyyy hh:mm:a'}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row" ng-if="v.outPatient == false">
+            <span class="text-muted" style="font-size:15px;">Discharged Date</span> <br>
+            <span style="font-size:17px;"> {{v.dateOfDischarge | date : 'dd MMM yyyy hh:mm:a'}}</span>
+          </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row" ng-if="v.outPatient == false && v.dischargeSummary.length > 0">
+              <span class="text-muted" style="font-size:15px;"><a href="/api/patients/downloaddischargeSummary/?pPk={{v.dischargeSummary[0]}}" target="_blank"target="_blank">
+               <button  type="button" class="btn btn-primary pull-right" >
+                 Discharge Summary <i class="fa fa-download"></i>
+               </button> </a> </span><br>
+
+            </div>
+            </div>
+
+
+          <div class="col-md-1 col-md-offset-1">
+            <button type="button" class="btn btn-default pull-right" ng-click="toggleExpand($index)">
+            <i class="fa fa-chevron-{{ !v.expanded ? 'down':'up'}}"></i>
+          </button>
+          </div>
+        </div>
       </div>
-      <div class="col-md-8">
-        {{patient.uniqueId}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 text-right">
-        <strong>Date of Birth :</strong>
-      </div>
-      <div class="col-md-8">
-        {{patient.dateOfBirth}}
+      <div class="row" ng-if="v.expanded" style="height:{{v.expanded ? 'auto':'0'}};">
+        <hr>
+        <div class="row text-center" style="margin-left:30px;font-size:20px">
+          <label>Invoices History</label>
+        </div>
+        <div class="row">
+          <div class="container-fluid " style="padding-left:30px;padding-right:30px;">
+            <div class="row text-center text-muted" ng-if="v.invoices.length == 0">
+              <h2>No Invoices For This Visit</h2>
+            </div>
+            <div class="col-md-3" ng-repeat="d in v.invoices" style="padding:15px;">
+              <div class="container-fluid relationDealCard">
+                <div class="row">
+                  <div class="text-right col-md-3">
+                    <strong>Name : </strong>
+                  </div>
+                  <div class="text-left col-md-9">
+                    <span>{{d.name}}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-md-3">
+                    <strong>ID : </strong>
+                  </div>
+                  <div class="text-left col-md-9">
+                    <span>{{d.pk}}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-md-3">
+                    <strong>Owner : </strong>
+                  </div>
+                  <div class="text-left col-md-9">
+                    <img ng-src="{{d.user | getDP}}" class="img img-rounded" style="width:30px;height:30px;"> <span>{{d.user | getName}}</span>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="text-right col-md-3">
+                    <strong>Contact : </strong>
+                  </div>
+                  <div class="text-left col-md-9">
+                    <img ng-src="{{d.contacts[0] | getCRMDP}}" class="img img-rounded" style="width:30px;height:30px;"> <span>{{d.contacts[0].name}}</span>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="text-right col-md-3">
+                    <strong>Value : </strong>
+                  </div>
+                  <div class="text-left col-md-9">
+                    <i class="fa fa-{{d.currency | lowercase}}" style="margin-right:20px;"></i>{{d.value}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+</div>
 
 
 

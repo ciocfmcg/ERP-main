@@ -90,7 +90,10 @@ class ActivePatientViewSet(viewsets.ModelViewSet):
     filter_fields = ['patient','outPatient' , 'status']
 
     def get_queryset(self):
-        return ActivePatient.objects.filter( ~Q(status = 'settled')).order_by('-created')
+        if 'all' in self.request.GET:
+            return ActivePatient.objects.order_by('-created')
+        else:
+            return ActivePatient.objects.filter( ~Q(status = 'settled')).order_by('-created')
 
 
 

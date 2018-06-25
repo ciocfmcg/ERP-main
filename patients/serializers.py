@@ -77,13 +77,15 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
         model = DischargeSummary
         fields = ('pk' , 'patient','ipNo','treatingConsultant','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications')
     def create(self , validated_data):
+        print validated_data
+        print '*******************'
+        print self.context['request'].data
         i = DischargeSummary(**validated_data)
         i.patient = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
-        i.treatingConsultant = Doctor.objects.get(pk=int(self.context['request'].data['treatingConsultant']))
+        i.save()
         if 'docListPk' in self.context['request'].data:
             for p in self.context['request'].data['docListPk']:
-                i.treatingConsultant = Doctor.objects.get(pk=int(p))
-        i.save()
+                i.treatingConsultant.add(Doctor.objects.get(pk=int(p)))
         return i
     def update(self ,instance, validated_data):
         print "will update"
@@ -115,4 +117,4 @@ class ActivePatientLiteSerializer(serializers.ModelSerializer):
     docName = DoctorSerializer(many=False , read_only=True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices', 'opNo' ,'docName')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices', 'opNo' ,'docName' , 'outPatient' , 'dateOfDischarge')

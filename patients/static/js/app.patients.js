@@ -221,7 +221,14 @@ app.controller("hospitalManagement.patient.explore", function($scope, $rootScope
   then(function(response) {
     console.log(response.data);
     $scope.visits = response.data;
+    for (var i = 0; i < $scope.visits.length; i++) {
+      $scope.visits[i].expanded = false;
+    }
   })
+
+  $scope.toggleExpand = function(idx) {
+    $scope.visits[idx].expanded = !$scope.visits[idx].expanded
+  }
 
 
 
