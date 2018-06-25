@@ -100,7 +100,27 @@
               <h2>No Invoices For This Visit</h2>
             </div>
             <div class="col-md-3" ng-repeat="d in v.invoices" style="padding:15px;">
+
               <div class="container-fluid relationDealCard">
+
+                <div class="row text-center">
+                  <h2>{{d.invoiceName}}</h2>
+                </div>
+                <div class="row text-center">
+                  <span style="font-size:20px;"> ₹ {{d.grandTotal}} </span>
+                </div>
+                <div class="row text-center" ng-if="d.billed">
+                  <span style="font-size:16px;"> Bill Generated <br> (Discount : {{d.discount}}  <i class="fa fa-inr"></i> ) </span>
+                </div>
+                <div class="row text-center" style="padding-top:20px;" >
+                  <!-- <div class="col-md-6 pull-right"> -->
+                    <button ng-click="openInvoice(d.pk);$event.stopPropagation();" ng-if="d.grandTotal>0" class="btn btn-success btn-block">Download Invoice <i class="fa fa-download"></i> </button>
+                  <!-- </div> -->
+                </div>
+              </div>
+
+
+              <!-- <div class="container-fluid relationDealCard">
                 <div class="row">
                   <div class="text-right col-md-3">
                     <strong>Name : </strong>
@@ -143,7 +163,8 @@
                     <i class="fa fa-{{d.currency | lowercase}}" style="margin-right:20px;"></i>{{d.value}}
                   </div>
                 </div>
-              </div>
+              </div> -->
+
             </div>
           </div>
         </div>

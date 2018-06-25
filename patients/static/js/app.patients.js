@@ -22,7 +22,6 @@ app.controller('hospitalManagement.patients.explore', function($scope, $http, $a
 });
 
 app.controller('hospitalManagement.patients.edit', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
-
   $scope.form = $scope.tab.data;
   console.log($scope.tab.data);
   console.log('coming in edit', $scope.form);
@@ -50,8 +49,8 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
   },true)
 
 
-
-  $scope.saveDetails = function() {
+  $scope.savePatientDetails = function() {
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     console.log('it comes here');
 
     var v = "";
@@ -80,6 +79,9 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
     }
     if ($scope.editForm.phoneNo != null && $scope.editForm.phoneNo.length != 0) {
       fd.append('phoneNo', $scope.editForm.phoneNo);
+    }
+    if ($scope.editForm.age != null && $scope.editForm.age.length != 0) {
+      fd.append('age', $scope.editForm.age);
     }
     if ($scope.editForm.email != null && $scope.editForm.email.length != 0) {
       fd.append('email', $scope.editForm.email);
@@ -228,6 +230,10 @@ app.controller("hospitalManagement.patient.explore", function($scope, $rootScope
 
   $scope.toggleExpand = function(idx) {
     $scope.visits[idx].expanded = !$scope.visits[idx].expanded
+  }
+
+  $scope.openInvoice =function(pk) {
+    window.open('/api/patients/downloadInvoice/?invoicePk=' + pk , '_blank');
   }
 
 
