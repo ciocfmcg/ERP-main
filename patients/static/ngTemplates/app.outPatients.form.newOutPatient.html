@@ -1,0 +1,58 @@
+<div class="row" ng-controller="hospitalManagement.outPatient.form">
+  <div class="row" ng-if="activePatientsForm.pk" style="padding-left:30px">
+    <h1>Edit Out Patient</h1>
+  </div>
+  <div class="col-md-6">
+    <form>
+      <div class="form-group">
+        <label>Patient Name</label>
+        <div class="{{addNewPatient==true ? 'input-group': ''}}">
+          <input ng-if="activePatientsForm.pk==null" type="text" class="form-control" ng-model="activePatientsForm.patient" uib-typeahead="patient as patient.firstName for patient in patientSearch($viewValue)" >
+          <input ng-if="activePatientsForm.pk" type="text" class="form-control" ng-model="activePatientsForm.patient" uib-typeahead="patient as patient.firstName for patient in patientSearch($viewValue)" disabled>
+          <div ng-if="addNewPatient" class="input-group-addon" style="cursor:pointer;" ng-click="addNewActivePatient(activePatientsForm.patient)">Add</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Ref ID</label>
+        <input  type="text" class="form-control" ng-model="activePatientsForm.opNo">
+      </div>
+      <div class="form-group" ng-if="activePatientsForm.pk">
+        <label>Status</label>
+        <select class="form-control" ng-model="activePatientsForm.status">
+          <option ng-repeat="s in statusList" value="{{s.value}}">{{s.name}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-click="createActivePatient()">Save</button>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-6">
+    <div class="container-fluid" style="padding:15px; padding-left:50px;" ng-if="displayDetails">
+
+      <div class="row" ng-if="activePatientsForm.patient.firstName">
+        <label style="font-size:15px;">Patient Name  :</label>
+        <span style="font-size:15px;">{{activePatientsForm.patient.firstName}} {{activePatientsForm.patient.lastName}} </span>
+      </div>
+      <div class="row" ng-if="activePatientsForm.patient.gender">
+        <label style="font-size:15px;">Gender  :</label>
+        <span style="font-size:15px;">{{activePatientsForm.patient.gender}} </span>
+      </div>
+      <div class="row" ng-if="activePatientsForm.patient.dateOfBirth">
+        <label style="font-size:15px;">Date Of Birth :</label>
+        <span style="font-size:15px;">{{activePatientsForm.patient.dateOfBirth}}</span>
+      </div>
+      <div class="row" ng-if="activePatientsForm.patient.uniqueId">
+        <label style="font-size:15px;">Unique Id  :</label>
+        <span style="font-size:15px;">{{activePatientsForm.patient.uniqueId}} </span>
+      </div>
+      <div class="row" ng-if="activePatientsForm.patient.phoneNo">
+        <label style="font-size:15px;">Phone No. :</label>
+        <span style="font-size:15px;">{{activePatientsForm.patient.phoneNo}} </span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
