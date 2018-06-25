@@ -475,6 +475,13 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
     })
   };
 
+  $scope.doctorSearch = function(query) {
+    return $http.get('/api/patients/doctor/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
   // console.log('kkkkkkkkkkk',$scope.data);
   // console.log('kkkkkk',$scope.tab);
 
@@ -519,6 +526,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
     $scope.activePatientsForm = {
       patient: '',
       opNo: '',
+      docName: '',
       inTime: new Date(),
       status: '',
       comments: ''
@@ -657,7 +665,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
       $scope.displayDetails = true;
       console.log('obbjjj' );
       if ($scope.activePatientsForm.pk==undefined) {
-        $http.get('/api/patients/activePatient/?patient=' + newValue.pk + '&outPatient=false' ).
+        $http.get('/api/patients/activePatient/?patient=' + newValue.pk + '&outPatient=true' ).
         then(function(response) {
           console.log(response.data);
           if (response.data.length>0) {
@@ -683,6 +691,10 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
       Flash.create('danger', 'please fill patient name');
       return
     }
+    if ($scope.activePatientsForm.docName == '' || $scope.activePatientsForm.docName.pk == undefined) {
+      Flash.create('danger', 'please Select Suggested Doctor Name');
+      return
+    }
     if ($scope.activePatientsForm.opNo == '') {
       Flash.create('danger', 'please fill Ref ID');
       return
@@ -704,6 +716,7 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
     dataToSend = {
       patient: $scope.activePatientsForm.patient.pk,
       opNo: $scope.activePatientsForm.opNo,
+      docName: $scope.activePatientsForm.docName.pk,
       inTime: $scope.activePatientsForm.inTime,
       outPatient: true
       // status: $scope.selectedStatus
@@ -732,7 +745,8 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
         $scope.activePatientsForm = {
           patient: '',
           opNo: '',
-          inTime: '',
+          docName: '',
+          inTime: new Date(),
           status: '',
           comments: ''
         };

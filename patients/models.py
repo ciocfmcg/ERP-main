@@ -31,6 +31,9 @@ class Patient(models.Model):
     state = models.CharField(max_length = 20 , null= True, blank = True )
     country = models.CharField(max_length = 20 , null= True, blank = True , default = 'India')
 
+    class Meta:
+        ordering = ('-created',)
+
 class PatientComments(models.Model):
     heading = models.CharField(max_length = 100 , null = False)
     data = models.CharField(max_length = 100 , null = False)
@@ -59,6 +62,9 @@ class ActivePatient(models.Model):
     cash = models.BooleanField(default = False)
     insurance = models.BooleanField(default = False)
     opNo = models.CharField(max_length = 100 , null = True  , blank = True)
+    docName = models.ForeignKey(Doctor , null= True , blank = True, related_name='outPatients')
+    class Meta:
+        ordering = ('-created',)
 
 class DischargeSummary(models.Model):
     patient = models.ForeignKey(ActivePatient , related_name='dischargeSummary', null= True)

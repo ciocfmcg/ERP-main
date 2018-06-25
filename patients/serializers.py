@@ -8,7 +8,7 @@ from .models import *
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ('pk' , 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' , 'age' )
+        fields = ('pk' ,'created', 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' , 'age' )
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,17 +22,31 @@ class DoctorSerializer(serializers.ModelSerializer):
 
 class ActivePatientSerializer(serializers.ModelSerializer):
     patient = PatientSerializer(many=False , read_only=True)
+    docName = DoctorSerializer(many=False , read_only=True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','created','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','created','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo' ,'docName')
     def create(self , validated_data):
         print '**********************************'
         print validated_data , self.context['request'].data
         a = ActivePatient(**validated_data)
-
+        if 'docName' in self.context['request'].data:
+            a.docName = Doctor.objects.get(pk=int(self.context['request'].data['docName']))
         a.patient = Patient.objects.get(pk=int(self.context['request'].data['patient']))
         a.save()
         return a
+    def update(self ,instance, validated_data):
+        print validated_data , self.context['request'].data
+        for key in ['inTime','outTime','status','comments','outPatient','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'docName' in self.context['request'].data:
+            instance.docName = Doctor.objects.get(pk=int(self.context['request'].data['docName']))
+        instance.save()
+        return instance
+
 
 class InvoiceSerializer(serializers.ModelSerializer):
     # activePatient = ActivePatientSerializer(many=False , read_only=True)
@@ -89,6 +103,7 @@ class DishchargeSummaryLiteSerializer(serializers.ModelSerializer):
 class ActivePatientLiteSerializer(serializers.ModelSerializer):
     invoices = InvoiceSerializer(many = True , read_only = True)
     # dischargeSummary = DishchargeSummaryLiteSerializer(many = False , read_only = True)
+    docName = DoctorSerializer(many=False , read_only=True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices', 'opNo')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices', 'opNo' ,'docName')

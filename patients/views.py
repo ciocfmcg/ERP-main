@@ -146,10 +146,12 @@ class PageNumCanvas(canvas.Canvas):
 def invoice(response,inv):
     print '999999999999999999999999999999999999999'
     now = datetime.datetime.now()
-    print inv.activePatient.dateOfDischarge
+    print inv.activePatient.dateOfDischarge,inv.activePatient.inTime
 
-    ad = str(inv.activePatient.inTime).split(' ')[0].split('-')
-    dd = str(inv.activePatient.dateOfDischarge).split(' ')[0].split('-')
+    ad1 = str(inv.activePatient.inTime).split(' ')
+    ad = ad1[0].split('-')
+    dd1 = str(inv.activePatient.dateOfDischarge).split(' ')
+    dd = dd1[0].split('-')
     print dd
     if inv.activePatient.outPatient:
         refId = inv.activePatient.opNo
@@ -157,9 +159,9 @@ def invoice(response,inv):
         d = ''
     else:
         refId = inv.activePatient.dischargeSummary.get().ipNo
-        a = ad[2]+'-'+ad[1]+'-'+ad[0]
+        a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('+')[0]
         try:
-            d = dd[2]+'-'+dd[1]+'-'+dd[0]
+            d = dd[2]+'-'+dd[1]+'-'+dd[0]+' '+ dd1[1].split('.')[0]
         except:
             d = ''
     (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,a,d,inv.grandTotal)
@@ -207,13 +209,16 @@ def invoice(response,inv):
     elements.append(Spacer(1, 15))
 
     if inv.activePatient.outPatient:
-        data2=[['Patient Name : {0}'.format(name.upper()),'UHID : {0}'.format(refid)]]
-        rheights=1*[0.3*inch]
+        if inv.activePatient.docName:
+            dN = inv.activePatient.docName.name
+        else:
+            dN = ''
+        data2=[['Patient Name : {0}'.format(name.upper()),'UHID : {0}'.format(refid)],['DoctorName : {0}'.format(dN),'']]
     else:
         data2=[['Patient Name : {0}'.format(name.upper()),'UHID : {0}'.format(refid)],['Admitted on : {0}'.format(a),'Discharged on : {0}'.format(d)]]
-        rheights=2*[0.3*inch]
 
 
+    rheights=2*[0.3*inch]
     cwidths=2*[5*inch]
     cwidths[1]=2.5*inch
     t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
