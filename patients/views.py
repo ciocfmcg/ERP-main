@@ -165,8 +165,10 @@ def invoice(response,inv):
             refId = inv.activePatient.dischargeSummary.get().ipNo
         except DischargeSummary.DoesNotExist:
             refId = ''
-
-        a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('+')[0]
+        if '.' in ad1[1]:
+            a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('.')[0]
+        else:
+            a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('+')[0]
         try:
             d = dd[2]+'-'+dd[1]+'-'+dd[0]+' '+ dd1[1].split('.')[0]
         except:
@@ -298,7 +300,10 @@ def dischargeSummary(response,dis):
 
     elements.append(Spacer(1, 15))
     print dis.patient.patient,dis.patient.inTime,dis.patient.dateOfDischarge
-    ad = str(dis.patient.inTime).split('+')[0]
+    if '.' in str(dis.patient.inTime):
+        ad = str(dis.patient.inTime).split('.')[0]
+    else:
+        ad = str(dis.patient.inTime).split('+')[0]
     dd = str(dis.patient.dateOfDischarge).split('.')[0]
     d = str(now).split('.')[0]
     print d, ad , dd
