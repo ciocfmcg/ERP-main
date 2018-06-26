@@ -234,7 +234,7 @@ def invoice(response,inv):
     t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 12),('TEXTFONT', (0, 0), (-1, -1), 'Courier'), ]))
     elements.append(t2)
 
-    elements.append(Spacer(1, 50))
+    elements.append(Spacer(1, 40))
 
     rheights=(totalRows+1)*[0.25*inch]
     cwidths=5*[0.4*inch]
@@ -251,17 +251,23 @@ def invoice(response,inv):
             data3.append([i,details[i-1]['name'].upper(),details[i-1]['qty'],details[i-1]['rate'],details[i-1]['qty']*details[i-1]['rate']])
 
     t3=Table(data3,rowHeights=rheights,colWidths=cwidths)
-    t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 13),('TEXTFONT', (0, 0), (-1, -1), 'Courier'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
+    t3.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 11),('TEXTFONT', (0, 0), (-1, -1), 'Courier'),('LINEBELOW',(0,0),(-1,0),0.8,black),('LINEBELOW',(0,-1),(-1,-1),0.8,black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
     elements.append(t3)
     elements.append(Spacer(1, 7))
     # elements.append(HRFlowable(width="20%", thickness=1, color=black ,hAlign='RIGHT',spaceBefore=12))
-    elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Total : {0} </b></para>".format(total),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=11 alignment='right' rightIndent=70><b> Total : {0} </b></para>".format(total),styles['Normal']))
 
     if inv.billed:
-        elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Amount recieved : {0} </b></para>".format(total-inv.discount),styles['Normal']))
-        elements.append(Paragraph("<para fontSize=13 alignment='right' rightIndent=70><b> Discount Amount / Due amount: {0} </b></para>".format(inv.discount),styles['Normal']))
+        elements.append(Paragraph("<para fontSize=11 alignment='right' rightIndent=70><b> Amount recieved : {0} </b></para>".format(total-inv.discount),styles['Normal']))
+        elements.append(Paragraph("<para fontSize=11 alignment='right' rightIndent=70><b> Discount Amount / Due amount: {0} </b></para>".format(inv.discount),styles['Normal']))
 
-    doc.build(elements,canvasmaker=PageNumCanvas)
+    # elements.append(HRFlowable(spaceBefore=10, spaceAfter=10, thickness=1, color=black))
+    elements.append(Spacer(1, 30))
+    elements.append(Paragraph("<para fontSize=11 alignment='center' leading=15> FOR CHAITANYA HOSPITAL </para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=11 alignment='center' > Thank You </para>",styles['Normal']))
+
+
+    doc.build(elements)
 
 
 def dischargeSummary(response,dis):
