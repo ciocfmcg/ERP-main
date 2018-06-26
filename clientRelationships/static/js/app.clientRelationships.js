@@ -172,8 +172,15 @@ app.controller("businessManagement.clientRelationships.default", function($scope
             return data;
           }
         },
-        controller: function($scope , data) {
+        controller: function($scope, $users , data) {
           $scope.data = data;
+          $scope.mode = 'calling';
+          $scope.me = $users.get('mySelf');
+          connection.session.publish('service.self.'+ $scope.me.username , ['call' , $scope.data.mobile], {}, {acknowledge: true}).
+          then(function (publication) {
+            $scope.mode = 'called';
+          });
+
         },
       })
     }
