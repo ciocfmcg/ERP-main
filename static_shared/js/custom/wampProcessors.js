@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'ws://'+ '192.168.1.113' +':8080/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'ws://'+ wampServer +':8080/ws', realm: 'default'});
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function (session) {
