@@ -12,16 +12,30 @@
         <div class="col-md-3">
           <img class="img-responsive img-circle" ng-src="{{message.originator | getDP}}" width="40px" height="50px" alt="P" style="position:relative; top:10px;margin-left:5px;">
         </div>
-        <div class="col-md-8 messageBubble"> <p style="word-wrap: break-word;">{{message.message}}</p>
+        <div class="col-md-8 messageBubble" ng-if="message.message"> <p style="word-wrap: break-word;">{{message.message}}</p>
         </div>
+        <div class="col-md-8 text-center  messageBubble" ng-if="message.attachment">
+          <a ng-href="{{message.attachment}}" target = "_blank"> <img ng-if="message.fileType=='image'" ng-src="{{message.attachment}}" width="100px" height="100px" alt="image attachment"></a>
+          <p ng-if="message.fileType=='document'" style="word-wrap: break-word;"> <a ng-href="{{message.attachment}}" target = "_blank" >{{message.attachment.split('chat/')[1]}}</a> </p>
+        </div>
+      </div>
+      <div class="row" ng-if="!senderIsMe[$index]">
+        <span class="text-muted pull-right" style="font-size:10px; padding-right:25px;">{{message.created | timeAgo}}</span>
       </div>
       <!-- // for the bubble with sender picture is on the left -->
       <div class="row" ng-if="senderIsMe[$index]">
-        <div class="col-md-8 col-md-offset-1 messageBubble"> <p style="word-wrap: break-word;"> {{message.message}}</p>
+        <div class="col-md-8 col-md-offset-1 messageBubble" ng-if="message.message" > <p style="word-wrap: break-word;"> {{message.message}}</p>
+        </div>
+        <div class="col-md-8 text-center col-md-offset-1 messageBubble" ng-if="message.attachment">
+          <a ng-href="{{message.attachment}}" target = "_blank"><img ng-if="message.fileType=='image'" ng-src="{{message.attachment}}" width="100px" height="100px" alt="image attachment"></a>
+          <p ng-if="message.fileType=='document'" style="word-wrap: break-word;"><a ng-href="{{message.attachment}}" target = "_blank" >{{message.attachment.split('chat/')[1]}}</a></p>
         </div>
         <div class="col-md-3">
           <img class="img-responsive img-circle" ng-src="{{message.originator | getDP}}" width="40px" height="50px" alt="P" style="position:relative; top:10px;margin-left:5px;">
         </div>
+      </div>
+      <div class="row" ng-if="senderIsMe[$index]">
+        <span class="text-muted pull-left" style="font-size:10px; padding-left:25px;">{{message.created | timeAgo}}</span>
       </div>
     </div>
     <div class="row" style="height:40px;">
@@ -29,8 +43,14 @@
     </div>
   </div>
   <div class="footer" ng-show="toggle">
-    <div class="container-fluid">
-      <input type="text" class="form-control" value="" style="width:100%"  ng-enter="send()" ng-model="messageToSend"></input>
+    <div class="container-fluid input-group" >
+      <input type="text" ng-if="chatForm.fileToSend.size==0" class="form-control" style="width:100%" ng-enter="send()" ng-model="chatForm.messageToSend" >
+      <input type="file" id="filePickerChat{{friend.pk}}" style="display:none;" file-model="chatForm.fileToSend">
+      <span ng-if="chatForm.fileToSend.size==0" class="input-group-addon btn btn-default" style="border:none; border-radius: 0px;" ng-click="attachFile()"><i class="fa fa-paperclip" aria-hidden="true" ></i></span>
+      <span ng-if="chatForm.fileToSend.size!=0" class="input-group-addon btn btn-default" > <i class="fa {{chatForm.fileToSend.name | fileTypeIcon }}"></i> </span>
+      <span ng-if="chatForm.fileToSend.size!=0" class="input-group-addon btn btn-default" style="font-size:10px;" > {{chatForm.fileToSend.name.slice(0,25)}} </span>
+      <span ng-if="chatForm.fileToSend.size!=0" class="input-group-addon btn btn-default" style="cursor:pointer" ng-click="removeFile()" > <i class="fa fa-times" aria-hidden="true"></i> </span>
+      <span ng-if="chatForm.fileToSend.size!=0" class="input-group-addon btn btn-default" style="cursor:pointer" ng-click="sendFile()"> <i class="fa fa-paper-plane-o" aria-hidden="true"></i> </span>
     </div>
   </div>
 </div>
