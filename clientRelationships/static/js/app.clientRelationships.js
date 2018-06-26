@@ -34,15 +34,229 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.clientRelationships.relationships.html',
       controller: 'businessManagement.clientRelationships.relationships'
     })
+    .state('businessManagement.clientRelationships.reports', {
+      url: "/reports",
+      templateUrl: '/static/ngTemplates/app.clientRelationships.reports.html',
+      controller: 'businessManagement.clientRelationships.reports'
+    })
+    .state('businessManagement.clientRelationships.team', {
+      url: "/team",
+      templateUrl: '/static/ngTemplates/app.clientRelationships.team.html',
+      controller: 'businessManagement.clientRelationships.team'
+    })
 
 });
 
 
 
 
-app.controller("businessManagement.clientRelationships.default", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.clientRelationships.default", function($scope, $state, $users, $stateParams, $http, Flash, $timeout , $uibModal) {
 
-  
+  $http({method : 'GET' , url : '/api/clientRelationships/clientHomeCal/'}).
+  then(function(response) {
+    console.log('resssssssssss',response.data);
+    $scope.clrHomeData = response.data
+    if ($scope.clrHomeData.currencyTyp == 'INR') {
+    $scope.currSymbol = 'inr';
+  }else if ($scope.clrHomeData.currencyTyp == 'USD') {
+      $scope.currSymbol = 'usd';
+    }else if ($scope.clrHomeData.currencyTyp == 'GBP') {
+      $scope.currSymbol = 'gbp';
+    }else if ($scope.clrHomeData.currencyTyp == 'EUR') {
+      $scope.currSymbol = 'eur';
+    }else if ($scope.clrHomeData.currencyTyp == 'AUD') {
+      $scope.currSymbol = 'aud';
+    }else {
+      $scope.currSymbol = '';
+    }
+  })
+
+  $scope.valConfig = {
+  		type: 'funnel',
+  		data: {
+  			datasets: [{
+  				data: [0, 0, 0 , 0, 0, 0],
+  				backgroundColor: [
+  					"#16a085",
+  					"#af6a10",
+            "#FFB424",
+            "#2980b9",
+            "#27ae60",
+  					"#795F99"
+  				],
+  				hoverBackgroundColor: [
+            "#16a085",
+  					"#af6a10",
+            "#FFB424",
+            "#2980b9",
+            "#27ae60",
+  					"#795F99"
+  				]
+  			}],
+  			labels: [
+  				"Contacting",
+  				"Demo/POC",
+          "Requirements",
+          "Proposal",
+          "Negotiation",
+  				"Conclusion"
+  			]
+  		},
+  		options: {
+  			responsive: true,
+  			legend: {
+  				position: 'top'
+  			},
+  			title: {
+  				display: true,
+  				text: 'Sales pipeline'
+  			},
+  			animation: {
+  				animateScale: true,
+  				animateRotate: true
+  			}
+  		}
+  	};
+
+    $scope.countConf = JSON.parse(JSON.stringify($scope.valConfig))
+
+
+
+
+    $scope.$watch('dealGraph', function(newValue, oldValue) {
+      if (newValue) {
+        $scope.showtyp = 'count'
+      }else {
+        $scope.showtyp = 'val'
+      }
+    });
+
+
+
+    $timeout(function () {
+      $scope.valConfig.data.datasets[0].data = $scope.clrHomeData.sumLi
+      $scope.countConf.data.datasets[0].data = $scope.clrHomeData.countLi
+      var valG = document.getElementById("chart-areaVal").getContext("2d");
+      var countG = document.getElementById("chart-areaCount").getContext("2d");
+      window.myDoughnut1 = new Chart(valG, $scope.valConfig);
+      window.myDoughnut2 = new Chart(countG, $scope.countConf);
+      $scope.dealGraph = false
+      selectGaguge1 = new Gauge(document.getElementById("select-1"));
+      selectGaguge1.maxValue = $scope.clrHomeData.target;
+      selectGaguge1.set($scope.clrHomeData.complete);
+    }, 1000);
+
+
+
+
+
+    $scope.form = {usrSearch : '' , contacts : []}
+
+
+    $scope.searchContacts = function() {
+      $http({method : 'GET' , url : '/api/clientRelationships/contact/?&name__contains='+ $scope.form.usrSearch +'&limit=3'}).
+      then(function(response) {
+        $scope.form.contacts = response.data.results;
+      })
+    }
+
+    $scope.searchContacts();
+
+    $scope.call = function(data) {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.clientRelationships.call.modal.html',
+        size: 'md',
+        backdrop: true,
+        resolve: {
+          data: function() {
+            return data;
+          }
+        },
+        controller: function($scope , data) {
+          $scope.data = data;
+        },
+      })
+    }
+
+    $scope.sms = function(data) {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.clientRelationships.message.modal.html',
+        size: 'md',
+        backdrop: true,
+        resolve: {
+          data: function() {
+            return data;
+          }
+        },
+        controller: function($scope , data) {
+          $scope.data = data;
+        },
+      })
+    }
+
+    $scope.email = function(data) {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.clientRelationships.email.modal.html',
+        size: 'lg',
+        backdrop: true,
+        resolve: {
+          data: function() {
+            return data;
+          }
+        },
+        controller: function($scope , data) {
+          $scope.data = data;
+
+          $scope.sendEmail = function() {
+
+            var cc = []
+            for (var i = 0; i < $scope.form.cc.length; i++) {
+              cc.push($scope.form.cc[i]);
+            }
+
+            // var contact = []
+            // for (var i = 0; i < $scope.data.length; i++) {
+            //   contact.push($scope.data[i]);
+            // }
+            var contact = []
+            contact.push($scope.data.pk);
+
+            var toSend = {
+              contact :contact,
+              cc : cc,
+              emailbody :$scope.form.emailBody,
+              emailSubject:$scope.form.emailSubject
+            }
+            $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
+            then(function() {
+              Flash.create('success', 'Email sent successfully');
+              $scope.resetEmailForm();
+            })
+          }
+
+          $scope.tinymceOptions = {
+            selector: 'textarea',
+            content_css: '/static/css/bootstrap.min.css',
+            inline: false,
+            plugins: 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+            skin: 'lightgray',
+            theme: 'modern',
+            height: 300,
+            toolbar: 'undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+            setup: function(editor) {
+              // editor.addButton();
+            },
+          };
+
+          $scope.resetEmailForm = function() {
+            $scope.form = {emailBody : '' , cc : [] , emailSubject : ''}
+          }
+
+          $scope.resetEmailForm();
+
+        },
+      })
+    }
 
 })
 

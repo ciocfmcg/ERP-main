@@ -91,6 +91,32 @@ class DealSerializer(serializers.ModelSerializer):
                 instance.contacts.add(Contact.objects.get(pk = c))
         return instance
 
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = ('pk' , 'user' , 'created','users' ,'slot','email','typ')
+        read_only_fields = ('user','users',)
+    def create(self , validated_data):
+        d = Schedule(**validated_data)
+        d.user = self.context['request'].user
+        d.save()
+        if 'users' in self.context['request'].data:
+            for c in self.context['request'].data['users']:
+                d.users.add(User.objects.get(pk = c))
+        return d
+    def update(self ,instance, validated_data):
+        for key in ['users' ,'slot','email','typ']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                print "Error while saving " , key
+                pass
+        if 'users' in self.context['request'].data:
+            instance.users.clear()
+            for c in self.context['request'].data['users']:
+                instance.users.add(User.objects.get(pk = c))
+        instance.save()
+        return instance
 
 
 class RelationshipSerializer(serializers.ModelSerializer):
@@ -118,6 +144,7 @@ class ContractSerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
     contacts = ContactLiteSerializer(many = True , read_only = True)
+    contact = ContactLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Activity
         fields = ('pk'  ,'user' , 'created' , 'typ' , 'data', 'deal', 'contact', 'notes', 'doc' , 'contacts' , 'internalUsers')
@@ -125,6 +152,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         a = Activity(**validated_data)
         a.user = self.context['request'].user
+        a.contact = Contact.objects.get(pk=self.context['request'].data['contact'])
         a.save()
         if 'internalUsers' in self.context['request'].data:
             for c in self.context['request'].data['internalUsers']:

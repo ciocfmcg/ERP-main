@@ -1,0 +1,72 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;cursor:pointer" ng-click="rowActionClicked('info')">
+  <div class="container-fluid card" style="padding:15px 5px;">
+    <div class="row">
+      <div class="col-md-5" align="right">
+        <strong>Name :</strong>
+      </div>
+      <div class="col-md-7">
+        {{data.name ? data.name : 'None'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5" align="right">
+        <strong>Email :</strong>
+      </div>
+      <div class="col-md-7">
+        {{data.email ? data.email : 'None'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5" align="right">
+        <strong>Mobile :</strong>
+      </div>
+      <div class="col-md-7">
+        {{data.mobile ? data.mobile : 'None'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5" align="right">
+        <strong>Reference ID :</strong>
+      </div>
+      <div class="col-md-7">
+        {{data.referenceId ? data.referenceId : 'None'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5" align="right">
+        <strong>Source :</strong>
+      </div>
+      <div class="col-md-7">
+        {{data.source ? data.source : 'None'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5" align="right">
+        <strong>PinCode :</strong>
+      </div>
+      <div class="col-md-7">
+        {{data.pinCode ? data.pinCode : 'None'}}
+      </div>
+    </div>
+    <!-- <hr>
+    <div class="row" style="padding:0px 30px">
+      <div class="col-md-5">
+        <i style="cursor:pointer;" class="fa fa-pencil fa-lg" ng-click="rowActionClicked('edit')"></i>
+      </div>
+      <div class="col-md-3">
+        <i style="cursor:pointer;" class="fa fa-info fa-lg" ng-click="rowActionClicked('info')"></i>
+      </div>
+      <div class="col-md-4">
+        <i style="cursor:pointer;" class="fa fa-trash fa-lg pull-right" mwl-confirm
+        title="Confirm"
+        message="Are you sure you want to delete this?"
+        confirm-text="Yes <i class='fa fa-check'></i>"
+        cancel-text="No"
+        on-confirm="rowActionClicked('delete')"
+        confirm-button-type="danger"
+        cancel-button-type="default">
+      </i>
+      </div>
+    </div> -->
+  </div>
+</div>

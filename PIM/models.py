@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from time import time
 # Create your models here.
 def getThemeImageUploadPath(instance , filename ):
     return 'PIM/images/theme/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)

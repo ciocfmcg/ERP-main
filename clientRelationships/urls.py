@@ -12,9 +12,14 @@ router.register(r'contract' , ContractViewSet , base_name = 'contract')
 router.register(r'activity' , ActivityViewSet , base_name = 'activity')
 router.register(r'relationships' , RelationshipViewSet , base_name = 'relationships')
 router.register(r'productMeta' , ProductMetaViewSet , base_name = 'productMeta')
+router.register(r'schedule' , ScheduleViewSet, base_name = 'schedule')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),
     url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
+    url(r'clientHomeCal/$' , ClientHomeCalAPIView.as_view() ),
+    url(r'reportHomeCal/$' , ReportHomeCalAPIView.as_view() ),
+    url(r'sendEmail/$' , SendEmailAPIView.as_view() ),
+    url(r'scheduleReport/$' , SucheduleReportAPIView.as_view() ),
 ]

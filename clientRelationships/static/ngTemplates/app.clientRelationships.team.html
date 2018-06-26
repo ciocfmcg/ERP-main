@@ -1,0 +1,150 @@
+<breadcrumb></breadcrumb>
+<div class="container-fluid"  style="padding:0px !important;">
+
+  <div class="col-md-5">
+    <div id="chart-container" ng-click='retriveTimeline()'></div>
+  </div>
+
+  <div class="col-md-7" style="border-left:solid 2px #eeeeee;">
+
+    <div class="row">
+      <div class="col-md-2 text-right">
+        <img ng-src=" {{form.userInView | getDP}}" style="width:60px;height:60px;">
+      </div>
+      <div class="col-md-5">
+        <h3>{{form.userInView | getName}}</h3>
+      </div>
+      <div class="col-md-2 {{form.active == 'task'? 'text-primary':''}}" style="cursor:pointer;" ng-click="form.active = 'task';change()" >
+        <h3> <i class="fa fa-calendar-check-o"></i> Tasks </h3>
+      </div>
+      <div class="col-md-3 {{form.active == 'activity'? 'text-primary':''}}" style="cursor:pointer;" ng-click="form.active = 'activity';change()">
+        <h3> <i class="fa fa-braille"></i> Activities </h3>
+      </div>
+    </div>
+    <!-- <div class="row">
+      <div class="container-fluid text-center">
+        <h4 class="text-muted">
+          <i class="fa fa-calendar fa-lg"></i> <span style="padding-bottom:20px;">Upcoming</span>
+        </h4>
+      </div>
+    </div> -->
+    <div class="row" style="overflow:hidden;padding-left: 170px" ng-if="form.active == 'task'">
+      <!-- <i style="position:absolute; font-size:260px;color:#f7fbfc;left:120px;top:180px;" class="fa fa-calendar"></i> -->
+      <div class="text-center text-muted" ng-if="calendar.length == 0" style="padding-top:50px;">
+        No entry in calendar!
+      </div>
+
+    <div class="row" style="padding:30px;height:80vh;overflow:auto;border-top:2px solid #eeeeee;" >
+
+      <ul class="timeline timeline-inverse">
+      <div ng-repeat="c in calendar" >
+        <div style="position:absolute; margin-left:-130px;">
+          <span ng-if="c.completed" class="badge badge-pill bg-yellow" style="font-size:15px;">Completed</span>
+          <!-- <span ng-if="!$first" class="badge badge-pill bg-yellow" style="font-size:15px;">Today{{c.when}}</span>
+          <span ng-if="$first" class="badge badge-pill bg-yellow" style="font-size:15px;">Tommorow{{c.when}}</span> -->
+          <!-- <span ng-if="c.completed" class="badge badge-pill bg-yellow" style="font-size:15px;">Today</span> -->
+          <!-- <span class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created |timeAgo}} Ago</span> -->
+        </div>
+        <div class="row text-center" ng-if="c.newDate" style="margin-top:30px;">
+          <span class="badge bg-blue" ng-if="c.today">Today</span>
+          <span class="badge bg-blue" ng-if="!c.today">{{c.when.toDateString()}}</span>
+        </div>
+        <div class="row" style="margin-top:20px;">
+          <div class="col-md-2" >
+
+            <input ng-if="c.eventType == 'Reminder'" type="checkbox" ng-model="c.completed" ng-change="markComplete(c.pk)">
+            <i class="fa fa-users" ng-if="c.eventType == 'Meeting'"></i>
+          </div>
+          <div class="col-md-10" >
+            <div class="row text-center">
+              <h3><span ng-if="c.data.pk != null">
+                <!-- <div class="col-md-1">
+                <div style="width:30px;height:30px;font-size:22px; background:#FCB95B;display:bolck;padding-bottom:5px;border-radius:7px;" class="text-center">
+                  <i class="fi-crown" style="color:white;"></i>
+                </div>
+              </div> -->
+              <i class="fa fa-handshake-o fa-lg"> &nbsp;</i>{{c.data.name}}</span></h3>
+              <h3><span ng-if="c.clients.length > 0"><img ng-src="{{c.clients[0].pk | getCRMDP}}" class="img img-circle" style="width:30px;height:30px;" alt="">
+              {{p.name}}{{c.clients[0].name}}</span></h3>
+            </div>
+            <div class="row">
+              <span style="{{c.completed ? 'text-decoration:line-through green;':''}}">{{c.text}}</span>
+            </div>
+            <div class="row" ng-if="c.clients.length>0">
+              <label class="text-muted" style="margin-top:10px;color:#c1c1c1;">Stakeholders</label> <br>
+              <div class="row" ng-repeat="p in c.clients" style="cursor:pointer;" ng-click="exploreContact(p)">
+                <img ng-src="{{p | getCRMDP}}" class="img img-circle" style="width:20px;height:20px;" alt="">
+                {{p.name}}
+              </div>
+            </div>
+
+            <div class="row" ng-if="c.followers.length>0">
+              <label class="text-muted" style="margin-top:10px;color:#c1c1c1;">Internal Users</label> <br>
+              <div class="row" ng-repeat="p in c.followers">
+                <img ng-src="{{p | getDP}}" class="img img-circle" style="width:20px;height:20px;" alt="">
+                {{p | getName}}
+              </div>
+            </div>
+
+            <div class="row" ng-if="c.venue != null && c.venue.length>0">
+              <label class="text-muted" style="margin-top:10px;color:#c1c1c1;">Venue</label> <br>
+              {{c.venue}}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </ul>
+      <nav>
+        <ul class="pager">
+          <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prePage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+          <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="nxtPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+    <div class="row" style="padding:30px;height:80vh;overflow:auto;border-top:2px solid #eeeeee;"ng-if="form.active == 'activity'" >
+      <!-- <ul class="timeline timeline-inverse">
+        <div ng-repeat="feed in timelineItems">
+          <div ng-if="feed.newMonth || $first" style="position:absolute; margin-left:-130px;">
+            <span ng-if="!$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created | date:'MMM-yy'}}</span>
+            <span ng-if="$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created |timeAgo}} Ago</span>
+          </div>
+          <crm-Note ng-if="feed.typ == 'note'" data="feed"></crm-Note>
+          <crm-Call ng-if="feed.typ == 'call'" data="feed"></crm-Call>
+          <crm-Meeting ng-if="feed.typ == 'meeting'" data="feed"></crm-Meeting>
+          <crm-Mail ng-if="feed.typ == 'mail' && feed.data.length >0" data="feed"></crm-Mail>
+          <crm-Todo ng-if="feed.typ == 'todo'" data="feed"></crm-Todo>
+        </div>
+      </ul> -->
+      <div class="text-center text-muted" ng-if="timelineItems.length == 0" style="padding-top:50px;">
+        No activity log found!
+      </div>
+      <div class="col-md-10 col-md-offset-2" style="padding-top:40px;">
+        <ul class="timeline timeline-inverse">
+          <div ng-repeat="feed in timelineItems">
+            <div ng-if="feed.newMonth || $first" style="position:absolute; margin-left:-130px;">
+              <span ng-if="!$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created | date:'MMM-yy'}}</span>
+              <span ng-if="$first" class="badge badge-pill bg-yellow" style="font-size:15px;">{{feed.created |timeAgo}} Ago</span>
+            </div>
+            <crm-Note ng-if="feed.typ == 'note'" data="feed"></crm-Note>
+            <crm-Call ng-if="feed.typ == 'call'" data="feed"></crm-Call>
+            <crm-Meeting ng-if="feed.typ == 'meeting'" data="feed"></crm-Meeting>
+            <crm-Mail ng-if="feed.typ == 'mail' && feed.data.length >0" data="feed"></crm-Mail>
+            <crm-Todo ng-if="feed.typ == 'todo'" data="feed"></crm-Todo>
+          </div>
+        </ul>
+      </div>
+
+      <nav>
+        <ul class="pager">
+          <li class="previous {{pageNo == 0? 'disabled':''}}"><a href="" ng-click="prevPage()"><span aria-hidden="true">&larr;</span> Prev</a></li>
+          <li class="next {{disableNext? 'disabled':''}}"><a href="" ng-click="nextPage()">Next <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+      </nav>
+
+    </div>
+
+  </div>
+
+</div>

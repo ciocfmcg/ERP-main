@@ -180,10 +180,10 @@ app.controller("businessManagement.clientRelationships.opportunities.created", f
 
 
 app.controller("businessManagement.clientRelationships.opportunities.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $timeout, $rootScope, $aside) {
-
   $scope.disableNext = false;
   $scope.pageNo = 0;
   $scope.sms = {text : '' , include : [] , selectAll : false , preventUnselect : false}
+  $scope.form={}
 
   $scope.$watch('sms.selectAll' , function(newValue , oldValue) {
     if ($scope.sms.preventUnselect && !newValue) {
@@ -235,6 +235,7 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
       }
     }
   }
+
 
   $scope.editDeal = function() {
     $uibModal.open({
@@ -747,6 +748,33 @@ app.controller("businessManagement.clientRelationships.opportunities.explore", f
     })
   }
 
+  $scope.resetEmailForm = function() {
+    $scope.form={cc:[], emailBody : '' , emailSubject : ''}
+  }
+
+  $scope.resetEmailForm();
+
+  $scope.sendEmail = function() {
+    var cc = []
+    for (var i = 0; i < $scope.form.cc.length; i++) {
+      cc.push($scope.form.cc[i]);
+    }
+    var contact = []
+    for (var i = 0; i < $scope.deal.contacts.length; i++) {
+      contact.push($scope.deal.contacts[i].pk);
+    }
+    var toSend = {
+      contact :contact,
+      cc : cc,
+      emailbody :$scope.form.emailBody,
+      emailSubject:$scope.form.emailSubject
+    }
+    $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
+    then(function() {
+      Flash.create('success', 'Email sent successfully')
+      $scope.resetEmailForm();
+    })
+  }
 
 });
 

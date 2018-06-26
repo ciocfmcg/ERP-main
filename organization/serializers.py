@@ -5,6 +5,7 @@ from rest_framework.exceptions import *
 from .models import *
 from django.conf import settings as globalSettings
 from rest_framework.response import Response
+import re
 
 
 # class UnitsLiteSerializer(serializers.ModelSerializer):
@@ -193,5 +194,72 @@ class RoleSerializer(serializers.ModelSerializer):
             a=self.context['request'].data['contacts'].split(',')
             for i in a:
                 instance.contacts.add(User.objects.get(pk = i))
+        instance.save()
+        return instance
+
+class ResponsibilitySerializer(serializers.ModelSerializer):
+    departments = DepartmentsSerializer(many = True , read_only = True)
+    class Meta:
+        model = Responsibility
+        fields = ('pk' , 'title', 'departments','data')
+        read_only_fields = ('departments', )
+    def create(self , validated_data):
+        print '************',validated_data
+        r = Responsibility(**validated_data)
+        if 'data' in validated_data:
+            match=re.match(r'\d,|\d',r.data)
+            if match:
+                r.data = r.data
+            else:
+                raise ValidationError({'Not valid data'})
+        r.user = self.context['request'].user
+        r.save()
+        r.departments.clear()
+        for d in self.context['request'].data['depList']:
+            r.departments.add(Departments.objects.get(pk = d))
+        return r
+    def update(self , instance , validated_data):
+        for key in ['title', 'data' ]:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'data' in validated_data:
+            match=re.match(r'\d,|\d',instance.data)
+            if match:
+                instance.data = instance.data
+            else:
+                raise ValidationError({'Not valid data'})
+        instance.departments.clear()
+        for d in self.context['request'].data['depList']:
+            instance.departments.add(Departments.objects.get(pk = d))
+        instance.save()
+        return instance
+
+class ResponsibilityLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Responsibility
+        fields = ('pk' , 'title')
+
+class KRASerializer(serializers.ModelSerializer):
+    responsibility = ResponsibilityLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = KRA
+        fields = ('pk' ,'created' , 'responsibility', 'target' , 'assignedBy' , 'user' , 'period', 'weightage')
+        read_only_fields = ('assignedBy', )
+    def create(self , validated_data):
+        kra = KRA(**validated_data)
+        kra.responsibility_id = self.context['request'].data['responsibility']
+        already = KRA.objects.filter(responsibility_id =  self.context['request'].data['responsibility'] , user = validated_data['user']).count()
+        if already > 0:
+            raise ValidationError({'ALREADY_ADDED'})
+        kra.assignedBy = self.context['request'].user
+        kra.save()
+        return kra
+    def update(self , instance , validated_data):
+        instance.target = validated_data['target']
+        instance.period = validated_data['period']
+        if 'weightage' in validated_data:
+            instance.weightage = validated_data['weightage']
         instance.save()
         return instance

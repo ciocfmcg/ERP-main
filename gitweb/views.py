@@ -101,7 +101,7 @@ def getFiles(commit , relPath = ''):
 
 def getRepo(repoName):
     repoName += '.git'
-    repoPath = os.path.join(os.path.dirname(globalSettings.BASE_DIR) ,'repositories')
+    repoPath = os.path.join('/home/git/' ,'repositories')
     if '/' in repoName:
         for p in repoName.split('/'):
             repoPath = os.path.join(repoPath, p)
@@ -154,9 +154,9 @@ def getBranchAlias(u):
     return (u.first_name[0] + u.last_name[0]).lower()
 
 def generateGitoliteConf():
-    gitoliteDir = os.path.join(os.path.dirname(globalSettings.BASE_DIR) , 'gitolite-admin')
+    gitoliteDir = os.path.join('/home/git', 'gitolite-admin')
     if not os.path.isdir(gitoliteDir):
-        with lcd(os.path.dirname(globalSettings.BASE_DIR)):
+        with lcd(os.path.dirname('/home/git')):
             local('git clone git@localhost:gitolite-admin')
     f = open( os.path.join( gitoliteDir , 'conf' ,'gitolite.conf') , 'w')
 
@@ -199,7 +199,7 @@ def generateGitoliteConf():
     keyDir = os.path.join(gitoliteDir , 'keydir')
     shutil.rmtree(keyDir)
     os.mkdir(keyDir)
-    shutil.copyfile(os.path.join(os.path.dirname(globalSettings.BASE_DIR) , 'git.pub'), os.path.join(keyDir , 'git.pub'))
+    shutil.copyfile(os.path.join(os.path.dirname('/home/git') , 'git.pub'), os.path.join(keyDir , 'git.pub'))
     for p in profile.objects.all():
         idx = 0
         for d in p.devices.all():

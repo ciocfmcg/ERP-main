@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <h3 class="text-center">Schedule</h3>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label>Schedule Slot</label>
+    <select class="form-control" ng-model="form.slot">
+      <option value="1 AM">1 AM</option>
+      <option value="2 AM">2 AM</option>
+      <option value="3 AM">3 AM</option>
+      <option value="4 AM">4 AM</option>
+      <option value="5 AM">5 AM</option>
+      <option value="6 AM">6 AM</option>
+      <option value="7 AM">7 AM</option>
+      <option value="8 AM">8 AM</option>
+      <option value="9 AM">9 AM</option>
+      <option value="10 AM">10 AM</option>
+      <option value="11 AM">11 AM</option>
+      <option value="12 AM">12 AM</option>
+      <option value="13 PM">13 PM</option>
+      <option value="14 PM">14 PM</option>
+      <option value="15 PM">15 PM</option>
+      <option value="16 PM">16 PM</option>
+      <option value="17 PM">17 PM</option>
+      <option value="18 PM">18 PM</option>
+      <option value="19 PM">19 PM</option>
+      <option value="20 PM">20 PM</option>
+      <option value="21 PM">21 PM</option>
+      <option value="22 PM">22 PM</option>
+      <option value="23 PM">23 PM</option>
+      <option value="24 PM">24 PM</option>
+    </select>
+  </div>
+    <users-field url="/api/HR/userSearch/"  data="form.users" col="6" label="Filters based on users" ></users-field>
+    <div class="form-group">
+      <label>Email (Optional)</label>
+      <input type="text" class="form-control" ng-model="form.email">
+    </div>
+    <div class="row">
+      <div class="col-md-6" style="margin-top:30px;">
+        <button type="button" class="btn btn-primary" ng-click="saveSchedule()">Save</button>
+      </div>
+      <div class="col-md-6 text-right" style="margin-top:30px;">
+        <button type="button" class="btn btn-default" ng-click="sendMail()">Send Mail<i class="fa fa-paper-plane" ></i></button>
+      </div>
+    </div>
+
+</div>

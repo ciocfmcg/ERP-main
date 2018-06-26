@@ -57,7 +57,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.100', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113']
+ALLOWED_HOSTS = ['192.168.1.106', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -118,6 +118,7 @@ INSTALLED_APPS = (
 	'organization',# organization
 	'logistic',# logistics
 	'assets',# assets
+	'marketing',# Marketing Application
 )
 
 
@@ -241,16 +242,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-EMAIL_HOST_SUFFIX = 'cioc.co.in'
+EMAIL_HOST_SUFFIX = 'cioc.in'
 
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_HOST_USER = 'pradeep@cioc.co.in'
-EMAIL_HOST_PASSWORD = 'janhvi@1'
+EMAIL_HOST = 'email.cioc.in'
+EMAIL_HOST_USER = 'testmail@cioc.in'
+EMAIL_HOST_PASSWORD = 'Titan@1234'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'ciocpky@gmail.com'
+DEFAULT_FROM_EMAIL = 'testmail@cioc.in'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -286,4 +287,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = '192.168.1.113'
+WAMP_SERVER = '192.168.1.106'

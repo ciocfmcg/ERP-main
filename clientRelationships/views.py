@@ -1,56 +1,65 @@
-from django.contrib.auth.models import User , Group
+from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate , login , logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.conf import settings as globalSettings
 # Related to the REST Framework
-from rest_framework import viewsets , permissions , serializers
+from rest_framework import viewsets, permissions, serializers
 from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import HttpResponse
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
-from ERP.models import service
+from ERP.models import service, appSettingsField
 from HR.models import profile
 # Create your views here.
 from reportlab import *
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm, mm
-from reportlab.lib import colors , utils
+from reportlab.lib import colors, utils
 from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
 from PIL import Image
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
-from reportlab.graphics import barcode , renderPDF
+from reportlab.graphics import barcode, renderPDF
 from reportlab.graphics.shapes import *
 from reportlab.graphics.barcode.qr import QrCodeWidget
 import datetime
+import calendar as pythonCal
 import json
 import pytz
 import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
-
+from django.db.models import Sum, Count
+from dateutil.relativedelta import relativedelta
+from PIM.models import calendar
+from organization.models import KRA, Responsibility
+from excel_response import ExcelResponse
+from django.db.models.functions import Concat
+from django.db.models import Value
+import xlsxwriter
 
 
 themeColor = colors.HexColor('#227daa')
 
-styles=getSampleStyleSheet()
+styles = getSampleStyleSheet()
 styleN = styles['Normal']
 styleH = styles['Heading1']
 
 
-settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+settingsFields = application.objects.get(
+    name='app.clientRelationships').settings.all()
 
 
 class FullPageImage(Flowable):
-    def __init__(self , img):
+    def __init__(self, img):
         Flowable.__init__(self)
         self.image = img
 
@@ -60,16 +69,19 @@ class FullPageImage(Flowable):
         iw, ih = img.getSize()
         aspect = ih / float(iw)
         width, self.height = PAGE_SIZE
-        width -= 3.5*cm
-        self.canv.drawImage(os.path.join(BASE_DIR , self.image) , -1 *MARGIN_SIZE + 1.5*cm , -1* self.height + 5*cm , width, aspect*width)
+        width -= 3.5 * cm
+        self.canv.drawImage(os.path.join(BASE_DIR, self.image), -1 * MARGIN_SIZE +
+                            1.5 * cm, -1 * self.height + 5 * cm, width, aspect * width)
+
 
 class expanseReportHead(Flowable):
 
-    def __init__(self, request , contract):
+    def __init__(self, request, contract):
         Flowable.__init__(self)
         self.req = request
         self.contract = contract
     #----------------------------------------------------------------------
+
     def draw(self):
         """
         draw the floable
@@ -82,9 +94,9 @@ class expanseReportHead(Flowable):
         else:
             docTitle = 'TAX INVOICE'
 
-        passKey = '%s%s'%(str(self.req.user.date_joined.year) , self.req.user.pk) # also the user ID
-        docID = '%s%s%s' %(self.contract.deal.pk, now.year , self.contract.pk)
-
+        passKey = '%s%s' % (str(self.req.user.date_joined.year),
+                            self.req.user.pk)  # also the user ID
+        docID = '%s%s%s' % (self.contract.deal.pk, now.year, self.contract.pk)
 
         pSrc = '''
         <font size=14>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<u>%s</u></font><br/><br/><br/>
@@ -93,12 +105,12 @@ class expanseReportHead(Flowable):
         <strong>On:</strong> %s<br/><br/>
         <strong>Document ID:</strong> %s<br/><br/>
         </font>
-        ''' % ( docTitle , '%s %s (%s)' %(self.req.user.first_name ,self.req.user.last_name , passKey )  , now.strftime("%d-%B-%Y - %H:%M:%S") , docID)
+        ''' % (docTitle, '%s %s (%s)' % (self.req.user.first_name, self.req.user.last_name, passKey), now.strftime("%d-%B-%Y - %H:%M:%S"), docID)
 
         story = []
-        head = Paragraph(pSrc , styleN)
-        head.wrapOn(self.canv , 200*mm, 50*mm)
-        head.drawOn(self.canv , 0*mm, -10*mm)
+        head = Paragraph(pSrc, styleN)
+        head.wrapOn(self.canv, 200 * mm, 50 * mm)
+        head.drawOn(self.canv, 0 * mm, -10 * mm)
 
         # barcode_value = "1234567890"
         # barcode39 = barcode.createBarcodeDrawing('EAN13', value = barcode_value,barWidth=0.3*mm,barHeight=10*mm)
@@ -106,24 +118,27 @@ class expanseReportHead(Flowable):
         # barcode39.drawOn(self.canv,160*mm,0*mm)
         # self.canv.drawImage(os.path.join(BASE_DIR , 'logo.png') , 80*mm , 0*mm , 2*cm, 2*cm)
 
+
 def addPageNumber(canvas, doc):
     """
     Add the page number
     """
     print doc.contract
     now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-    passKey = '%s%s'%(str(doc.request.user.date_joined.year) , doc.request.user.pk) # also the user ID
-    docID = '%s%s%s' %(doc.contract.deal.pk, now.year , doc.contract.pk)
+    passKey = '%s%s' % (str(doc.request.user.date_joined.year),
+                        doc.request.user.pk)  # also the user ID
+    docID = '%s%s%s' % (doc.contract.deal.pk, now.year, doc.contract.pk)
 
-    qrw = QrCodeWidget('http://cioc.co.in/documents?id=%s&passkey=%s&app=crmInvoice' %(docID , passKey))
+    qrw = QrCodeWidget(
+        'http://cioc.co.in/documents?id=%s&passkey=%s&app=crmInvoice' % (docID, passKey))
     b = qrw.getBounds()
 
-    w=b[2]-b[0]
-    h=b[3]-b[1]
+    w = b[2] - b[0]
+    h = b[3] - b[1]
 
-    d = Drawing(60,60,transform=[60./w,0,0,60./h,0,0])
+    d = Drawing(60, 60, transform=[60. / w, 0, 0, 60. / h, 0, 0])
     d.add(qrw)
-    renderPDF.draw(d, canvas ,180*mm,270*mm)
+    renderPDF.draw(d, canvas, 180 * mm, 270 * mm)
 
     pass
 
@@ -132,7 +147,6 @@ def addPageNumber(canvas, doc):
     # p = Paragraph(text , styleN)
     # p.wrapOn(canvas , 50*mm , 10*mm)
     # p.drawOn(canvas , 100*mm , 10*mm)
-
 
 
 class PageNumCanvas(canvas.Canvas):
@@ -166,47 +180,50 @@ class PageNumCanvas(canvas.Canvas):
 
         canvas.Canvas.save(self)
 
-
     #----------------------------------------------------------------------
     def draw_page_number(self, page_count):
         """
         Add the page number
         """
 
-        text = "<font size='8'>Page #%s of %s</font>" % (self._pageNumber , page_count)
-        p = Paragraph(text , styleN)
-        p.wrapOn(self , 50*mm , 10*mm)
-        p.drawOn(self , 100*mm , 10*mm)
+        text = "<font size='8'>Page #%s of %s</font>" % (
+            self._pageNumber, page_count)
+        p = Paragraph(text, styleN)
+        p.wrapOn(self, 50 * mm, 10 * mm)
+        p.drawOn(self, 100 * mm, 10 * mm)
 
     def drawLetterHeadFooter(self):
         self.setStrokeColor(themeColor)
         self.setFillColor(themeColor)
-        self.rect(0,0,1500,70, fill=True)
+        self.rect(0, 0, 1500, 70, fill=True)
         # print dir(self)
         compNameStyle = styleN.clone('footerCompanyName')
-        compNameStyle.textColor = colors.white;
+        compNameStyle.textColor = colors.white
 
-        p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
-        p.wrapOn(self , 50*mm , 10*mm)
-        p.drawOn(self , 85*mm  , 18*mm)
+        p = Paragraph(settingsFields.get(
+            name='companyName').value, compNameStyle)
+        p.wrapOn(self, 50 * mm, 10 * mm)
+        p.drawOn(self, 85 * mm, 18 * mm)
 
-        p1 = Paragraph(settingsFields.get(name = 'companyAddress').value , compNameStyle)
-        p1.wrapOn(self , 200*mm , 10*mm)
-        p1.drawOn(self , 15*mm  , 10*mm)
+        p1 = Paragraph(settingsFields.get(
+            name='companyAddress').value, compNameStyle)
+        p1.wrapOn(self, 200 * mm, 10 * mm)
+        p1.drawOn(self, 15 * mm, 10 * mm)
 
-
-        p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)
-        p2.wrapOn(self , 200*mm , 10*mm)
-        p2.drawOn(self , 40*mm  , 4*mm)
+        p2 = Paragraph(settingsFields.get(
+            name='contactDetails').value, compNameStyle)
+        p2.wrapOn(self, 200 * mm, 10 * mm)
+        p2.drawOn(self, 40 * mm, 4 * mm)
 
         from svglib.svglib import svg2rlg
-        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'cioc_icon.svg'))
-        sx=sy=0.5
-        drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
-        drawing.scale(sx,sy)
-        #if you want to see the box around the image
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR,
+                                       'static_shared', 'images', 'cioc_icon.svg'))
+        sx = sy = 0.5
+        drawing.width, drawing.height = drawing.minWidth() * sx, drawing.height * sy
+        drawing.scale(sx, sy)
+        # if you want to see the box around the image
         # drawing._showBoundary = True
-        renderPDF.draw(drawing, self,10*mm  , self._pagesize[1]-20*mm)
+        renderPDF.draw(drawing, self, 10 * mm, self._pagesize[1] - 20 * mm)
 
         #width = self._pagesize[0]
         # page = "Page %s of %s" % (, page_count)
@@ -214,8 +231,7 @@ class PageNumCanvas(canvas.Canvas):
         # self.drawRightString(195*mm, 272*mm, page)
 
 
-def genInvoice(response , contract, request):
-
+def genInvoice(response, contract, request):
 
     MARGIN_SIZE = 8 * mm
     PAGE_SIZE = A4
@@ -223,9 +239,9 @@ def genInvoice(response , contract, request):
     # c = canvas.Canvas("hello.pdf")
     # c.drawString(9*cm, 19*cm, "Hello World!")
 
-    pdf_doc = SimpleDocTemplate(response, pagesize = PAGE_SIZE,
-        leftMargin = MARGIN_SIZE, rightMargin = MARGIN_SIZE,
-        topMargin = 4*MARGIN_SIZE, bottomMargin = 3*MARGIN_SIZE)
+    pdf_doc = SimpleDocTemplate(response, pagesize=PAGE_SIZE,
+                                leftMargin=MARGIN_SIZE, rightMargin=MARGIN_SIZE,
+                                topMargin=4 * MARGIN_SIZE, bottomMargin=3 * MARGIN_SIZE)
 
     # data = [['', '', '', 'Grand Total', '' , pFooterGrandTotal]]
 
@@ -233,17 +249,18 @@ def genInvoice(response , contract, request):
     pdf_doc.request = request
 
     tableHeaderStyle = styles['Normal'].clone('tableHeaderStyle')
-    tableHeaderStyle.textColor = colors.white;
+    tableHeaderStyle.textColor = colors.white
     tableHeaderStyle.fontSize = 7
 
-    pHeadProd = Paragraph('<strong>Product/<br/>Service</strong>' , tableHeaderStyle)
-    pHeadDetails = Paragraph('<strong>Details</strong>' , tableHeaderStyle)
-    pHeadTaxCode = Paragraph('<strong>HSN/<br/>SAC</strong>' , tableHeaderStyle)
-    pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
-    pHeadPrice = Paragraph('<strong>Rate</strong>' , tableHeaderStyle)
-    pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
-    pHeadTax = Paragraph('<strong>IGST <br/> Tax</strong>' , tableHeaderStyle)
-    pHeadSubTotal = Paragraph('<strong>Sub Total</strong>' , tableHeaderStyle)
+    pHeadProd = Paragraph(
+        '<strong>Product/<br/>Service</strong>', tableHeaderStyle)
+    pHeadDetails = Paragraph('<strong>Details</strong>', tableHeaderStyle)
+    pHeadTaxCode = Paragraph('<strong>HSN/<br/>SAC</strong>', tableHeaderStyle)
+    pHeadQty = Paragraph('<strong>Qty</strong>', tableHeaderStyle)
+    pHeadPrice = Paragraph('<strong>Rate</strong>', tableHeaderStyle)
+    pHeadTotal = Paragraph('<strong>Total</strong>', tableHeaderStyle)
+    pHeadTax = Paragraph('<strong>IGST <br/> Tax</strong>', tableHeaderStyle)
+    pHeadSubTotal = Paragraph('<strong>Sub Total</strong>', tableHeaderStyle)
 
     # # bookingTotal , bookingHrs = getBookingAmount(o)
     #
@@ -252,7 +269,8 @@ def genInvoice(response , contract, request):
     # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
     # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
 
-    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty, pHeadTotal, pHeadTax ,pHeadSubTotal ]]
+    data = [[pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice,
+             pHeadQty, pHeadTotal, pHeadTax, pHeadSubTotal]]
 
     totalQuant = 0
     totalTax = 0
@@ -268,21 +286,22 @@ def genInvoice(response , contract, request):
         totalTax += i['totalTax']
         grandTotal += i['subtotal']
 
-        pBodyProd = Paragraph('Service' , tableBodyStyle)
-        pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
-        pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
-        pBodyPrice = Paragraph(str(i['rate']) , tableBodyStyle)
+        pBodyProd = Paragraph('Service', tableBodyStyle)
+        pBodyTitle = Paragraph(pDescSrc, tableBodyStyle)
+        pBodyQty = Paragraph(str(i['quantity']), tableBodyStyle)
+        pBodyPrice = Paragraph(str(i['rate']), tableBodyStyle)
         if 'taxCode' in i:
-            taxCode = '%s(%s %%)' %(i['taxCode'] , i['tax'])
+            taxCode = '%s(%s %%)' % (i['taxCode'], i['tax'])
         else:
             taxCode = ''
 
-        pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
-        pBodyTax = Paragraph(str(i['totalTax']) , tableBodyStyle)
-        pBodyTotal = Paragraph(str(i['quantity']*i['rate']) , tableBodyStyle)
-        pBodySubTotal = Paragraph(str(i['subtotal']) , tableBodyStyle)
+        pBodyTaxCode = Paragraph(taxCode, tableBodyStyle)
+        pBodyTax = Paragraph(str(i['totalTax']), tableBodyStyle)
+        pBodyTotal = Paragraph(str(i['quantity'] * i['rate']), tableBodyStyle)
+        pBodySubTotal = Paragraph(str(i['subtotal']), tableBodyStyle)
 
-        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodyTotal, pBodyTax , pBodySubTotal])
+        data.append([pBodyProd, pBodyTitle, pBodyTaxCode, pBodyPrice,
+                     pBodyQty, pBodyTotal, pBodyTax, pBodySubTotal])
 
     contract.grandTotal = grandTotal
     contract.save()
@@ -290,45 +309,42 @@ def genInvoice(response , contract, request):
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
     tableGrandStyle.fontSize = 10
 
-
-    data += [['', '','','', '', '',Paragraph(str(totalTax) , tableBodyStyle)  , Paragraph(str(grandTotal) , tableBodyStyle) ],
-            ['', '', '', '', '',  Paragraph('Grand Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
-    t=Table(data)
-    ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
-                ('VALIGN',(0,1),(-1,-3),'TOP'),
-                ('VALIGN',(0,-2),(-1,-2),'TOP'),
-                ('VALIGN',(0,-1),(-1,-1),'TOP'),
-                ('SPAN',(-3,-1),(-2,-1)),
-                ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
-                ('BACKGROUND',(0,0),(-1,0) , themeColor),
-                ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
-                ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
-                ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
-                ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
-                ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
-                ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
-                # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
-            ])
+    data += [['', '', '', '', '', '', Paragraph(str(totalTax), tableBodyStyle), Paragraph(str(grandTotal), tableBodyStyle)],
+             ['', '', '', '', '',  Paragraph('Grand Total (INR)', tableHeaderStyle), '', Paragraph(str(grandTotal), tableGrandStyle)]]
+    t = Table(data)
+    ts = TableStyle([('ALIGN', (1, 1), (-3, -3), 'RIGHT'),
+                     ('VALIGN', (0, 1), (-1, -3), 'TOP'),
+                     ('VALIGN', (0, -2), (-1, -2), 'TOP'),
+                     ('VALIGN', (0, -1), (-1, -1), 'TOP'),
+                     ('SPAN', (-3, -1), (-2, -1)),
+                     ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                     ('BACKGROUND', (0, 0), (-1, 0), themeColor),
+                     ('LINEABOVE', (0, 0), (-1, 0), 0.25, themeColor),
+                     ('LINEABOVE', (0, 1), (-1, 1), 0.25, themeColor),
+                     ('BACKGROUND', (-2, -2), (-1, -2), colors.HexColor('#eeeeee')),
+                     ('BACKGROUND', (-3, -1), (-1, -1), themeColor),
+                     ('LINEABOVE', (-2, -2), (-1, -2), 0.25, colors.gray),
+                     ('LINEABOVE', (0, -1), (-1, -1), 0.25, colors.gray),
+                     # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
+                     ])
     t.setStyle(ts)
-    t._argW[0] = 1.5*cm
-    t._argW[1] = 6*cm
-    t._argW[2] = 2.4*cm
-    t._argW[3] = 2*cm
-    t._argW[4] = 2*cm
-    t._argW[5] = 2*cm
-    t._argW[6] = 1.6*cm
-    t._argW[7] = 2*cm
+    t._argW[0] = 1.5 * cm
+    t._argW[1] = 6 * cm
+    t._argW[2] = 2.4 * cm
+    t._argW[3] = 2 * cm
+    t._argW[4] = 2 * cm
+    t._argW[5] = 2 * cm
+    t._argW[6] = 1.6 * cm
+    t._argW[7] = 2 * cm
 
-    #add some flowables
-
-
+    # add some flowables
 
     story = []
 
-    expHead = expanseReportHead(request , contract)
-    story.append(Spacer(2.5,2*cm))
+    expHead = expanseReportHead(request, contract)
+    story.append(Spacer(2.5, 2 * cm))
     story.append(expHead)
-    story.append(Spacer(2.5,0.75*cm))
+    story.append(Spacer(2.5, 0.75 * cm))
 
     adrs = contract.deal.company.address
 
@@ -348,47 +364,49 @@ def genInvoice(response , contract, request):
     %s<br/>
     <strong>GSTIN:</strong>%s<br/>
     </font>
-    """ %(contract.deal.contacts.all()[0].name , contract.deal.company.name, adrs.street , adrs.city , adrs.state , adrs.pincode , adrs.country, tin)
-    story.append(Paragraph(summryParaSrc , styleN))
+    """ % (contract.deal.contacts.all()[0].name, contract.deal.company.name, adrs.street, adrs.city, adrs.state, adrs.pincode, adrs.country, tin)
+    story.append(Paragraph(summryParaSrc, styleN))
     story.append(t)
-    story.append(Spacer(2.5,0.5*cm))
+    story.append(Spacer(2.5, 0.5 * cm))
 
-    if contract.status in ['billed' , 'approved' , 'recieved']:
-        summryParaSrc = settingsFields.get(name = 'regulatoryDetails').value
-        story.append(Paragraph(summryParaSrc , styleN))
+    if contract.status in ['billed', 'approved', 'recieved']:
+        summryParaSrc = settingsFields.get(name='regulatoryDetails').value
+        story.append(Paragraph(summryParaSrc, styleN))
 
-        summryParaSrc = settingsFields.get(name = 'bankDetails').value
-        story.append(Paragraph(summryParaSrc , styleN))
+        summryParaSrc = settingsFields.get(name='bankDetails').value
+        story.append(Paragraph(summryParaSrc, styleN))
 
-        tncPara = settingsFields.get(name = 'tncInvoice').value
+        tncPara = settingsFields.get(name='tncInvoice').value
 
     else:
-        tncPara = settingsFields.get(name = 'tncQuotation').value
+        tncPara = settingsFields.get(name='tncQuotation').value
 
-    story.append(Paragraph(tncPara , styleN))
+    story.append(Paragraph(tncPara, styleN))
 
     # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
     # for s in scans:
     #     story.append(PageBreak())
     #     story.append(FullPageImage(s))
 
-
-    pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
-
+    pdf_doc.build(story, onFirstPage=addPageNumber,
+                  onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
 
 class DownloadInvoice(APIView):
     renderer_classes = (JSONRenderer,)
-    def get(self , request , format = None):
+
+    def get(self, request, format=None):
         print '****** entered'
         if 'contract' not in request.GET:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         response = HttpResponse(content_type='application/pdf')
-        o = Contract.objects.get(id = request.GET['contract'])
-        response['Content-Disposition'] = 'attachment; filename="CR_invoice%s_%s_%s.pdf"' %(o.deal.pk, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
-        genInvoice(response , o , request)
-        f = open('./media_root/CR_invoice%s%s_%s.pdf'%(o.deal.pk,datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk) , 'wb')
+        o = Contract.objects.get(id=request.GET['contract'])
+        response['Content-Disposition'] = 'attachment; filename="CR_invoice%s_%s_%s.pdf"' % (
+            o.deal.pk, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)
+        genInvoice(response, o, request)
+        f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/CR_invoice%s%s_%s.pdf' %
+                              (o.deal.pk, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)), 'wb')
         f.write(response.content)
         f.close()
         if 'saveOnly' in request.GET:
@@ -397,53 +415,71 @@ class DownloadInvoice(APIView):
 
 
 class ProductMetaViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     serializer_class = ProductMetaSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['description', 'code']
+
     def get_queryset(self):
         return ProductMeta.objects.all()
 
 
 class ContactLiteViewSet(viewsets.ModelViewSet):
-    permission_classes = (isOwner , )
+    permission_classes = (isOwner, )
     serializer_class = ContactLiteSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name', 'company' , 'mobile', 'email']
+    filter_fields = ['name', 'company', 'mobile', 'email']
+
     def get_queryset(self):
         return Contact.objects.all()
 
+
 class ContactViewSet(viewsets.ModelViewSet):
-    permission_classes = (isOwner , )
+    permission_classes = (isOwner, )
     serializer_class = ContactSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
+
     def get_queryset(self):
         return Contact.objects.all()
 
+
+class ScheduleViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ScheduleSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['users']
+
+    def get_queryset(self):
+        return Schedule.objects.all()
+
+
 class DealLiteViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , readOnly, )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, readOnly, )
     serializer_class = DealLiteSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name', 'result', 'company']
+
     def get_queryset(self):
-        return Deal.objects.filter(active = True)
+        return Deal.objects.filter(active=True)
+
 
 class DealViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated , )
+    permission_classes = (permissions.IsAuthenticated, )
     serializer_class = DealSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name', 'state', 'result', 'company']
+
     def get_queryset(self):
 
         if 'created' in self.request.GET and 'won' in self.request.GET and 'lost' in self.request.GET:
-            qs1 , qs2 , qs3 = Deal.objects.none(), Deal.objects.none(), Deal.objects.none()
+            qs1, qs2, qs3 = Deal.objects.none(), Deal.objects.none(), Deal.objects.none()
             if self.request.GET['created'] == '1':
-                qs1 = Deal.objects.filter(state = 'created')
+                qs1 = Deal.objects.filter(state='created')
             if self.request.GET['won'] == '1':
-                qs2 = Deal.objects.filter(result = 'won')
+                qs2 = Deal.objects.filter(result='won')
             if self.request.GET['lost'] == '1':
-                qs2 = Deal.objects.filter(result = 'lost')
+                qs2 = Deal.objects.filter(result='lost')
 
             toReturn = qs1 | qs2 | qs3
         else:
@@ -452,44 +488,54 @@ class DealViewSet(viewsets.ModelViewSet):
         # print self.request.GET
         # print toReturn
 
-        toReturn = toReturn.filter(active = True)
+        toReturn = toReturn.filter(active=True)
         if 'company__contains' in self.request.GET:
             comName = self.request.GET['company__contains']
-            toReturn = toReturn.filter(company__in = service.objects.filter(name__contains=comName))
+            toReturn = toReturn.filter(
+                company__in=service.objects.filter(name__contains=comName))
 
         if 'created' in self.request.GET and self.request.GET['created'] == 'false':
-            toReturn = toReturn.exclude(state = 'created')
+            toReturn = toReturn.exclude(state='created')
 
         if 'board' in self.request.GET:
-            toReturn = toReturn.filter(result = 'na')
+            toReturn = toReturn.filter(result='na')
 
         return toReturn
 
+
 class RelationshipViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , readOnly , )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, readOnly, )
     serializer_class = RelationshipSerializer
+
     def get_queryset(self):
-        return service.objects.filter(deals__in = Deal.objects.filter(active = True).filter(result='won')).distinct()
+        return service.objects.filter(deals__in=Deal.objects.filter(active=True).filter(result='won')).distinct()
+
 
 class ContractViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated  , )
+    permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ContractSerializer
+
     def get_queryset(self):
         return Contract.objects.all()
 
+
 class ActivityViewSet(viewsets.ModelViewSet):
-    permission_classes = (isOwner , )
+    permission_classes = (isOwner, )
     serializer_class = ActivitySerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['contact' , 'deal', 'notes' , 'data']
+    filter_fields = ['contact', 'deal', 'notes', 'data', 'typ', ]
+
     def get_queryset(self):
         return Activity.objects.order_by('-created')
 
+
 from email.mime.application import MIMEApplication
+
 
 class SendNotificationAPIView(APIView):
     renderer_classes = (JSONRenderer,)
-    def post(self , request , format = None):
+
+    def post(self, request, format=None):
         print request.data
         toEmail = []
         cc = []
@@ -502,8 +548,8 @@ class SendNotificationAPIView(APIView):
             print toEmail
 
             for c in request.data['internal']:
-                p = profile.objects.get(user_id = c)
-                u = User.objects.get(pk = c)
+                p = profile.objects.get(user_id=c)
+                u = User.objects.get(pk=c)
                 cc.append(u.email)
             print cc
 
@@ -515,36 +561,398 @@ class SendNotificationAPIView(APIView):
                     toSMS.append(mob)
             print toSMS
 
-        c = Contract.objects.get(pk = request.data['contract'])
+        c = Contract.objects.get(pk=request.data['contract'])
 
         # print dir(att)
         # return Response(status=status.HTTP_200_OK)
 
-        docID = '%s%s%s' %(c.deal.pk, c.billedDate.year , c.pk)
+        docID = '%s%s%s' % (c.deal.pk, c.billedDate.year, c.pk)
         value = c.grandTotal
 
         typ = request.data['type']
-        print "will send invoice generated mail to " , toEmail , cc , toSMS
-        print docID , value
+        print "will send invoice generated mail to ", toEmail, cc, toSMS
+        print docID, value
         if typ == 'invoiceGenerated':
-            email_subject = 'Invoice %s generated'%(docID)
+            email_subject = 'Invoice %s generated' % (docID)
             heading = 'Invoice Generated'
-            msgBody = ['We are pleased to share invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong>.' %(docID , value) , 'The due date to make payment is <strong>%s</strong>.' %(c.dueDate) , 'In case you have any query please contact us.']
-            smsBody = 'Invoice %s generated for the amount of INR %s. Due date is %s. Please check youe email for more information.'%(docID , value, c.dueDate)
+            msgBody = ['We are pleased to share invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong>.' %
+                       (docID, value), 'The due date to make payment is <strong>%s</strong>.' % (c.dueDate), 'In case you have any query please contact us.']
+            smsBody = 'Invoice %s generated for the amount of INR %s. Due date is %s. Please check youe email for more information.' % (
+                docID, value, c.dueDate)
         elif typ == 'dueDateReminder':
-            email_subject = 'Payment reminder for invoice %s'%(docID)
+            email_subject = 'Payment reminder for invoice %s' % (docID)
             heading = 'Payment reminder'
-            msgBody = ['We are sorry but invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> is still unpaid.' %(docID , value) , 'The due date to make the payment is <strong>%s</strong>. Please make payment at the earliest to avoid late payment fee.' %(c.dueDate) , 'In case you have any query please contact us.']
-            smsBody = 'REMINDER : Invoice no. %s is sill unpaid. Due date is %s. Please ignore if paid.'%(docID , c.dueDate)
+            msgBody = ['We are sorry but invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> is still unpaid.' %
+                       (docID, value), 'The due date to make the payment is <strong>%s</strong>. Please make payment at the earliest to avoid late payment fee.' % (c.dueDate), 'In case you have any query please contact us.']
+            smsBody = 'REMINDER : Invoice no. %s is sill unpaid. Due date is %s. Please ignore if paid.' % (
+                docID, c.dueDate)
         elif typ == 'dueDateElapsed':
-            email_subject = 'Payment overdue for invoice number %s'%(docID)
+            email_subject = 'Payment overdue for invoice number %s' % (docID)
             heading = 'Due date missed'
-            msgBody = ['We are pleased to share the updated copy of invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> including the late payment fees.' %(docID , value) , 'The payment is now due <strong>Immediately</strong>.' , 'In case you have any query please contact us.']
-            smsBody = 'ALERT : Invoice no. %s updated to include late payment fee. Please pay immediately. Check your email for more info.'%(docID)
+            msgBody = ['We are pleased to share the updated copy of invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> including the late payment fees.' %
+                       (docID, value), 'The payment is now due <strong>Immediately</strong>.', 'In case you have any query please contact us.']
+            smsBody = 'ALERT : Invoice no. %s updated to include late payment fee. Please pay immediately. Check your email for more info.' % (
+                docID)
 
         ctx = {
-            'heading' : heading,
-            'recieverName' : Contact.objects.get(pk=request.data['contacts'][0]).name,
+            'heading': heading,
+            'recieverName': Contact.objects.get(pk=request.data['contacts'][0]).name,
+            'message': msgBody,
+            'linkUrl': 'cioc.co.in',
+            'linkText': 'View Online',
+            'sendersAddress': '(C) CIOC FMCG Pvt Ltd',
+            'sendersPhone': '841101',
+            'linkedinUrl': 'https://www.linkedin.com/company/13440221/',
+            'fbUrl': 'facebook.com',
+            'twitterUrl': 'twitter.com',
+        }
+
+        email_body = get_template(
+            'app.clientRelationships.email.html').render(ctx)
+        msg = EmailMessage(email_subject, email_body, to=toEmail,
+                           cc=cc, from_email='do_not_reply@cioc.co.in')
+        msg.content_subtype = 'html'
+
+        if typ != 'dueDateReminder':
+            fp = open('./media_root/clientRelationships/doc%s%s_%s.pdf' %
+                      (c.deal.pk, c.pk, c.status), 'rb')
+            att = MIMEApplication(fp.read(), _subtype="pdf")
+            fp.close()
+            att.add_header('Content-Disposition', 'attachment',
+                           filename=fp.name.split('/')[-1])
+            msg.attach(att)
+
+        msg.send()
+
+        for n in toSMS:
+            url = globalSettings.SMS_API_PREFIX + \
+                'number=%s&message=%s' % (n, smsBody)
+            requests.get(url)
+
+        return Response(status=status.HTTP_200_OK)
+
+
+class ClientHomeCalAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+
+    def get(self, request, format=None):
+        print '****** entered', request.GET
+        # print 'dateeeeeeeeeeeeeee',
+        today = datetime.date.today()
+        # print today,today + relativedelta(days=1),today.month
+        todayTasks = calendar.objects.filter(eventType='Reminder', originator='CRM', when__contains=today).values('pk', 'eventType', 'followers', 'originator', 'duration','created', 'updated', 'user', 'text', 'notification', 'when', 'read', 'deleted', 'completed', 'canceled', 'level', 'venue', 'attachment', 'myNotes', 'clients', 'data')
+        tomorrowTasks = calendar.objects.filter(eventType='Reminder', originator='CRM', when__contains=today + relativedelta(days=1)).values('pk', 'eventType', 'followers', 'originator', 'duration', 'created', 'updated', 'user', 'text', 'notification', 'when', 'read', 'deleted', 'completed', 'canceled', 'level', 'venue', 'attachment', 'myNotes', 'clients', 'data')
+        print list(todayTasks), list(tomorrowTasks),
+        approvedAmount = list(Contract.objects.filter(
+            status='approved').values('status').annotate(total=Sum('value')))
+        if len(approvedAmount) > 0:
+            approvedAmount = approvedAmount[0]['total']
+        else:
+            approvedAmount = 0
+        billedAmount = list(Contract.objects.filter(
+            status='billed', dueDate__lt=today).values('status').annotate(total=Sum('value')))
+        if len(billedAmount) > 0:
+            billedAmount = billedAmount[0]['total']
+        else:
+            billedAmount = 0
+        monthdays = pythonCal.monthrange(today.year, today.month)
+        # print monthdays
+        FstDate = datetime.date(today.year, today.month, 1)
+        lstDate = datetime.date(today.year, today.month, monthdays[1])
+        # print FstDate,lstDate
+        receivedAmount = list(Contract.objects.filter(status='received', recievedDate__gte=FstDate,
+                                                      recievedDate__lte=lstDate).values('status').annotate(total=Sum('value')))
+        if len(receivedAmount) > 0:
+            receivedAmount = receivedAmount[0]['total']
+        else:
+            receivedAmount = 0
+        # print '@@@@@@@@@@@',approvedAmount,billedAmount,receivedAmount
+        target = 0
+        complete = 0
+        period = 'yearly'
+        kraObj = KRA.objects.filter(
+            responsibility__title='CRM.SalesTarget', user=request.user.pk)
+        if len(kraObj) > 0:
+            print 'kraaaaaaaaaaaaaaa*******************', kraObj[0].target, kraObj[0].pk
+            target = kraObj[0].target
+            period = kraObj[0].period
+            created = str(kraObj[0].created).split(' ')[0].split('-')
+            print created
+
+            if period == 'daily':
+                userTarget = list(Deal.objects.filter(result='won', user=request.user.pk, closeDate=today).values(
+                    'result').annotate(sum_val=Sum('value')))
+            else:
+                if period == 'yearly':
+                    fDate = datetime.date(int(created[0]), 1, 1)
+                    lDate = datetime.date(int(created[0]), 12, 31)
+                elif period == 'monthly':
+                    mr = pythonCal.monthrange(int(created[0]), int(created[1]))
+                    fDate = datetime.date(int(created[0]), int(created[1]), 1)
+                    lDate = datetime.date(
+                        int(created[0]), int(created[1]), mr[1])
+                elif period == 'quaterly':
+                    if int(created[1]) <= 3:
+                        fDate = datetime.date(int(created[0]), 1, 1)
+                        lDate = datetime.date(int(created[0]), 3, 31)
+                    elif int(created[1]) > 3 and int(created[1]) <= 6:
+                        fDate = datetime.date(int(created[0]), 4, 1)
+                        lDate = datetime.date(int(created[0]), 6, 30)
+                    elif int(created[1]) > 6 and int(created[1]) <= 9:
+                        fDate = datetime.date(int(created[0]), 7, 1)
+                        lDate = datetime.date(int(created[0]), 9, 30)
+                    elif int(created[1]) > 9 and int(created[1]) <= 12:
+                        fDate = datetime.date(int(created[0]), 10, 1)
+                        lDate = datetime.date(int(created[0]), 12, 31)
+                elif period == 'weekly':
+                    dt = datetime.date(int(created[0]), int(
+                        created[1]), int(created[2]))
+                    fDate = dt - relativedelta(days=dt.weekday())
+                    lDate = fDate + relativedelta(days=6)
+                userTarget = list(Deal.objects.filter(result='won', user=request.user.pk, closeDate__range=(
+                    fDate, lDate)).values('result').annotate(sum_val=Sum('value')))
+            print 'resulttttttttttttt', userTarget
+            if len(userTarget) > 0:
+                complete = userTarget[0]['sum_val']
+        calLi = list(Deal.objects.filter(result='na').values(
+            'state').annotate(sum_val=Sum('value'), count_val=Count('state')))
+        # print calLi
+        sumLi = [0, 0, 0, 0, 0, 0]
+        countLi = [0, 0, 0, 0, 0, 0]
+        for i in calLi:
+            if i['state'] == 'contacted':
+                sumLi[0] = i['sum_val']
+                countLi[0] = i['count_val']
+            elif i['state'] == 'demo':
+                sumLi[1] = i['sum_val']
+                countLi[1] = i['count_val']
+            elif i['state'] == 'requirements':
+                sumLi[2] = i['sum_val']
+                countLi[2] = i['count_val']
+            elif i['state'] == 'proposal':
+                sumLi[3] = i['sum_val']
+                countLi[3] = i['count_val']
+            elif i['state'] == 'negotiation':
+                sumLi[4] = i['sum_val']
+                countLi[4] = i['count_val']
+            elif i['state'] == 'conclusion':
+                sumLi[5] = i['sum_val']
+                countLi[5] = i['count_val']
+        # print sumLi,countLi
+        currencyObj = appSettingsField.objects.filter(name='currency', app=69)
+        if len(currencyObj) > 0:
+            currencyTyp = currencyObj[0].value
+        else:
+            currencyTyp = ''
+        # print currencyTyp
+        toSend = {'sumLi': sumLi, 'countLi': countLi, 'todayTasks': list(todayTasks), 'tomorrowTasks': list(
+            tomorrowTasks), 'approvedAmount': approvedAmount, 'billedAmount': billedAmount, 'receivedAmount': receivedAmount, 'currencyTyp': currencyTyp, 'target': target, 'complete': complete, 'period': period}
+
+        return Response(toSend, status=status.HTTP_200_OK)
+
+
+class ReportHomeCalAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+
+    def get(self, request, format=None):
+        print '****** entered', request.GET
+        print '7777777777', request.GET['usr'], type(request.GET['usr'])
+        today = datetime.date.today()
+        toSend = []
+        if len(request.GET['typ']) > 0:
+            fd = request.GET['fdate'].split('-')
+            td = request.GET['tdate'].split('-')
+            fd = datetime.date(int(fd[0]), int(fd[1]), int(fd[2]))
+            td = datetime.date(int(td[0]), int(td[1]), int(td[2]))
+            if 'download' in request.GET:
+                if len(request.GET['usr']) < 3:
+                    usr = []
+                else:
+                    usr = []
+                    a = str(request.GET['usr'][1:-1]).split(',')
+                    print 'dddddddddddddddd', a, type(a), len(a)
+                    for i in a:
+                        print '................', i
+                        usr.append(int(i))
+            else:
+                if request.GET['usr'] == '':
+                    usr = []
+                else:
+                    ur = str(request.GET['usr']).split(',')
+                    print ur
+                    usr = []
+                    for i in ur:
+                        usr.append(int(i))
+            print fd, td, usr
+
+            if request.GET['typ'] == 'call':
+                print '************ call'
+                if len(usr) == 0:
+                    toSend = list(Activity.objects.filter(typ='call', created__range=(fd, td)).values('created', 'data', name=F(
+                        'contact__name'), mobile=F('contact__mobile'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                else:
+                    toSend = list(Activity.objects.filter(typ='call', created__range=(fd, td), user__in=usr).values('data', name=F(
+                        'contact__name'), mobile=F('contact__mobile'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+
+            elif request.GET['typ'] == 'contacts':
+                print '************ contacts'
+                if len(usr) == 0:
+                    toSend = list(Contact.objects.filter(created__range=(fd, td)).values('name', 'email', 'mobile', 'designation', comany=F(
+                        'company__name'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                else:
+                    toSend = list(Contact.objects.filter(created__range=(fd, td), user__in=usr).values('name', 'email', 'mobile', 'designation', comany=F(
+                        'company__name'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+
+            elif request.GET['typ'] == 'leads':
+                print '************ leads'
+                if len(usr) == 0:
+                    toSend = list(Deal.objects.filter(created__range=(fd, td)).values('name', 'state', 'result', 'value', comany=F(
+                        'company__name'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                else:
+                    toSend = list(Deal.objects.filter(created__range=(fd, td), user__in=usr).values('name', 'state', 'result', 'value', comany=F(
+                        'company__name'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+
+            elif request.GET['typ'] == 'conversion':
+                print '************ conversion'
+                if len(usr) == 0:
+                    toSend = list(Contract.objects.filter(status='approved', approvedDate__range=(fd, td)).values('status', 'value', 'grandTotal', dealName=F(
+                        'deal__name'), dealCompany=F('deal__company__name'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                else:
+                    toSend = list(Contract.objects.filter(status='approved', approvedDate__range=(fd, td), user__in=usr).values('status', 'value', 'grandTotal', dealCompany=F(
+                        'deal__name'), dealName=F('deal__company__name'), userId=F('user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+
+            elif request.GET['typ'] == 'pipeline':
+                print '************ pipeline'
+                if len(usr) == 0:
+                    toSend = list(Deal.objects.filter(result='na', created__range=(fd, td)).values(
+                        'state').annotate(totalValue=Sum('value'), count=Count('state')))
+                else:
+                    toSend = list(Deal.objects.filter(result='na', created__range=(fd, td), user__in=usr).values(
+                        'state').annotate(totalValue=Sum('value'), count=Count('state')))
+                if 'download' not in request.GET:
+                    sumLi = [0, 0, 0, 0, 0, 0]
+                    countLi = [0, 0, 0, 0, 0, 0]
+                    for i in toSend:
+                        if i['state'] == 'contacted':
+                            sumLi[0] = i['totalValue']
+                            countLi[0] = i['count']
+                        elif i['state'] == 'demo':
+                            sumLi[1] = i['totalValue']
+                            countLi[1] = i['count']
+                        elif i['state'] == 'requirements':
+                            sumLi[2] = i['totalValue']
+                            countLi[2] = i['count']
+                        elif i['state'] == 'proposal':
+                            sumLi[3] = i['totalValue']
+                            countLi[3] = i['count']
+                        elif i['state'] == 'negotiation':
+                            sumLi[4] = i['totalValue']
+                            countLi[4] = i['count']
+                        elif i['state'] == 'conclusion':
+                            sumLi[5] = i['totalValue']
+                            countLi[5] = i['count']
+                        i['sumLi'] = sumLi
+                        i['countLi'] = countLi
+                    print sumLi, countLi
+
+            elif request.GET['typ'] == 'salesInflow':
+                print '************ salesInflow'
+                if len(usr) == 0:
+                    # toSend = list(Contract.objects.filter(status='received',recievedDate__range=(fd,td)).values('status','value','grandTotal',dealName = F('deal__name'),dealCompany = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+                    toSend = list(Contract.objects.filter(status='received', recievedDate__range=(fd, td)).values(dealCompany=F('deal__company__name'), userId=F(
+                        'user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')).annotate(grandTotal=Sum('grandTotal'), dealCount=Count('deal', distinct=True)))
+                else:
+                    toSend = list(Contract.objects.filter(status='received', recievedDate__range=(fd, td), user__in=usr).values(dealCompany=F('deal__company__name'), userId=F(
+                        'user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')).annotate(grandTotal=Sum('grandTotal'), dealCount=Count('deal', distinct=True)))
+
+                if 'download' not in request.GET:
+                    for i in toSend:
+                        print '@@@@@@@@@@@@@@@@22'
+                        i['comapnyName'] = i['dealCompany']
+                        i['details'] = []
+                        if len(usr) == 0:
+                            dealsList = list(Contract.objects.filter(status='received', recievedDate__range=(
+                                fd, td), deal__company__name=i['dealCompany']).values_list('deal__name', flat=True).distinct())
+                        else:
+                            dealsList = list(Contract.objects.filter(status='received', recievedDate__range=(
+                                fd, td), user__in=usr, deal__company__name=i['dealCompany']).values_list('deal__name', flat=True).distinct())
+                        print dealsList
+                        for j in dealsList:
+                            print j
+                            d = {'dealName': j}
+                            if len(usr) == 0:
+                                deals = list(Contract.objects.filter(status='received', recievedDate__range=(fd, td), deal__company__name=i['dealCompany'], deal__name=j).values(
+                                    'grandTotal', 'dueDate', 'pk', 'deal__contacts', 'deal__contacts__name', 'deal__contacts__email', 'deal__contacts__mobile', userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                            else:
+                                deals = list(Contract.objects.filter(status='received', recievedDate__range=(fd, td), user__in=usr, deal__company__name=i['dealCompany'], deal__name=j).values(
+                                    'grandTotal', 'dueDate', 'pk', 'deal__contacts', 'deal__contacts__name', 'deal__contacts__email', 'deal__contacts__mobile', userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                            print '777777777777777777777777777777', deals
+                            d['data'] = deals
+                            i['details'].append(d)
+
+            elif request.GET['typ'] == 'nonPerforming':
+                print '************ nonPerforming'
+                if len(usr) == 0:
+                    # toSend = list(Contract.objects.filter(status = 'billed',dueDate__lt = today).values('status','value','grandTotal',dealName = F('deal__name'),dealCompany = F('deal__company__name'),userId=F('user'),userName=Concat('user__first_name',Value(' '),'user__last_name')))
+                    toSend = list(Contract.objects.filter(status='billed', dueDate__lt=today).values(dealCompany=F('deal__company__name'), userId=F('user'), userName=Concat(
+                        'user__first_name', Value(' '), 'user__last_name')).annotate(grandTotal=Sum('grandTotal'), dealCount=Count('deal', distinct=True)))
+
+                else:
+                    toSend = list(Contract.objects.filter(status='billed', dueDate__lt=today, user__in=usr).values(dealCompany=F('deal__company__name'), userId=F(
+                        'user'), userName=Concat('user__first_name', Value(' '), 'user__last_name')).annotate(grandTotal=Sum('grandTotal'), dealCount=Count('deal', distinct=True)))
+                print toSend
+
+                if 'download' not in request.GET:
+                    for i in toSend:
+                        print '@@@@@@@@@@@@@@@@22'
+                        i['comapnyName'] = i['dealCompany']
+                        i['details'] = []
+                        if len(usr) == 0:
+                            dealsList = list(Contract.objects.filter(status='billed', dueDate__lt=today,
+                                                                     deal__company__name=i['dealCompany']).values_list('deal__name', flat=True).distinct())
+                        else:
+                            dealsList = list(Contract.objects.filter(status='billed', dueDate__lt=today, user__in=usr,
+                                                                     deal__company__name=i['dealCompany']).values_list('deal__name', flat=True).distinct())
+                        print dealsList
+                        for j in dealsList:
+                            print j
+                            d = {'dealName': j}
+                            if len(usr) == 0:
+                                deals = list(Contract.objects.filter(status='billed', dueDate__lt=today, deal__company__name=i['dealCompany'], deal__name=j).values(
+                                    'grandTotal', 'dueDate', 'pk', 'deal__contacts', 'deal__contacts__name', 'deal__contacts__email', 'deal__contacts__mobile', userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                            else:
+                                deals = list(Contract.objects.filter(status='billed', dueDate__lt=today, user__in=usr, deal__company__name=i['dealCompany'], deal__name=j).values(
+                                    'grandTotal', 'dueDate', 'pk', 'deal__contacts', 'deal__contacts__name', 'deal__contacts__email', 'deal__contacts__mobile', userName=Concat('user__first_name', Value(' '), 'user__last_name')))
+                            print '777777777777777777777777777777', deals
+                            d['data'] = deals
+                            i['details'].append(d)
+
+            print toSend
+            if 'download' in request.GET and len(toSend) > 0:
+                print 'downloadddddddddddddddddddddddddd'
+                return ExcelResponse(toSend)
+
+        return Response(toSend,status=status.HTTP_200_OK)
+
+class SendEmailAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self, request, format=None):
+        cc = []
+        contactData=[]
+        for c in request.data['contact']:
+            u = Contact.objects.get(pk = c)
+            contactData.append(u.email)
+
+        for c in request.data['cc']:
+            u = User.objects.get(pk = c)
+            cc.append(str(u.email))
+        print cc
+
+        email_subject =request.data['emailSubject']
+
+        msgBody= request.data['emailbody']
+
+        ctx = {
             'message': msgBody,
             'linkUrl': 'cioc.co.in',
             'linkText' : 'View Online',
@@ -556,20 +964,271 @@ class SendNotificationAPIView(APIView):
         }
 
         email_body = get_template('app.clientRelationships.email.html').render(ctx)
-        msg = EmailMessage(email_subject, email_body, to= toEmail, cc= cc, from_email= 'do_not_reply@cioc.co.in' )
+        msg = EmailMessage(email_subject, msgBody,  to= contactData, cc= cc )
         msg.content_subtype = 'html'
-
-        if typ != 'dueDateReminder':
-            fp = open('./media_root/clientRelationships/doc%s%s_%s.pdf'%(c.deal.pk, c.pk, c.status) , 'rb')
-            att = MIMEApplication(fp.read(),_subtype="pdf")
-            fp.close()
-            att.add_header('Content-Disposition','attachment',filename=fp.name.split('/')[-1])
-            msg.attach(att)
-
         msg.send()
 
-        for n in toSMS:
-            url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(n , smsBody)
-            requests.get(url)
+        return Response({}, status = status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_200_OK)
+
+class SucheduleReportAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self, request, format=None):
+        cc = []
+        contactData=[]
+        contact=[]
+        msgBody=''
+        print request.data,'****************calllll'
+        data = request.data['dataExcel']
+        workbook = xlsxwriter.Workbook('Expenses03.xlsx')
+        worksheet = workbook.add_worksheet()
+        bold = workbook.add_format({'bold': 1})
+        worksheet.set_column(200, 200, 200)
+        print request.data['typ'],'typeeeeeeeeeeeeeeeeeee'
+        if request.data['typ']=="call":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'NAME', bold)
+            worksheet.write('C1', 'DATE AND TIME', bold)
+            worksheet.write('D1', 'PHONE NO', bold)
+            worksheet.write('E1', 'DURATION', bold)
+            row = 1
+            col = 0
+            for item in data:
+                worksheet.write_string(row, col,item[u'userName'])
+                if item[u'name']==None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'name'])
+                worksheet.write_string(row, col+2,item[u'created'])
+                if item[u'mobile']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'mobile'])
+                if item[u'data']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'data'])
+                row += 1
+        if request.data['typ']=="leads":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'NAME', bold)
+            worksheet.write('C1', 'VALUE', bold)
+            worksheet.write('D1', 'COMPANY', bold)
+            worksheet.write('E1', 'STATE', bold)
+            worksheet.write('F1', 'RESULT', bold)
+            row = 1
+            col = 0
+            for item in data:
+                worksheet.write_string(row, col,item[u'userName'])
+                if item[u'name']==None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'name'])
+                if item[u'value']==None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,str(item[u'value']))
+                if item[u'comany']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'comany'])
+                if item[u'state']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'state'])
+                if item[u'result']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+5,item[u'result'])
+                row += 1
+        if request.data['typ']=="conversion":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'STATUS', bold)
+            worksheet.write('C1', 'GRAND TOTAL', bold)
+            worksheet.write('D1', 'DEAL COMPANY', bold)
+            worksheet.write('E1', 'DEAL NAME', bold)
+            row = 1
+            col = 0
+            for item in data:
+                worksheet.write_string(row, col,item[u'userName'])
+                if item[u'status']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'status'])
+                if item[u'grandTotal']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,str(item[u'grandTotal']))
+                if item[u'dealCompany']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'dealCompany'])
+                if item[u'dealName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'dealName'])
+                row += 1
+        if request.data['typ']=="pipeline":
+            worksheet.write('A1', 'STATE', bold)
+            worksheet.write('B1', 'TOTAL VALUE', bold)
+            worksheet.write('C1', 'COUNT', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item['state']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item['state'])
+                if item['totalValue']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,str(item['totalValue']))
+                if item['count']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,str(item['count']))
+                row += 1
+        if request.data['typ']=="salesInflow":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'DEAL COUNT', bold)
+            worksheet.write('C1', 'COMPANY', bold)
+            worksheet.write('D1', 'GRAND TOTAL', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item[u'userName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item[u'userName'])
+                if item[u'dealCount']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,str(item[u'dealCount']))
+                if item[u'comapnyName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,item[u'comapnyName'])
+                if item[u'grandTotal']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,str(item[u'grandTotal']))
+                row += 1
+        if request.data['typ']=="contacts":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'NAME', bold)
+            worksheet.write('C1', 'EMAIL', bold)
+            worksheet.write('D1', 'PHONE NO', bold)
+            worksheet.write('E1', 'COMANY', bold)
+            worksheet.write('F1', 'DESIGNATION', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item[u'userName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item[u'userName'])
+                if item[u'name']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,item[u'name'])
+                if item[u'email']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,item[u'email'])
+                if item[u'mobile']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,item[u'mobile'])
+                if item[u'comany']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+4,item[u'comany'])
+                if item[u'designation']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+5,item[u'designation'])
+                row += 1
+        if request.data['typ']=="nonPerforming":
+            worksheet.write('A1', 'USERNAME', bold)
+            worksheet.write('B1', 'DEAL COUNT', bold)
+            worksheet.write('C1', 'COMPANY', bold)
+            worksheet.write('D1', 'GRAND TOTAL', bold)
+            row = 1
+            col = 0
+            for item in data:
+                if item[u'userName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col,item[u'userName'])
+                if item[u'dealCount']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+1,str(item[u'dealCount']))
+                if item[u'comapnyName']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+2,item[u'comapnyName'])
+                if item[u'grandTotal']== None:
+                    print 'aaaaaaa'
+                else:
+                    worksheet.write_string(row, col+3,str(item[u'grandTotal']))
+                row += 1
+
+        workbook.close()
+        # if not request.data['emailID']:
+        #     word = request.data['email'].split(",")
+        #     for a in word:
+        #         contact.append(str(a))
+        #     print contact
+        #     for c in request.data['cc']:
+        #         u = User.objects.get(pk = c)
+        #         print u.email
+        #         cc.append(str(u.email))
+        #     email_subject = str(request.data['typ'])
+        #     msgBody=''
+        #     ctx = {
+        #         'message': msgBody,
+        #         'linkUrl': 'cioc.co.in',
+        #         'linkText' : 'View Online',
+        #         'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+        #         'sendersPhone' : '841101',
+        #         'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+        #         'fbUrl' : 'facebook.com',
+        #         'twitterUrl' : 'twitter.com',
+        #     }
+        #     email_body = get_template('app.clientRelationships.email.html').render(ctx)
+        #     msg = EmailMessage(email_subject, msgBody,  to= contact, cc=cc )
+        #     msg.send()
+        # else:
+        print request.data['cc'],'aaaaaaaa'
+        if request.data['cc']!=[]:
+            for c in request.data['cc']:
+                u = User.objects.get(pk = c)
+                print u.email
+            cc.append(str(u.email))
+        word = request.data['emailID'].split(",")
+        for a in word:
+            contactData.append(str(a))
+        email_subject =str(request.data['typ'])
+        msgBody=''
+        ctx = {
+            'message': msgBody,
+            'linkUrl': 'cioc.co.in',
+            'linkText' : 'View Online',
+            'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+            'sendersPhone' : '841101',
+            'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+            'fbUrl' : 'facebook.com',
+            'twitterUrl' : 'twitter.com',
+        }
+        email_body = get_template('app.clientRelationships.email.html').render(ctx)
+        msg = EmailMessage(email_subject, msgBody,  to= contactData, cc=cc)
+        fp = open('Expenses03.xlsx', 'rb')
+        att = MIMEApplication(fp.read(), _subtype="xlsx")
+        fp.close()
+        att.add_header('Content-Disposition', 'attachment',
+                       filename=fp.name.split('/')[-1])
+        msg.attach(att)
+        msg.send()
+
+        return Response({},status=status.HTTP_200_OK)

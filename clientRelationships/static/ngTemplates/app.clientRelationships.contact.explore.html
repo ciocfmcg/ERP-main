@@ -186,9 +186,7 @@
 
         <div ng-if="local.activeTab == 2">
           <div class="container-fluid">
-            <h3 class="text-muted">Send an email</h3>
-            <div class="text-center" style="padding-top:100px;">
-              <h2 class="text-muted">Not implimented</h2>
+            <div ng-include="'/static/ngTemplates/app.clientRelationships.email.modal.html'">
             </div>
           </div>
         </div>
@@ -196,9 +194,22 @@
         <div ng-if="local.activeTab == 3">
           <div class="container-fluid">
             <h3 class="text-muted">Call/sms</h3>
-            <div class="text-center" style="padding-top:100px;">
-              <h2 class="text-muted">Not implimented</h2>
+
+            <div class="col-md-6">
+              <textarea style="margin-bottom:20px;" class="form-control" rows="4" cols="80"></textarea>
+
+              <button type="button" class="btn btn-primary">
+                Send
+              </button>
+
             </div>
+            <div class="col-md-6" style="border-left:solid 2px #eeeeee;">
+              <button type="button" class="btn btn-default">
+                Call
+              </button>
+            </div>
+
+
           </div>
         </div>
         <div ng-if="local.activeTab == 4">

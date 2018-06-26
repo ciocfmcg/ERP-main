@@ -143,6 +143,29 @@ app.controller("businessManagement.clientRelationships.contacts.item", function(
 
 app.controller("businessManagement.clientRelationships.contacts.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
 
+  $scope.sendEmail = function() {
+    var cc = []
+    console.log( $scope.form.cc,'aaaaaaaaa');
+    for (var i = 0; i < $scope.form.cc.length; i++) {
+      cc.push($scope.form.cc[i]);
+    }
+
+    var contact = []
+    contact.push($scope.contact.pk);
+
+    var toSend = {
+      contact :contact,
+      cc : cc,
+      emailbody :$scope.form.emailBody,
+      emailSubject:$scope.form.emailSubject
+    }
+
+    $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
+    then(function() {
+        Flash.create('success', 'Email sent successfully');
+        $scope.resetEmailForm();
+    })
+  }
   $scope.editContact = function() {
     $scope.$emit('editContact' , {contact : $scope.contact})
   }
@@ -150,6 +173,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   if ($scope.data != undefined) {
     $scope.contact = $scope.data.tableData[$scope.tab.data.index]
   }
+
   $scope.disableNext = false;
   $scope.pageNo = 0;
 
@@ -274,6 +298,7 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   $scope.timelineItems = [];
 
   $scope.retriveTimeline = function() {
+    console.log($scope.pageNo,'aaaaaaaa');
     $http({
       method: 'GET',
       url: '/api/clientRelationships/activity/?contact=' + $scope.contact.pk + '&limit=5&offset=' + $scope.pageNo * 5
@@ -408,6 +433,12 @@ app.controller("businessManagement.clientRelationships.contacts.explore", functi
   $scope.local = {
     activeTab: 0
   };
+
+  $scope.resetEmailForm = function() {
+    $scope.form = {cc : [] , emailBody : '' , emailSubject : ''};
+  }
+
+  $scope.resetEmailForm();
 
   $scope.resetEventScheduler = function() {
     $scope.eventScheduler = {

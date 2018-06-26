@@ -1,0 +1,25 @@
+<div class="modal-body" style="padding-bottom:0px;">
+<div class="container-fluid">
+  <div class="row">
+    <strong>Email :</strong> {{data.email}}{{contact.email}}  <span ng-repeat="c in deal.contacts"> <span ng-if="!$first"> , </span> {{c.name}} ({{c.email}})</span>
+
+    <button type="button" class="btn btn-primary pull-right" ng-click="sendEmail()">
+      Send
+    </button>
+
+  </div>
+  <div class="row">
+    <users-Field data="form.cc" url="/api/HR/userSearch/" col="4" label="CC"></users-Field>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <label>Subject</label>
+      <input type="text " class="form-control" ng-model="form.emailSubject">
+    </div>
+  </div>
+
+
+  <div class="row">
+    <textarea ui-tinymce="tinymceOptions" ng-model="form.emailBody"></textarea>
+  </div>
+</div>
