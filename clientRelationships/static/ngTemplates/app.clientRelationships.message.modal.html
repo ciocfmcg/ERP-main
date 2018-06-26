@@ -1,12 +1,20 @@
 <div class="modal-body">
   <div class="container-fluid" style="padding-top:20px;">
 
-    <textarea rows="4" class="form-control" cols="80" placeholder="Please type your sms for {{data.mobile}}"></textarea>
+    <div ng-if="mode == 'writing'">
+      <textarea ng-model="form.text" rows="4" class="form-control" cols="80" placeholder="Please type your sms for {{mobile}}"></textarea>
 
-    <br>
-    <button type="button" class="btn btn-default">
-      Send
-    </button>
+      <br>
+      <button type="button" class="btn btn-default" ng-click="sendSMS()">
+        Send
+      </button>
+    </div>
+
+    <div ng-if="mode == 'sent'">
+      <h3 class="text-success">SMS Sent</h3>
+    </div>
+
+
 
   </div>
 </div>

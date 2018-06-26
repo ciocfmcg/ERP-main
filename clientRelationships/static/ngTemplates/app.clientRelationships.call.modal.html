@@ -1,15 +1,18 @@
 <div class="modal-body">
   <div class="container-fluid text-center">
-    <img ng-if="mode != 'called'" src="/static/images/calling.gif" style="height:200px;">
+    <img ng-if="mode == 'calling'" src="/static/images/calling.gif" style="height:200px;">
 
     <br>
 
-    <h3><span>  {{mode | humanize}}... </span>{{data.mobile}}</h3>
+    <h3><span>  {{mode | humanize}}... </span>{{mobile}}</h3>
 
     <br>
 
-    <span ng-if="mode == 'called'"> Please check your mobile device</span>
+    <span ng-if="mode == 'incall'"> Please check your mobile device</span>
 
+    <button type="button" class="btn btn-danger" ng-click="endCall()">
+      End Call
+    </button>
 
   </div>
 </div>
