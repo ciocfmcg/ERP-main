@@ -130,7 +130,7 @@ class PageNumCanvas(canvas.Canvas):
         Add the page number
         """
         styles = getSampleStyleSheet()
-        text = "<font size='14'>Page #%s of %s</font>" % (self._pageNumber , page_count)
+        text = "<font size='14' textColor=darkblue>Page #%s of %s</font>" % (self._pageNumber , page_count)
         p = Paragraph(text , styles['Normal'])
         p.wrapOn(self , 50*mm , 10*mm)
         p.drawOn(self , 100*mm , 10*mm)
@@ -279,21 +279,21 @@ def dischargeSummary(response,dis):
     elements = []
 
     # logo = "hospital_logo.png"
-    logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'hospital_logo.png')
-    im = Image(logo,height=1*inch ,width=0.6*inch)
-
-    p1=[
-       Paragraph("<para fontSize=30 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
-       Paragraph("<para fontSize=11  spaceBefore=12 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
-       Paragraph("<para fontSize=11 alignment='left'  leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
-       ]
-    # Paragraph("<para fontSize=13 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
-
-    data1=[[im,p1]]
-    rheights=1*[1.1*inch]
-    cwidths=2*[0.8*inch]
-    cwidths[1]=7*inch
-    t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
+    # logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'hospital_logo.png')
+    # im = Image(logo,height=1*inch ,width=0.6*inch)
+    #
+    # p1=[
+    #    Paragraph("<para fontSize=30 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
+    #    Paragraph("<para fontSize=11  spaceBefore=12 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
+    #    Paragraph("<para fontSize=11 alignment='left'  leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
+    #    ]
+    # # Paragraph("<para fontSize=13 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
+    #
+    # data1=[[im,p1]]
+    # rheights=1*[1.1*inch]
+    # cwidths=2*[0.8*inch]
+    # cwidths[1]=7*inch
+    # t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
     # elements.append(t1)
 
     # elements.append(Spacer(1, 150))
@@ -304,7 +304,7 @@ def dischargeSummary(response,dis):
 
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=darkblue><b> DISCHARGE SUMMARY </b></para>",styles['Normal']))
 
-    elements.append(Spacer(1, 15))
+    elements.append(Spacer(1, 20))
     print dis.patient.patient,dis.patient.inTime,dis.patient.dateOfDischarge
     if '.' in str(dis.patient.inTime):
         ad = str(dis.patient.inTime).split('.')[0]
@@ -363,67 +363,67 @@ def dischargeSummary(response,dis):
     (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,docname,dt,regno,docMob)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dName, docMobile ,dep,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason,dis.summIllness,dis.keyFindings,dis.historyOfAlchohol,dis.pastHistory,dis.familyHistory,dis.summaryKeyInvestigation,dis.courseInHospital,dis.patientCondition,dis.advice,dis.reviewOn,dis.complications,bottomDName,d,bottomDRegNo,bottomDMob)
 
     p1_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Patient's Name</b></para>",styles['Normal']),
-    p1_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
+    p1_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
 
     p2_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Telephone No / Mobile No.</b></para>",styles['Normal'])
-    p2_2=Paragraph("<para  fontSize=11>: {0} </para>".format(mob),styles['Normal'])
+    p2_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} </para>".format(mob),styles['Normal'])
 
     p3_1= Paragraph("<para fontSize=11 textColor=darkblue><b>UHID : </b></para>",styles['Normal']),
-    p3_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>4.IP No</b>. : {1}</para>".format(uhid,ipno),styles['Normal'])
+    p3_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>4.IP No</b>. : {1}</para>".format(uhid,ipno),styles['Normal'])
 
     p5_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Treating Consultant/s Name<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Contact Numbers <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Department/ Specialty </b></para>",styles['Normal']),
-    p5_2=Paragraph("<para  fontSize=11>: {0} <br/><br/>: {1} <br/><br/>: {2}</para>".format(tcname,cno,dep),styles['Normal'])
+    p5_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} <br/><br/>: {1} <br/><br/>: {2}</para>".format(tcname,cno,dep),styles['Normal'])
 
     p6_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Date Of Admission With Time</b></para>",styles['Normal']),
-    p6_2=Paragraph("<para  fontSize=11>: {0} </para>".format(doa),styles['Normal'])
+    p6_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} </para>".format(doa),styles['Normal'])
 
     p7_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Date Of Discharge With Time</b></para>",styles['Normal']),
-    p7_2=Paragraph("<para  fontSize=11>: {0} </para>".format(dod),styles['Normal'])
+    p7_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} </para>".format(dod),styles['Normal'])
 
     p8_1= Paragraph("<para fontSize=11 textColor=darkblue><b>MLC No.</b></para>",styles['Normal']),
-    p8_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>FIR No.</b> : {1}</para>".format(mlc,fir),styles['Normal'])
+    p8_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>FIR No.</b> : {1}</para>".format(mlc,fir),styles['Normal'])
 
     p9_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Provisional Diagnosis<br/>At The Time Of Admission</b></para>",styles['Normal'])
-    p9_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p9),styles['Normal'])
+    p9_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p9),styles['Normal'])
 
     p10_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Final Diagnosis<br/>At The Time Of Discharge</b></para>",styles['Normal'])
-    p10_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p10),styles['Normal'])
+    p10_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p10),styles['Normal'])
 
     p11_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Presenting Complaints With Duration And Reason For Admission</b></para>",styles['Normal'])
-    p11_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p11),styles['Normal'])
+    p11_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p11),styles['Normal'])
 
     p12_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Summary Of Presenting Illness</b></para>",styles['Normal'])
-    p12_2=Paragraph("<para  fontSize=11>: {0} </para>".format(p12),styles['Normal'])
+    p12_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} </para>".format(p12),styles['Normal'])
 
     p13_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Key Findings, On Physical Examination At The Time Of Admission</b></para>",styles['Normal'])
-    p13_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p13),styles['Normal'])
+    p13_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p13),styles['Normal'])
 
     p14_1= Paragraph("<para fontSize=11 textColor=darkblue><b>History Of Alcoholism, Tobacco Or Substance Abuse, If Any</b></para>",styles['Normal'])
-    p14_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p14),styles['Normal'])
+    p14_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p14),styles['Normal'])
 
     p15_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Significant Past Medical And Surgical History, If Any</b></para>",styles['Normal'])
-    p15_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p15),styles['Normal'])
+    p15_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p15),styles['Normal'])
 
     p16_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Family History If Significant / Relevent To Diagnosis Or Treatment</b></para>",styles['Normal'])
-    p16_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p16),styles['Normal'])
+    p16_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p16),styles['Normal'])
 
     p17_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Summary Of Key Investigations During Hospitalization</b></para>",styles['Normal'])
-    p17_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p17),styles['Normal'])
+    p17_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p17),styles['Normal'])
 
     p18_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Course In The Hospital Including Complications, If Any</b></para>",styles['Normal'])
-    p18_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p18),styles['Normal'])
+    p18_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p18),styles['Normal'])
 
     p19_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Patient Condition At The Time Of Discharge</b></para>",styles['Normal'])
-    p19_2=Paragraph("<para  fontSize=11><br/>: {0} </para>".format(p19),styles['Normal'])
+    p19_2=Paragraph("<para  fontSize=11 textColor=darkblue><br/>: {0} </para>".format(p19),styles['Normal'])
 
     p20_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Advice On Discharge</b></para>",styles['Normal'])
-    p20_2=Paragraph("<para  fontSize=11>: {0} </para>".format(p20),styles['Normal'])
+    p20_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} </para>".format(p20),styles['Normal'])
 
     p21_1= Paragraph("<para fontSize=11 textColor=darkblue><b>Review On</b></para>",styles['Normal'])
-    p21_2=Paragraph("<para  fontSize=11>: {0} </para>".format(p21),styles['Normal'])
+    p21_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} </para>".format(p21),styles['Normal'])
 
     p22_1= Paragraph("<para fontSize=11 textColor=darkblue><b>In Case Of Complications Such As</b></para>",styles['Normal'])
-    p22_2=Paragraph("<para  fontSize=11>: {0} &nbsp;&nbsp;&nbsp;&nbsp;<b>Contact The Consultant</b></para>".format(p22),styles['Normal'])
+    p22_2=Paragraph("<para  fontSize=11 textColor=darkblue>: {0} &nbsp;&nbsp;&nbsp;&nbsp;<b>Contact The Consultant</b></para>".format(p22),styles['Normal'])
 
     l1=['1.',p1_1,p1_2]
     l2=['2.',p2_1,p2_2]
@@ -470,7 +470,7 @@ def dischargeSummary(response,dis):
     # rheights=[0.3*inch,0.3*inch,0.3*inch,1*inch,0.3*inch,0.3*inch,0.3*inch,0.5*inch,0.5*inch,0.4*inch if len(a)<200 else 1.2*inch,0.8*inch,1.2*inch,1*inch,1*inch,1*inch,1*inch,1.7*inch,1*inch,1.5*inch,0.8*inch,0.6*inch,]
     cwidths=[0.25*inch , 2.4*inch , 5.5*inch]
     t2=Table(data,rowHeights=rheights,colWidths=cwidths)
-    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),darkblue),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),]))
+    t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 11),('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),darkblue),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),]))
     elements.append(t2)
 
     elements.append(Spacer(1,6))
@@ -484,7 +484,10 @@ def dischargeSummary(response,dis):
 
     elements.append(Spacer(1,8))
 
-    elements.append(Paragraph("<para fontSize=11  leftIndent=10><b>In Case Of Emergency - Contact No. of The Hospital (Casualty : 7022161297)</b></para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=11 textColor=darkblue leftIndent=20><b>In Case Of Emergency - Contact No. of The Hospital (Casualty : 7022161297)</b></para>",styles['Normal']))
+    elements.append(Spacer(1, 30))
+    elements.append(Paragraph("<para fontSize=11 alignment='center' textColor=darkblue leading=15> FOR CHAITANYA HOSPITAL </para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=11 alignment='center' textColor=darkblue> Thank You </para>",styles['Normal']))
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
