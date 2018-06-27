@@ -9,9 +9,20 @@
         <label>Name</label>
         <input type="text" class="form-control" ng-model="product.name">
       </div>
-      <div class="form-group">
-        <label>MRP</label>
-        <input type="tel" class="form-control" ng-model="product.price">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>MRP</label>
+            <input type="text" class="form-control" ng-model="product.price">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Cost</label>
+            <input type="number" class="form-control" ng-model="product.cost">
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -23,24 +34,39 @@
         <label>SKU</label>
         <input type="tel" class="form-control" ng-model="product.serialNo">
       </div>
-      <div class="form-group">
-        <label>In Stock.</label>
-        <input type="tel" class="form-control" ng-model="product.inStock">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>In Stock.</label>
+            <input type="tel" class="form-control" ng-model="product.inStock">
+          </div>
+
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>logistics</label>
+            <input type="number" class="form-control" ng-model="product.logistics">
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Cost</label>
-        <input type="number" class="form-control" ng-model="product.cost">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Serial Id</label>
+            <input type="text" class="form-control" ng-model="product.serialId">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Reorder Threshold</label>
+            <input type="number" class="form-control" ng-model="product.reorderTrashold">
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="form-group">
-        <label>logistics</label>
-        <input type="number" class="form-control" ng-model="product.logistics">
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea class="form-control custom-control" rows="3" ng-model="product.description"></textarea>
-      </div>
+
       <div class="form-group">
         <label>Product Meta</label>
         <input type="text" class="form-control" ng-model="product.productMeta" uib-typeahead="meta as meta.description for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
@@ -48,29 +74,37 @@
           Edit <i class="fa fa-pencil"></i>
         </button> <br> {{product.productMeta.description}} <br><strong>Code Type : </strong> {{product.productMeta.typ}} <br> <strong>Code : </strong> {{product.productMeta.code}} <br> <strong>Tax Rate :</strong>{{product.productMeta.taxRate}}</span>
       </div>
-      <div class="form-group">
-        <label>Serial Id</label>
-        <input type="text" class="form-control" ng-model="product.serialId">
-      </div>
-      <div class="form-group">
-        <label>Reorder Threshold</label>
-        <input type="number" class="form-control" ng-model="product.reorderTrashold">
-      </div>
+
+
     </div>
-    <div class="col-md-4" ng-if="product.pk">
+    <div class="col-md-4">
+
       <div class="form-group">
-        <label>Secondary SKU</label>
-        <input type="text" class="form-control" ng-model="productVerientForm.sku">
+        <label>Description</label>
+        <textarea class="form-control custom-control" rows="3" ng-model="product.description"></textarea>
       </div>
-      <div class="form-group">
-        <label>Units / Pack</label>
-        <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack">
-      </div>
+
+
+      <label>Secondary SKU</label>
       <div class="row">
-        <div class="col-md-12 text-center" style="margin-top: 27px;">
-          <button type="button" class="btn btn-success" ng-click="saveUnits()">Save</button>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="text" class="form-control" ng-model="productVerientForm.sku">
+          </div>
+
+        </div>
+        <div class="col-md-6">
+
+          <div class="input-group">
+            <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack" placeholder="No. of items per pack">
+
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-primary" ng-click="saveUnits()">Add</button>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;" ng-repeat="data in productData">
         <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
           <div class="col-md-12">
@@ -82,6 +116,20 @@
           </div>
         </div>
       </div>
+
+
+    </div>
+    <div class="col-md-4" ng-if="product.pk">
+
+
+
+      <div class="row">
+        <input type="text" ng-model="category" class="form-control" uib-typeahead="c as c.title for c in categorySearch($viewValue)" placeholder="Search and select a category">
+
+
+      </div>
+
+
     </div>
   </div>
   <div class="row">

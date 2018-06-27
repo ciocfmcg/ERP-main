@@ -61,6 +61,9 @@ class Product(models.Model):
     logistics = models.PositiveIntegerField(default = 0)
     serialId = models.CharField(max_length = 50, null=True)
     reorderTrashold = models.PositiveIntegerField(default = 0)
+    haveComposition = models.BooleanField(default = False)
+    compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
+    compositionQtyMap = models.CharField(max_length = 1000 , null = True)
     def __str__(self):
         return self.name
 
