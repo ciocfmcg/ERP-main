@@ -4,11 +4,22 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from django.db.models import Sum
 from .models import *
+import requests
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ('pk' ,'created', 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' , 'age' )
+
+    def create(self , validated_data):
+        p = Patient(**validated_data)
+        p.save()
+
+        requests.get("https://cioc.in/api/ERP/contacts/?name=" + p.firstName + "&email="+ str(p.email) + "&mobile=" + str(p.phoneNo) + "&age=" + str(p.age) + "&pincode=" + str(p.pin) )
+
+        return p
+
+
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
