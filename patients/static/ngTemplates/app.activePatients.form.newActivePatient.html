@@ -36,6 +36,10 @@
         <input type="checkbox" ng-model="activePatientsForm.cash"> Cash<br>
         <input type="checkbox" ng-model="activePatientsForm.insurance"> Insurance<br>
       </div>
+      <div class="form-group">
+        <label>Primary Doctor</label>
+        <input type="text" class="form-control" ng-model="activePatientsForm.docName" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Doctor Name Here...">
+      </div>
       <div class="form-group" ng-if="activePatientsForm.pk">
         <label>Status</label>
         <select class="form-control" ng-model="activePatientsForm.status">

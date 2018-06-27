@@ -213,7 +213,8 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
     skin: 'lightgray',
     theme : 'modern',
     height : 640,
-    toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+    toolbar : false,
+    menubar : false,
     setup: function (editor ) {
       editor.addButton( 'publishBtn', {
         text: 'Publish',
@@ -232,7 +233,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             state : 'published',
             tags : tags,
           };
-          
+
           if ($scope.mode == 'edit') {
             method = 'PATCH';
             url = $scope.editor.url;

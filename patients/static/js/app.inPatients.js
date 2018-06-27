@@ -14,7 +14,112 @@ app.config(function($stateProvider) {
 
 app.controller('hospitalManagement.activePatient.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout, $uibModal) {
 
+  $scope.tinymceOptions = {
+    selector: 'textarea',
+    content_css : '/static/css/bootstrap.min.css',
+    inline: false,
+    plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+    skin: 'lightgray',
+    theme : 'modern',
+    height : 300,
+    toolbar : false,
+    menubar : false,
+    setup: function (editor ) {
+      editor.addButton( 'publishBtn', {
+        text: 'Publish',
+        icon: false,
+        onclick: function() {
+          var tags = [];
+          for (var i = 0; i < $scope.editor.tags.length; i++) {
+            tags.push($scope.editor.tags[i].pk)
+          }
+          var dataToSend = {
+            source : $scope.editor.source,
+            header : $scope.editor.header,
+            title : $scope.editor.title,
+            users : [$scope.me.pk],
+            sourceFormat : 'html',
+            state : 'published',
+            tags : tags,
+          };
 
+          if ($scope.mode == 'edit') {
+            method = 'PATCH';
+            url = $scope.editor.url;
+          } else if ($scope.mode == 'new') {
+            method = 'POST';
+            url = '/api/PIM/blog/';
+          }
+
+          $http({method : method , url : url, data : dataToSend}).
+          then(function(response){
+            Flash.create('success' , response.status + ' : ' + response.statusText);
+            $scope.editor.source = '';
+            $scope.editor.header = '';
+            $scope.editor.title = '';
+            $scope.editor.tags = [];
+            $scope.editor.mode = 'hedaer';
+          }, function(response){
+            Flash.create('danger' , response.status + ' : ' + response.statusText);
+          });
+        }
+      });
+      editor.addButton( 'saveBtn', {
+        text: 'Save',
+        icon: false,
+        onclick: function() {
+          tags = '';
+          for (var i = 0; i < $scope.editor.tags.length; i++) {
+            tags += $scope.editor.tags[i].title;
+            if (i != $scope.editor.tags.length-1) {
+              tags += ',';
+            }
+          }
+          var dataToSend = {
+            source : $scope.editor.source,
+            header : $scope.editor.header,
+            title : $scope.editor.title,
+            users : [$scope.me.pk],
+            sourceFormat : 'html',
+            state : 'saved',
+            tags : tags,
+          };
+
+          if ($scope.mode == 'edit') {
+            method = 'PATCH';
+            url = $scope.editor.url;
+          } else if ($scope.mode == 'new') {
+            method = 'POST';
+            url = '/api/PIM/blog/';
+          }
+
+          $http({method : method , url : url, data : dataToSend}).
+          then(function(response){
+            Flash.create('success' , response.status + ' : ' + response.statusText);
+            $scope.editor.source = '';
+            $scope.editor.header = '';
+            $scope.editor.title = '';
+            $scope.editor.tags = [];
+            $scope.editor.mode = 'hedaer';
+          }, function(response){
+            Flash.create('danger' , response.status + ' : ' + response.statusText);
+          });
+        }
+      });
+      editor.addButton( 'cancelBtn', {
+        text: 'Cancel',
+        icon: false,
+        onclick: function() {
+          if ($scope.mode == 'edit') {
+            $state.go('home.blog' , { action:'list'} )
+          } else {
+            $state.go('home.blog' , {id : '' , action:'list'} )
+          }
+
+        }
+      });
+    },
+  };
 
 
 
@@ -23,6 +128,24 @@ console.log('coming in explooreeee');
 
 $scope.data = $scope.tab.data;
 console.log('exploreee', $scope.data);
+
+$scope.$watch('data.msg' , function(newValue , oldValue) {
+
+  if (newValue != null) {
+
+    $http({
+      method: 'PATCH',
+      url: '/api/patients/activePatient/'+ $scope.data.pk +'/',
+      data: {msg:$scope.data.msg}
+    }).
+    then(function(response) {
+    });
+
+  }
+
+
+
+})
 
 $scope.invoices = [];
 
@@ -53,6 +176,7 @@ $scope.fetchInvoices = function() {
     if ($scope.dis.length>0) {
       console.log('thteeeeeeeeeee');
       $scope.dischargeSummForm=$scope.dis[0]
+      $scope.dischargeSummForm.primaryDoctor = $scope.data.docName
       $scope.dischargeSummForm.docList = $scope.dischargeSummForm.treatingConsultant
       $scope.dischargeSummForm.docListPk = []
       for (var i = 0; i < $scope.dischargeSummForm.docList.length; i++) {
@@ -63,6 +187,7 @@ $scope.fetchInvoices = function() {
       console.log('newwwwwwwwwwwwwwww');
       $scope.refresh();
       $scope.dischargeSummForm.patient = $scope.data
+      $scope.dischargeSummForm.primaryDoctor = $scope.data.docName
     }
   })
 }
@@ -94,6 +219,7 @@ $scope.fetchInvoices();
       complications  :'',
       docList: [],
       docListPk: [],
+      primaryDoctor:$scope.data.docName
     }
   }
 
@@ -161,13 +287,15 @@ $scope.fetchInvoices();
 
     console.log('here...');
     console.log($scope.dischargeSummForm);
-    if (typeof $scope.dischargeSummForm.docList.length == 0) {
-      Flash.create('warning', 'Please Fill Treating Consultants');
+    if (typeof $scope.dischargeSummForm.primaryDoctor != 'object') {
+      Flash.create('warning', 'Please Fill Suggested primaryDoctor');
       return
     }
 
+    $scope.copyOfDoctor = $scope.dischargeSummForm.primaryDoctor
     var toSend = $scope.dischargeSummForm
     toSend.patient = $scope.dischargeSummForm.patient.pk
+    toSend.primaryDoctor = $scope.dischargeSummForm.primaryDoctor.pk
     delete toSend['treatingConsultant']
     delete toSend['docList']
     console.log('******************',toSend);
@@ -189,6 +317,7 @@ $scope.fetchInvoices();
         Flash.create('success', 'Saved');
         console.log('dataaaa', response.data);
         $scope.dischargeSummForm = response.data
+        $scope.dischargeSummForm.primaryDoctor = $scope.copyOfDoctor
         $scope.dischargeSummForm.docList = $scope.dischargeSummForm.treatingConsultant
         $scope.dischargeSummForm.docListPk = []
         for (var i = 0; i < $scope.dischargeSummForm.docList.length; i++) {
@@ -531,6 +660,12 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       return response.data;
     })
   };
+  $scope.doctorSearch = function(query) {
+    return $http.get('/api/patients/doctor/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
 
   // console.log('kkkkkkkkkkk',$scope.data);
   // console.log('kkkkkk',$scope.tab);
@@ -575,6 +710,7 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
   }else {
     $scope.activePatientsForm = {
       patient: '',
+      docName: '',
       inTime: new Date(),
       status: '',
       comments: '',
@@ -781,6 +917,10 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       Flash.create('danger', 'please fill In Time');
       return
     }
+    if ($scope.activePatientsForm.docName == '' || $scope.activePatientsForm.docName.pk == undefined) {
+      Flash.create('danger', 'please Select Suggested Doctor Name');
+      return
+    }
 
     // if ($scope.mode=='edit') {
     //   console.log('ffffffffffff');
@@ -793,6 +933,7 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
     dataToSend = {
       patient: $scope.activePatientsForm.patient.pk,
       inTime: $scope.activePatientsForm.inTime,
+      docName: $scope.activePatientsForm.docName.pk,
       mlc: $scope.activePatientsForm.mlc,
       cash: $scope.activePatientsForm.cash,
       insurance: $scope.activePatientsForm.insurance,
@@ -821,6 +962,7 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
 
         $scope.activePatientsForm = {
           patient: '',
+          docName: '',
           inTime: new Date(),
           status: '',
           comments: ''

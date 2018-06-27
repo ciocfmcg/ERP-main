@@ -25,7 +25,7 @@ class ActivePatientSerializer(serializers.ModelSerializer):
     docName = DoctorSerializer(many=False , read_only=True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','created','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo' ,'docName')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments','outPatient','created','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo' ,'docName' , 'msg')
     def create(self , validated_data):
         print '**********************************'
         print validated_data , self.context['request'].data
@@ -37,7 +37,7 @@ class ActivePatientSerializer(serializers.ModelSerializer):
         return a
     def update(self ,instance, validated_data):
         print validated_data , self.context['request'].data
-        for key in ['inTime','outTime','status','comments','outPatient','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo']:
+        for key in ['inTime','outTime','status','comments','outPatient','dateOfDischarge', 'mlc' , 'cash' , 'insurance' ,'opNo' ,'msg']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -83,6 +83,10 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
         i = DischargeSummary(**validated_data)
         i.patient = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
         i.save()
+        if 'primaryDoctor' in self.context['request'].data:
+            ap = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
+            ap.docName = Doctor.objects.get(pk=int(self.context['request'].data['primaryDoctor']))
+            ap.save()
         if 'docListPk' in self.context['request'].data:
             for p in self.context['request'].data['docListPk']:
                 i.treatingConsultant.add(Doctor.objects.get(pk=int(p)))
@@ -97,6 +101,10 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
             except:
                 pass
         print 'came'
+        if 'primaryDoctor' in self.context['request'].data:
+            ap = ActivePatient.objects.get(pk=int(self.context['request'].data['patient']))
+            ap.docName = Doctor.objects.get(pk=int(self.context['request'].data['primaryDoctor']))
+            ap.save()
         if 'docListPk' in self.context['request'].data:
             print 'innnn'
             instance.treatingConsultant.clear()
@@ -105,6 +113,7 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
                 instance.treatingConsultant.add(Doctor.objects.get(pk=int(p)))
         instance.save()
         return instance
+
 
 class DishchargeSummaryLiteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -117,4 +126,4 @@ class ActivePatientLiteSerializer(serializers.ModelSerializer):
     docName = DoctorSerializer(many=False , read_only=True)
     class Meta:
         model = ActivePatient
-        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices', 'opNo' ,'docName' , 'outPatient' , 'dateOfDischarge')
+        fields = ('pk' , 'patient','inTime','outTime','status','comments', 'dischargeSummary' , 'invoices', 'opNo' ,'docName' , 'outPatient' , 'dateOfDischarge' , 'msg')

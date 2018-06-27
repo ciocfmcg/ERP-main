@@ -62,7 +62,8 @@ class ActivePatient(models.Model):
     cash = models.BooleanField(default = False)
     insurance = models.BooleanField(default = False)
     opNo = models.CharField(max_length = 100 , null = True  , blank = True)
-    docName = models.ForeignKey(Doctor , null= True , blank = True, related_name='outPatients')
+    docName = models.ForeignKey(Doctor , null= True , blank = True, related_name='primaryDoctor')
+    msg = models.CharField(max_length = 100 , null = True  , blank = True ,default = 'Thank You')
     class Meta:
         ordering = ('-created',)
 
@@ -81,7 +82,7 @@ class DischargeSummary(models.Model):
     pastHistory = models.CharField(max_length = 2000 , null = True , blank = True)
     familyHistory = models.CharField(max_length = 2000 , null = True , blank = True)
     summaryKeyInvestigation = models.CharField(max_length = 2000 , null = True , blank = True)
-    courseInHospital = models.CharField(max_length = 2000 , null = True , blank = True)
+    courseInHospital = models.CharField(max_length = 10000 , null = True , blank = True)
     patientCondition= models.CharField(max_length = 2000 , null = True , blank = True)
     advice = models.CharField(max_length =2000 , null = True , blank = True)
     reviewOn = models.CharField(max_length = 2000 , null = True , blank = True)

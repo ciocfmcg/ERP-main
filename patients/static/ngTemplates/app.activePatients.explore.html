@@ -1,4 +1,9 @@
 <div class="container-fluid" ng-controller="hospitalManagement.activePatient.explore" style="margin-top:20px;">
+<style media="screen">
+  #mceu_2{
+    display: none;
+  }
+</style>
   <div class="row">
 
     <div class="col-md-4">
@@ -23,7 +28,7 @@
             </div>
             <div class="row">
               <label>Mode of payment : </label>
-              <div class="row text-center">
+              <div class="text-center">
                 <span ng-if="data.mlc">Medical Legal Case </span> <br>
                 <span ng-if="data.insurance">Insurance </span> <br>
                 <span ng-if="data.cash">Cash </span> <br>
@@ -32,6 +37,12 @@
             <hr>
             <div class="row" ng-if="data.status=='dishcharged'">
               <label>Discharge Time : </label> {{data.dateOfDischarge | date: 'dd-MM-yyyy:hh:mm a'}}
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label>Greeting Message</label>
+                <input type="text" class="form-control" ng-model="data.msg" placeholder="Type Greeting Message Here...">
+              </div>
             </div>
           </div>
           <!-- <div class="col-md-6">
@@ -199,6 +210,12 @@
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>PrimaryDoctor</label>
+            <input type="text" class="form-control" ng-model="dischargeSummForm.primaryDoctor" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Doctor Name Here...">
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
           <!-- <div class="form-group">
             <label>Treating Consultant/s</label>
             <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Name Here...">
@@ -294,7 +311,8 @@
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Course in the Hospital including complicayions, if any</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.courseInHospital" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.courseInHospital" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.courseInHospital"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
