@@ -217,6 +217,7 @@ $scope.fetchInvoices();
       advice  :'',
       reviewOn  :'',
       complications  :'',
+      treatmentGiven : '',
       docList: [],
       docListPk: [],
       primaryDoctor:$scope.data.docName

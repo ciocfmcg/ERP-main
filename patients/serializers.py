@@ -75,7 +75,7 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
     treatingConsultant = DoctorSerializer(many=True , read_only=True)
     class Meta:
         model = DischargeSummary
-        fields = ('pk' , 'patient','ipNo','treatingConsultant','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications')
+        fields = ('pk' , 'patient','ipNo','treatingConsultant','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications' , 'treatmentGiven')
     def create(self , validated_data):
         print validated_data
         print '*******************'
@@ -95,7 +95,7 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
         print "will update"
         print validated_data
         print self.context['request'].data
-        for key in ['ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications']:
+        for key in ['ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications' , 'treatmentGiven']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -118,7 +118,7 @@ class DishchargeSummarySerializer(serializers.ModelSerializer):
 class DishchargeSummaryLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = DischargeSummary
-        fields = ('pk' ,'ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications' , 'treatingConsultant')
+        fields = ('pk' ,'ipNo','mlcNo','firNo','provisionalDiagnosis','finalDiagnosis','complaintsAndReason','summIllness','keyFindings','historyOfAlchohol','pastHistory','familyHistory','summaryKeyInvestigation','courseInHospital','patientCondition','advice','reviewOn','complications' , 'treatingConsultant' , 'treatmentGiven')
 
 class ActivePatientLiteSerializer(serializers.ModelSerializer):
     invoices = InvoiceSerializer(many = True , read_only = True)

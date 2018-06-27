@@ -211,7 +211,7 @@
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
-            <label>PrimaryDoctor</label>
+            <label>Incharge Doctor</label>
             <input type="text" class="form-control" ng-model="dischargeSummForm.primaryDoctor" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Doctor Name Here...">
           </div>
         </div>
@@ -269,48 +269,62 @@
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Presenting Complaints with Duration and Resason for Admission</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.complaintsAndReason" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.complaintsAndReason" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.complaintsAndReason"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Summary of Presenting Illness</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.summIllness" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.summIllness" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.summIllness"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Key findings, on physical Examination at the time of Admission</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.keyFindings" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.keyFindings" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.keyFindings"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>History of alcholism, tabacco or substance abuse, if any</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.historyOfAlchohol" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.historyOfAlchohol" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.historyOfAlchohol"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Significant Past Medical and Surgical History, if any</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.pastHistory" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.pastHistory" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.pastHistory"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Family History if Significant to Diagnosis or Treatment</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.familyHistory" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.familyHistory" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.familyHistory"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Summary Of Key Investigations During Hospitalization</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.summaryKeyInvestigation" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.summaryKeyInvestigation" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.summaryKeyInvestigation"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
-            <label>Course in the Hospital including complicayions, if any</label>
+            <label>Treatment Given</label>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.courseInHospital" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.treatmentGiven"></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Course in the Hospital including complications, if any</label>
             <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.courseInHospital" ></textarea> -->
             <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.courseInHospital"></textarea>
           </div>
@@ -318,25 +332,29 @@
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Patient condition at the time of discharge</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.patientCondition" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.patientCondition" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.patientCondition"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Advice on discharge</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.advice" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.advice" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.advice"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Review On</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.reviewOn" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.reviewOn" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.reviewOn"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>In case of complicatoins such as</label>
-            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.complications" ></textarea>
+            <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.complications" ></textarea> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.complications"></textarea>
           </div>
         </div>
         <!-- <div class="row" style="padding:0px 15px;">
