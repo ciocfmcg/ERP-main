@@ -1,10 +1,65 @@
-<div class="container-fluid" style="min-height:600px;padding:0px;margin-top:20px;">
+<div class="row" style="margin-top:20px;margin:0px;">
   <div class="col-md-8 col-md-offset-2 ">
-    <div ng-repeat="l in listings" >
+    <div ng-repeat="l in [1,2,3,5, 6,7,8,9,10]" >
       <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
           <div class="row" >
-            <img style="width: 100%;" class="img" ng-src="{{l.files[0].attachment}}" >
+            <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" >
+          </div>
+          <div class="row" >
+            <div class="container-fluid card bg-white" style="padding:10px;">
+              <h4>{{l.title}}</h4>
+              {{l.providerOptions.length}} {{l.providerOptions.length>1? 'Vendors' : 'Vendor'}}
+              <span class="pull-right">
+                Starts from  <span style="font-size:20px;margin-left:10px;">
+                  {{l.bestOffer.rate}} <i class="fa fa-inr"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row" style="margin:0px;">
+  <div class="col-md-offset-2 col-md-8 " style="padding:40px;" >
+
+    <div style="padding:10px;" class="row card bg-white">
+
+      <h4>Featured Brands</h4>
+
+      <div class="row" style="">
+        <div class="col-md-3">
+          <img src="/static/images/photo1.png" style="width:100%;" alt="" class="img img-rounded">
+        </div>
+        <div class="col-md-3">
+          <img src="/static/images/photo2.png" style="width:100%;" alt="" class="img img-rounded">
+        </div>
+        <div class="col-md-3">
+          <img src="/static/images/photo3.jpg" style="width:100%;" alt="" class="img img-rounded">
+
+        </div>
+        <div class="col-md-3">
+          <img src="/static/images/photo4.jpg" style="width:100%;" alt="" class="img img-rounded">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<div class="row" style="margin:20px;">
+  <div class="col-md-8 col-md-offset-2 ">
+    <div ng-repeat="l in [1,2,3,5, 6,7,8,9,10]" >
+      <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
+          <div class="row" >
+            <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" >
           </div>
           <div class="row" >
             <div class="container-fluid card bg-white" style="padding:10px;">

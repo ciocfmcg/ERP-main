@@ -10,6 +10,17 @@
 
 }
 
+.ecomNav input:focus{
+	outline: none;
+	border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.ecomNav{
+	margin:0px;
+}
+
 .cardCartBtn{
 	border-radius: 15px;
 	width: 40px;

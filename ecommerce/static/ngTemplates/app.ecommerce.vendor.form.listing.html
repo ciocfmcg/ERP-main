@@ -2,7 +2,7 @@
   <div class="row">
     <div  class="col-md-6">
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Title</label>
         <input class="form-control" type="text" ng-model = "data.form.title" >
       </div>
@@ -28,22 +28,29 @@
           <option value = "product">Product</option>
           <option value = "service">Service</option>
         </select>
+      </div> -->
+      <div class="form-group">
+        <label>Product</label>
+        <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">
       </div>
 
       <div ng-repeat="f in data.genericProduct.fields">
         <div class="form-group">
-          <label ng-if="f.fieldType != 'choice'">{{f.name | humanize}} {{f.unit==null? '': 'in (' + f.unit + ')' }}</label>
-          <label ng-if="f.fieldType == 'choice'">{{f.name | humanize}} {{f.unit==null? '': '(choice parent label :  ' + f.unit + ')' }}</label>
-          <input ng-if="f.fieldType == 'char'" type="text" class="form-control" ng-model="f.default">
-          <input ng-if="f.fieldType == 'boolean'" type="checkbox" ng-model="f.default">
-          <input ng-if="f.fieldType == 'float'" type="number" class="form-control" ng-model="f.default" step="0.01">
+          <label ng-if="f.fieldType != 'choice'">{{f.name | humanize}} {{f.unit==null || f.unit == ''? '': 'in (' + f.unit + ')' }}</label>
+          <label ng-if="f.fieldType == 'choice'">{{f.name | humanize}} {{f.unit==null || f.unit == ''? '': '(choice parent label :  ' + f.unit + ')' }}</label>
+          <input ng-if="f.fieldType == 'char'" type="text" class="form-control" ng-model="f.value">
+          <input ng-if="f.fieldType == 'boolean'" type="checkbox" ng-model="f.value">
+          <input ng-if="f.fieldType == 'float'" type="number" class="form-control" ng-model="f.value" step="0.01">
           <div class="input-group" ng-if="f.fieldType == 'date'">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="f.default" is-open="f.opened"  />
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="f.value" is-open="f.opened"  />
             <span class="input-group-btn">
               <button type="button" class="btn btn-default" ng-click="f.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
           </div>
-          <input ng-if="f.fieldType == 'choice'" uib-typeahead="choice as choice.name for choice in choiceSearch($viewValue , f)" ng-model="f.default" type="text" class="form-control" placeholder="Search and select a choice">
+          <!-- <input ng-if="f.fieldType == 'choice'" uib-typeahead="choice as choice.name for choice in choiceSearch($viewValue , f)" ng-model="f.value" type="text" class="form-control" placeholder="Search and select a choice"> -->
+          <select ng-if="f.fieldType == 'choice'" class="form-control" ng-model="f.value">
+            <option ng-repeat="o in f.data" value="{{o}}" >{{o}}</option>
+          </select>
           <p class="help-block">{{f.helpText}}.</p>
         </div>
 

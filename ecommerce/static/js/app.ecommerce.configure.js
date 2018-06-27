@@ -1,45 +1,68 @@
-app.controller('businessManagement.ecommerce.configure.offerBanner' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('businessManagement.ecommerce.configure.offerBanner', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
 
-  $scope.form = {image : emptyFile};
+  $scope.form = {
+    image: emptyFile
+  };
 
   if (angular.isUndefined($scope.data.pk)) {
     $scope.mode = 'new';
-    $scope.data = {title : '' , subtitle : '' , level : 1 , state : '' , params : ''};
-    $scope.url =  '/api/ecommerce/offerBanner/';
+    $scope.data = {
+      title: '',
+      subtitle: '',
+      level: 1,
+      state: '',
+      params: ''
+    };
+    $scope.url = '/api/ecommerce/offerBanner/';
     $scope.method = 'POST';
-  }else {
+  } else {
     $scope.mdoe = 'edit';
-    $scope.url =  '/api/ecommerce/offerBanner/' + $scope.data.pk + '/?mode=configure';
+    $scope.url = '/api/ecommerce/offerBanner/' + $scope.data.pk + '/?mode=configure';
     $scope.method = 'PATCH';
   }
 
   $scope.submit = function() {
     var fd = new FormData();
-    fd.append( 'title' , $scope.data.title);
-    fd.append( 'subtitle' , $scope.data.subtitle);
-    fd.append( 'level' , $scope.data.level);
-    fd.append( 'state' , $scope.data.state);
-    fd.append( 'params' , $scope.data.params);
+    fd.append('title', $scope.data.title);
+    fd.append('subtitle', $scope.data.subtitle);
+    fd.append('level', $scope.data.level);
+    fd.append('state', $scope.data.state);
+    fd.append('params', $scope.data.params);
     if ($scope.mode == 'new') {
       if ($scope.form.image == emptyFile) {
         Flash.create('danger', 'No image selected');
         return;
-      }else {
-        fd.append( 'image' , $scope.form.image);
+      } else {
+        fd.append('image', $scope.form.image);
       }
-    }else {
-      fd.append('active' , $scope.data.active);
+    } else {
+      fd.append('active', $scope.data.active);
       if ($scope.form.image != emptyFile) {
-        fd.append( 'image' , $scope.form.image);
+        fd.append('image', $scope.form.image);
       }
     }
-    $http({method : $scope.method , url : $scope.url , data : fd , transformRequest: angular.identity, headers: {'Content-Type': undefined}}).
-    then(function(response){
+    $http({
+      method: $scope.method,
+      url: $scope.url,
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
       if ($scope.mode == 'new') {
-        $scope.data = {title : '' , subtitle : '' , image : emptyFile , level : 1 , state : '' , params : ''};
+        $scope.data = {
+          title: '',
+          subtitle: '',
+          image: emptyFile,
+          level: 1,
+          state: '',
+          params: ''
+        };
       }
       Flash.create('success', response.status + ' : ' + response.statusText);
-    }, function(response){
+    }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
   }
@@ -47,209 +70,342 @@ app.controller('businessManagement.ecommerce.configure.offerBanner' , function($
 
 
 });
-app.controller('businessManagement.ecommerce.configure' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
 
-  var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
-    ];
 
-  $scope.editorTemplateField = '/static/ngTemplates/app.ecommerce.vendor.form.field.html';
-  $scope.editorTemplateChoiceLabel = '/static/ngTemplates/app.ecommerce.vendor.form.choiceLabel.html';
-  $scope.editorTemplateChoiceOption = '/static/ngTemplates/app.ecommerce.vendor.form.choiceOption.html';
-  $scope.editorTemplateGenericProduct = '/static/ngTemplates/app.ecommerce.vendor.form.genericProduct.html';
-  $scope.editorTemplateGenericType = '/static/ngTemplates/app.ecommerce.vendor.form.genericType.html';
+app.controller('businessManagement.ecommerce.configure', function($scope,$uibModal, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+
+
+
+  $scope.data = {
+    tableFieldData: [],
+    tableproductData: [],
+  };
+
+  var fieldViews = [{name : 'list' , icon : 'fa-th-large' ,
+        template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
+    itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.configure.field.item.html',
+  }, ];
+
+  var productViews = [{name : 'list' , icon : 'fa-th-large' ,
+        template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
+    itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.configure.product.item.html',
+  }, ];
+
+
 
   $scope.fieldConfig = {
-    views : views,
-    url : '/api/ecommerce/field/',
-    fields : ['pk','fieldType','unit' , 'name' , 'default' , 'helpText'],
+    views: fieldViews,
+    url: '/api/ecommerce/field/',
     searchField: 'name',
-    deletable : true,
-    editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.modal.html',
-  }
-  $scope.genericTypeConfig = {
-    views : views,
-    url : '/api/ecommerce/genericType/',
-    fields : ['pk', 'name' , 'icon' ],
-    editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.modal.html',
-    deletable : true,
-    searchField: 'name',
+    deletable: true,
+    itemsNumPerView: [12, 24, 48],
   }
 
   $scope.genericProductConfig = {
-    views : views,
-    url : '/api/ecommerce/genericProduct/',
-    fields : ['pk', 'name' , 'productType', 'minCost', 'visual' ],
-    editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.modal.html',
-    deletable : true,
+    views: productViews,
+    url: '/api/ecommerce/genericProduct/',
     searchField: 'name',
+    deletable: true,
+    itemsNumPerView: [12, 24, 48],
   }
 
-  $scope.choiceLabelConfig = {
-    views : views,
-    url : '/api/ecommerce/choiceLabel/',
-    fields : ['pk', 'name' , 'icon' ],
-    editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.modal.html',
-    deletable : true,
-    searchField: 'name',
-  }
 
-  $scope.choiceOptionConfig = {
-    views : views,
-    url : '/api/ecommerce/choiceOption/',
-    fields : ['pk', 'name' , 'icon', 'parent' ],
-    editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.modal.html',
-    deletable : true,
-    searchField: 'name',
-  }
   $scope.offerBannersConfig = {
-    views : views,
+    views : [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'}, ],
     url : '/api/ecommerce/offerBanner/',
-    fields : ['pk', 'created' , 'level', 'image' , 'title' , 'subtitle' , 'state' , 'params' , 'active'],
     deletable : true,
     searchField: 'name',
     canCreate : true,
     editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.html',
-    getParams : [{key : 'mode' , value : 'configure'}]
   }
 
 
-  $scope.typeSearch = function(query) {
-    return $http.get('/api/ecommerce/genericType/?name__contains=' + query).
-    then(function(response){
-      return response.data;
-    })
+  $scope.editorTemplateField = '/static/ngTemplates/app.ecommerce.vendor.form.field.html';
+
+  $scope.editorTemplateGenericProduct = '/static/ngTemplates/app.ecommerce.vendor.form.genericProduct.html';
+
+  $scope.tableActionFields = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableFieldData);
+
+      for (var i = 0; i < $scope.data.tableFieldData.length; i++) {
+        if ($scope.data.tableFieldData[i].pk == parseInt(target)) {
+          if (action == 'edit') {
+            console.log('editing');
+            var title ='Edit Field : '
+            var appType = 'editField'
+          }else {
+            var title ='Field Explore : '
+            var appType = 'fieldExplore'
+          }
+          // i clicked this $scope.data.tableFieldData[i]
+          $scope.addTab({
+            title:  title + $scope.data.tableFieldData[i].pk,
+            cancel: true,
+            app: appType,
+            data: {
+              pk: target,
+              field: $scope.data.tableFieldData[i]
+            },
+            active: true
+          })
+      }
+    }
+
   }
 
-  $scope.getFieldsSuggestions = function(query){
-    return $http.get('/api/ecommerce/field/?name__contains='+ query)
+  $scope.tableProductAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableproductData);
+
+      for (var i = 0; i < $scope.data.tableproductData.length; i++) {
+        if ($scope.data.tableproductData[i].pk == parseInt(target)) {
+          if (action == 'edit') {
+            console.log('editing');
+            var title ='Edit Product : '
+            var appType = 'editproduct'
+          }else {
+            var title ='Product Explore : '
+            var appType = 'productExplore'
+          }
+          // i clicked this $scope.data.tableproductData[i]
+          $scope.addTab({
+            title:  title + $scope.data.tableproductData[i].pk,
+            cancel: true,
+            app: appType,
+            data: {
+              pk: target,
+              field: $scope.data.tableproductData[i]
+            },
+            active: true
+          })
+      }
+    }
+
   }
 
-  $scope.parentLabelSearch = function(query) {
-    return $http.get('/api/ecommerce/choiceLabel/?name__contains=' + query).
-    then(function(response){
-      return response.data;
-    })
+  $scope.tabs = [];
+  $scope.searchTabActive = true;
+
+  $scope.closeTab = function(index) {
+    $scope.tabs.splice(index, 1)
   }
 
-  if (angular.isUndefined($scope.data)) { // we are creating new entry
-    $scope.data = {mode : 'field' , fieldType : 'char'};
-    $scope.editing = false;
-  } else { // editing
-    $scope.editing = true;
-    $scope.config = $scope.$parent.config;
-    $scope.backup = angular.copy($scope.data);
-    $scope.data.mode = $scope.config.url.split('/')[3];
-    if ($scope.data.mode == 'choiceOption' && !angular.isDefined($scope.data.parentLabel)) {
-      $http({method : 'GET' , url : '/api/ecommerce/choiceLabel/' + $scope.data.parent + '/'}).
-      then(function(response) {
-        $scope.data.parentLabel = response.data;
-      });
-    } else if ($scope.data.mode == 'field' && $scope.data.fieldType == 'choice') {
-      $http({method : 'GET' , url : '/api/ecommerce/choiceLabel/?name=' + $scope.data.unit}).
-      then(function(response) {
-        $scope.data.choiceLabel = response.data[0];
-      });
+  $scope.addTab = function(input) {
+    console.log(JSON.stringify(input));
+    $scope.searchTabActive = false;
+    alreadyOpen = false;
+    for (var i = 0; i < $scope.tabs.length; i++) {
+      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+        $scope.tabs[i].active = true;
+        alreadyOpen = true;
+      } else {
+        $scope.tabs[i].active = false;
+      }
+    }
+    if (!alreadyOpen) {
+      $scope.tabs.push(input)
     }
   }
 
 
-  $scope.submit = function(){
-    d = $scope.data;
-    if ($scope.data.mode == 'field') {
+
+
+
+});
+
+
+app.controller('businessManagement.ecommerce.configure.form', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+
+  $scope.me = $users.get('mySelf');
+  $scope.curr = $scope.me.profile.currency;
+  console.log($scope.me);
+  if ($scope.curr == 'INR') {
+    $scope.currSymbol = 'inr';
+  } else if ($scope.curr == 'USD') {
+    $scope.currSymbol = 'usd';
+  } else if ($scope.curr == 'GBP') {
+    $scope.currSymbol = 'gbp';
+  } else if ($scope.curr == 'EUR') {
+    $scope.currSymbol = 'eur';
+  } else {
+    $scope.currSymbol = 'aud';
+  }
+
+  $scope.resetForm = function() {
+    $scope.form = {
+        mode: 'field',
+        fieldType: 'char',
+        name: '',
+        choiceLabel: '',
+        unit: '',
+        helpText: '',
+        default: '',
+        fields: [],
+        minCost: 0,
+        visual: emptyFile
+      }
+      $scope.editing = false
+  }
+
+  $scope.resetForm();
+  $scope.ChoiceValues = []
+
+  if ($scope.tab == undefined) {
+    $scope.mode = 'new';
+    $scope.resetForm();
+  } else {
+    $scope.mode = 'edit';
+    console.log('ssssssssssssssssss');
+    console.log($scope.tab.data.field);
+    $scope.form = $scope.tab.data.field;
+    if ('fields' in $scope.tab.data.field) {
+      $scope.form.mode = 'genericProduct'
+    }else {
+
+      $scope.form.mode = 'field'
+    }
+    if ($scope.form.fieldType == 'choice') {
+        $scope.ChoiceValues = JSON.parse($scope.form.data)
+      }
+    console.log('ffffffffff',$scope.ChoiceValues);
+    $scope.editing = true
+
+  }
+
+
+  $scope.getFieldsSuggestions = function(query) {
+    console.log(query);
+    return $http.get('/api/ecommerce/field/?name__contains=' + query)
+  }
+
+
+
+  $scope.addChoice = function() {
+    console.log($scope.form.choiceLabel);
+    $scope.ChoiceValues.push($scope.form.choiceLabel)
+    $scope.form.choiceLabel = ''
+    console.log($scope.ChoiceValues);
+  }
+  $scope.removeChoice = function(idx) {
+    $scope.ChoiceValues.splice(idx, 1)
+  }
+
+  $scope.submit = function() {
+    d = $scope.form;
+    console.log(d);
+    console.log($scope.editing);
+    if (d.name == '' || d.name.length == 0) {
+      Flash.create('warning', 'Name Should Not Be Blank')
+      return;
+    }
+    if ($scope.form.mode == 'field') {
       dataToSend = {
-        fieldType : d.fieldType,
-        name : d.name,
-        helpText : d.helpText,
-        default : d.default,
+        fieldType: d.fieldType,
+        name: d.name,
+        unit: d.unit,
+        helpText: d.helpText,
+        default: d.default,
+        choiceLabel: d.choiceLabel
       };
       if (d.fieldType == 'choice') {
-        dataToSend.unit = d.choiceLabel.name;
-      }else {
-        dataToSend.unit = d.unit;
+        if ($scope.ChoiceValues.length == 0) {
+          Flash.create('warning', 'Please Add Some Choices')
+          return;
+        }
+        dataToSend.data = JSON.stringify($scope.ChoiceValues);
       }
 
       url = '/api/ecommerce/field/';
-    } else if($scope.data.mode == 'genericType'){
-      dataToSend = {
-        name : d.name,
-        icon : d.icon,
-      };
-      url = '/api/ecommerce/genericType/';
-    } else if ($scope.data.mode == 'genericProduct') {
+      console.log(dataToSend);
+    } else if ($scope.form.mode == 'genericProduct') {
       fs = [];
+      console.log(d.fields);
+      if (d.fields.length == 0) {
+        Flash.create('warning', 'No fields selected')
+        return;
+      }
       for (var i = 0; i < d.fields.length; i++) {
         fs.push(d.fields[i].pk);
       }
-      if (fs.length == 0) {
-        Flash.create('danger' , 'No fields selected')
-        return;
-      }
 
       var fd = new FormData();
-      fd.append( 'name' , d.name);
-      fd.append( 'productType' , d.productType.pk);
-      fd.append( 'fields' , fs);
-      fd.append( 'minCost' , d.minCost);
-      fd.append( 'visual' , d.visual);
-
-      // dataToSend = {
-      //   name : d.name,
-      //   productType : d.productType.pk,
-      //   fields : fs,
-      // }
+      fd.append('name', d.name);
+      fd.append('fields', fs);
+      fd.append('minCost', d.minCost);
+      if (d.visual != null && typeof d.visual != 'string') {
+        fd.append('visual', d.visual);
+      }
 
       url = '/api/ecommerce/genericProduct/';
-    } else if ($scope.data.mode == 'choiceLabel') {
-      dataToSend = {
-        name : $scope.data.name,
-        icon : $scope.data.icon,
-      }
-      url = '/api/ecommerce/choiceLabel/';
-    } else if ($scope.data.mode == 'choiceOption') {
-      dataToSend = {
-        name : $scope.data.name,
-        parent : $scope.data.parentLabel.pk,
-        icon : $scope.data.icon,
-      }
-      url = '/api/ecommerce/choiceOption/';
+      console.log(fd);
     }
 
-
     if ($scope.editing) {
-      url += $scope.data.pk + '/';
+      url += $scope.form.pk + '/';
       method = 'PATCH';
     } else {
       method = 'POST';
     }
-
-    if ($scope.data.mode != 'genericProduct') {
-      $http({method : method , url : url , data : dataToSend}).
-      then(function(response){
+    if ($scope.form.mode != 'genericProduct') {
+      $http({
+        method: method,
+        url: url,
+        data: dataToSend
+      }).
+      then(function(response) {
         if (!$scope.editing) {
-          $scope.data = {mode : $scope.data.mode , fieldType : 'char', parentLabel : $scope.data.parentLabel}
-        }
-        Flash.create('success', response.status + ' : ' + response.statusText );
-      }, function(response){
-        Flash.create('danger', response.status + ' : ' + response.statusText );
-      })
-
-    }else {
-
-      // because we need to use formdata for the genericProduct
-      $http({method : method , url : url , data : fd , transformRequest: angular.identity, headers: {'Content-Type': undefined}}).
-      then(function(response){
-        if (!$scope.editing) {
-          $scope.data = {mode : $scope.data.mode , fieldType : 'char', parentLabel : $scope.data.parentLabel}
+          $scope.form = {
+            mode: $scope.form.mode,
+            fieldType: 'char',
+            name: '',
+            choiceLabel: '',
+            unit: '',
+            helpText: '',
+            default: '',
+            fields: [],
+            minCost: 0,
+            visual: emptyFile
+          };
         }
         Flash.create('success', response.status + ' : ' + response.statusText);
-      }, function(response){
+      }, function(response) {
+        Flash.create('danger', response.status + ' : ' + response.statusText);
+      })
+
+    } else {
+
+      // because we need to use formdata for the genericProduct
+      $http({
+        method: method,
+        url: url,
+        data: fd,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).
+      then(function(response) {
+        if (!$scope.editing) {
+          $scope.form = {
+            mode: $scope.form.mode,
+            fieldType: 'char',
+            name: '',
+            choiceLabel: '',
+            unit: '',
+            helpText: '',
+            default: '',
+            fields: [],
+            minCost: 0,
+            visual: emptyFile
+          }
+        }
+        Flash.create('success', response.status + ' : ' + response.statusText);
+      }, function(response) {
         Flash.create('danger', response.status + ' : ' + response.statusText);
       });
     }
 
-
-
   }
-
 
 });

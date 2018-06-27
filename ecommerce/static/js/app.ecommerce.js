@@ -16,6 +16,11 @@ app.config(function($stateProvider){
         }
     }
   })
+  .state('businessManagement.ecommerce.configure', {
+    url: "/configure",
+    templateUrl: '/static/ngTemplates/app.ecommerce.vendor.configure.html',
+    controller: 'businessManagement.ecommerce.configure'
+  })
   .state('businessManagement.ecommerce.listings', {
     url: "/listings",
     templateUrl: '/static/ngTemplates/app.ecommerce.vendor.listings.html',
@@ -35,11 +40,6 @@ app.config(function($stateProvider){
     url: "/support",
     templateUrl: '/static/ngTemplates/app.ecommerce.vendor.support.html',
     controller: 'businessManagement.ecommerce.support'
-  })
-  .state('businessManagement.ecommerce.configure', {
-    url: "/configure",
-    templateUrl: '/static/ngTemplates/app.ecommerce.vendor.configure.html',
-    controller: 'businessManagement.ecommerce.configure'
   })
   .state('businessManagement.ecommerce.offerings', {
     url: "/offerings",

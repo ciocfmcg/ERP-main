@@ -1,5 +1,4 @@
-<div class="navbar navbar-default navbar-fixed-top animated slideInDown" >
-  <!-- Brand and toggle get grouped for better mobile display -->
+<!-- <div class="navbar navbar-default navbar-fixed-top animated slideInDown" >
   <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
           <span class="sr-only">Toggle navigation</span>
@@ -7,12 +6,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand " style="position:relative;font-size:20px;" ui-sref="ecommerce">{{settings.serviceName ? settings.serviceName:'Ecommerce'}} <i class="fa {{settings.logo? settings.logo : 'fa-shopping-cart'}}"></i></a>
+      <a class="navbar-brand " style="background-image: url(/static/images/mono_icon.svg);position:relative;font-size:20px;width:230px;" ui-sref="ecommerce"> </a>
   </div>
-
-  <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-
     <ul class="nav navbar-nav navbar-right">
       <li ng-if="me != null" style="margin-right:10px;">
         <a ui-sref="account.cart"><i class="fa fa-shopping-cart" ></i>
@@ -36,68 +32,64 @@
 			  </ul>
 			</li>
     </ul>
-    <div ng-if="!($state.is('ecommerce') || $state.is('pages'))">
-      <div class="navbar-form navbar-right" style="position:relative;right:10%;">
-        <span style="position:relative;">Dropin</span>
-        <i class="fa fa-calendar fa-2x {{getDateTimePickerClass()}}" style="cursor:pointer;margin-left:20px;" id="dLabel" data-toggle="dropdown" ></i>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-          <datetimepicker data-ng-model="data.dropInTime" data-on-set-time="checkDateTime(newDate, oldDate)"
-            data-datetimepicker-config="{ dropdownSelector: '#dLabel' , minView :'hour' }"></datetimepicker>
-        </ul>
-        <span style="margin-left:100px;cursor:pointer;position:relative;" class="fa fa-arrow-right fa-2x text-muted" ng-click="refreshResults()"></span>
-      </div>
-      <div style="width:30%;margin-right:10%;" class="navbar-form navbar-right">
-        <div style="width:100%;position:relative;">
-          <input style="width:100%;" uib-typeahead="location as location.description for location in getLocationSuggeations($viewValue)"
-          ng-model="data.location" type="text" class="form-control" placeholder="Where are you ? .." >
-        </div>
-      </div>
-      <div class="navbar-form navbar-right" style="position:relative;">
-        <span style="position:relative;">Pickup</span>
-        <i class="fa fa-calendar fa-2x" style="cursor:pointer;margin-left:20px;"id="dLabel2" data-toggle="dropdown" ></i>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel2">
-          <datetimepicker data-ng-model="data.pickUpTime"
-          data-datetimepicker-config="{ dropdownSelector: '#dLabel2' , minView :'hour'}"></datetimepicker>
-        </ul>
-      </div>
+    <div class="navbar-form navbar-right" >
+      <input type="text" class="form-control" name="" value="" placeholder="Search ...">
     </div>
   </div>
-  <!-- /.navbar-collapse -->
-<!-- /.container-fluid -->
-</div>
-
-<div ng-if="$state.is('list') || $state.is('details')" ng-init="tripDetails=true;" style="position:fixed;top:110px;left:{{!tripDetails? '-240px' : '0px;'}};
-  display:inline-block;z-index:100;color:white;background-color:#1b375c;width:;box-sizing:border-box;transition:left 0.1s linear;width:240px;">
-
-  <div class="container-fluid" style="display:inline-block;overflow: hidden;">
-    <h3 class="text-muted" style="color:white;">Trip details</h3>
-    <p>
-      <strong>Starts : </strong><br> {{data.pickUpTime | date : 'dd-MMM-yyyy: hh:mm a'}} {{data.pickUpTime ? '':'Not selected'}}
-    </p>
-    <p>
-      <strong>Ends : </strong> <br> {{data.dropInTime | date : 'dd-MMM-yyyy: hh:mm a'}} {{data.dropInTime? '':'Not selected'}}
-    </p>
-  </div>
-  <div style="position:absolute;display:block;right:-40px;top:0px;width:40px;height:40px;
-    background-color:#e69a41;padding-top:6px;border-radius:0px 5px 5px 0px;cursor:pointer;" ng-click="tripDetails = !tripDetails "
-    class=" text-center">
-    <i class="fa fa-chevron-{{tripDetails? 'left': 'right'}} fa-2x"></i>
-  </div>
-</div>
-
-
-
-<!--
-<div ng-init="showShortlist=false;" class="bg-white card" style="position:fixed; top:70px;right:{{!showShortlist ? '-350' : '0'}}px;transition:right 0.1s linear;
-  width:350px;height:250px;z-index:10;border-left:solid 5px #831bad;">
-  <div style="position:absolute;right:266px;width:200px;height:32px;top:100px;background-color:#831bad;cursor:pointer;
-    transform: rotate(-90deg);border-radius : 6px 6px 0px 0px; padding-right:20px;padding-left:20px;" ng-click="showShortlist = !showShortlist;">
-    <span style="font-size:18px;color:white;letter-spacing: 3px;"><i class="fa fa-star"></i> Shortlist
-      <span class="badge" style="background-color:white;"><span style="color:#be2611;">0</span></span>
-    </span>
-  </div>
-
 </div> -->
+
+<div class="row bg-blue ecomNav" style="height:7vh;width:100%;">
+
+  <div class="col-xs-3 text-right">
+    <img src="/static/images/mono_icon_inverted.svg" style="height:7vh;" alt="">
+  </div>
+
+  <div style="padding-top:1.5vh;">
+    <div class="col-xs-5" style="padding:0px;">
+      <!-- <input type="text" class="" style="width:100%;color: #000;text-indent: 10px;outline: none;" placeholder="Search for products, brands and more.."> -->
+      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="Search for products, brands and more..">
+    </div>
+    <div class="col-xs-1 text-center" style="padding:0px;">
+      <div style="width:50px;height:29px;padding-top:3px;background-color:#e2e2e2;color:grey; cursor:pointer;" ng-click="search()">
+        <i class="fa fa-search"></i>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-xs-1 text-center">
+    <span  ng-click="$state.go('account.orders')">Pradeep</span>
+  </div>
+  <div class="col-xs-2 text-center">
+    <span ng-click="$state.go('account.cart')">  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+  </div>
+
+
+
+
+</div>
+
+
+
+<div ng-if="$state.is('ecommerce')" style="position:relative;height:300px;margin-bottom:20px;width:64%;left:18%;display:border-box;overflow:hidden;" class="card">
+  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slide.banners[slide.active].state , slide.banners[slide.active].params)" style="width:100%;"
+    ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.image}}" />
+  <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
+    <ul style="padding:0px;">
+      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:20%;height:60px;cursor:pointer;"
+        ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
+        <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;">
+          {{s.title | uppercase}}
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+
+
+
 
 <div ng-init="showFeedback=false;" class="bg-white card" style="position:fixed; top:350px;right:{{!showFeedback ? '-350' : '0'}}px;transition:right 0.1s linear;
   width:350px;height:460px;z-index:10;border-left:solid 5px #136ab1;">

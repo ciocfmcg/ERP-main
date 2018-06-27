@@ -4,12 +4,25 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 from PIM.serializers import *
-from HR.serializers import userSearchSerializer
+from HR.models import profile
+# from HR.serializers import userSearchSerializer
 from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
 
+class userProfileLiteSerializer(serializers.ModelSerializer):
+    # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
+    class Meta:
+        model = profile
+        fields = ('displayPicture' , 'prefix' )
+
+class userSearchSerializer(serializers.ModelSerializer):
+    # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
+    profile = userProfileLiteSerializer(many=False , read_only=True)
+    class Meta:
+        model = User
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation' )
 class addressSerializer(serializers.ModelSerializer):
     class Meta:
         model = address

@@ -1,0 +1,18 @@
+<div class="col-md-3">
+  <div class="card card-cascade">
+    <div class="card-body text-center">
+      <h4 class="" style="padding:20px;"><strong>{{data.name}}</strong></h4>
+    </div>
+    <div class="container-fluid">
+      <strong>Field Type : </strong> {{data.fieldType | humanize}} <br>
+      <strong>Unit : </strong> {{data.unit.length > 0 ? data.unit : 'None'}}<br>
+      <strong>Default Value : </strong> {{data.default.length > 0 ? data.default : 'None'}}<br>
+      <strong>Help Text : </strong> {{data.helpText.length > 0 ? data.helpText : 'None'}}<br>
+      <strong>Choices : </strong> {{data.data.length > 0 ? data.data : 'None'}}<br>
+    </div>
+    <div class="row" style="margin:10px 15px;margin-bottom:5px">
+      <i class="fa fa-pencil fa-lg" style="cursor:pointer" ng-click="rowActionClicked('edit',data)"></i>
+      <i class="fa fa-info fa-lg pull-right" style="cursor:pointer" ng-click="rowActionClicked('info')"></i>
+    </div>
+  </div>
+</div>

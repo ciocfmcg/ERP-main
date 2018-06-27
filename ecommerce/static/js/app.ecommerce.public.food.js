@@ -1,12 +1,13 @@
 var app = angular.module('app' , ['ui.router', 'ui.bootstrap' ,'flash' ,'ngSanitize', 'ngAnimate', 'anim-in-out' ,'ui.bootstrap.datetimepicker' , 'chart.js' , 'uiGmapgoogle-maps', 'ngAside']);
 
-app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $provide){
+app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $provide , $locationProvider){
 
   $urlRouterProvider.otherwise('/');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
 
+  $locationProvider.html5Mode(true);
 
 });
 
