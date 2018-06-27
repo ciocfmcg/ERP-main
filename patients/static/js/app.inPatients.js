@@ -288,7 +288,7 @@ $scope.fetchInvoices();
     console.log('here...');
     console.log($scope.dischargeSummForm);
     if (typeof $scope.dischargeSummForm.primaryDoctor != 'object') {
-      Flash.create('warning', 'Please Fill Suggested primaryDoctor');
+      Flash.create('warning', 'Please Fill Suggested Primary Doctor');
       return
     }
 

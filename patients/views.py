@@ -151,28 +151,33 @@ def invoice(response,inv):
     now = datetime.datetime.now()
     print inv.activePatient.dateOfDischarge,inv.activePatient.inTime
 
-    ad1 = str(inv.activePatient.inTime).split(' ')
-    ad = ad1[0].split('-')
-    dd1 = str(inv.activePatient.dateOfDischarge).split(' ')
-    dd = dd1[0].split('-')
-    print dd
+    # ad1 = str(inv.activePatient.inTime).split(' ')
+    # ad = ad1[0].split('-')
+    # dd1 = str(inv.activePatient.dateOfDischarge).split(' ')
+    # dd = dd1[0].split('-')
+    # print dd
     if inv.activePatient.outPatient:
         refId = inv.activePatient.opNo
         a = ''
         d = ''
+        txt = 'OP No.'
     else:
+        txt = 'IP No.'
+        a = defaultfilters.date(inv.activePatient.inTime, "h:i A , d-m-Y")
+        d = defaultfilters.date(inv.activePatient.dateOfDischarge, "h:i A , d-m-Y")
         try:
             refId = inv.activePatient.dischargeSummary.get().ipNo
         except DischargeSummary.DoesNotExist:
             refId = ''
-        if '.' in ad1[1]:
-            a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('.')[0]
-        else:
-            a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('+')[0]
-        try:
-            d = dd[2]+'-'+dd[1]+'-'+dd[0]+' '+ dd1[1].split('.')[0]
-        except:
-            d = ''
+        # if '.' in ad1[1]:
+        #     a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('.')[0]
+        # else:
+        #     a = ad[2]+'-'+ad[1]+'-'+ad[0]+' '+ ad1[1].split('+')[0]
+        # try:
+        #     d = dd[2]+'-'+dd[1]+'-'+dd[0]+' '+ dd1[1].split('.')[0]
+        # except:
+        #     d = ''
+
     (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,a,d,inv.grandTotal)
     data = json.loads(inv.products)
     details = []
@@ -213,7 +218,7 @@ def invoice(response,inv):
     elements.append(Spacer(1, 10))
     elements.append(Paragraph("<para fontSize=12 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
     elements.append(Paragraph("<para fontSize=12 alignment='left' leftIndent=30><b> Bill No. : {0}</b></para>".format(inv.pk),styles['Normal']))
-    elements.append(Paragraph("<para fontSize=12 alignment='left' leftIndent=30><b> Ref ID. : {0}</b></para>".format(refId),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=12 alignment='left' leftIndent=30><b> {0} : {1}</b></para>".format(txt,refId),styles['Normal']))
 
     elements.append(Spacer(1, 15))
 
@@ -228,8 +233,8 @@ def invoice(response,inv):
 
 
     rheights=2*[0.3*inch]
-    cwidths=2*[5*inch]
-    cwidths[1]=2.5*inch
+    cwidths=2*[4.7*inch]
+    cwidths[1]=2.8*inch
     t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
     t2.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 12),('TEXTFONT', (0, 0), (-1, -1), 'Courier'), ]))
     elements.append(t2)
@@ -318,7 +323,7 @@ def dischargeSummary(response,dis):
 
     dd = defaultfilters.date(dis.patient.dateOfDischarge, "h:i A , d-m-Y")
 
-    d = str(now).split('.')[0]
+    d = defaultfilters.date(now, "h:i A , d-m-Y")
     print d, ad , dd
     # page= int(d.split('-')[0])-int(str(dis.patient.patient.dateOfBirth).split('-')[0])
     # print 'ageeeeeeeeeeee',page
