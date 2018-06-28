@@ -1,0 +1,360 @@
+<div class="container-fluid" ng-controller="hospitalManagement.activePatient.explore" style="margin-top:20px;">
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <!-- <label>Status : </label> -->
+              <h2 ng-if="data.status=='checkedIn'">Checked In</h2>
+              <h2 ng-if="data.status=='onGoingTreatment'">Treatment On Going</h2>
+              <h2 ng-if="data.status=='operation'">Operation</h2>
+              <h2 ng-if="data.status=='observation'">Observation</h2>
+              <h2 ng-if="data.status=='readyToDischarged'">Ready To Discharged</h2>
+              <h2 ng-if="data.status=='dishcharged'">Discharged</h2>
+              <h2 ng-if="data.status=='settled'"> Settled </h2>
+            </div>
+            <div class="row">
+              <label>In Time : </label> {{data.inTime | date: 'dd-MM-yyyy:hh:mm a'}}
+            </div>
+            <div class="row">
+              <label>Patient Id : </label> {{data.patient.uniqueId}}
+            </div>
+            <div class="row">
+              <label>Mode of payment : </label>
+              <div class="row text-center">
+                <span ng-if="data.mlc">Medical Legal Case </span> <br>
+                <span ng-if="data.insurance">Insurance </span> <br>
+                <span ng-if="data.cash">Cash </span> <br>
+              </div>
+            </div>
+            <hr>
+            <div class="row" ng-if="data.status=='dishcharged'">
+              <label>Discharge Time : </label> {{data.dateOfDischarge | date: 'dd-MM-yyyy:hh:mm a'}}
+            </div>
+          </div>
+          <!-- <div class="col-md-6">
+            <button type="button" class="btn btn-primary pull-right" ng-click="chageStatus()">
+              {{ data.status!='dishcharged' ? 'Dishcharge': 'Update Discharge date'}}
+            </button>
+          </div> -->
+        </div>
+
+
+
+
+
+
+        <div class="row text-center">
+          <h3>Invoices of {{data.patient.firstName}} {{data.patient.lastName}}</h3>
+        </div>
+        <div class="row" style="margin-top:20px">
+
+          <div ng-if="invoices.length!=0" class="col-md-6" ng-repeat="i in invoices" ng-click="invoiceInfo($index)">
+            <div class="container-fluid card" style="border-radius:5px;margin-top:25px;">
+
+              <div class="row text-center">
+                <h2>{{i.invoiceName}}</h2>
+              </div>
+              <div class="row text-center">
+                <span style="font-size:20px;"> ₹ {{i.grandTotal}} </span>
+              </div>
+              <div class="row text-center" ng-if="i.billed">
+                <span style="font-size:16px;"> Bill Generated <br> (Discount : {{i.discount}}  <i class="fa fa-inr"></i> ) </span>
+              </div>
+              <div class="row" style="padding-top:40px;margin-bottom:20px;" >
+                <!-- <div class="col-md-6">
+                  <span style="cursor:pointer;" >
+                      <i class="fa fa-info fa-lg" ></i>
+                  </span>
+                </div> -->
+                <div class="col-md-6">
+                  <button ng-click="updatePayment($index);$event.stopPropagation();" ng-if="i.grandTotal>0" class="btn btn-info btn-block">Generate </button>
+                </div>
+                <div class="col-md-6 pull-right">
+                  <button ng-click="openInvoice(i.pk);$event.stopPropagation();" ng-if="i.grandTotal>0" class="btn btn-default btn-block">Print <i class="fa fa-download"></i> </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="container-fluid bg-blue card" style=" margin-top:25px;border-radius:5px;">
+              <div class="row text-center" style="padding-top:15px; ">
+                <i class="fa fa-plus" style="font-size:140px; cursor:pointer;" aria-hidden="true" ng-click="createInvoice()"></i>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="container-fluid">
+
+
+
+
+        <!-- <a href="" target="_blank">
+          <button type="button" class="btn btn-default" >
+            Discharge Summary <i class="fa fa-download"></i>
+          </button> </a>
+
+        <button type="button" class="btn btn-default" >
+          Check Out
+        </button> -->
+        <div class="row" ng-if="dischargeSummForm.pk">
+          <a href="/api/patients/downloaddischargeSummary/?pPk={{dischargeSummForm.pk}}" target="_blank"target="_blank">
+           <button  type="button" class="btn btn-primary pull-right" >
+             Discharge Summary <i class="fa fa-download"></i>
+           </button> </a>
+        </div>
+
+        <div class="row text-center">
+          <h2>Discharge Summary </h2>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <!-- <input type="text" class="form-control" value="{{dischargeSummForm.patientName.firstName}}  {{dischargeSummForm.patientName.lastName}}" disabled> -->
+              <h3><small><b>Patient Name : </b></small>{{dischargeSummForm.patient.patient.firstName}}  {{dischargeSummForm.patient.patient.lastName}}</h3>
+            </div>
+          </div>
+          <div class="col-md-2" style="padding-top:15px;">
+            <div class="form-group">
+              <!-- <label>Age :</label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.age" placeholder=""> -->
+              <h4><small><b>Age : </b></small>{{dischargeSummForm.patient.patient.age}}</h4>
+            </div>
+          </div>
+          <div class="col-md-4" style="padding-top:15px;">
+            <div class="form-group">
+              <!-- <label>Sex :</label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.sex" placeholder=""> -->
+              <h4><small><b>Sex : </b></small>{{dischargeSummForm.patient.patient.gender}}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:25px;">
+          <div class="col-md-6">
+            <div class="form-group">
+              <!-- <label>UHID No.</label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.uhidNo" placeholder=""> -->
+              <h4><small><b>Telephone No. : </b></small>{{dischargeSummForm.patient.patient.phoneNo}}</h4>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <!-- <label> Telephone No. </label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.telephoneNo" placeholder=""> -->
+              <h4><small><b>UHID No. : </b></small>{{dischargeSummForm.patient.patient.uniqueId}}</h4>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" style="margin-top:35px;">
+            <div class="form-group">
+              <!-- <label>UHID No.</label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.uhidNo" placeholder=""> -->
+              <h4><small><b>Date of Admission : </b></small>{{dischargeSummForm.patient.inTime | date: 'dd-MM-yyyy:hh:mm a'}}</h4>
+            </div>
+          </div>
+          <div class="col-md-6" style="padding-right:50px">
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-4" style="margin-top:40px;padding:0px;">Discharge date & time</label>
+              <div class="col-md-5">
+                <div class="input-group" style="margin-top:35px;">
+                  <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dischargeSummForm.patient.dateOfDischarge " is-open="status.opened" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="row container-fluid">
+                  <uib-timepicker ng-model="dischargeSummForm.patient.dateOfDischarge " hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group"> -->
+              <!-- <label> Telephone No. </label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.telephoneNo" placeholder=""> -->
+              <!-- <h4><small><b>Date of Discharge : </b></small>{{dischargeSummForm.patient.dateOfDischarge | date: 'dd-MM-yyyy:hh:mm a'}}</h4> -->
+
+            <!-- </div> -->
+
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>IP No.</label>
+            <input type="text" class="form-control" ng-model="dischargeSummForm.ipNo" placeholder="">
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Treating Consultant/s</label>
+            <!-- <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" placeholder=""> -->
+            <input type="text" class="form-control" ng-model="dischargeSummForm.treatingConsultant" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Name Here...">
+          </div>
+        </div>
+
+
+        <div class="row text-center" ng-if="dischargeSummForm.treatingConsultant.pk">
+          <strong>Doctor : </strong> {{dischargeSummForm.treatingConsultant.name}} <br>
+          <strong>Department : </strong> {{dischargeSummForm.treatingConsultant.department}} <br>
+          <strong>Qualification : </strong> {{dischargeSummForm.treatingConsultant.education}} <br>
+
+          <hr>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>MLC No.</label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.mlcNo" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>FIR No.</label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.firNo" placeholder="">
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Provisional Diagnosis at the time of Admission.</label>
+            <input type="text" class="form-control" ng-model="dischargeSummForm.provisionalDiagnosis" placeholder="">
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Final Diagnosis at the time of Admission.</label>
+            <input type="text" class="form-control" ng-model="dischargeSummForm.finalDiagnosis" placeholder="">
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Presenting Complaints with Duration and Resason for Admission</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.complaintsAndReason" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Summary of Presenting Illness</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.summIllness" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Key findings, on physical Examination at the time of Admission</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.keyFindings" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>History of alcholism, tabacco or substance abuse, if any</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.historyOfAlchohol" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Significant Past Medical and Surgical History, if any</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.pastHistory" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Family History if Significant to Diagnosis or Treatment</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.familyHistory" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Summary Of Key Investigations During Hospitalization</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.summaryKeyInvestigation" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Course in the Hospital including complicayions, if any</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.courseInHospital" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Patient condition at the time of discharge</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.patientCondition" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Advice on discharge</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.advice" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>Review On</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.reviewOn" ></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <div class="form-group">
+            <label>In case of complicatoins such as</label>
+            <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.complications" ></textarea>
+          </div>
+        </div>
+        <!-- <div class="row" style="padding:0px 15px;">
+          <table style=" width: 100%; height:300px;   border: 1px solid black; border-collapse: collapse;">
+
+            <tr style="  border: 1px solid black;border-collapse: collapse;">
+              <td width="35%" rowspan="2" style="  border: 1px solid black;border-collapse: collapse; text-align: center;padding-left: 10px;">Treating Consultant/Authorized Team Doctor</td>
+              <td width="15%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;" >Name</td>
+              <td width="50%" colspan="2" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;"><input type="text" class="form-control-pos" ng-model="dischargeSummForm.doctorName" placeholder="Enter Name Here..." ></td>
+            </tr>
+            <tr style="  border: 1px solid black;border-collapse: collapse;">
+              <td width="15%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;">Signature</td>
+              <td width="50%" colspan="2" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;" ><input type="text" class="form-control-pos" placeholder="Sign Here..." ></td>
+            </tr>
+            <tr style="  border: 1px solid black;border-collapse: collapse;" >
+              <td width="35%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;">Date & time: <div class="input-group">
+
+              </div></td>
+              <td width="10%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;" >Reg. No. :</td>
+              <td width="20%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;"><input type="text" class="form-control-pos" ng-model="dischargeSummForm.regNo" placeholder="Enter Reg. No" ></td>
+              <td width="35%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;">Contact No. : <input type="text" class="form-control-pos" ng-model="dischargeSummForm.telephoneNo" placeholder="Enter Contact No"></td>
+            </tr>
+            <tr style="  border: 1px solid black;border-collapse: collapse;">
+              <td width="35%" rowspan="2" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;">Patient/Attendant</td>
+              <td width="15%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;">Name</td>
+              <td width="50%" colspan="2" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;"><input type="text" class="form-control-pos" ng-model="dischargeSummForm.patientName" placeholder="Enter Name Here..." ></td>
+            </tr>
+            <tr style="  border: 1px solid black;border-collapse: collapse;">
+              <td width="15%" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;">Signature</td>
+              <td width="50%" colspan="2" style="  border: 1px solid black;border-collapse: collapse;text-align: center;padding-left: 10px;"><input type="text" class="form-control-pos" placeholder="Sign Here..."></td>
+            </tr>
+          </table>
+
+        </div>
+        <div class="row" style="padding:0px 15px;">
+          <span >In case of Emergency- Contact No. of the Hospital</span>
+        </div> -->
+        <div class="row text-center" style="padding-top:15px;">
+          <button type="button" name="button" class="btn btn-primary" ng-click="saveDischargeSumm()">Save</button>{{name}}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

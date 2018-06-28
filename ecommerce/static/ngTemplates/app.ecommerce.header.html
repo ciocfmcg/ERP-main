@@ -1,47 +1,7 @@
-<!-- <div class="navbar navbar-default navbar-fixed-top animated slideInDown" >
-  <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand " style="background-image: url(/static/images/mono_icon.svg);position:relative;font-size:20px;width:230px;" ui-sref="ecommerce"> </a>
-  </div>
-  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-    <ul class="nav navbar-nav navbar-right">
-      <li ng-if="me != null" style="margin-right:10px;">
-        <a ui-sref="account.cart"><i class="fa fa-shopping-cart" ></i>
-          <div class="label label-primary" style="position:absolute;top:5px;right:-5px;">{{inCart.length==0? '':inCart.length}}</div>
-        </a>
-      </li>
-      <li ng-if="me == null" style="margin-right:40px;">
-        <a  href="/login"><i class="fa fa-sign-in"></i></a>
-      </li>
-      <li class="dropdown" ng-if="me != null" style="margin-right:30px;">
-			  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{me.url | getName}}  <span class="glyphicon glyphicon-chevron-down"></span></a>
-			  <ul class="dropdown-menu" >
-  				<li><img class="img-responsive" width="200px" src="/static/images/userIcon.png" ng-src="{{me.profile.displayPicture}}" style="top:-5px; position:relative; width:200px"></li>
-  				<li>
-            <div style="text-align:center; -moz-user-select: none;">{{me.email}}</br>
-            </div>
-          </li>
-  				<li role="separator" class="divider"></li>
-  				<li><a ui-sref="account.orders"><i class="fa fa-gears fa-fw"></i> Accounts </a></li>
-          <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
-			  </ul>
-			</li>
-    </ul>
-    <div class="navbar-form navbar-right" >
-      <input type="text" class="form-control" name="" value="" placeholder="Search ...">
-    </div>
-  </div>
-</div> -->
-
 <div class="row bg-blue ecomNav" style="height:7vh;width:100%;">
 
   <div class="col-xs-3 text-right">
-    <img src="/static/images/mono_icon_inverted.svg" style="height:7vh;" alt="">
+    <img ng-click="$state.go('ecommerce')" src="/static/images/mono_icon_inverted.svg" style="height:7vh;cursor:pointer;" alt="">
   </div>
 
   <div style="padding-top:1.5vh;">
@@ -57,13 +17,19 @@
 
   </div>
 
-  <div class="col-xs-1 text-center">
-    <span  ng-click="$state.go('account.orders')">Pradeep</span>
-  </div>
-  <div class="col-xs-2 text-center">
-    <span ng-click="$state.go('account.cart')">  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+  <div class="col-xs-1 text-center dropdown">
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer" >Pradeep</span>
+    <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
+      <li> <img src="/static/images/avatar5.png" style="width: 170px;" alt=""> </li>
+      <li><a ui-sref="account.orders" >Orders</a></li>
+      <li><a ui-sref="account">Account</a></li>
+      <li><a href="">Logout</a></li>
+    </ul>
   </div>
 
+  <div class="col-xs-2 text-center">
+    <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+  </div>
 
 
 
@@ -72,12 +38,10 @@
 
 
 <div ng-if="$state.is('ecommerce')" style="position:relative;height:300px;margin-bottom:20px;width:64%;left:18%;display:border-box;overflow:hidden;" class="card">
-  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slide.banners[slide.active].state , slide.banners[slide.active].params)" style="width:100%;"
-    ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.image}}" />
+  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slide.banners[slide.active].state , slide.banners[slide.active].params)" style="width:100%;" ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.image}}"/>
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
     <ul style="padding:0px;">
-      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:20%;height:60px;cursor:pointer;"
-        ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
+      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:20%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
         <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;">
           {{s.title | uppercase}}
         </span>
@@ -109,12 +73,12 @@
       </div>
       <div class="form-group">
         <label> Mobile</label>
-        <input type="number" ng-model="feedback.mobile"  class="form-control" placeholder="Enter your mobile number">
+        <input type="number" ng-model="feedback.mobile" class="form-control" placeholder="Enter your mobile number">
       </div>
 
       <div class="form-group">
         <label> Message</label>
-        <textarea rows="3" ng-model="feedback.message"  class="form-control" placeholder="Enter your message/feedback"> </textarea>
+        <textarea rows="3" ng-model="feedback.message" class="form-control" placeholder="Enter your message/feedback"> </textarea>
       </div>
 
       <div style="position:absolute;bottom:10px;">

@@ -40,6 +40,7 @@ class genericProduct(models.Model): # such as MI5, Nokia N8 etc
     created = models.DateTimeField(auto_now_add = True)
     minCost = models.PositiveIntegerField(default=0)
     visual = models.ImageField(upload_to=getEcommerceProductVisualUploadPath , null = True)
+    parent = models.ForeignKey('self' , related_name='parentgenericProduct' , null= True)
 
 MEDIA_TYPE_CHOICES = (
     ('onlineVideo' , 'onlineVideo'),
@@ -89,3 +90,11 @@ class offerBanner(models.Model):
     state = models.CharField(max_length = 20 , null = True)
     params = models.CharField(max_length = 200 , null = True) # string repr of json obj to be passed as params
     active = models.BooleanField(default = False)
+
+# class Cart
+#     prod
+#     user
+#     qtymap
+#     typ
+
+User.cart = property(lambda u : Cart.objects.get_or_create(user = u)[0])

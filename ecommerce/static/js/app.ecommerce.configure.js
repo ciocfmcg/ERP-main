@@ -236,6 +236,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
     $scope.form = {
         mode: 'field',
         fieldType: 'char',
+        parent: '',
         name: '',
         choiceLabel: '',
         unit: '',
@@ -279,6 +280,14 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
     return $http.get('/api/ecommerce/field/?name__contains=' + query)
   }
 
+  $scope.parentSearch = function(query) {
+    console.log(query);
+    return $http.get('/api/ecommerce/genericProduct/?name__contains=' + query).
+    then(function(response) {
+      console.log('**********************');
+      return response.data;
+    })
+  }
 
 
   $scope.addChoice = function() {
@@ -333,6 +342,9 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       fd.append('name', d.name);
       fd.append('fields', fs);
       fd.append('minCost', d.minCost);
+      if (d.parent != null && d.parent.pk != undefined) {
+        fd.append('parent', d.parent.pk);
+      }
       if (d.visual != null && typeof d.visual != 'string') {
         fd.append('visual', d.visual);
       }
@@ -358,6 +370,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
           $scope.form = {
             mode: $scope.form.mode,
             fieldType: 'char',
+            parent: '',
             name: '',
             choiceLabel: '',
             unit: '',
@@ -390,6 +403,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
           $scope.form = {
             mode: $scope.form.mode,
             fieldType: 'char',
+            parent: '',
             name: '',
             choiceLabel: '',
             unit: '',

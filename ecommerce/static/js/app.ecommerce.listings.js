@@ -1,8 +1,8 @@
 app.controller('businessManagement.ecommerce.listings.item' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions , $sce){
-  $http({method : 'GET' , url : '/api/ecommerce/insight/?mode=operations&listing='+ $scope.data.pk }).
-  then(function(response) {
-    $scope.insight = response.data;
-  })
+  // $http({method : 'GET' , url : '/api/ecommerce/insight/?mode=operations&listing='+ $scope.data.pk }).
+  // then(function(response) {
+  //   $scope.insight = response.data;
+  // })
 });
 
 app.directive('ecommerceListingEditor', function () {
@@ -147,9 +147,10 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
     }
     dataToSend.specifications = JSON.stringify(specs)
     dataToSend.parentType = $scope.data.genericProduct.pk;
+    console.log(dataToSend);
     $http({method : post.method , url : post.url , data : dataToSend}).
     then(function(response){
-      console.log('ressssssssssss');
+      console.log('ressssssssssss',response.data);
       if ($scope.editorMode == 'new') {
         console.log('11111');
         $scope.buildForm();

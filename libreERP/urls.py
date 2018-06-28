@@ -47,4 +47,5 @@ if settings.DEBUG:
     urlpatterns +=static(settings.STATIC_URL , document_root = settings.STATIC_ROOT)
     urlpatterns +=static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
 
-urlpatterns.append(url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'))
+urlpatterns.append(url(r'^', ecommerceHome , name ='ecommerceHome'))
+# urlpatterns.append(url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'))

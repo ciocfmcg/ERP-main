@@ -17,15 +17,23 @@ class fieldSerializer(serializers.ModelSerializer):
         model = field
         fields = ( 'pk', 'fieldType' , 'unit' ,'name' , 'helpText' , 'default' ,'data')
 
-class genericProductSerializer(serializers.ModelSerializer):
-    fields = fieldSerializer(many = True, read_only = True)
+class genericProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = genericProduct
-        fields = ('pk' , 'fields' , 'name' , 'minCost' , 'visual')
+        fields = ('pk' ,  'name' ,  'parent')
+
+class genericProductSerializer(serializers.ModelSerializer):
+    fields = fieldSerializer(many = True, read_only = True)
+    parent = genericProductLiteSerializer(many = False, read_only = True)
+    class Meta:
+        model = genericProduct
+        fields = ('pk' , 'fields' , 'name' , 'minCost' , 'visual' , 'parent')
     def create(self , validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
         gp = genericProduct(**validated_data)
+        if 'parent' in self.context['request'].data:
+            gp.parent = genericProduct.objects.get(pk=int(self.context['request'].data['parent']))
 
         # try:
         #     gp.visual = self.context['request'].FILES['visual']
@@ -39,6 +47,7 @@ class genericProductSerializer(serializers.ModelSerializer):
             flds = flds.split(',')
         for f in flds:
             gp.fields.add(field.objects.get(pk = f))
+
         gp.save()
         return gp
     def update(self , instance , validated_data):
@@ -50,6 +59,8 @@ class genericProductSerializer(serializers.ModelSerializer):
                 setattr(instance , key , validated_data[key])
             except:
                 pass
+        if 'parent' in self.context['request'].data:
+            instance.parent = genericProduct.objects.get(pk=int(self.context['request'].data['parent']))
         instance.fields.clear()
         instance.save()
         flds = self.context['request'].data['fields']
@@ -78,12 +89,13 @@ class mediaSerializer(serializers.ModelSerializer):
 class POSProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name')
+        fields = ('pk' , 'user' ,'name' , 'price')
 
 
 class listingSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
     product = POSProductSerializer(many = False , read_only = True)
+    # parentType = genericProductSerializer(many = False , read_only = True)
     class Meta:
         model = listing
         fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source' )
@@ -109,6 +121,7 @@ class listingSerializer(serializers.ModelSerializer):
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
 
         instance.parentType = genericProduct.objects.get(pk = self.context['request'].data['parentType'])
+        instance.source = self.context['request'].data['source']
         instance.product = Product.objects.get(pk = self.context['request'].data['product'])
         instance.save()
 

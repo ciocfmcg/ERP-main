@@ -48,7 +48,7 @@ from HR.models import accountsKey
 
 from django.core import serializers
 from django.http import JsonResponse
-from django.db.models import F ,Value
+from django.db.models import F ,Value,CharField
 
 def ecommerceHome(request):
     return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
@@ -58,10 +58,13 @@ class SearchProductAPI(APIView):
     # permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
         search = str(self.request.GET['search'])
-        genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name'))
-        listProd = list(listing.objects.filter(product__name__icontains=search).values('pk').annotate(name=F('product__name')))
+        l = int(self.request.GET['limit'])
+        print l , type(l)
+        genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
+        listProd = list(listing.objects.filter(product__name__icontains=search).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
         tosend = genericProd + listProd
-        return Response(tosend, status = status.HTTP_200_OK)
+        print tosend[0:l]
+        return Response(tosend[0:l], status = status.HTTP_200_OK)
 
 class fieldViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin , )
@@ -75,7 +78,7 @@ class genericProductViewSet(viewsets.ModelViewSet):
     queryset = genericProduct.objects.all()
     serializer_class = genericProductSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_fields = ['name','parent']
 
 class mediaViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly , )
@@ -87,36 +90,7 @@ class listingViewSet(viewsets.ModelViewSet):
     serializer_class = listingSerializer
     queryset = listing.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title']
-
-    def list(self , request, *args, **kwargs):
-        u = self.request.user
-        if 'lat' in self.request.GET and 'lon' in self.request.GET:
-            da = [] # distance array
-            sa = service.objects.all() # service array
-            for s in sa:
-                p1 = {'lat' : s.address.lat , 'lon' : s.address.lon}
-                p2 = {'lat' : self.request.GET['lat'] , 'lon' : self.request.GET['lon'] }
-                d = geoDistance(p1 , p2)
-                if d<30000:
-                    da.append(d)
-            la = list() # listings array
-            for k in sorted(range(len(da)), key=lambda k: da[k]):
-                for l in listing.objects.filter(providerOptions__in = offering.objects.filter(service = sa[k])):
-                    if l not in la:
-                        la.append(l)
-            serializer = listingSerializer(la , many = True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        elif 'mode' in self.request.GET:
-            if self.request.GET['mode'] == 'vendor':
-                s = service.objects.get(user = u)
-                items = offering.objects.filter( service = s).values_list('item' , flat = True)
-                la = listing.objects.exclude(pk__in = items)
-        else:
-            la = listing.objects.all()
-        serializer = listingSerializer(la , many = True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    filter_fields = ['parentType']
 
 class listingLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (readOnly, )

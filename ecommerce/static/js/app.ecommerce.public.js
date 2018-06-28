@@ -34,6 +34,13 @@ app.config(function($stateProvider ){
   })
 
   $stateProvider
+  .state('categories', {
+    url: "/categories/:name",
+    templateUrl: '/static/ngTemplates/app.ecommerce.categories.html',
+    controller: 'controller.ecommerce.categories'
+  })
+
+  $stateProvider
   .state('checkout', {
     url: "/checkout/:pk",
     templateUrl: '/static/ngTemplates/app.ecommerce.checkout.html',
@@ -81,48 +88,51 @@ app.config(function($stateProvider ){
 
 app.controller('controller.ecommerce.details' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window){
 
-  $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
+  $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime'
+  console.log($scope.data);
+  $scope.breadcrumbList = [];
+  $scope.details = {};
   $window.scrollTo(0,0)
   $http({method : 'GET' , url : '/api/ecommerce/listing/'+ $state.params.id +'/'}).
   then(function(response){
-    d = response.data;
-    d.specifications = JSON.parse(d.specifications);
-    d.pictureInView = 0;
-    min = d.providerOptions[0].rate;
-    index = 0;
-    for (var i =0; i < d.providerOptions.length; i++) {
-      if ($scope.data.pickUpTime == null || $scope.data.dropInTime == null) {
-        d.providerOptions[i].available = 'error';
-      } else {
-        dataToSend = {
-          start : $scope.data.pickUpTime,
-          end : $scope.data.dropInTime,
-          offering : d.providerOptions[i].pk,
-        }
-        $http({method : 'GET' , url : '/api/ecommerce/offeringAvailability/?mode=time' , params : dataToSend}).
-        then((function(i){
-          return function(response){
-            $scope.data.providerOptions[i].available = response.data.available;
-          }
-        })(i))
-        d.providerOptions[i].available = true;
-      }
-      if (d.providerOptions[i].rate <min){
-        index = i;
-        min = d.providerOptions[i].rate;
-      }
-    }
-    console.log(d);
-    $scope.data = d;
-    $scope.offeringInView = index;
+    console.log('pppppppppppppppp',response.data);
+    $scope.details = response.data
+    $scope.details.specifications = JSON.parse($scope.details.specifications);
+    $scope.breadcrumbList.push($scope.details.product.name)
   });
 
 
+  // $timeout(function () {
+  //   $http({method : 'GET' , url : '/api/ecommerce/genericProduct/'+ $scope.details.parentType  +'/'}).
+  //   then(function(response){
+  //     console.log(response.data);
+  //     $scope.parent = response.data;
+  //   });
+  // }, 1000);
+
+
+
+
+  $scope.ratings = { meta : [5,4,3,2,1] , counts : [15,10,1,1,1] , averageRating : 4.5 };
+  $scope.form = {rating : 0 , reviewText : '' , reviewHeading: '', reviewEditor : false , ratable : true}
+  $scope.reviewsPage = 0;
+
+  $scope.reviews = [{heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: true} ,
+    {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: true},
+    {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
+    {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: true},
+    {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: false}];
+
+  $scope.reviewsCount = 10;
+
+  $scope.pictureInView = 0;
+
   $scope.changePicture = function(pic){
-    $scope.data.pictureInView = pic;
+    $scope.pictureInView = pic;
   }
 
   $scope.addToCart = function(input){
+    console.log(input);
     dataToSend = {
       category : 'cart',
       user : getPK($scope.me.url),
@@ -140,11 +150,82 @@ app.controller('controller.ecommerce.details' , function($scope , $state , $http
   }
 
   $scope.buy = function(input){
+    console.log(input);
     $state.go('checkout' , {pk : input.pk})
   }
 
+  $scope.sendReview = function(mode) {
+    if (mode == 'rating') {
+      if ($scope.form.rating == 0 || !$scope.form.ratable) {
+        return;
+      }
+    }else {
+      if ($scope.form.reviewText == '' || $scope.form.reviewHeading == '') {
+        Flash.create('danger' , 'No review to post.')
+        return;
+      }
+      //post request
+      $scope.form = {rating : 0 , reviewText : '' , reviewHeading: '', reviewEditor : false , ratable : true}
+    }
+  }
 
+  $scope.nextReviews = function() {
+    if ($scope.reviewsCount > ($scope.reviewsPage+1)*5) {
+      $scope.reviewsPage += 1;
+      $scope.fetchReviews();
+    }
+  }
+  $scope.prevReviews = function() {
+    if ($scope.reviewsPage > 0) {
+      $scope.reviewsPage -= 1;
+      $scope.fetchReviews();
+    }
+  }
 
+  $scope.fetchReviews = function() {
+    console.log('coming in fetchReviews');
+    $scope.reviews = [{heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: true} ,
+  {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: true},
+  {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
+  {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
+  {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: true}];
+  }
+  // $http({method : 'GET' , url : '/api/ecommerce/review/?listing=' + $scope.data.pk + '&limit=5&offset=' + $scope.reviewsPage * 5 }).
+  // then(function(response) {
+  //
+  // });
+
+});
+
+app.controller('controller.ecommerce.categories' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window){
+
+  $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
+  $window.scrollTo(0,0)
+  console.log($state.params);
+  $scope.category = {}
+  $http({method : 'GET' , url : '/api/ecommerce/genericProduct/?name__iexact='+ $state.params.name}).
+  then(function(response){
+    console.log('category',response.data);
+    $scope.category = response.data[0];
+  });
+
+  $timeout(function () {
+    if ($scope.category.parent) {
+      console.log('heree');
+      $http({method : 'GET' , url : '/api/ecommerce/listing/?parentType='+ $scope.category.pk }).
+      then(function(response){
+        $scope.listing = response.data;
+      })
+    }else {
+      console.log('second');
+      $http({method : 'GET' , url : '/api/ecommerce/genericProduct/?parent='+ $scope.category.pk}).
+      then(function(response){
+        console.log('child category',response.data);
+        $scope.childCategory = response.data;
+      });
+    }
+    ;
+  }, 1000);
 
 
 
@@ -351,8 +432,9 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
 
 
   $scope.genericProductSearch = function(query) {
-    return $http.get('/api/ecommerce/searchProduct/?search=' + query).
+    return $http.get('/api/ecommerce/searchProduct/?search=' + query + '&limit=10').
     then(function(response){
+      console.log(response.data);
       return response.data;
     })
   };
@@ -363,7 +445,14 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
 
   $scope.search = function () {
     if (typeof $scope.searchProduct.product=='object') {
-      $state.go('details' , {id:$scope.searchProduct.product.pk})
+      console.log($scope.searchProduct.product);
+      if ($scope.searchProduct.product.typ=='list') {
+        // console.log('proooo');
+        $state.go('details' , {id:$scope.searchProduct.product.pk})
+      }else {
+        // console.log('generic');
+        $state.go('categories' , {name:$scope.searchProduct.product.name})
+      }
       $scope.searchProduct.product = '';
     }
   }
@@ -378,6 +467,7 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
     //   s = s.split('}')[0];
     //   response.data[i].params = {id : parseInt(s)}
     // }
+    console.log('gggggggggggggggggggggg',response.data);
     $scope.slide.banners = response.data;
   })
   $scope.changeSlide = function(index){
@@ -392,6 +482,29 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
   }, 5000);
 
   $scope.feedback = {email : '' , mobile : null , message : ''};
+
+
+
+
+
+
+
+  $http({method : 'GET' , url : '/api/ecommerce/listingLite/'}).
+  then(function(response) {
+    console.log('******************',response.data);
+    $scope.listingProducts = response.data;
+  })
+  $http({method : 'GET' , url : '/api/ecommerce/genericProduct/'}).
+  then(function(response) {
+    console.log('******************',response.data);
+    $scope.products = response.data;
+  })
+
+
+
+
+
+
 
   $scope.sendFeedback = function() {
     dataToSend = {
