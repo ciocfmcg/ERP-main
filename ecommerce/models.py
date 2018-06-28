@@ -40,6 +40,7 @@ class genericProduct(models.Model): # such as MI5, Nokia N8 etc
     created = models.DateTimeField(auto_now_add = True)
     minCost = models.PositiveIntegerField(default=0)
     visual = models.ImageField(upload_to=getEcommerceProductVisualUploadPath , null = True)
+    parent = models.ForeignKey('self' , related_name='parentgenericProduct' , null= True)
 
 MEDIA_TYPE_CHOICES = (
     ('onlineVideo' , 'onlineVideo'),

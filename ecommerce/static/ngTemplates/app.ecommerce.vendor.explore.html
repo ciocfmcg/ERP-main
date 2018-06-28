@@ -22,7 +22,8 @@
         <img ng-src="{{form.visual}}" alt="" width="100px" height="100px">
       </div>
     </div>
-    <strong>Minimum Cost: </strong> {{form.minCost}} <br>
+    <span ng-if="form.parent.pk"><strong>Category : </strong> {{form.parent.name}} <br></span>
+    <strong>Minimum Cost : </strong> {{form.minCost}} <br>
     <strong>Fields : </strong><br>
     <div class="col-md-12" ng-repeat="f in form.fields" style="font-size:18px">
       <div class="card card-cascade">

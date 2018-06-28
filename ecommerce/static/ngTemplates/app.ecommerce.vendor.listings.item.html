@@ -7,10 +7,10 @@
       </div>
       <div class="col-md-8" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">
-          <h3>{{data.product.name}}</h3>
           <span class="text-muted" style="position:absolute; top:10px;right:10px;">
             <i class="fa fa-hashtag"></i> <span style="font-size:20px;">{{insight.inStock.inStock__sum? insight.inStock.inStock__sum :0}}</span>
-          </span>
+          </span><br>
+          <h3>{{data.product.name}}</h3>
         </div>
         <div class="row" ng-if="insight.inStock.inStock__sum">
           <span style="position:absolute;right:10px;bottom:-45px;" class="text-muted">
