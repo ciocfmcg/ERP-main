@@ -13,6 +13,13 @@ app.config(function($stateProvider) {
 });
 
 app.controller('hospitalManagement.activePatient.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout, $uibModal) {
+  $scope.range = function(min, max, step){
+    step = step || 1;
+    var input = [];
+    for (var i = min; i <= max; i += step) input.push(i);
+    return input;
+  };
+  $scope.mcurange = $scope.range(0,200,1)
 
   $scope.tinymceOptions = {
     selector: 'textarea',
