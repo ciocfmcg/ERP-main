@@ -377,43 +377,30 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
 
 });
 
-app.controller("businessManagement.clientRelationships.relationships.item", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.clientRelationships.relationships.item", function($uibModal, $scope, $state, $users, $stateParams, $http, Flash) {
 
-  $scope.showSummary = function() {
+  $scope.sendSummary = function() {
 
     $uibModal.open({
-      template: '<div style="padding:30px;"><div class="form-group"><label>Due Date</label>'+
-          '<div class="input-group" >'+
-              '<input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="contract.dueDate" is-open="status.opened" />' +
-              '<span class="input-group-btn">'+
-                '<button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>'+
-              '</span>'+
-            '</div><p class="help-block">Auto set based on Deal due period.</p>'+
-        '</div></div>',
-      size: 'sm',
+      templateUrl: '/static/ngTemplates/app.clientRelationships.summary.modal.html',
+      size: 'md',
       backdrop : true,
       resolve : {
-        contract : function() {
-          return $scope.deal.contracts[indx];
-        },
-        deal : function() {
-          return $scope.deal;
-        }
+
       },
-      controller: function($scope , contract, deal){
-        $scope.contract = contract;
-        var dueDate = new Date();
-        dueDate.setDate(dueDate.getDate() + deal.duePeriod);
-        if ($scope.contract.dueDate == null) {
-          $scope.contract.dueDate = dueDate;
-        }
-        $scope.deal = deal;
+      controller: function($scope){
+
       },
     })
 
 
 
   }
+
+  $scope.data2 = [300, 500, 100];
+  $scope.labels2 = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
+
+
 
 
   $scope.expanded = false;

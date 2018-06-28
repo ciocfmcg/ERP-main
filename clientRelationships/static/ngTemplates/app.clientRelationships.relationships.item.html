@@ -1,5 +1,5 @@
-<div class="container-fluid card animated fadeIn" style="padding-top:15px;border-left:4px solid #4192cd;" ng-controller="businessManagement.clientRelationships.relationships.item">
-  <div class="row">
+<div class="container-fluid card animated fadeIn" style="padding-top:15px;border-left:4px solid #4192cd;" ng-controller="businessManagement.clientRelationships.relationships.item" >
+  <div class="row" ng-click="toggleExpand()" style="cursor:pointer;">
     <div class="col-md-6">
       <div class="col-md-1">
         <i class="fa fa-building-o fa-3x text-muted"></i>
@@ -18,20 +18,41 @@
         <span class="text-muted" style="font-size:15px;"><i class="fa fa-globe"></i> </span><br>
         <span style="font-size:17px;"> <a href="{{data.web[0]!='h' ? 'http://':''}}{{data.web}}" target="_blank">{{data.web}}</a></span>
       </div>
-
-      <div class="col-md-3 col-md-offset-4">
-        <div class="btn-group btn-group-sm">
-          <button type="button" class="btn btn-default" ng-click="toggleExpand()">
-            <i class="fa fa-chevron-{{ !expanded ? 'down':'up'}}"></i>
-          </button>
-          <button ng-click="showSummary()" type="button" class="btn btn-info">
-            Summary
-          </button>
-        </div>
+      <div ng-if="expanded" class="col-md-7">
+        <button type="button" ng-click="sendSummary();$event.stopPropagation();" class="btn btn-default pull-right">
+          Send Summary
+        </button>
       </div>
     </div>
+
   </div>
   <div class="row" ng-if="expanded" style="height:{{expanded ? 'auto':'0'}};">
+    <hr>
+
+    <div class="row">
+      <div class="col-md-3">
+        <canvas id="doughnut" class="chart chart-doughnut"
+          chart-data="data2" chart-labels="labels2">
+        </canvas>
+      </div>
+      <div class="col-md-2 text-success text-center">
+        Paid
+        <h1> <i class="fa fa-inr"></i> 4000 </h1>
+      </div>
+      <div class="col-md-2 text-warning text-center">
+        Pending
+        <h1> <i class="fa fa-inr"></i> 8045 </h1>
+      </div>
+      <div class="col-md-2 text-danger text-center">
+        Overdue
+        <h1> <i class="fa fa-inr"></i> 4330 </h1>
+      </div>
+      <div class="col-md-3 text-primary text-center">
+        Total
+        <h1> <i class="fa fa-inr"></i> 16375 </h1>
+      </div>
+    </div>
+
     <hr>
     <label style="margin-left:30px;">Active Deals</label> <br>
     <div class="row">
