@@ -257,13 +257,15 @@
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Provisional Diagnosis at the time of Admission.</label>
-            <input type="text" class="form-control" ng-model="dischargeSummForm.provisionalDiagnosis" placeholder="">
+            <!-- <input type="text" class="form-control" ng-model="dischargeSummForm.provisionalDiagnosis" placeholder=""> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.provisionalDiagnosis"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Final Diagnosis at the time of Admission.</label>
-            <input type="text" class="form-control" ng-model="dischargeSummForm.finalDiagnosis" placeholder="">
+            <!-- <input type="text" class="form-control" ng-model="dischargeSummForm.finalDiagnosis" placeholder=""> -->
+            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.finalDiagnosis"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">

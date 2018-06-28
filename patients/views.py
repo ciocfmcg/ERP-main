@@ -390,7 +390,7 @@ def dischargeSummary(response,dis):
     bottomDMob = dMB
     bottomDRegNo = ''
 
-    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,docname,dt,regno,docMob)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dN, dM ,dP,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis,dis.finalDiagnosis,dis.complaintsAndReason.replace('\n','<br/>'),dis.summIllness,dis.keyFindings.replace('\n','<br/>'),dis.historyOfAlchohol.replace('\n','<br/>'),dis.pastHistory.replace('\n','<br/>'),dis.familyHistory.replace('\n','<br/>'),dis.summaryKeyInvestigation.replace('\n','<br/>'),dis.treatmentGiven.replace('\n','<br/>'),dis.courseInHospital.replace('\n','<br/>'),dis.patientCondition.replace('\n','<br/>'),dis.advice.replace('\n','<br/>'),dis.reviewOn.replace('\n','<br/>'),dis.complications.replace('\n','<br/>'),bottomDName,d,bottomDRegNo,bottomDMob)
+    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,docname,dt,regno,docMob)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dN, dM ,dP,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis.replace('\n','<br/>'),dis.finalDiagnosis.replace('\n','<br/>'),dis.complaintsAndReason.replace('\n','<br/>'),dis.summIllness,dis.keyFindings.replace('\n','<br/>'),dis.historyOfAlchohol.replace('\n','<br/>'),dis.pastHistory.replace('\n','<br/>'),dis.familyHistory.replace('\n','<br/>'),dis.summaryKeyInvestigation.replace('\n','<br/>'),dis.treatmentGiven.replace('\n','<br/>'),dis.courseInHospital.replace('\n','<br/>'),dis.patientCondition.replace('\n','<br/>'),dis.advice.replace('\n','<br/>'),dis.reviewOn.replace('\n','<br/>'),dis.complications.replace('\n','<br/>'),bottomDName,d,bottomDRegNo,bottomDMob)
 
     p1_1= Paragraph("<para fontSize=10 textColor=black><b>Patient's Name</b></para>",styles['Normal']),
     p1_2=Paragraph("<para  fontSize=10 textColor=black>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
@@ -531,9 +531,9 @@ def dischargeSummary(response,dis):
     elements.append(Spacer(1,8))
 
     elements.append(Paragraph("<para fontSize=11 textColor=black leftIndent=20><b>In Case Of Emergency - Contact No. of The Hospital (Casualty : 7022161297)</b></para>",styles['Normal']))
-    elements.append(Spacer(1, 30))
-    elements.append(Paragraph("<para fontSize=11 alignment='right' textColor=black leading=15 rightIndent=50> FOR CHAITANYA HOSPITAL </para>",styles['Normal']))
-    elements.append(Paragraph("<para fontSize=11 alignment='right' textColor=black rightIndent=50> {0} </para>".format(dis.patient.msg),styles['Normal']))
+    # elements.append(Spacer(1, 30))
+    # elements.append(Paragraph("<para fontSize=11 alignment='right' textColor=black leading=15 rightIndent=50> FOR CHAITANYA HOSPITAL </para>",styles['Normal']))
+    # elements.append(Paragraph("<para fontSize=11 alignment='right' textColor=black rightIndent=50> {0} </para>".format(dis.patient.msg),styles['Normal']))
 
     doc.build(elements,canvasmaker=PageNumCanvas)
 
