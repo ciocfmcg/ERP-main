@@ -221,8 +221,8 @@
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item" ng-repeat="b in breadcrumbList" ><a href="#">{{b}}</a></li>
-          <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
+          <li class="breadcrumb-item" ng-repeat="b in breadcrumbList" ><a style="cursor:pointer" ng-click="$state.go('categories', {name : b})" >{{b}}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{details.product.name}}</li>
         </ol>
       </nav>
 
@@ -286,7 +286,7 @@
           </div>
           <div class="col-md-6 ">
             <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding:5px 0px;">
-              <span ng-click="addToCart(details.product)" style="cursor:pointer;">
+              <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart </b></span>
               <i class="fa fa-shopping-cart fa-2x"></i>
               </span>

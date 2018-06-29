@@ -40,7 +40,9 @@ class genericProduct(models.Model): # such as MI5, Nokia N8 etc
     created = models.DateTimeField(auto_now_add = True)
     minCost = models.PositiveIntegerField(default=0)
     visual = models.ImageField(upload_to=getEcommerceProductVisualUploadPath , null = True)
-    parent = models.ForeignKey('self' , related_name='parentgenericProduct' , null= True)
+    parent = models.ForeignKey('self' , related_name='children' , null= True)
+    def __repr__(self):
+        return  "Generic Product : " + self.name
 
 MEDIA_TYPE_CHOICES = (
     ('onlineVideo' , 'onlineVideo'),
@@ -68,6 +70,9 @@ class listing(models.Model):
     parentType = models.ForeignKey(genericProduct , related_name='products' , null = True)
     source = models.TextField(max_length = 40000 , null = True ,blank=True)
     # ths may contain the html source for the description giving the admin a way to full featured webpage description
+    def __repr__(self):
+        return  "Listing : " + self.product.name
+
 
 class Category(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -91,10 +96,15 @@ class offerBanner(models.Model):
     params = models.CharField(max_length = 200 , null = True) # string repr of json obj to be passed as params
     active = models.BooleanField(default = False)
 
-# class Cart
-#     prod
-#     user
-#     qtymap
-#     typ
+CART_TYPE_CHOICES = (
+    ('cart' , 'cart'),
+    ('favourite' , 'favourite'),
+)
+
+class Cart(models.Model):
+    product = models.ForeignKey(listing, null = False)
+    user = models.ForeignKey(User, null = False)
+    qty = models.PositiveIntegerField(null = True)
+    typ = models.CharField(choices = CART_TYPE_CHOICES , max_length = 10 , default = 'cart')
 
 User.cart = property(lambda u : Cart.objects.get_or_create(user = u)[0])

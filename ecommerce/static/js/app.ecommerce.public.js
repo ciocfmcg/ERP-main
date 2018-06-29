@@ -93,24 +93,20 @@ app.controller('controller.ecommerce.details' , function($scope , $state , $http
   $scope.breadcrumbList = [];
   $scope.details = {};
   $window.scrollTo(0,0)
-  $http({method : 'GET' , url : '/api/ecommerce/listing/'+ $state.params.id +'/'}).
+  $http({method : 'GET' , url : '/api/ecommerce/listingLite/'+ $state.params.id +'/'}).
   then(function(response){
-    console.log('pppppppppppppppp',response.data);
     $scope.details = response.data
     $scope.details.specifications = JSON.parse($scope.details.specifications);
-    $scope.breadcrumbList.push($scope.details.product.name)
+    var parent = response.data.parentType
+      while (parent) {
+        $scope.breadcrumbList.push(parent.name)
+        parent = parent.parent
+      }
   });
 
-
-  // $timeout(function () {
-  //   $http({method : 'GET' , url : '/api/ecommerce/genericProduct/'+ $scope.details.parentType  +'/'}).
-  //   then(function(response){
-  //     console.log(response.data);
-  //     $scope.parent = response.data;
-  //   });
-  // }, 1000);
-
-
+  $timeout(function () {
+    $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
+  }, 1000);
 
 
   $scope.ratings = { meta : [5,4,3,2,1] , counts : [15,10,1,1,1] , averageRating : 4.5 };
@@ -131,21 +127,31 @@ app.controller('controller.ecommerce.details' , function($scope , $state , $http
     $scope.pictureInView = pic;
   }
 
-  $scope.addToCart = function(input){
-    console.log(input);
+
+
+  $scope.addToCart = function(inputPk){
     dataToSend = {
-      category : 'cart',
+      product : inputPk,
       user : getPK($scope.me.url),
-      item : input.pk,
+      qty : 1,
+      typ : 'cart',
     }
-    $http({method : 'POST' , url : '/api/ecommerce/saved/' , data : dataToSend }).
+    console.log(dataToSend);
+    console.log('in cart',$scope.inCart);
+
+
+  for (var i = 0; i < $scope.inCart.length; i++) {
+    if ($scope.inCart[i].product.pk==dataToSend.product) {
+        Flash.create('warning' , 'This Product is already in cart');
+        console.log('in cart',$scope.inCart);
+        return
+    }
+  }
+    $http({method : 'POST' , url : '/api/ecommerce/cart/' , data : dataToSend }).
     then(function(response){
-      for (var i = 0; i < $scope.inCart.length; i++) {
-        if ($scope.inCart[i].pk == response.data.pk){
-          return;
-        }
-      }
+      Flash.create('success', 'Product added in cart');
       $scope.inCart.push(response.data);
+      console.log('in cart',$scope.inCart);
     })
   }
 
@@ -202,32 +208,27 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
   $window.scrollTo(0,0)
   console.log($state.params);
+  $scope.breadcrumbList = [];
   $scope.category = {}
   $http({method : 'GET' , url : '/api/ecommerce/genericProduct/?name__iexact='+ $state.params.name}).
   then(function(response){
     console.log('category',response.data);
     $scope.category = response.data[0];
+    var parent = response.data[0].parent
+      while (parent) {
+        $scope.breadcrumbList.push(parent.name)
+        parent = parent.parent
+      }
   });
 
+
   $timeout(function () {
-    if ($scope.category.parent) {
-      console.log('heree');
-      $http({method : 'GET' , url : '/api/ecommerce/listing/?parentType='+ $scope.category.pk }).
-      then(function(response){
-        $scope.listing = response.data;
-      })
-    }else {
-      console.log('second');
-      $http({method : 'GET' , url : '/api/ecommerce/genericProduct/?parent='+ $scope.category.pk}).
-      then(function(response){
-        console.log('child category',response.data);
-        $scope.childCategory = response.data;
-      });
-    }
-    ;
+    $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
+    $http({method : 'GET' , url : '/api/ecommerce/listing/?parent='+ $scope.category.pk + '&recursive=1' }).
+       then(function(response){
+         $scope.listingSearch = response.data;
+       })
   }, 1000);
-
-
 
 
 });
@@ -237,40 +238,120 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
 app.controller('controller.ecommerce.account' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
 // for the dashboard of the account tab
 });
+
 app.controller('controller.ecommerce.account.cart' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
 
-  $scope.views = [{name : 'list' , icon : 'fa-bars' ,
-    template : '/static/ngTemplates/app.ecommerce.account.cart.list.html' ,
-    itemTemplate : '/static/ngTemplates/app.ecommerce.account.cart.item.html',
+  // $scope.views = [{name : 'list' , icon : 'fa-bars' ,
+  //   template : '/static/ngTemplates/app.ecommerce.account.cart.list.html' ,
+  //   itemTemplate : '/static/ngTemplates/app.ecommerce.account.cart.item.html',
+  //
+  // },];
 
-  },];
+  $scope.data = {
+    tableData: [],
+  };
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.ecommerce.account.cart.item.html',
+  }, ];
+
+
+  $scope.config = {
+    views: views,
+    url: '/api/ecommerce/cart/',
+    searchField: 'Name',
+    getParams: [{key : 'user' , value : $scope.me.pk}],
+    deletable: true,
+    itemsNumPerView: [4, 8, 16],
+  }
+
+  $scope.tableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableData);
+
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      if ($scope.data.tableData[i].pk == parseInt(target)) {
+        if (action == 'deleteItem') {
+          $http({method : 'DELETE' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' }).
+             then(function(response){
+               Flash.create('success', 'Item removed from cart');
+             })
+          $scope.data.tableData.splice(i,1)
+          $scope.calcTotal();
+        }else if (action == 'addQty') {
+          $scope.data.tableData[i].qty = $scope.data.tableData[i].qty + 1;
+          console.log($scope.data.tableData);
+          $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {qty: $scope.data.tableData[i].qty } }).
+             then(function(response){
+             })
+          $scope.calcTotal();
+        }else if (action == 'substractQty') {
+          $scope.data.tableData[i].qty = $scope.data.tableData[i].qty - 1;
+          console.log($scope.data.tableData);
+          $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {qty: $scope.data.tableData[i].qty } }).
+             then(function(response){
+             })
+          $scope.calcTotal();
+        }else if (action == 'favourite'){
+          $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {typ: 'favourite' } }).
+             then(function(response){
+             })
+            $scope.data.tableData[i].typ = 'favourite';
+        }
+      }
+    }
+  }
+
+  $scope.calcTotal = function () {
+    $scope.total = 0;
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      $scope.total = $scope.total + ($scope.data.tableData[i].product.product.price * $scope.data.tableData[i].qty)
+      console.log($scope.total);
+    }
+  }
+
+  $timeout(function () {
+    $scope.calcTotal();
+  }, 1000);
+
+
+
 
 });
 
 app.controller('controller.ecommerce.account.cart.item' , function($scope , $http , $state){
   console.log("item loaded");
 
-  $scope.data = $scope.$parent.$parent.data;
-  console.log($scope.data);
-  $http({method : 'GET' , url : '/api/ecommerce/listing/' + $scope.data.item + '/'}).
-  then(function(response){
-    index = 0
-    l = response.data;
-    min = l.providerOptions[index].rate;
-    for (var j = 1; j < l.providerOptions.length; j++) {
-      if (l.providerOptions[j].rate < min) {
-        min = l.providerOptions[j].rate;
-        index = j;
-      }
-    }
-    l.bestOffer = l.providerOptions[index];
-    for(key in l){
-      $scope.data[key] = l[key];
-    }
-  })
+  console.log('ffffffffffffff',$scope.data);
 
-  $scope.view = function(){
-    $state.go('details' , {id : $scope.data.pk})
+  // $scope.data = $scope.$parent.$parent.data;
+  // console.log($scope.data);
+  // $http({method : 'GET' , url : '/api/ecommerce/listing/' + $scope.data.item + '/'}).
+  // then(function(response){
+  //   index = 0
+  //   l = response.data;
+  //   min = l.providerOptions[index].rate;
+  //   for (var j = 1; j < l.providerOptions.length; j++) {
+  //     if (l.providerOptions[j].rate < min) {
+  //       min = l.providerOptions[j].rate;
+  //       index = j;
+  //     }
+  //   }
+  //   l.bestOffer = l.providerOptions[index];
+  //   for(key in l){
+  //     $scope.data[key] = l[key];
+  //   }
+  // })
+  //
+  // $scope.view = function(){
+  //   $state.go('details' , {id : $scope.data.pk})
+  // }
+
+  $scope.deleteItem = function (itemPk) {
+    console.log('delete',itemPk);
+    $scope.data
   }
 
 
@@ -434,7 +515,6 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
   $scope.genericProductSearch = function(query) {
     return $http.get('/api/ecommerce/searchProduct/?search=' + query + '&limit=10').
     then(function(response){
-      console.log(response.data);
       return response.data;
     })
   };
@@ -445,12 +525,9 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
 
   $scope.search = function () {
     if (typeof $scope.searchProduct.product=='object') {
-      console.log($scope.searchProduct.product);
       if ($scope.searchProduct.product.typ=='list') {
-        // console.log('proooo');
         $state.go('details' , {id:$scope.searchProduct.product.pk})
       }else {
-        // console.log('generic');
         $state.go('categories' , {name:$scope.searchProduct.product.name})
       }
       $scope.searchProduct.product = '';
@@ -534,10 +611,10 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
   $scope.data.pickUpTime = null;
   $scope.data.dropInTime = null;
 
-  $http({method : 'GET' , url : '/api/ecommerce/saved/'}).
+  $http({method : 'GET' , url : '/api/ecommerce/cart/'}).
   then(function(response){
     for (var i = 0; i < response.data.length; i++) {
-      if (response.data[i].category=='cart'){
+      if (response.data[i].typ=='cart'){
         $scope.inCart.push(response.data[i])
       }
     }

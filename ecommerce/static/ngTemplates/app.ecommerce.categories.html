@@ -1,26 +1,25 @@
 <div class="container-fluid">
   <div class="col-md-8 col-md-offset-2 card bg-white">
 
-    <div ng-if="listing.length>0">
-      <div class="row" style="padding:10px;">
-        <span style="font-size:20px;">
-          <span style="cursor:pointer;" ng-if="category.parent.name" ng-click="$state.go('categories', {name : category.parent.name})">
-            {{category.parent.name}} <span style="font-size:23px;"> &gt; </span>
-          </span>
-          <span>{{category.name}}</span>
-        </span>
-      </div>
-      <div class="row">
-        <div ng-repeat="l in listing">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item" ng-repeat="b in breadcrumbList"><a style="cursor:pointer" ng-click="$state.go('categories', {name : b})">{{b}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{category.name}}</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <div ng-if="listingSearch.length>0">
+        <div ng-repeat="l in listingSearch">
           <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
               <div class="row">
                 <img style="width: 100%;height:300px" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-                <img style="width: 100%;height:300px" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+                <img style="width: 100%;height:200px" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
               </div>
               <div class="row">
                 <div class="container-fluid card bg-white" style="padding:10px; height:150px;">
-                  <h4>{{l.product.name}}</h4>
+                  <h5>{{l.product.name}}</h5>
                   <span class="pull-right">
                   Starts from  <span style="font-size:20px;margin-left:10px;">
                     {{l.product.price}} <i class="fa fa-inr"></i>
@@ -32,37 +31,10 @@
           </div>
         </div>
       </div>
-    </div>
 
-
-    <div ng-if="childCategory.length>0">
-      <div class="row" style="padding:10px;">
-        <span style="font-size:20px;">
-          <span >{{category.name}}</span>
-        </span>
+      <div ng-if="listingSearch.length==0">
+        <h2 class="text-center text-muted">There are no products yet</h2>
       </div>
-      <div class="row">
-        <div ng-repeat="c in childCategory">
-          <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
-            <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : c.name})">
-              <div class="row">
-                <img style="width: 100%;height:250px" class="img" ng-src="{{c.visual}}" ng-if="c.visual.length>0">
-                <imgstyle="width: 100%;height:250px" class="img" src="/static/images/ecommerce.jpg" ng-if="c.visual==none">
-              </div>
-              <div class="row">
-                <div class="container-fluid card bg-white" style="padding:10px;">
-                  <span style="font-size:18px;">{{c.name}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row" ng-if="childCategory.length==0 || listing.length==0" style="padding:10px;">
-        <span style="font-size:18px;">{{category.name}}</span>
-      <h3 class="text-center text-muted" > No Products Yet </h3>
     </div>
 
   </div>

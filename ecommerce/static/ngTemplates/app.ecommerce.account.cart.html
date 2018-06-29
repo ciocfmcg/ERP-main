@@ -1,4 +1,15 @@
-<div class="container-fluid">
-  <generic-Table data="data.cart" config-Obj="{{cartConfig}}" ></generic-Table>
-
+<div class="container-fluid" ng-controller="controller.ecommerce.account.cart" >
+  <!-- <generic-Table data="data.cartData" config-Obj="{{cartConfig}}" ></generic-Table> -->
+  <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction" ></generic-Table>
+  <div class="row " ng-if="data.tableData.length==0">
+    <h2 class="text-muted text-center" >There are no products in your cart</h2>
+  </div>
+  <div class="row" ng-if="data.tableData.length>0" style="padding-top:100px; padding-left:50px;" >
+    <div class="col-md-6">
+       <span style="font-size:20px;" >Total : {{total.toFixed(2)}} <i class="fa fa-inr"></i>  </span>
+    </div>
+    <div class="col-md-6">
+      <span class="pull-right"> <button type="button" name="button" class="btn btn-success" >Checkout</button> </span>
+    </div>
+  </div>
 </div>

@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^register', registration , name ='register'),
     url(r'^services', serviceRegistration , name ='serviceRegistration'),
     url(r'^token', tokenAuthentication , name ='tokenAuthentication'),
-    url(r'^logout/', logoutView , name ='logout'),
+    url(r'^logout', logoutView , name ='logout'),
     url(r'^corporate/', index , name ='index'),
     url(r'^events/', eventHome, name = 'event'), # public blogs app
     url(r'^blogs/', include('blogs.urls')), # public blogs app

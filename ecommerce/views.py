@@ -48,7 +48,7 @@ from HR.models import accountsKey
 
 from django.core import serializers
 from django.http import JsonResponse
-from django.db.models import F ,Value,CharField
+from django.db.models import F ,Value,CharField,Prefetch
 
 def ecommerceHome(request):
     return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
@@ -57,14 +57,16 @@ class SearchProductAPI(APIView):
     renderer_classes = (JSONRenderer,)
     # permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
-        search = str(self.request.GET['search'])
-        l = int(self.request.GET['limit'])
-        print l , type(l)
-        genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
-        listProd = list(listing.objects.filter(product__name__icontains=search).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
-        tosend = genericProd + listProd
-        print tosend[0:l]
-        return Response(tosend[0:l], status = status.HTTP_200_OK)
+        if 'search' in self.request.GET:
+            search = str(self.request.GET['search'])
+            l = int(self.request.GET['limit'])
+            print l , type(l)
+            genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
+            listProd = list(listing.objects.filter(product__name__icontains=search).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+            tosend = genericProd + listProd
+            print tosend[0:l]
+            return Response(tosend[0:l], status = status.HTTP_200_OK)
+
 
 class fieldViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin , )
@@ -85,12 +87,31 @@ class mediaViewSet(viewsets.ModelViewSet):
     queryset = media.objects.all()
     serializer_class = mediaSerializer
 
+
+def getProducts(lst , node):
+    lst = lst | listing.objects.filter(parentType = node)
+    for child in node.children.all():
+        lst = getProducts(lst , child)
+    return lst
+
 class listingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
     serializer_class = listingSerializer
-    queryset = listing.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['parentType']
+
+    def get_queryset(self):
+
+        if 'recursive' in self.request.GET:
+            if self.request.GET['recursive'] == '1':
+                prnt = genericProduct.objects.get(id = self.request.GET['parent'])
+                toReturn = listing.objects.filter(parentType = prnt)
+                for child in prnt.children.all():
+                    toReturn = getProducts(toReturn , child)
+
+                return toReturn
+        else:
+            return listing.objects.all()
 
 class listingLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (readOnly, )
@@ -123,3 +144,10 @@ class offerBannerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return offerBanner.objects.all()
         # return offerBanner.objects.filter(active = True)
+
+class CartViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    serializer_class = CartSerializer
+    queryset = Cart.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user']

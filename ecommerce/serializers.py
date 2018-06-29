@@ -17,7 +17,14 @@ class fieldSerializer(serializers.ModelSerializer):
         model = field
         fields = ( 'pk', 'fieldType' , 'unit' ,'name' , 'helpText' , 'default' ,'data')
 
+class RecursiveField(serializers.Serializer):
+    def to_representation(self, value):
+        print 'ddddddddddddddddddddddddddddddddddd',self.parent
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
 class genericProductLiteSerializer(serializers.ModelSerializer):
+    parent = RecursiveField(many=False)
     class Meta:
         model = genericProduct
         fields = ('pk' ,  'name' ,  'parent')
@@ -156,3 +163,14 @@ class offerBannerSerializer(serializers.ModelSerializer):
         b.user = u
         b.save()
         return b
+
+class CartSerializer(serializers.ModelSerializer):
+    product = listingSerializer(many = False , read_only = True)
+    class Meta:
+        model = Cart
+        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ')
+    def create(self , validated_data):
+        c = Cart(**validated_data)
+        c.product = listing.objects.get(pk = self.context['request'].data['product'])
+        c.save()
+        return c
