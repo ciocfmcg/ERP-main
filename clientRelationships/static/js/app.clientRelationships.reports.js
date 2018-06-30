@@ -17,7 +17,7 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
   $scope.td = date
   $scope.usr = []
   $scope.mail = []
-  $scope.users = []
+  $scope.userData = {}
 
   $scope.valConfig = {
     type: 'funnel',
@@ -66,42 +66,8 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
     }
   };
 
-  $scope.sendMail = function(){
-    $http({
-      method: 'GET',
-      url: '/api/clientRelationships/schedule/'
-    }).
-    then(function(response) {
-      for (var i = 0; i < response.data.length; i++) {
-        if($scope.form.reportType==response.data[i].typ){
-          console.log(response.data[i].pk,'aaaaaaaaaaaaaaa');
-          $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/?user'+ response.data[i].pk}).
-          then(function() {
-            Flash.create('success', 'Email sent successfully')
-          })
-        }
-      }
-    })
-  }
-  // $scope.mail=function(){
-  //
-  //   var cc = []
-  //   console.log( $scope.users,'aaaaaaaaa');
-  //   for (var i = 0; i < $scope.users.length; i++) {
-  //     cc.push($scope.users[i]);
-  //   }
-  //
-  //   var toSend = {
-  //     // contact :contact,
-  //     cc : cc,
-  //     emailbody :'',
-  //     emailSubject:''
-  //   }
-  //   $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/' }).
-  //   then(function() {
-  //     Flash.create('success', 'Email sent successfully')
-  //   })
-  // }
+
+
   $scope.countConf = JSON.parse(JSON.stringify($scope.valConfig))
 
   $scope.dealGraph = false
@@ -135,6 +101,50 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
       }
 
     })
+  }
+
+  $scope.sendMail = function(){
+    // if($scope.form.email){
+    //   $scope.form.email=$scope.form.email
+    // }
+    // else{
+    //   $scope.form.email=''
+    // }
+    // $http({
+    //   method: 'GET',
+    //   url: '/api/clientRelationships/schedule/'
+    // }).
+    // then(function(response) {
+    //   for (var i = 0; i < response.data.length; i++) {
+    //     if($scope.form.reportType==response.data[i].typ){
+    //         $scope.userData.users =response.data[i].users,
+    //         $scope.userData.email = response.data[i].email,
+    //         $scope.userData.typ = response.data[i].typ
+    //         var toSend = {
+    //           cc:$scope.userData.users,
+    //           email:$scope.userData.email,
+    //           typ:$scope.userData.typ,
+    //           emailID:$scope.form.email,
+    //           dataExcel:$scope.callData
+    //         }
+    //         console.log(toSend,'aaaaaaaaaaa');
+    //       $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/', data : toSend }).
+    //       then(function() {
+    //         Flash.create('success', 'Email sent successfully')
+    //       })
+    //     }
+    //   }
+    // })
+    var toSend = {
+          emailID:$scope.form.email,
+          typ:$scope.form.reportType,
+          dataExcel:$scope.callData,
+          cc:[]
+         }
+    $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/', data : toSend }).
+         then(function() {
+           Flash.create('success', 'Email sent successfully')
+         })
   }
 
   $scope.$watch('form.from', function(newValue, oldValue) {
@@ -203,6 +213,9 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
         typ: function() {
           return $scope.form.reportType;
         },
+        report:function() {
+          return $scope.callData;
+        },
       },
       controller: "report.schedule.modal",
     }).result.then(function() {
@@ -216,10 +229,12 @@ app.controller("businessManagement.clientRelationships.reports", function($scope
 
 });
 
-app.controller("report.schedule.modal", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, data, Flash, typ) {
+app.controller("report.schedule.modal", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, data, Flash, typ,report) {
 
   $scope.me = data;
   $scope.reportType = typ;
+  $scope.callData = report;
+  console.log($scope.callData,'aaaaaaaaaaa');
   $scope.form = {
     users: []
   }
@@ -235,6 +250,9 @@ app.controller("report.schedule.modal", function($scope, $state, $users, $stateP
         $scope.form = response.data[i]
     }
   })
+
+
+
 
   $scope.saveSchedule = function() {
     var f = $scope.form
@@ -274,5 +292,20 @@ app.controller("report.schedule.modal", function($scope, $state, $users, $stateP
     }
 
   }
+
+
+    $scope.sendMail = function(){
+      console.log();
+      var toSend = {
+            cc:$scope.form.users,
+            emailID:$scope.form.email,
+            typ:$scope.reportType,
+            dataExcel:$scope.callData
+           }
+      $http({method : 'POST' , url : '/api/clientRelationships/scheduleReport/', data : toSend }).
+           then(function() {
+             Flash.create('success', 'Email sent successfully')
+           })
+    }
 
 })

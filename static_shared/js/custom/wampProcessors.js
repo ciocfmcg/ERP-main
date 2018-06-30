@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'ws://'+ '192.168.1.113' +':8080/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'ws://'+ wampServer +':8080/ws', realm: 'default'});
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function (session) {
@@ -14,6 +14,7 @@ connection.onopen = function (session) {
     var msg = args[1];
     var friend = args[2];
     var scope = angular.element(document.getElementById('chatWindow'+friend)).scope();
+    console.log(scope);
     if (typeof scope !='undefined' ) {
       scope.$apply(function() {
         if (status =="T" && !scope.$$childHead.isTyping) {
@@ -25,6 +26,9 @@ connection.onopen = function (session) {
             });
           }, 1500 );
         }else if (status=="M") {
+          scope.$$childHead.addMessage(msg , args[3])
+        }else if (status=="MF") {
+          console.log('attach file');
           scope.$$childHead.addMessage(msg , args[3])
         };
       });

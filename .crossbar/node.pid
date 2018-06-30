@@ -1,0 +1,19 @@
+{
+    "pid": 4352, 
+    "options": {
+        "reactor": null, 
+        "loglevel": "info", 
+        "logtofile": false, 
+        "cbdir": "/home/pradeep/Documents/bacup/libreERP-main/.crossbar", 
+        "logformat": "standard", 
+        "command": "start", 
+        "logdir": null, 
+        "config": "config.json", 
+        "colour": "auto", 
+        "personality": "community"
+    }, 
+    "argv": [
+        "/usr/local/bin/crossbar", 
+        "start"
+    ]
+}

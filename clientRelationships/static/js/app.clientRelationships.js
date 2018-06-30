@@ -168,12 +168,27 @@ app.controller("businessManagement.clientRelationships.default", function($scope
         size: 'md',
         backdrop: true,
         resolve: {
-          data: function() {
-            return data;
+          mobile: function() {
+            return data.mobile;
           }
         },
-        controller: function($scope , data) {
-          $scope.data = data;
+        controller: function($scope, $users , mobile , $uibModalInstance) {
+          $scope.mobile = mobile;
+          $scope.mode = 'calling';
+          $scope.me = $users.get('mySelf');
+          connection.session.publish('service.self.'+ $scope.me.username , ['call' , $scope.mobile], {}, {acknowledge: true}).
+          then(function (publication) {
+            $scope.mode = 'incall';
+          });
+
+          $scope.endCall = function() {
+            connection.session.publish('service.self.'+ $scope.me.username , ['endcall'], {}, {acknowledge: true}).
+            then(function (publication) {
+              $scope.mode = 'ended';
+              $uibModalInstance.dismiss();
+            });
+          }
+
         },
       })
     }
@@ -184,12 +199,32 @@ app.controller("businessManagement.clientRelationships.default", function($scope
         size: 'md',
         backdrop: true,
         resolve: {
-          data: function() {
-            return data;
+          mobile: function() {
+            return data.mobile;
+          },
+          name: function() {
+            return data.name;
           }
         },
-        controller: function($scope , data) {
-          $scope.data = data;
+        controller: function($scope , mobile , name, $uibModalInstance, $timeout ){
+          $scope.mobile = mobile;
+          $scope.name = name;
+          $scope.mode = 'writing';
+          $scope.form = {text : 'Hi ' + name.split(' ')[0] + ' '};
+
+          $scope.me = $users.get('mySelf');
+
+          $scope.sendSMS = function() {
+            connection.session.publish('service.self.'+ $scope.me.username , ['sms' , $scope.mobile , $scope.form.text], {}, {acknowledge: true}).
+            then(function (publication) {
+              $scope.mode = 'sent';
+              $timeout(function() {
+                $uibModalInstance.dismiss();
+              },3000)
+
+            });
+          }
+
         },
       })
     }
@@ -229,7 +264,8 @@ app.controller("businessManagement.clientRelationships.default", function($scope
             }
             $http({method : 'POST' , url : '/api/clientRelationships/sendEmail/' , data : toSend}).
             then(function() {
-              Flash.create('success', 'Email sent successfully')
+              Flash.create('success', 'Email sent successfully');
+              $scope.resetEmailForm();
             })
           }
 
@@ -247,7 +283,11 @@ app.controller("businessManagement.clientRelationships.default", function($scope
             },
           };
 
-          $scope.form = {emailBody : '' , cc : [] }
+          $scope.resetEmailForm = function() {
+            $scope.form = {emailBody : '' , cc : [] , emailSubject : ''}
+          }
+
+          $scope.resetEmailForm();
 
         },
       })
