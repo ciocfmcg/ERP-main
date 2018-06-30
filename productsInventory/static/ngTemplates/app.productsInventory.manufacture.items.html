@@ -1,0 +1,15 @@
+<div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;cursor:pointer" ng-click="rowActionClicked('info')">
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row" style="border-bottom: 1px solid #dedede;height:120px">
+        <div class="row text-center" style="padding:5px 17px;">
+          <h3>{{data.name}}</h3>
+        </div>
+    </div>
+    <div class="row container-fluid" style="padding:15px;font-size:18px">
+          <span>MRP : {{data.price}}</span><br>
+          <span>In Stock : {{data.inStock}}</span><br>
+          <span>SerialNo : {{data.serialNo}}</span><br>
+          <span>HSN/SAC : {{data.productMeta.code}}</span>
+    </div>
+  </div>
+</div>

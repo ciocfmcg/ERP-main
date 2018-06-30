@@ -84,53 +84,77 @@
         <textarea class="form-control custom-control" rows="3" ng-model="product.description"></textarea>
       </div>
 
+      <div class="row" ng-if="product.pk" style="padding:5px 20px">
 
-      <label>Secondary SKU</label>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <input type="text" class="form-control" ng-model="productVerientForm.sku">
+        <label>Secondary SKU</label>
+        <div class="row" >
+          <div class="col-md-8">
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="productVerientForm.sku">
+            </div>
+
           </div>
+          <div class="col-md-4">
 
-        </div>
-        <div class="col-md-6">
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack" placeholder="No. of items per pack">
 
-          <div class="input-group">
-            <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack" placeholder="No. of items per pack">
-
-            <div class="input-group-btn">
-              <button type="button" class="btn btn-primary" ng-click="saveUnits()">Add</button>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-primary" ng-click="saveUnits()">Add</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 25px;" ng-repeat="data in productData">
-        <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
-          <div class="col-md-12">
-            <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/><br/>
-            <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span>
-            <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
-            <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
-              style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </button>
-          </div>
+        <div class="row" style="margin-top: 30px;padding:5px 20px">
+          <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 15px;" ng-repeat="data in productData">
+            <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
+              <div class="col-md-12">
+                <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/><br/>
+                <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span>
+                <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
+                <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
+                  style="padding-bottom: 9px;"> <i class="fa fa-trash fa-lg"></i> </button>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
 
 
     </div>
+
     <div class="col-md-4" ng-if="product.pk">
 
-
-
       <div class="row">
-        <input type="text" ng-model="category" class="form-control" uib-typeahead="c as c.title for c in categorySearch($viewValue)" placeholder="Search and select a category">
-
-
+        <div class="col-md-7">
+          <input type="text" ng-model="categoryForm.category" class="form-control" uib-typeahead="c as c.name for c in categorySearch($viewValue)" placeholder="Search and select">
+        </div>
+        <div class="col-md-3">
+          <input type="number" ng-model="categoryForm.qty" class="form-control" >
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-primary" ng-click="addCategories()">Add <i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 30px;padding:5px 20px">
+        <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top:15px;" ng-repeat="c in categoriesList">
+          <div class="row" style="padding:15px">
+            <div class="col-md-11">
+              <span><strong>Name : </strong> {{c.category.name}}</span><br/><br/>
+              <span><strong>Quantity : </strong> {{c.qty}}</span>
+            </div>
+            <div class="col-md-1">
+              <i class="fa fa-pencil fa-lg" ng-click="editCategories($index)" style="cursor:pointer"></i>
+              <i class="fa fa-trash fa-lg" ng-click="removeCategories($index)" style="cursor:pointer;margin-top:30px"></i>
+            </div>
+            <!-- <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
+            style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </button> -->
+          </div>
+        </div>
       </div>
 
-
     </div>
+
   </div>
   <div class="row">
     <div class="col-md-6 text-center" style="margin-top: 27px;">

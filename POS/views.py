@@ -51,7 +51,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
     search_fields = ('name', 'serialNo', 'description', 'serialId')
-    # filter_fields = ['name']
+    filter_fields = ['name','haveComposition']
     # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
@@ -94,7 +94,7 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
     serializer_class = PurchaseOrderSerializer
     queryset = PurchaseOrder.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['service']
+    filter_fields = ['service','status']
 
 class ProductVerientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )

@@ -1,15 +1,32 @@
 <div class="container-fluid" style="padding:10px" ng-controller="businessManagement.productsInventory.purchaseOrder.explore">
-  <div class="row">
-    <div class="col-md-6">
-      <h4>Purchase order Details of {{data.service.name}}</h4>
+  <div class="row" style="padding:15px 5px">
+    <div class="col-md-4">
+      <h4>Purchase Order Details Of {{data.service.name}}</h4>
     </div>
-    <div class="col-md-2 text-right">
+    <div class="col-md-8">
+      <div class="text-right" ng-if="data.status=='created'" style="padding-right:25px">
+        <button type="button" class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="approveStatus()" confirm-button-type="default" cancel-button-type="default">Approved</button>
+      </div>
+      <div class="container-fluid" ng-if="data.status=='approved'">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Type Email Here ...">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="fa fa-paper-plane"></i>
+              </button>
+              <a class="btn btn-primary" href="/api/POS/productPrint/?POs={{data.pk}}">
+                Download <i class="fa fa-download"></i>
+              </a>
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-2 text-right">
       <a class="btn btn-default" href="/api/POS/productPrint/?POs={{data.pk}}">
         Download <i class="fa fa-download"></i>
       </a>
     </div>
     <div class="col-md-3 text-right" styele="padding:10px">
-      <!-- <label>Status</label> -->
       <select ng-model="data.status" class="form-control">
         <option value="created">Created</option>
         <option value="sent">Sent</option>
@@ -18,10 +35,10 @@
         <option value="recieved">Recieved</option>
         <option value="reconciled">Reconciled</option>
       </select>
-    </div>
-    <div class="col-md-1 text-right">
+    </div> -->
+    <!-- <div class="col-md-2 text-right">
       <button type="button" class="btn btn-success"ng-click="saveStatus()">Save</button>
-    </div>
+    </div> -->
   </div>
   <div class="row">
     <div class="col-md-4">
@@ -89,20 +106,28 @@
           <span>{{data.service.address.country}}</span>
         </div>
       </div>
+      <div class="row text-center" style="margin-top:200px">
+        <a class="btn btn-primary" href="/api/POS/productPrint/?POs={{data.pk}}" ng-if="data.status == 'approved' || data.status=='recieved'">
+          Download <i class="fa fa-download" ></i>
+        </a><br>
+        <a class="btn btn-primary" href="" ng-if="data.status=='recieved'" style="margin-top:15px">
+          Download GRNs<i class="fa fa-download" ></i>
+        </a>
+      </div>
     </div>
     <div class="col-md-8" style="border-left:1px solid #eeeeee;min-height:60vh">
-      <div class="container-fluid">
+      <div class="container-fluid" ng-if="data.status=='created'">
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>Item Description</th>
-              <th>Item Quantity</th>
-              <th>Item Rate (Rupees)</th>
+              <th style="text-align:center">Item Description</th>
+              <th style="text-align:center">Item Quantity</th>
+              <th style="text-align:center">Item Rate (Rupees)</th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="a in data.products">
-              <td>{{a.product.name}}</td>
+              <td style="text-align:center">{{a.product.name}}</td>
               <td style="text-align:center">{{a.qty}}</td>
               <td style="text-align:center"><i class="fa fa-inr"></i>{{a.rate}}</td>
             </tr>
@@ -113,6 +138,68 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="container-fluid" ng-if="data.status=='approved'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="text-align:center;width:50%">Item Description</th>
+              <th style="text-align:center">Item Quantity</th>
+              <th style="text-align:center">Item Rate (Rupees)</th>
+              <th style="text-align:center">Quantity Received</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="a in data.products">
+              <td style="text-align:center;width:50%">{{a.product.name}}</td>
+              <td style="text-align:center">{{a.qty}}</td>
+              <td style="text-align:center"><i class="fa fa-inr"></i>{{a.rate}}</td>
+              <td style="text-align:center"><input type="number" class="form-control-pos" ng-model="a.receivedQty" ng-init="a.receivedQty=0"></td>
+            </tr>
+            <tr>
+              <td style="border:none;">Total:</td>
+              <td style="border:none;"></td>
+              <td style="text-align:center"><i class="fa fa-inr">{{getTotalRate()}}</td>
+              <td style="border:none;"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="btn btn-success" ng-if="data.status=='approved'" style="margin-top:20px" ng-click="receivedStatus()">
+          Received
+        </div>
+
+      </div>
+      <div class="container-fluid" ng-if="data.status=='recieved'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="text-align:center">Item Description</th>
+              <th style="text-align:center">Item Quantity</th>
+              <th style="text-align:center">Item Rate (Rupees)</th>
+              <th style="text-align:center">Quantity Received</th>
+              <th style="text-align:center">Item Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="a in data.products">
+              <td style="text-align:center">{{a.product.name}}</td>
+              <td style="text-align:center">{{a.qty}}</td>
+              <td style="text-align:center"><i class="fa fa-inr"></i>{{a.rate}}</td>
+              <td style="text-align:center">{{a.receivedQty}}</td>
+              <td style="text-align:center"><i class="fa fa-inr"></i>{{a.rate * a.receivedQty}}</td>
+            </tr>
+            <tr>
+              <td style="border:none;">Total:</td>
+              <td style="border:none;"></td>
+              <td style="text-align:center"><i class="fa fa-inr">{{getTotalRate()}}</td>
+              <td style="border:none;"></td>
+              <td style="text-align:center"><i class="fa fa-inr">{{getTotalPrice()}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row" ng-if="data.status=='recieved'" style="margin-top:20px">
+          <h3>Payment Process</h3>
+        </div>
       </div>
     </div>
   </div>

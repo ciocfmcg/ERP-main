@@ -28,24 +28,32 @@ class CustomerSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
+class ProductLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock')
+
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
+    compositions=ProductLiteSerializer(many=True,read_only=True)
     class Meta:
         model = Product
         fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
-        print 'entered','***************'
         print self.context['request'].data
-        # print int(self.context['request'].data['productMeta'])
+        print 'entered','***************'
+        print validated_data
         p = Product(**validated_data)
         p.user = self.context['request'].user
         if 'compositions' in self.context['request'].data:
             p.compositions.clear()
             for c in self.context['request'].data['compositions']:
                 p.compositions.add(Product.objects.get(pk = c))
-        # p.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
+        if 'productMeta' in self.context['request'].data:
+            print self.context['request'].data['productMeta']
+            p.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
         p.save()
         return p
     # def update(self ,instance, validated_data):
@@ -59,6 +67,9 @@ class ProductSerializer(serializers.ModelSerializer):
     #     return instance
     def update(self ,instance, validated_data):
         print 'entered in updating ************************************'
+        print self.context['request'].data
+        print 'entered','***************'
+        print validated_data
 
         if 'typ' in self.context['request'].data and self.context['request'].data['typ']=='user':
             il = InventoryLog(before = instance.inStock , after = validated_data['inStock'],product = instance,typ = 'user' , user = self.context['request'].user)
@@ -70,12 +81,14 @@ class ProductSerializer(serializers.ModelSerializer):
             except:
                 pass
         if 'productMeta' in self.context['request'].data:
+            print self.context['request'].data['productMeta']
             instance.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
 
         if 'compositions' in self.context['request'].data:
             instance.compositions.clear()
-            for c in self.context['request'].data['compositions']:
-                instance.compositions.add(Product.objects.get(pk = c))
+            print self.context['request'].data['compositions'],type(self.context['request'].data['compositions'])
+            for c in self.context['request'].data['compositions'].split(','):
+                instance.compositions.add(Product.objects.get(pk = int(c)))
 
 
 

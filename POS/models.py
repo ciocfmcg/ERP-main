@@ -51,19 +51,19 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length = 100 , null = False)
-    productMeta = models.ForeignKey(ProductMeta , related_name="POSProducts" , null = True)
+    productMeta = models.ForeignKey(ProductMeta , related_name="POSProducts" , null = True, blank = True)
     price = models.FloatField(null=False)
-    displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True)
-    serialNo = models.CharField(max_length = 30, null=True)
-    description = models.TextField(max_length=10000,null=True)
+    displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True, blank = True)
+    serialNo = models.CharField(max_length = 30, null=True, blank = True)
+    description = models.TextField(max_length=10000,null=True, blank = True)
     inStock = models.IntegerField(default = 0)
     cost = models.PositiveIntegerField(default= 0)
     logistics = models.PositiveIntegerField(default = 0)
-    serialId = models.CharField(max_length = 50, null=True)
+    serialId = models.CharField(max_length = 50, null=True, blank = True)
     reorderTrashold = models.PositiveIntegerField(default = 0)
     haveComposition = models.BooleanField(default = False)
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
-    compositionQtyMap = models.CharField(max_length = 1000 , null = True)
+    compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
     def __str__(self):
         return self.name
 
@@ -144,6 +144,8 @@ PURCHASE_ORDER_STATUS_CHOICES = (
     ('cancelled','cancelled'),
     ('recieved','recieved'),
     ('reconciled','reconciled'),
+    ('approved','approved'),
+
 
 
 )
@@ -225,7 +227,7 @@ import requests
 from ERP.models import application
 @receiver(post_save, sender=Product, dispatch_uid="server_post_save")
 def updateProductsStock(sender, instance, **kwargs):
-
+    return
     try:
 
         for p in application.objects.get(name = 'app.productsInventory').permissions.all():

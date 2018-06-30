@@ -70,9 +70,9 @@ app.controller("businessManagement.productsInventory.purchaseOrder.explore", fun
     })
   }
 
-  $scope.saveStatus = function() {
+  $scope.approveStatus = function() {
     var toSend = {
-      status : $scope.data.status,
+      status : 'approved',
     }
     var url = '/api/POS/purchaseOrder/' + $scope.data.pk + '/';
     $http({
@@ -81,7 +81,26 @@ app.controller("businessManagement.productsInventory.purchaseOrder.explore", fun
       data: toSend
     }).
     then(function(response) {
-      Flash.create('success', 'Saved');
+      Flash.create('success', 'Approved Sucessfully');
+      $scope.data.status = response.data.status
+    })
+  }
+
+  $scope.receivedStatus = function(){
+    console.log($scope.data);
+    var toSend = {
+      status : 'recieved',
+      products : JSON.stringify($scope.data.products),
+    }
+    var url = '/api/POS/purchaseOrder/' + $scope.data.pk + '/';
+    $http({
+      method: 'PATCH',
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Approved Sucessfully');
+      $scope.data.status = response.data.status
     })
   }
 
@@ -110,6 +129,13 @@ app.controller("businessManagement.productsInventory.purchaseOrder.explore", fun
 
     return total;
   }
+  $scope.getTotalPrice = function() {
+    var total = 0;
+    for (var i = 0; i < $scope.data.products.length; i++) {
+      total += $scope.data.products[i].receivedQty * $scope.data.products[i].rate;
+    }
+    return total;
+  }
 
   $scope.status = ["created", "sent", "returned","cancelled"];
 
@@ -120,6 +146,7 @@ app.controller("productsInventory.purchaseOrder.modelForm", function($scope, $st
 
   $scope.POs = POs;
   $scope.data = data;
+  $scope.showbtn = true
 
 
   for (var i = 0; i < $scope.POs.length; i++) {
@@ -199,6 +226,7 @@ app.controller("productsInventory.purchaseOrder.modelForm", function($scope, $st
         }
       })(i))
     }
+    $scope.showbtn = false
   }
 
   $scope.deleteVendor = function(index) {
@@ -234,16 +262,16 @@ app.controller("productsInventory.purchaseOrder.modelForm", function($scope, $st
 
 app.controller("businessManagement.productsInventory.purchaseOrder.items", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
-  $http({
-    method: 'GET',
-    url: '/api/POS/purchaseOrder/',
-  }).
-  then(function(response) {
-    $scope.orders = response.data;
-    if (typeof $scope.data.products == 'string') {
-      $scope.data.products = JSON.parse($scope.data.products)
-    }
-  })
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/POS/purchaseOrder/',
+  // }).
+  // then(function(response) {
+  //   $scope.orders = response.data;
+  // })
+  if (typeof $scope.data.products == 'string') {
+    $scope.data.products = JSON.parse($scope.data.products)
+  }
 
 
 
@@ -253,7 +281,9 @@ app.controller("businessManagement.productsInventory.purchaseOrder.items", funct
 app.controller("businessManagement.productsInventory.purchaseOrder", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
   $scope.data = {
-    tableData: []
+    tableData: [],
+    pendingPoData: [],
+    grnsData: []
   };
 
   views = [{
@@ -264,11 +294,29 @@ app.controller("businessManagement.productsInventory.purchaseOrder", function($s
   }, ];
 
 
+
   $scope.config = {
     views: views,
     url: '/api/POS/purchaseOrder/',
     searchField: 'service',
     itemsNumPerView: [16, 32, 48],
+    getParams : [{key : 'status' , value : 'created'}]
+  }
+
+  $scope.pendingPoConfig = {
+    views: views,
+    url: '/api/POS/purchaseOrder/',
+    searchField: 'service',
+    itemsNumPerView: [16, 32, 48],
+    getParams : [{key : 'status' , value : 'approved'}]
+  }
+
+  $scope.grnsConfig = {
+    views: views,
+    url: '/api/POS/purchaseOrder/',
+    searchField: 'service',
+    itemsNumPerView: [16, 32, 48],
+    getParams : [{key : 'status' , value : 'recieved'}]
   }
 
 
@@ -279,18 +327,68 @@ app.controller("businessManagement.productsInventory.purchaseOrder", function($s
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
-          var title = 'Edit :';
+          var title = 'Edit : ';
           var appType = 'ordersEditor';
         } else if (action == 'info') {
-          var title = 'Details :';
+          var title = 'Details : ';
           var appType = 'ordersInfo';
         }
 
         $scope.addTab({
-          title: title + $scope.data.tableData[i].pk,
+          title: title + $scope.data.tableData[i].pk +' ',
           cancel: true,
           app: appType,
           data: $scope.data.tableData[i],
+          active: true
+        })
+      }
+    }
+  }
+
+  $scope.pendingPotableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.pendingPoData);
+
+    for (var i = 0; i < $scope.data.pendingPoData.length; i++) {
+      if ($scope.data.pendingPoData[i].pk == parseInt(target)) {
+        if (action == 'edit') {
+          var title = 'Edit : ';
+          var appType = 'ordersEditor';
+        } else if (action == 'info') {
+          var title = 'Details : ';
+          var appType = 'ordersInfo';
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.pendingPoData[i].pk +' ',
+          cancel: true,
+          app: appType,
+          data: $scope.data.pendingPoData[i],
+          active: true
+        })
+      }
+    }
+  }
+
+  $scope.grnstableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.grnsData);
+
+    for (var i = 0; i < $scope.data.grnsData.length; i++) {
+      if ($scope.data.grnsData[i].pk == parseInt(target)) {
+        if (action == 'edit') {
+          var title = 'Edit : ';
+          var appType = 'ordersEditor';
+        } else if (action == 'info') {
+          var title = 'Details : ';
+          var appType = 'ordersInfo';
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.grnsData[i].pk +' ',
+          cancel: true,
+          app: appType,
+          data: $scope.data.grnsData[i],
           active: true
         })
       }
