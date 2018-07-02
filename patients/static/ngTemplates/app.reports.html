@@ -44,29 +44,37 @@
               <table class="table table-striped" ng-if="tableData.length>0">
                 <thead>
                   <tr>
-                    <th>S.No.</th>
-                    <th>Patient Name</th>
-                    <th>Invoice Name</th>
-                    <th>Ref Id.</th>
-                    <th>Type</th>
-                    <th style="width:12%">Total</th>
+                    <th style="text-align:center">S.No.</th>
+                    <th style="text-align:center">Patient Name</th>
+                    <th style="text-align:center">Invoice Name</th>
+                    <th style="text-align:center">Ref Id.</th>
+                    <th style="text-align:center">Type</th>
+                    <th style="text-align:center">Total</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   <tr ng-repeat="r in tableData">
-                    <td>{{$index + 1}}</td>
-                    <td>{{r.pname}}</td>
-                    <td>{{r.invoiceName}}</td>
-                    <td>{{r.refId}}</td>
-                    <td>{{r.typ}}</td>
-                    <td style="width12%">{{r.grandTotal}}</td>
+                    <td style="text-align:center">{{$index + 1}}</td>
+                    <td style="text-align:center">{{r.pname}}</td>
+                    <td style="text-align:center">{{r.invoiceName}}</td>
+                    <td style="text-align:center">{{r.refId}}</td>
+                    <td style="text-align:center">{{r.typ}}</td>
+                    <td style="text-align:center">{{r.grandTotal}}</td>
                   </tr>
+                  <!-- <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td ></td>
+                  <td style="font-size:20px;padding-left:50px;"><b>Total : </b> {{grandTotal}}</td>
+                  </tr> -->
                 </tbody>
 
               </table>
             </div>
-            <div class="text-right" style="margin-right:160px;font-size:18px" ng-if="tableData.length>0">
+            <div class="text-right" style="margin-right:50px;font-size:18px" ng-if="tableData.length>0">
               <b>Total : </b> {{grandTotal}}
             </div>
           </div>
