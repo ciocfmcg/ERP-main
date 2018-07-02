@@ -128,6 +128,9 @@ app.controller('hospitalManagement.activePatient.explore', function($scope, $htt
     },
   };
 
+  $scope.tinymceOptionsSmall = JSON.parse(JSON.stringify($scope.tinymceOptions))
+  $scope.tinymceOptionsSmall.height = 100
+
 
 
 
@@ -206,7 +209,7 @@ $scope.fetchInvoices();
   $scope.refresh = function () {
 
     $scope.dischargeSummForm = {
-      ipNo  :'',
+      ipNo  :$scope.data.pk,
       treatingConsultant  :'',
       mlcNo  :'',
       firNo  :'',
@@ -231,29 +234,28 @@ $scope.fetchInvoices();
     }
   }
 
-  $scope.$watch('dischargeSummForm.patient.dateOfDischarge' , function(newValue , oldValue) {
+  $timeout(function() {
+    $scope.$watch('dischargeSummForm.patient.dateOfDischarge' , function(newValue , oldValue) {
 
-    if (newValue == '' || newValue == undefined) {
-      $scope.dischargeSummForm.patient.dateOfDischarge = new Date();
-    }else{
-      if (typeof newValue == 'string') {
-        $scope.dischargeSummForm.patient.dateOfDischarge = new Date($scope.dischargeSummForm.patient.dateOfDischarge);
+      if (newValue == '' || newValue == undefined) {
+        $scope.dischargeSummForm.patient.dateOfDischarge = new Date();
+      }else{
+        if (typeof newValue == 'string') {
+          $scope.dischargeSummForm.patient.dateOfDischarge = new Date($scope.dischargeSummForm.patient.dateOfDischarge);
+        }
       }
-    }
 
-    $http({
-      method: 'PATCH',
-      url: '/api/patients/activePatient/' + $scope.data.pk + '/' ,
-      data: {status: 'dishcharged' , dateOfDischarge: newValue },
+      $http({
+        method: 'PATCH',
+        url: '/api/patients/activePatient/' + $scope.data.pk + '/' ,
+        data: {status: 'dishcharged' , dateOfDischarge: newValue },
 
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
+      }).
+      then(function(response) {
+        // Flash.create('success', 'Saved');
+      })
     })
-
-
-
-  })
+  }, 500)
 
   $scope.chageStatus = function () {
     $http({
@@ -465,6 +467,13 @@ $scope.fetchInvoices();
 
   $scope.openInvoice =function(pk) {
     window.open('/api/patients/downloadInvoice/?invoicePk=' + pk , '_blank');
+  }
+
+  $scope.openDischargeSummary =function(pk) {
+    $scope.saveDischargeSumm()
+    $timeout(function() {
+      window.open('/api/patients/downloaddischargeSummary/?pPk=' + pk , '_blank');
+    }, 500)
   }
 
   $scope.invoiceInfo = function(idx) {

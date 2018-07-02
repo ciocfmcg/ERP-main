@@ -118,10 +118,11 @@
           Check Out
         </button> -->
         <div class="row" ng-if="dischargeSummForm.pk">
-          <a href="/api/patients/downloaddischargeSummary/?pPk={{dischargeSummForm.pk}}" target="_blank"target="_blank">
+          <!-- <a href="/api/patients/downloaddischargeSummary/?pPk={{dischargeSummForm.pk}}" target="_blank">
            <button  type="button" class="btn btn-primary pull-right" >
              Discharge Summary <i class="fa fa-download"></i>
-           </button> </a>
+           </button> </a> -->
+           <button  ng-click="openDischargeSummary(dischargeSummForm.pk);$event.stopPropagation();" type="button" class="btn btn-primary pull-right" >Discharge Summary <i class="fa fa-download"></i></button>
         </div>
 
         <div class="row text-center">
@@ -134,14 +135,14 @@
               <h3><small><b>Patient Name : </b></small>{{dischargeSummForm.patient.patient.firstName}}  {{dischargeSummForm.patient.patient.lastName}}</h3>
             </div>
           </div>
-          <div class="col-md-2" style="padding-top:15px;">
+          <div class="col-md-3" style="padding-top:15px;">
             <div class="form-group">
               <!-- <label>Age :</label>
               <input type="text" class="form-control" ng-model="dischargeSummForm.age" placeholder=""> -->
               <h4><small><b>Age : </b></small>{{dischargeSummForm.patient.patient.age}}</h4>
             </div>
           </div>
-          <div class="col-md-4" style="padding-top:15px;">
+          <div class="col-md-3" style="padding-top:15px;">
             <div class="form-group">
               <!-- <label>Sex :</label>
               <input type="text" class="form-control" ng-model="dischargeSummForm.sex" placeholder=""> -->
@@ -152,16 +153,17 @@
         <div class="row" style="margin-top:25px;">
           <div class="col-md-6">
             <div class="form-group">
-              <!-- <label>UHID No.</label>
-              <input type="text" class="form-control" ng-model="dischargeSummForm.uhidNo" placeholder=""> -->
               <h4><small><b>Telephone No. : </b></small>{{dischargeSummForm.patient.patient.phoneNo}}</h4>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="form-group">
-              <!-- <label> Telephone No. </label>
-              <input type="text" class="form-control" ng-model="dischargeSummForm.telephoneNo" placeholder=""> -->
               <h4><small><b>UHID No. : </b></small>{{dischargeSummForm.patient.patient.uniqueId}}</h4>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <h4><small><b>IP No. : </b></small>{{dischargeSummForm.ipNo}}</h4>
             </div>
 
           </div>
@@ -171,7 +173,7 @@
             <div class="form-group">
               <!-- <label>UHID No.</label>
               <input type="text" class="form-control" ng-model="dischargeSummForm.uhidNo" placeholder=""> -->
-              <h4><small><b>Date of Admission : </b></small>{{dischargeSummForm.patient.inTime | date: 'dd-MM-yyyy:hh:mm a'}}</h4>
+              <h4><small><b>Date of Admission : </b></small>{{dischargeSummForm.patient.inTime | date: 'dd-MM-yyyy hh:mm a'}}</h4>
             </div>
           </div>
           <div class="col-md-6" style="padding-right:50px">
@@ -203,12 +205,12 @@
 
           </div>
         </div>
-        <div class="row" style="padding:0px 15px;">
+        <!-- <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>IP No.</label>
             <input type="text" class="form-control" ng-model="dischargeSummForm.ipNo" placeholder="">
           </div>
-        </div>
+        </div> -->
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Incharge Doctor</label>
@@ -258,14 +260,14 @@
           <div class="form-group">
             <label>Provisional Diagnosis at the time of Admission.</label>
             <!-- <input type="text" class="form-control" ng-model="dischargeSummForm.provisionalDiagnosis" placeholder=""> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.provisionalDiagnosis"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.provisionalDiagnosis"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Final Diagnosis at the time of Admission.</label>
             <!-- <input type="text" class="form-control" ng-model="dischargeSummForm.finalDiagnosis" placeholder=""> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.finalDiagnosis"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.finalDiagnosis"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
@@ -300,14 +302,14 @@
           <div class="form-group">
             <label>Significant Past Medical and Surgical History, if any</label>
             <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.pastHistory" ></textarea> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.pastHistory"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.pastHistory"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Family History if Significant to Diagnosis or Treatment</label>
             <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.familyHistory" ></textarea> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.familyHistory"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.familyHistory"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
@@ -349,7 +351,7 @@
           <div class="form-group">
             <label>Review On</label>
             <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.reviewOn" ></textarea> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.reviewOn"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.reviewOn"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
