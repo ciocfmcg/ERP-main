@@ -1,5 +1,5 @@
 console.log("loaded");
-var app = angular.module('app' , ['ui.router']);
+var app = angular.module('app' , ['ui.router', 'ui.bootstrap']);
 
 
 app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $provide ){
@@ -80,8 +80,8 @@ function typedEffect($interval, $timeout) {
 }
 
 
-app.controller('main' , function($scope , $state , $http , $timeout , $interval){
-  console.log("main loded");
+app.controller('main' , function($scope , $state , $http , $timeout , $interval , $uibModal ){
+
   $scope.crmBannerID = 1;
 
   $scope.mainBannerImages = ['/static/images/banner-img2.jpg' ]
@@ -121,10 +121,33 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval)
     }
   } , 1000)
 
+  $scope.jobs=[]
 
+$http.get('/api/recruitment/job/?status=Active').
+  then(function(response) {
+  $scope.jobs= response.data;
+  })
+
+  $scope.apply=function(value){
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.careers.modal.apply.html',
+      size: 'lg',
+      backdrop : false,
+      resolve: {
+        data: function() {
+          return value;
+        }
+      },
+      controller: "careers.modal.apply",
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+  }
 
 });
-app.controller('homepage.chat' , function($scope , $state , $http , $timeout , $interval){
+app.controller('homepage.chat' , function($scope , $state , $http , $timeout , $interval , $uibModal){
   $scope.name = "Pradeep";
 
   $scope.minimized = true;
@@ -165,3 +188,79 @@ app.controller('homepage.career' , function($scope , $state , $http , $timeout ,
   ];
 
 });
+app.directive('fileModel', ['$parse', function ($parse) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var model = $parse(attrs.fileModel);
+      var modelSetter = model.assign;
+
+      element.bind('change', function(){
+        scope.$apply(function(){
+          modelSetter(scope, element[0].files[0]);
+        });
+      });
+    }
+  };
+}]);
+
+app.controller('careers.modal.apply' , function($scope , $state , $http , $timeout , $uibModal ,  data , $uibModalInstance){
+  $scope.job=data;
+  var emptyFile = new File([""], "");
+  $scope.resetForm = function() {
+    $scope.form = {
+      'firstnane': '',
+      'lastname': '',
+      'email': '',
+      'mobile': '',
+      'coverletter': '',
+      'resume':emptyFile
+    }
+  }
+
+    $scope.resetForm();
+
+    $scope.save = function() {
+      console.log( $scope.form,'aaaaaaaaaaa');
+      var f = $scope.form;
+      var url = '/api/recruitment/applyJob/';
+      var fd = new FormData();
+      console.log( f.resume,'aaaaaaaa');
+      if (f.resume != null && f.resume != emptyFile ) {
+        console.log("aaaaaaaaaa");
+        fd.append('resume', f.resume)
+      }
+
+      fd.append('firstname', f.firstname);
+      fd.append('lastname', f.lastname);
+      fd.append('email', f.email);
+      fd.append('mobile', f.mobile);
+      fd.append('coverletter', f.coverletter);
+      fd.append('job',$scope.job);
+
+      console.log(fd,'aaaaaaaaaaaaaa');
+      var method = 'POST';
+      $http({
+        method: method,
+        url: url,
+        data: fd,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).
+      then(function(response) {
+        $scope.form.pk = response.data.pk;
+      //   Flash.create('success', 'Saved')
+          $scope.resetForm();
+      })
+    }
+
+
+    $scope.cancel = function() {
+      $uibModalInstance.dismiss();
+    };
+
+
+
+})

@@ -46,7 +46,7 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
           var myapp = 'jobBrowse';
         }
         $scope.addTab({
-          title: title + $scope.data.tableData[i].pk,
+          title: title + $scope.data.tableData[i].jobtype,
           cancel: true,
           app: myapp,
           data: {
@@ -127,7 +127,9 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
   $scope.mode = 'edit';
   console.log($scope.form)
 } else {
+  $scope.mode = 'new';
   $scope.resetForm();
+
 }
 
   $scope.saveJobs = function() {
@@ -138,7 +140,8 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
       department: f.department.pk,
       role: f.role.pk,
       contacts: f.contacts,
-      skill: f.skill
+      skill: f.skill,
+      maximumCTC : f.maximumCTC
     }
     console.log(toSend);
     var url = '/api/recruitment/job/';
@@ -156,6 +159,9 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
     then(function(response) {
       // $scope.form= response.data;
       Flash.create('success', 'Saved');
+      if ($scope.mode == 'new') {
+        $scope.resetForm();
+      }
     })
   }
 
@@ -163,5 +169,68 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
 app.controller("workforceManagement.recruitment.jobs.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.jobDetails = $scope.data.tableData[$scope.tab.data.index]
+  $scope.jobApplied=[]
+
+  $scope.approve=function(){
+    $scope.jobDetails.approved = true;
+    $scope.jobDetails.status = 'Approved'
+    var toSend = {
+      approved : $scope.jobDetails.approved,
+      status : $scope.jobDetails.status
+    }
+    var method = 'PATCH';
+    var url = '/api/recruitment/job/';
+    url += $scope.jobDetails.pk + '/';
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+    })
+  }
+  $scope.active=function(){
+    if ($scope.jobDetails.status == 'Active') {
+        $scope.jobDetails.status = 'Closed';
+    }
+    else if ($scope.jobDetails.status == 'Approved'||$scope.jobDetails.status == 'Closed') {
+      $scope.jobDetails.status = 'Active';
+    }
+    var toSend = {
+      status : $scope.jobDetails.status
+    }
+    var method = 'PATCH';
+    var url = '/api/recruitment/job/';
+    url += $scope.jobDetails.pk + '/';
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+    })
+  }
+
+  $http({
+    method: 'GET',
+    url: '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk
+  }).
+  then(function(response) {
+    console.log(response.data.length,'aaaaaaaaa');
+    $scope.jobApplied=response.data;
+
+  });
+
+
+  $scope.$watch('form.checkAll' , function(newValue , oldValue) {
+    for (var i = 0; i < $scope.jobApplied.length; i++) {
+      $scope.select=newValue;
+
+
+    }
+  })
+
 
   });

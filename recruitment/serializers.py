@@ -6,38 +6,17 @@ from .models import *
 from django.conf import settings as globalSettings
 from rest_framework.response import Response
 from organization.models import *
-
-
-
-class DepartmentsLiteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Departments
-        fields = ('pk' , 'dept_name' )
-
-
-class UnitsLiteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Unit
-        fields = ('pk' , 'name' )
-
-class RolesLiteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Role
-        fields = ('pk' , 'name')
-
+from organization.serializers import *
 
 class JobsSerializer(serializers.ModelSerializer):
     unit = UnitsLiteSerializer(many = False , read_only = True)
     department = DepartmentsLiteSerializer(many = False , read_only = True)
-    role = RolesLiteSerializer(many = False , read_only = True)
+    role = RoleSerializer(many = False , read_only = True)
     class Meta:
         model = Jobs
-        fields = ('pk', 'jobtype','unit', 'department', 'role' , 'contacts', 'skill' )
+        fields = ('pk', 'jobtype','unit', 'department', 'role' , 'contacts', 'skill' , 'approved' , 'maximumCTC' , 'status' )
     def create(self , validated_data):
-        print validated_data,self.context['request'].data['contacts']
-        # cont = validated_data['contacts']
         del validated_data['contacts']
-        print validated_data
         inv = Jobs(**validated_data)
         inv.unit = Unit.objects.get(pk = self.context['request'].data['unit'])
         inv.department = Departments.objects.get(pk = self.context['request'].data['department'])
@@ -48,17 +27,30 @@ class JobsSerializer(serializers.ModelSerializer):
         return inv
 
     def update(self ,instance, validated_data):
-        print 'enteredddddddddddddddddddd'
-        for key in ['jobtype',  'contacts' , 'skill']:
+        for key in ['jobtype',  'contacts' , 'skill', 'approved' , 'maximumCTC' , 'status']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        instance.unit = Unit.objects.get(pk = self.context['request'].data['unit'])
-        instance.department = Departments.objects.get(pk = self.context['request'].data['department'])
-        instance.role = Role.objects.get(pk = self.context['request'].data['role'])
+        if 'unit' in self.context['request'].data:
+            instance.unit = Unit.objects.get(pk = self.context['request'].data['unit'])
+        if 'department' in self.context['request'].data:
+            instance.department = Departments.objects.get(pk = self.context['request'].data['department'])
+        if 'role' in self.context['request'].data:
+            instance.role = Role.objects.get(pk = self.context['request'].data['role'])
         if 'contacts' in self.context['request'].data:
             for i in self.context['request'].data['contacts']:
                 instance.contacts.add(User.objects.get(pk = i))
         instance.save()
         return instance
+
+class JobApplicationSerializer(serializers.ModelSerializer):
+    job = JobsSerializer(many = False , read_only = True)
+    class Meta:
+        model = JobApplication
+        fields = ('pk', 'created','firstname', 'lastname', 'email' , 'mobile', 'resume' , 'coverletter' , 'status' , 'job' )
+    def create(self , validated_data):
+        i = JobApplication(**validated_data)
+        i.job = Jobs.objects.get(pk = self.context['request'].data['job'])
+        i.save()
+        return i

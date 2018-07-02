@@ -34,8 +34,6 @@ app.controller("workforceManagement.organization.departments", function($scope, 
 
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -48,21 +46,9 @@ app.controller("workforceManagement.organization.departments", function($scope, 
         }
 
 
-        console.log({
-          title: title + $scope.data.tableData[i].pk,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i,
-            departments: $scope.data.tableData[i]
-          },
-          active: true
-        });
-
 
         $scope.addTab({
-          title: title + $scope.data.tableData[i].pk,
+          title: title + $scope.data.tableData[i].dept_name,
           cancel: true,
           app: appType,
           data: {
@@ -84,7 +70,6 @@ app.controller("workforceManagement.organization.departments", function($scope, 
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -115,8 +100,9 @@ app.controller("workforceManagement.organization.departments.form", function($sc
       'telephone': '',
       'fax': '',
       'contacts': [],
-      'units': [],
+      'unit': [],
     }
+      $scope.unit=[]
   }
   //
   // 'name':'',
@@ -147,6 +133,7 @@ app.controller("workforceManagement.organization.departments.form", function($sc
     then(function(response) {
       console.log('@', response.data);
       return response.data;
+
     })
   };
 
@@ -216,6 +203,10 @@ app.controller("workforceManagement.organization.departments.form", function($sc
       //  $scope.$broadcast('forceRefetch',)
       //    $scope.$broadcast('forcerefresh', response.data);
       //  $route.reload();
+      if ($scope.mode == 'new') {
+        console.log("aaaaaaaaaa");
+        $scope.resetForm();
+      }
     })
   }
 
