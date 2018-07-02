@@ -67,7 +67,13 @@
       </div>
     </div>
   </div><br/>
-  <div class="row" style="padding-left:50px">
+    <div class="row">
+      <div class="col-md-12 text-right">
+        <button class="btn btn-primary" ng-click="selected()"><i class="fa fa-tick">Shortlist</i></button>
+      </div>
+    </div><br/>
+
+  <div class="row" >
     <table class="ui fixed single line celled table striped sortable compact"  id="mytable" >
   <thead>
     <tr>
@@ -81,8 +87,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="i in jobApplied">
-      <td><input type="checkbox" ng-model="select"></td>
-        <!-- <td>{{x.checkStatus}}</td> -->
+      <td><input type="checkbox" ng-model="i.select"></td>
       <td>{{i.firstname}} {{i.lastname}}</td>
       <td>{{i.email}}</td>
       <td>{{i.mobile}}</td>

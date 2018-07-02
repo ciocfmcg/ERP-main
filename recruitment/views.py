@@ -23,12 +23,12 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = JobApplicationSerializer
     queryset = JobApplication.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['job',]
+    filter_fields = ['job','status']
 
 class DownloadResume(APIView):
     def get(self , request , format = None):
         print 'ccccccccccccccccccccc'
         print request.GET['uPk']
-        
+
 
         return Response(toReturn )
