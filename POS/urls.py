@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'invoicePrint/$' , InvoicePrint.as_view() ),
     url(r'productPrint/$' , ProductPrint.as_view() ),
+    url(r'productPrintGrns/$' , ProductPrintGrns.as_view() ),
     url(r'bulkProductsCreation/$' , BulkProductsCreationAPI.as_view() ),
     url(r'externalEmailOrders/$' , ExternalEmailOrders.as_view() ),
     url(r'reorderingReport/$' , ReorderingReport.as_view() ),

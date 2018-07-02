@@ -110,8 +110,8 @@
         <a class="btn btn-primary" href="/api/POS/productPrint/?POs={{data.pk}}" ng-if="data.status == 'approved' || data.status=='recieved'">
           Download <i class="fa fa-download" ></i>
         </a><br>
-        <a class="btn btn-primary" href="" ng-if="data.status=='recieved'" style="margin-top:15px">
-          Download GRNs<i class="fa fa-download" ></i>
+        <a class="btn btn-primary" href="/api/POS/productPrintGrns/?POs={{data.pk}}" ng-if="data.status=='recieved'" style="margin-top:15px">
+          Download GRNs <i class="fa fa-download" ></i>
         </a>
       </div>
     </div>
@@ -132,7 +132,7 @@
               <td style="text-align:center"><i class="fa fa-inr"></i>{{a.rate}}</td>
             </tr>
             <tr>
-              <td style="border:none;">Total:</td>
+              <td style="border:none;"><b>Total :</b></td>
               <td style="border:none;"></td>
               <td style="text-align:center"><i class="fa fa-inr">{{getTotalRate()}}</td>
             </tr>
@@ -157,7 +157,7 @@
               <td style="text-align:center"><input type="number" class="form-control-pos" ng-model="a.receivedQty" ng-init="a.receivedQty=0"></td>
             </tr>
             <tr>
-              <td style="border:none;">Total:</td>
+              <td style="border:none;"><b>Total :</b></td>
               <td style="border:none;"></td>
               <td style="text-align:center"><i class="fa fa-inr">{{getTotalRate()}}</td>
               <td style="border:none;"></td>
@@ -189,7 +189,7 @@
               <td style="text-align:center"><i class="fa fa-inr"></i>{{a.rate * a.receivedQty}}</td>
             </tr>
             <tr>
-              <td style="border:none;">Total:</td>
+              <td style="border:none;"><b>Total :</b></td>
               <td style="border:none;"></td>
               <td style="text-align:center"><i class="fa fa-inr">{{getTotalRate()}}</td>
               <td style="border:none;"></td>
