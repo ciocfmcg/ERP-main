@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^downloadInvoice/', InvoiceSlip.as_view() , name ='downloadInvoice'),
     url(r'^downloaddischargeSummary/', DischargeSummarys.as_view() , name ='downloaddischargeSummary'),
+    url(r'^reports/', GetReports.as_view() , name ='reports'),
  ]

@@ -1,0 +1,76 @@
+<div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
+    <breadcrumb></breadcrumb>
+    <div class="container-fluid">
+      <uib-tabset>
+        <uib-tab active="searchTabActive">
+          <uib-tab-heading>
+            Browse
+            <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+            <!-- <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table> -->
+            <div class="row" style="margin:25px 50px">
+              <div class="col-md-4 col-md-offset-1">
+                <div class="form-group">
+                  <label>Starting Date</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dateForm.start" is-open="start.opened"/>
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="start.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-md-offset-1">
+                <div class="form-group">
+                  <label>Ending Date</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dateForm.end" is-open="end.opened" />
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="end.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="row" style="margin:0px 20px">
+              <div class="text-center text-muted" ng-if="tableData.length==0" style="padding-top:50px">
+                <h2>No Reports With In These Dates</h2>
+              </div>
+              <div class="text-center" ng-if="tableData.length>0" style="padding-bottom:30px">
+                <h3>Report Details</h3>
+              </div>
+              <table class="table table-striped" ng-if="tableData.length>0">
+                <thead>
+                  <tr>
+                    <th>S.No.</th>
+                    <th>Patient Name</th>
+                    <th>Invoice Name</th>
+                    <th>Ref Id.</th>
+                    <th>Type</th>
+                    <th style="width:12%">Total</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr ng-repeat="r in tableData">
+                    <td>{{$index + 1}}</td>
+                    <td>{{r.pname}}</td>
+                    <td>{{r.invoiceName}}</td>
+                    <td>{{r.refId}}</td>
+                    <td>{{r.typ}}</td>
+                    <td style="width12%">{{r.grandTotal}}</td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+            <div class="text-right" style="margin-right:160px;font-size:18px" ng-if="tableData.length>0">
+              <b>Total : </b> {{grandTotal}}
+            </div>
+          </div>
+        </uib-tab>
+      </uib-tabset>
+    </div>
+</div>

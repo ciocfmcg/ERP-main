@@ -209,7 +209,7 @@ $scope.fetchInvoices();
   $scope.refresh = function () {
 
     $scope.dischargeSummForm = {
-      ipNo  :$scope.data.pk,
+      ipNo  :'',
       treatingConsultant  :'',
       mlcNo  :'',
       firNo  :'',

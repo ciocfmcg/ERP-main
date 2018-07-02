@@ -63,7 +63,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     # activePatient = ActivePatientSerializer(many=False , read_only=True)
     class Meta:
         model = Invoice
-        fields = ('pk' , 'activePatient','invoiceName','grandTotal','products','quantity' , 'billed' , 'discount')
+        fields = ('pk' ,'created', 'activePatient','invoiceName','grandTotal','products','quantity' , 'billed' , 'discount')
     def create(self , validated_data):
         i = Invoice(**validated_data)
         i.activePatient = ActivePatient.objects.get(pk=int(self.context['request'].data['activePatient']))

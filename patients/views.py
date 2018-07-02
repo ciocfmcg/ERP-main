@@ -28,7 +28,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from django.conf import settings as globalSettings
-from django.db.models import Q, F
+from django.db.models import Q, F ,Value,CharField
 from django.db.models.functions import Concat
 from django.db.models import Value
 import json
@@ -390,7 +390,7 @@ def dischargeSummary(response,dis):
     bottomDMob = dMB
     bottomDRegNo = ''
 
-    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,docname,dt,regno,docMob)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dN, dM ,dP,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis.replace('\n','<br/>'),dis.finalDiagnosis.replace('\n','<br/>'),dis.complaintsAndReason.replace('\n','<br/>'),dis.summIllness,dis.keyFindings.replace('\n','<br/>'),dis.historyOfAlchohol.replace('\n','<br/>'),dis.pastHistory.replace('\n','<br/>'),dis.familyHistory.replace('\n','<br/>'),dis.summaryKeyInvestigation.replace('\n','<br/>'),dis.treatmentGiven.replace('\n','<br/>'),dis.courseInHospital.replace('\n','<br/>'),dis.patientCondition.replace('\n','<br/>'),dis.advice.replace('\n','<br/>'),dis.reviewOn.replace('\n','<br/>'),dis.complications.replace('\n','<br/>'),bottomDName,d,bottomDRegNo,bottomDMob)
+    (pname,age,sex,mob,uhid,ipno,tcname,cno,dep,doa,dod,mlc,fir,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,docname,dt,regno,docMob)=(dis.patient.patient.firstName+' '+dis.patient.patient.lastName,dis.patient.patient.age,dis.patient.patient.gender,dis.patient.patient.phoneNo,dis.patient.patient.uniqueId,dis.ipNo,dN, dM ,dP,ad,dd,dis.mlcNo,dis.firNo,dis.provisionalDiagnosis.replace('\n','<br/>'),dis.finalDiagnosis.replace('\n','<br/>'),dis.complaintsAndReason.replace('\n','<br/>'),dis.summIllness.replace('\n','<br/>'),dis.keyFindings.replace('\n','<br/>'),dis.historyOfAlchohol.replace('\n','<br/>'),dis.pastHistory.replace('\n','<br/>'),dis.familyHistory.replace('\n','<br/>'),dis.summaryKeyInvestigation.replace('\n','<br/>'),dis.treatmentGiven.replace('\n','<br/>'),dis.courseInHospital.replace('\n','<br/>'),dis.patientCondition.replace('\n','<br/>'),dis.advice.replace('\n','<br/>'),dis.reviewOn.replace('\n','<br/>'),dis.complications.replace('\n','<br/>'),bottomDName,d,bottomDRegNo,bottomDMob)
 
     p1_1= Paragraph("<para fontSize=9 textColor=black><b>Patient's Name</b></para>",styles['Normal']),
     p1_2=Paragraph("<para  fontSize=9 textColor=black>: {0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Age </b>: {1} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sex</b> : {2} &nbsp;</para>".format(pname.upper(),age,sex.capitalize()),styles['Normal'])
@@ -558,3 +558,15 @@ class DischargeSummarys(APIView):
         response['Content-Disposition'] = 'attachment;filename="dischargeSummery.pdf"'
         dischargeSummary(response,dis)
         return response
+
+class GetReports(APIView):
+    def get(self , request , format = None):
+        print 'reportssssssssssssssssss'
+        start = request.GET['start']
+        end = request.GET['end']
+        print start,end
+        inpatientRecords =list( Invoice.objects.filter(created__range=(start,end),activePatient__outPatient=True).values('pk','invoiceName','grandTotal',pname = Concat('activePatient__patient__firstName', Value(' '), 'activePatient__patient__lastName'),refId=F('activePatient__opNo')).annotate(typ=Value('Out Patient',output_field=CharField())))
+        outPatientRecords = list( Invoice.objects.filter(created__range=(start,end),activePatient__outPatient=False).values('pk','invoiceName','grandTotal',pname=Concat('activePatient__patient__firstName', Value(' '), 'activePatient__patient__lastName'),refId=F('activePatient__dischargeSummary__ipNo')).annotate(typ=Value('In Patient',output_field=CharField())))
+        toSend = inpatientRecords+outPatientRecords
+        print '************',toSend
+        return Response(toSend,status = status.HTTP_200_OK)

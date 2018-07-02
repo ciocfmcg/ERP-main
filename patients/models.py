@@ -96,6 +96,8 @@ class Product(models.Model):
     rate = models.PositiveIntegerField(null=True)
 
 class Invoice(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateField(auto_now=True)
     activePatient = models.ForeignKey(ActivePatient , related_name='invoices')
     invoiceName = models.CharField(max_length = 20 , null= True )
     grandTotal = models.PositiveIntegerField(null=True, default = 0)
