@@ -44,6 +44,9 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
         } else if (action == 'jobBrowse') {
           var title = 'Browse Jobs : ';
           var myapp = 'jobBrowse';
+        }else if (action == 'selected') {
+          var title = 'Selected  : ';
+          var myapp = 'selected';
         }
         $scope.addTab({
           title: title + $scope.data.tableData[i].jobtype,
@@ -286,6 +289,12 @@ app.controller("recruitment.resume.view", function($scope, $state, $users, $stat
     console.log(response.data,'aaaaa');
     $scope.resumes=response.data;
   });
+
+
+});
+
+app.controller("recruitment.jobs.selected", function($scope, $state, $users, $stateParams, $http, Flash) {
+
 
 
 });
