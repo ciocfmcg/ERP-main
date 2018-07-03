@@ -1,43 +1,95 @@
-<div class="modal-header">
-  <h3>Apply :</h3>
+<div class="modal-header text-center" style="font-size:18px;color:{{msg.length>0?'#35e031':''}}">
+  <h3>{{msg.length>0?msg:'Apply'}}</h3>
 </div>
 <div class="modal-body">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" class="form-control" ng-model="form.firstname">
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" class="form-control" ng-model="form.lastname">
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" class="form-control" ng-model="form.email">
-        </div>
-        <div class="form-group">
-          <label>Mobile</label>
-          <input type="text" class="form-control" ng-model="form.mobile">
-        </div>
-        <div class="form-group">
-          <label>Cover Letter</label>
-          <textarea type="text" class="form-control" ng-model="form.coverletter"></textarea>
-        </div>
-        <br/>
-        <div class="form-group">
-          <label>Resume</label>
-          <input type="file" file-model="form.resume">
-          <div class="help-block">
-            Please Upload In Pdf Format
+    <div class="col-md-6">
+      <div class="row" style="font-size:16px;padding-right:20px;border-right:1px solid #eeeeee">
+        <form >
+          <div class="form-group">
+            <label><i style="color:#e27160">*</i> First Name </label>
+            <input type="text" class="form-control" ng-model="form.firstname" required>
           </div>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
-          <button type="button" class="btn btn-default" ng-click="cancel()">
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" class="form-control" ng-model="form.lastname">
+          </div>
+          <div class="form-group">
+            <label><i style="color:#e27160">*</i> Email</label>
+            <input type="email" class="form-control" ng-model="form.email" required>
+          </div>
+          <div class="form-group">
+            <label><i style="color:#e27160">*</i> Mobile</label>
+            <input type="text" class="form-control" ng-model="form.mobile" required>
+          </div>
+          <div class="form-group">
+            <label>Cover Letter</label>
+            <textarea type="text" class="form-control" ng-model="form.coverletter"></textarea>
+            <!-- <textarea ui-tinymce="tinymceOptions" ng-model="form.coverletter"></textarea> -->
+          </div>
+          <br/>
+          <div class="form-group">
+            <label><i style="color:#e27160">*</i> Resume</label>
+            <input type="file" file-model="form.resume">
+            <div class="help-block" style="color:{{rsD.length>0?'#e27160':''}}">
+              {{rsD.length>0?rsD:'Upload In PDF Format'}}
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" ng-model="form.aggree" required></input>
+            <label>I Agree To The Terms And Conditions</label>
+          </div>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+            <button type="button" class="btn btn-default" ng-click="cancel()">
               Close
             </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row" style="font-size:18px;">
+        <div class="row text-center">
+          <b>Job Details</b>
+        </div><br>
+        <div class="row">
+          <div class="col-md-4 text-right">
+            Job Type :
+          </div>
+          <div class="col-md-8">
+            {{job.jobtype}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-right">
+            Department :
+          </div>
+          <div class="col-md-8">
+            {{job.department__dept_name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-right">
+            Role :
+          </div>
+          <div class="col-md-8">
+            {{job.role__name}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 text-right">
+            CTC :
+          </div>
+          <div class="col-md-8">
+            {{job.maximumCTC}}
+          </div>
+        </div>
+        <div class="row" style="padding:25px;">
+          <b> Description </b>
+          <div style="padding-left:30px;padding-top:15px" ng-bind-html="job.skill"></div>
+
         </div>
       </div>
     </div>

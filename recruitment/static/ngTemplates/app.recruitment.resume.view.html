@@ -2,14 +2,10 @@
   <div class="container-fluid">
     <h4>
       <span class="pull-right">
-      View Resume: {{resume.firstname}} {{resume.firstname}}
+      Resume: {{resumes.firstname}} {{resumes.lastname}}
       </span>
       <i class="fa fa-arrow-circle-o-left pull-left fa-lg" ng-click="cancel()" style="cursor:pointer;"></i>
     </h4>
   </div>
 </div>
-{{resumes.resume}}
-<object data='{{resumes.resume}}'
-        type='application/txt'
-        width='100%'
-        height='100%'>
+<object data='{{resumes.resume}}' type='application/pdf' width='100%' height='100%'/>
