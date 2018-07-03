@@ -294,7 +294,15 @@ app.controller("recruitment.resume.view", function($scope, $state, $users, $stat
 });
 
 app.controller("recruitment.jobs.selected", function($scope, $state, $users, $stateParams, $http, Flash) {
-
+  $scope.columns = [
+    // {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
+    {icon : 'fa-phone' , text : 'Contacting' ,cat : 'contacted'},
+    {icon : 'fa-desktop' , text : 'Demo / POC' , cat : 'demo'},
+    {icon : 'fa-bars' , text : 'Requirements' , cat : 'requirements'},
+    {icon : 'fa-file-pdf-o' , text : 'Proposal' , cat : 'proposal'},
+    {icon : 'fa-money' , text : 'Negotiation' , cat : 'negotiation'},
+    {icon : 'fa-check' , text : 'Conclusion' , cat : 'conclusion'},
+  ]
 
 
 });
