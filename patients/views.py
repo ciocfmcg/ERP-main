@@ -130,10 +130,10 @@ class PageNumCanvas(canvas.Canvas):
         Add the page number
         """
         styles = getSampleStyleSheet()
-        text = "<font size='14'>Page #%s of %s</font>" % (self._pageNumber , page_count)
+        text = "<font size='12'>Page #%s of %s</font>" % (self._pageNumber , page_count)
         p = Paragraph(text , styles['Normal'])
         p.wrapOn(self , 50*mm , 10*mm)
-        p.drawOn(self , 100*mm , 10*mm)
+        p.drawOn(self , 95*mm , 5*mm)
 
 # def myFirstPage(canvas, doc):
 #     canvas.saveState()
@@ -281,7 +281,7 @@ def dischargeSummary(response,dis):
     print dis
     now = datetime.datetime.now()
     styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm,bottomMargin=1*cm)
     elements = []
 
     # logo = "hospital_logo.png"
