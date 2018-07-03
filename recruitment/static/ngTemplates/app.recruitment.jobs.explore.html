@@ -87,7 +87,7 @@
       <td>{{i.email}}</td>
       <td>{{i.mobile}}</td>
       <td>{{i.status}}</td>
-      <td><a href="/api/recruitment/downloadResume/?uPk={{i.pk}}" target="_blank"><button class="btn btn-primary"><i class="fa fa-download"></i></button></a></td>
+      <td><a ng-href="{{i.resume}}" target="_blank" ng-if="i.resume!=none"><button class="btn btn-primary">Download <i class="fa fa-download"></i></button></a></td>
     </tr>
   </tbody>
 </table>

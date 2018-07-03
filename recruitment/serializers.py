@@ -48,7 +48,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     job = JobsSerializer(many = False , read_only = True)
     class Meta:
         model = JobApplication
-        fields = ('pk', 'created','firstname', 'lastname', 'email' , 'mobile', 'resume' , 'coverletter' , 'status' , 'job' )
+        fields = ('pk', 'created','firstname', 'lastname', 'email' , 'mobile', 'resume' , 'coverletter' , 'status' , 'job' ,'aggree')
     def create(self , validated_data):
         i = JobApplication(**validated_data)
         i.job = Jobs.objects.get(pk = self.context['request'].data['job'])

@@ -123,19 +123,20 @@ app.controller('main' , function($scope , $state , $http , $timeout , $interval 
 
   $scope.jobs=[]
 
-$http.get('/api/recruitment/job/?status=Active').
+$http.get('/api/recruitment/jobsList/?status=Active').
   then(function(response) {
-  $scope.jobs= response.data;
+    console.log(response.data,'aaaaaa');
+    $scope.jobs= response.data;
   })
 
-  $scope.apply=function(value){
+  $scope.apply=function(idx){
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.careers.modal.apply.html',
       size: 'lg',
       backdrop : false,
       resolve: {
         data: function() {
-          return value;
+          return $scope.jobs[idx];
         }
       },
       controller: "careers.modal.apply",
@@ -205,7 +206,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
 }]);
 
 app.controller('careers.modal.apply' , function($scope , $state , $http , $timeout , $uibModal ,  data , $uibModalInstance){
-  $scope.job=data;
+  $scope.job = data;
   var emptyFile = new File([""], "");
   $scope.resetForm = function() {
     $scope.form = {
@@ -214,7 +215,8 @@ app.controller('careers.modal.apply' , function($scope , $state , $http , $timeo
       'email': '',
       'mobile': '',
       'coverletter': '',
-      'resume':emptyFile
+      'resume':emptyFile,
+      'aggree': false
     }
   }
 
@@ -240,20 +242,19 @@ app.controller('careers.modal.apply' , function($scope , $state , $http , $timeo
 
       console.log(fd,'aaaaaaaaaaaaaa');
       var method = 'POST';
-      $http({
-        method: method,
-        url: url,
-        data: fd,
-        transformRequest: angular.identity,
-        headers: {
-          'Content-Type': undefined
-        }
-      }).
-      then(function(response) {
-        $scope.form.pk = response.data.pk;
-      //   Flash.create('success', 'Saved')
-          $scope.resetForm();
-      })
+      // $http({
+      //   method: method,
+      //   url: url,
+      //   data: fd,
+      //   transformRequest: angular.identity,
+      //   headers: {
+      //     'Content-Type': undefined
+      //   }
+      // }).
+      // then(function(response) {
+      //   Flash.create('success', 'Applied Sucessfully')
+      //   $scope.resetForm();
+      // })
     }
 
 

@@ -32,8 +32,8 @@
           </div>
           <div class="row" >
             <div class="col-md-12">
-              <div class="job-header">
-                <h5 style="text-transform:uppercase;color:rgb(16, 68, 106);">bangalore</h5>
+              <div class="job-header" style="font-size:15px;padding-top:15px">
+                <h5 style="text-transform:uppercase;color:rgb(16, 68, 106);">bangalore</h5><br>
                 <ul class="row table-header hidden-xs" style="list-style-type:none;">
                   <li class="col-md-3">Jobtype</li>
                   <li class="col-md-3">Funtional Area</li>
@@ -41,12 +41,12 @@
                   <li class="col-md-3">Apply</li>
                 </ul>
               </div>
-              <div class="job-section" style="margin-top:20px" >
+              <div class="job-section" style="margin-top:20px;font-size:15px;" >
                 <ul class="row job" style="list-style-type:none;margin-top:20px;" ng-repeat="i in jobs">
                   <li class="col-md-3">{{i.jobtype}}</li>
-                  <li class="col-md-3">{{i.department.dept_name}}</li>
-                  <li class="col-md-3">{{i.role.name}}</li>
-                  <li class="col-md-3"><button type="button" class="btn btn-sm btn-default" ng-click="apply(i.pk)" >Apply</button></li>
+                  <li class="col-md-3">{{i.department__dept_name}}</li>
+                  <li class="col-md-3">{{i.role__name}}</li>
+                  <li class="col-md-3"><button type="button" class="btn btn-sm btn-default" ng-click="apply($index)" >Apply</button></li>
                 </ul>
               </div>
               <!-- <div class="job-section" style="margin-top:20px">

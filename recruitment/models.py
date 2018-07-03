@@ -47,6 +47,7 @@ class JobApplication(models.Model):
     email = models.EmailField(null = True)
     mobile = models.CharField(null=True , max_length=15)
     resume = models.FileField(upload_to = getDepartmentsLogoAttachmentPath , null = True)
-    coverletter =  models.CharField(max_length = 4000 , null = False)
+    coverletter =  models.CharField(max_length = 4000 , null = True)
     status = models.CharField(max_length = 15 , choices = STATUS_LIST_CHOICES  , default = 'Created' )
     job = models.ForeignKey(Jobs , null = True , related_name = "jobs_applied")
+    aggree = models.BooleanField(default = False)
