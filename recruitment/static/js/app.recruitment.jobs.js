@@ -166,7 +166,7 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
   }
 
 });
-app.controller("workforceManagement.recruitment.jobs.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("workforceManagement.recruitment.jobs.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $aside) {
 
   $scope.jobDetails = $scope.data.tableData[$scope.tab.data.index]
   $scope.jobApplied=[]
@@ -213,13 +213,11 @@ app.controller("workforceManagement.recruitment.jobs.explore", function($scope, 
     })
   }
   $scope.listData =function() {
-  console.log('aaaaaaaaabbbbbbbbbbbb');
   $http({
     method: 'GET',
     url: '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status=Created'
   }).
   then(function(response) {
-    console.log(response.data.length,'aaaaaaaaabbbbbbbbbbbb');
     $scope.jobApplied=response.data;
   });
 }
@@ -255,6 +253,39 @@ $scope.listData();
   }
 }
 
+$scope.resumeView = function(data) {
+  console.log("will create a quote",data);
+  $aside.open({
+    templateUrl : '/static/ngTemplates/app.recruitment.resume.view.html',
+    placement: 'left',
+    size: 'xl',
+    resolve: {
+      job : function() {
+        return data;
+      },
+    },
+    controller : 'recruitment.resume.view'
+  })
+}
 
 
   });
+
+app.controller("recruitment.resume.view", function($scope, $state, $users, $stateParams, $http, Flash,   $uibModalInstance, job) {
+  $scope.job=job;
+  $scope.resumes={}
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+
+  $http({
+    method: 'GET',
+    url: '/api/recruitment/applyJob/' +$scope.job
+  }).
+  then(function(response) {
+    console.log(response.data,'aaaaa');
+    $scope.resumes=response.data;
+  });
+
+
+});

@@ -1,0 +1,15 @@
+<div class="modal-header bg-blue">
+  <div class="container-fluid">
+    <h4>
+      <span class="pull-right">
+      View Resume: {{resume.firstname}} {{resume.firstname}}
+      </span>
+      <i class="fa fa-arrow-circle-o-left pull-left fa-lg" ng-click="cancel()" style="cursor:pointer;"></i>
+    </h4>
+  </div>
+</div>
+{{resumes.resume}}
+<object data='{{resumes.resume}}'
+        type='application/txt'
+        width='100%'
+        height='100%'>
