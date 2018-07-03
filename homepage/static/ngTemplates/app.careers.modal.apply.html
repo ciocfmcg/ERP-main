@@ -23,15 +23,22 @@
         </div>
         <div class="form-group">
           <label>Cover Letter</label>
-            <textarea type="text" class="form-control" ng-model="form.coverletter"></textarea>
+          <textarea type="text" class="form-control" ng-model="form.coverletter"></textarea>
         </div>
         <br/>
-        <label>Resume</label>
         <div class="form-group">
-          <input type="file" file-model="form.resume" >
+          <label>Resume</label>
+          <input type="file" file-model="form.resume">
+          <div class="help-block">
+            Please Upload In Pdf Format
+          </div>
         </div>
-        <div class="btn-group pull-right">
-          <button type="button" class="btn btn-primary pull-right" ng-click="save()">Save</button>
+        <div class="form-group">
+          <label>Cover Letter</label>
+          <textarea type="checkbox" class="form-control" ng-model="form.coverletter"></textarea>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
           <button type="button" class="btn btn-default" ng-click="cancel()">
               Close
             </button>

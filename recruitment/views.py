@@ -25,10 +25,17 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['job','status']
 
-class DownloadResume(APIView):
+class JobsList(APIView):
+    permission_classes = (permissions.AllowAny, )
     def get(self , request , format = None):
         print 'ccccccccccccccccccccc'
-        print request.GET['uPk']
+        print request.GET
+        if 'status' in request.GET:
+            querySet = Jobs.objects.filter(status = str(request.GET['status']))
+        else:
+            querySet = Jobs.objects.all()
+        toReturn = list(querySet.values('pk','jobtype','department__dept_name','skill','maximumCTC','unit__name','role__name'))
+        print toReturn
 
 
         return Response(toReturn )
