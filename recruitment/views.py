@@ -23,7 +23,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = JobApplicationSerializer
     queryset = JobApplication.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['job',]
+    filter_fields = ['job','status']
 
 class JobsList(APIView):
     permission_classes = (permissions.AllowAny, )
@@ -36,5 +36,6 @@ class JobsList(APIView):
             querySet = Jobs.objects.all()
         toReturn = list(querySet.values('pk','jobtype','department__dept_name','skill','maximumCTC','unit__name','role__name'))
         print toReturn
+
 
         return Response(toReturn )

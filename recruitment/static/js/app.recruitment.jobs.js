@@ -212,25 +212,48 @@ app.controller("workforceManagement.recruitment.jobs.explore", function($scope, 
       Flash.create('success', 'Saved');
     })
   }
-
+  $scope.listData =function() {
   $http({
     method: 'GET',
-    url: '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk
+    url: '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status=Created'
   }).
   then(function(response) {
     console.log(response.data.length,'aaaaaaaaa');
     $scope.jobApplied=response.data;
-
   });
-
+}
+$scope.listData();
 
   $scope.$watch('form.checkAll' , function(newValue , oldValue) {
     for (var i = 0; i < $scope.jobApplied.length; i++) {
-      $scope.select=newValue;
-
-
+      $scope.jobApplied[i].select=newValue;
     }
   })
+
+  $scope.selected =function() {
+  for (var i = 0; i < $scope.jobApplied.length; i++) {
+    if($scope.jobApplied[i].select){
+      console.log("aaaaaaa");
+      $scope.jobApplied[i].status='Screening'
+      var toSend = {
+        status : $scope.jobApplied[i].status
+      }
+      var method = 'PATCH';
+      var url = '/api/recruitment/applyJob/';
+      url += $scope.jobApplied[i].pk + '/';
+      $http({
+        method: method,
+        url: url,
+        data: toSend
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved');
+        $scope.listData();
+      })
+    }
+  }
+}
+
 
 
   });
