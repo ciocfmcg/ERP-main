@@ -213,12 +213,13 @@ app.controller("workforceManagement.recruitment.jobs.explore", function($scope, 
     })
   }
   $scope.listData =function() {
+  console.log('aaaaaaaaabbbbbbbbbbbb');
   $http({
     method: 'GET',
     url: '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status=Created'
   }).
   then(function(response) {
-    console.log(response.data.length,'aaaaaaaaa');
+    console.log(response.data.length,'aaaaaaaaabbbbbbbbbbbb');
     $scope.jobApplied=response.data;
   });
 }
