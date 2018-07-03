@@ -37,5 +37,23 @@ class JobsList(APIView):
         toReturn = list(querySet.values('pk','jobtype','department__dept_name','skill','maximumCTC','unit__name','role__name'))
         print toReturn
 
-
         return Response(toReturn )
+    def post(self , request , format = None):
+        print 'ccccccccccccccccccccc'
+        data = request.POST
+        print data
+        d = {'firstname':data['firstname'],'email':data['email'],'mobile':data['mobile'],'job':Jobs.objects.get(pk = int(data['job'])),'resume':request.FILES['resume']}
+        if 'lastname' in data:
+            d['lastname'] = data['lastname']
+        if 'coverletter' in data:
+            d['coverletter'] = data['coverletter']
+        if 'aggree' in data:
+            d['aggree'] = True
+        print d
+        try:
+            obj = JobApplication.objects.create(**d)
+            toSend = 'Sucess'
+        except:
+            toSend = 'Error'
+        print toSend
+        return Response({'res':toSend}, status = status.HTTP_200_OK)
