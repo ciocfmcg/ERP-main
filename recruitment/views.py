@@ -57,3 +57,10 @@ class JobsList(APIView):
             toSend = 'Error'
         print toSend
         return Response({'res':toSend}, status = status.HTTP_200_OK)
+
+class InterviewViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = InterviewSerializer
+    queryset = Interview.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['job','status']

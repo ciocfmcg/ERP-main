@@ -54,3 +54,12 @@ class JobApplicationSerializer(serializers.ModelSerializer):
         i.job = Jobs.objects.get(pk = self.context['request'].data['job'])
         i.save()
         return i
+
+class InterviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobApplication
+        fields = ('pk', 'person','comment', 'interviewDate', 'slot' , 'score')
+    def create(self , validated_data):
+        i = JobApplication(**validated_data)
+        i.save()
+        return i

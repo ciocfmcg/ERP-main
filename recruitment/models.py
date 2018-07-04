@@ -52,3 +52,10 @@ class JobApplication(models.Model):
     status = models.CharField(max_length = 15 , choices = STATUS_LIST_CHOICES  , default = 'Created' )
     job = models.ForeignKey(Jobs , null = True , related_name = "jobs_applied")
     aggree = models.BooleanField(default = False)
+
+class Interview(models.Model):
+    person = models.ManyToManyField(User , related_name='interviwer', blank = True)
+    comment =  models.CharField(max_length = 500 , null = True)
+    interviewDate =  models.DateField(null = False)
+    slot = models.CharField(max_length = 10 , null = True)
+    score = models.PositiveSmallIntegerField(default=0)

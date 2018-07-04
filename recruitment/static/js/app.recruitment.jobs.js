@@ -388,6 +388,18 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   $scope.fetchDeals();
   $scope.isDragging = false;
 
+  // $scope.$on('exploreDeal', function(event, input) {
+  //   $scope.addTab({
+  //     "title": "Details :" + input.deal.name,
+  //     "cancel": true,
+  //     "app": "exploreDeal",
+  //     "data": {
+  //       "pk": input.deal.pk
+  //     },
+  //     "active": true
+  //   })
+  // });
+  //
   // $scope.exploreDeal = function(deal , evt) {
   //   if ($scope.isDragging) {
   //     $scope.isDragging = false;
@@ -397,6 +409,21 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   //     });
   //   }
   // }
+  $scope.exploreApplicant = function(applicant , evt) {
+    if ($scope.isDragging) {
+      $scope.isDragging = false;
+    }else {
+      $scope.addTab({
+        "title": "Applicant : " + applicant.firstname,
+        "cancel": true,
+        "app": "applicant",
+        "data": {
+          "pk": applicant.pk
+        },
+        "active": true
+      })
+    }
+  }
 
   $scope.removeFromData = function(pk) {
     for (var key in $scope.data) {
@@ -434,6 +461,4 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
     });
     console.log("drop complete");
   }
-
-
 });
