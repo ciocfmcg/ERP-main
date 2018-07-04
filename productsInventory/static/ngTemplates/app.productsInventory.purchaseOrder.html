@@ -16,6 +16,20 @@
         <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
       </uib-tab>
 
+      <uib-tab>
+        <uib-tab-heading  >
+          Pending POs <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <generic-Table data="data.pendingPoData" config-Obj="{{pendingPoConfig}}" callback-Fn="pendingPotableAction"></generic-Table>
+      </uib-tab>
+
+      <uib-tab>
+        <uib-tab-heading  >
+          GRNs <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <generic-Table data="data.grnsData" config-Obj="{{grnsConfig}}" callback-Fn="grnstableAction"></generic-Table>
+      </uib-tab>
+
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
         <uib-tab-heading>
           {{tab.title}}

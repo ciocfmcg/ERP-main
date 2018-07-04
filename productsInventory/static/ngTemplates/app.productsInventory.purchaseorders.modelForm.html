@@ -1,9 +1,9 @@
 <div class="modal-header">
   <div class="col-md-8">
-    <h3>Please Confirm</h3>
+    <h3>{{showbtn?'Please Confirm':'Confirmed'}}</h3>
   </div>
-  <div class="col-md-4 text-right">
-    <button type="button" class="btn btn-success" ng-click="create()">confirm</button>
+  <div class="col-md-4 text-right" style="padding-top:20px">
+    <button type="button" class="btn btn-success" ng-click="create()" ng-if="showbtn">Confirm</button>
   </div>
 </div>
 <div class="modal-body" style="padding-right: 0px;">
@@ -45,11 +45,11 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <button type="button" class="btn btn-danger" ng-click="deleteVendor($index)">remove</button>
+            <button type="button" class="btn btn-danger" ng-click="deleteVendor($index)" ng-if="showbtn">Remove</button>
           </div>
         </div>
       </div>
-      <div class="container-fluid" ng-if="item.pk" style="padding:0px">
+      <!-- <div class="container-fluid" ng-if="item.pk" style="padding:0px">
           <div class="input-group">
             <input type="text" class="form-control" ng-model="item.detail.contactPersonEmail">
             <div class="input-group-btn">
@@ -61,13 +61,13 @@
               </a>
             </div>
           </div>
-      </div>
+      </div> -->
     </div>
   </div>
 
-  <div class="row" style="padding:10px">
+  <!-- <div class="row" style="padding:10px">
     <div class="col-md-12 text-right">
       <button type="button" class="btn btn-danger">cancel</button>
     </div>
-  </div>
+  </div> -->
 </div>

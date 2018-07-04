@@ -51,7 +51,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
     search_fields = ('name', 'serialNo', 'description', 'serialId')
-    # filter_fields = ['name']
+    filter_fields = ['name','haveComposition']
     # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
@@ -94,7 +94,7 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
     serializer_class = PurchaseOrderSerializer
     queryset = PurchaseOrder.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['service']
+    filter_fields = ['service','status']
 
 class ProductVerientViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -993,9 +993,9 @@ class PageNumberCanvas(canvas.Canvas):
 
 
 
-def genPurchaseOrder(response , POs, request):
+def genPurchaseOrder(response , POs, request,typ='PO'):
 
-
+    print 'enterrrrrrrrrrrrrrrrr',typ
     MARGIN_SIZE = 8 * mm
     PAGE_SIZE = A4
 
@@ -1015,8 +1015,8 @@ def genPurchaseOrder(response , POs, request):
 
     pHeadDetails = Paragraph('<strong>Item Details</strong>' , tableHeaderStyle)
     pHeadSKU = Paragraph('<strong>SKU</strong>' , tableHeaderStyle)
-    pHeadQty = Paragraph('<strong>Item Qty</strong>' , tableHeaderStyle)
     pHeadPrice = Paragraph('<strong>Rate</strong>' , tableHeaderStyle)
+    pHeadQty = Paragraph('<strong>Item Qty</strong>' , tableHeaderStyle)
     pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
 
     # # bookingTotal , bookingHrs = getBookingAmount(o)
@@ -1025,8 +1025,12 @@ def genPurchaseOrder(response , POs, request):
     # pFooterTax = Paragraph('%s' %('tax') , styles['Normal'])
     # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
     # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
+    if typ=='GRN':
+        pHeadQtyReceived = Paragraph('<strong>Qty Received</strong>' , tableHeaderStyle)
+        data = [[pHeadDetails,pHeadSKU,pHeadPrice , pHeadQty ,pHeadQtyReceived ,pHeadTotal]]
+    else:
+        data = [[pHeadDetails,pHeadSKU,pHeadPrice , pHeadQty ,pHeadTotal]]
 
-    data = [[pHeadDetails,pHeadSKU,pHeadPrice , pHeadQty ,pHeadTotal]]
 
 
     # totalQuant = 0
@@ -1039,40 +1043,49 @@ def genPurchaseOrder(response , POs, request):
     grandTotal = 0
     for i in json.loads(POs.products):
         print '***********',i
-        pDescSrc = i['product']['name']
-        pDescSrc = i['product']['serialNo']
-        pDescSrc = i['rate']
-
-        pDescSrc += i['qty']
-
-        print i
-
-        i['total'] = i['rate'] * i['qty']
-        grandTotal  += i['total']
+        # pDescSrc = i['product']['name']
+        # pDescSrc = i['product']['serialNo']
+        # pDescSrc = i['rate']
         #
-        # if 'price' not in i:
-        #     print "Continuing"
-        #     continue
-
-
-
+        # pDescSrc += i['qty']
+        #
+        # print i
         pBodyProd = Paragraph(str(i['product']['name']) , tableBodyStyle)
         pBodySku = Paragraph(str(i['product']['serialNo']) , tableBodyStyle)
         # pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
-        pBodyQty = Paragraph(str(i['qty']), tableBodyStyle)
         pBodyPrice = Paragraph(str(i['rate']) , tableBodyStyle)
-        pBodyTotal = Paragraph(str(i['total']) , tableBodyStyle)
+        pBodyQty = Paragraph(str(i['qty']), tableBodyStyle)
 
-        data.append([pBodyProd,pBodySku,pBodyPrice, pBodyQty,pBodyTotal])
+        if 'receivedQty' in i and typ=='GRN':
+            pBodyQtyReceived = Paragraph(str(i['receivedQty']), tableBodyStyle)
+            print '@@@@@22222',i['receivedQty'],i['qty']
+            i['total'] = i['receivedQty'] * i['rate']
+            print i['total']
+            pBodyTotal = Paragraph(str(i['total']) , tableBodyStyle)
+            data.append([pBodyProd,pBodySku,pBodyPrice, pBodyQty,pBodyQtyReceived,pBodyTotal])
+        else:
+            i['total'] = i['rate'] * i['qty']
+            pBodyTotal = Paragraph(str(i['total']) , tableBodyStyle)
+            data.append([pBodyProd,pBodySku,pBodyPrice, pBodyQty,pBodyTotal])
+
+        grandTotal  += i['total']
+
+
+
+
+
+
 
 
 
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
     tableGrandStyle.fontSize = 10
 
+    if typ=='GRN':
+        data += [['', '','','','',''],['', '', '', Paragraph('sub Total (INR)' , tableHeaderStyle),'', Paragraph(str(grandTotal) , tableGrandStyle)]]
+    else:
+        data += [['', '','','',''],['', '',  Paragraph('Sub Total (INR)' , tableHeaderStyle),'', Paragraph(str(grandTotal) , tableGrandStyle)]]
 
-    data += [['', '','','',''],
-                ['', '',  Paragraph('sub Total (INR)' , tableHeaderStyle),'', Paragraph(str(grandTotal) , tableGrandStyle)]]
 
     t=Table(data)
     ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
@@ -1095,6 +1108,12 @@ def genPurchaseOrder(response , POs, request):
     t._argW[1] = 3*cm
     t._argW[2] = 3*cm
     t._argW[3] = 3*cm
+    if typ=='GRN':
+        t._argW[0] = 7*cm
+        t._argW[1] = 2.5*cm
+        t._argW[2] = 2.5*cm
+        t._argW[3] = 2.5*cm
+        t._argW[4] = 2.5*cm
     # t._argW[3] = 2*cm
     # t._argW[4] = 2*cm
     # t._argW[5] = 2*cm
@@ -1155,4 +1174,18 @@ class ProductPrint(APIView):
         # f.close()
         # if 'saveOnly' in request.GET:
         #     return Response(status=status.HTTP_200_OK)
+        return response
+
+class ProductPrintGrns(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        if 'POs' not in request.GET:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        response = HttpResponse(content_type='application/pdf')
+        print'aaaaaaaaaaaaaaaaa' ,request.GET['POs']
+        o = PurchaseOrder.objects.get(id = request.GET['POs'])
+        response['Content-Disposition'] = 'attachment; filename="POsdownload%s%s.pdf"'
+        genPurchaseOrder(response,o, request,typ='GRN')
+
         return response

@@ -1,0 +1,142 @@
+<div class="container-fluid" ng-controller="businessManagement.productsInventory.manufacture.explore">
+  <div class="row" style="margin-top:30px">
+    <div class="col-md-3">
+      <div class="container-fluid text-center">
+        <img ng-src="{{data.displayPicture}}" style="width:200px;height:200px">
+      </div>
+      <div class="row" style="margin-top:20px;padding:5px;">
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>MRP :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.price}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Serial No :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.serialNo}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>In Stock :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.inStock}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Logistics :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.logistics}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Serial Id :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.serialId}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Reorder Threshold :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.reorderTrashold}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Product Meta :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.productMeta.description}}
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:20px;padding:5px 10px">
+          {{data.description}}
+        </div>
+      </div>
+      <div class="row" ng-if="data.skuData.length>0" style="margin-top:20px;padding:5px 10px;">
+        <div class="row text-center">
+          <label>Secondary SKU </label>
+        </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Units / Pack</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="s in data.skuData">
+              <td>{{s.sku}}</td>
+              <td>{{s.unitPerpack}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-9" style="border-left:1px solid #eeeeee;min-height:70vh">
+        <div class="container-fluid">
+          <div class="col-md-4" style="padding:15px">
+            <div class="form-group">
+              <label>Products</label>
+              <input type="number" class="form-control" ng-model="data.totalQuantity">
+            </div>
+          </div>
+          <div class="col-md-8 text-right" style="padding-top:40px">
+            <button type="button" name="button" class="btn btn-primary" ng-click="save()">Save</button>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr style="background-color:#434346;color:white">
+                <th style="width:30%">Name</th>
+                <th style="width:13%;text-align: center">Quantity per Unit</th>
+                <th style="width:12%;text-align: center">Total Quantity</th>
+                <th style="width:12%;text-align: center">In Stock</th>
+                <th style="width:10%;text-align: center">Reorder</th>
+                <th style="width:23%;text-align: center" ng-if="data.show">Reorder Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="c in data.categoriesList">
+                <td style="width:30%">{{c.category.name}}</td>
+                <td style="width:13%;text-align: center">{{c.qty}}</td>
+                <td style="width:12%;text-align: center">{{c.qty * data.totalQuantity}}</td>
+                <td style="width:12%;text-align: center">{{c.category.inStock}}</td>
+                <td style="width:10%;text-align: center"><div class="btn btn-danger" ng-if="c.category.inStock < (c.qty * data.totalQuantity)" ng-click="reorder($index)">
+                  Reorder
+                </div></td>
+                <td style="width:23%;text-align: center" ng-if="c.reorderVendor.pk">
+                  <h4>{{c.reorderVendor.vendor.service.name}}</h4>
+                  <span>@ {{c.reorderVendor.rate}} INR per item</span> <br>
+                  <span><strong>Quantity : </strong> {{c.reorderVendor.qty}}</span> <br>
+                  <span><strong>Total : </strong> {{c.reorderVendor.rate * c.reorderVendor.qty}} INR</span> <br>
+              </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+        <!-- <div class="row">
+          <div class="container-fluid">
+            <div class="col-md-12 text-center" style="margin-top: 27px;">
+              <button type="button" class="btn btn-success" ng-click="saveVenderServiceForm()">Save</button>
+            </div>
+          </div>
+        </div> -->
+    </div>
+  </div>
+</div>

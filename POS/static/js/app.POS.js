@@ -167,11 +167,27 @@ app.controller("controller.POS.productMeta.form", function($scope, $http, Flash)
   }
 })
 
-app.controller("controller.POS.productinfo.form", function($scope, product) {
+app.controller("controller.POS.productinfo.form", function($scope, product , $http) {
 
   if (product.pk != undefined) {
     $scope.mode = 'edit';
     $scope.product = product;
+    $scope.categoriesList = []
+    $scope.compositionQtyMap = JSON.parse($scope.product.compositionQtyMap)
+
+    $http({
+      method: 'GET',
+      url: '/api/POS/productVerient/?parent=' + $scope.product.pk
+    }).
+    then(function(response) {
+      $scope.productData = response.data;
+    })
+    for (var i = 0; i < $scope.product.compositions.length; i++) {
+      $scope.categoriesList.push({
+        category : $scope.product.compositions[i],
+        qty : $scope.compositionQtyMap[i].qty
+      })
+    }
   } else {
     $scope.mode = 'new';
     $scope.product = {
@@ -437,10 +453,31 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       return response.data;
     })
   }
+  $scope.categorySearch = function(c) {
+    return $http.get('/api/POS/product/?search=' + c +'&limit=10').
+    then(function(response) {
+      console.log(response.data);
+      return response.data.results;
+    })
+  }
+
+  $scope.categoriesList = []
+  $scope.compositionQtyMap = []
+  $scope.categoriesPk = []
+  $scope.categoryForm = {
+    category : '',
+    qty : 1
+  }
 
   if (product.pk != undefined) {
     $scope.mode = 'edit';
     $scope.product = product;
+    if ($scope.product.compositionQtyMap == null) {
+      $scope.compositionQtyMap = []
+    }else {
+      $scope.compositionQtyMap = JSON.parse($scope.product.compositionQtyMap)
+    }
+
     $http({
       method: 'GET',
       url: '/api/POS/productVerient/?parent=' + $scope.product.pk
@@ -448,6 +485,13 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     then(function(response) {
       $scope.productData = response.data;
     })
+    for (var i = 0; i < $scope.product.compositions.length; i++) {
+      $scope.categoriesPk.push($scope.product.compositions[i].pk)
+      $scope.categoriesList.push({
+        category : $scope.product.compositions[i],
+        qty : $scope.compositionQtyMap[i].qty
+      })
+    }
   } else {
     $scope.mode = 'new';
     $scope.product = {
@@ -464,6 +508,35 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'reorderTrashold': 0,
       'pk': null
     }
+  }
+
+  $scope.addCategories = function(){
+    if (typeof $scope.categoryForm.category != 'object') {
+      Flash.create('warning', 'Category Should Be Suggested One');
+      return;
+    }
+    if ($scope.categoriesPk.indexOf($scope.categoryForm.category.pk) >=0) {
+      Flash.create('warning', 'This Category Has Already Added');
+      return;
+    }
+    $scope.categoriesList.push($scope.categoryForm)
+    $scope.categoriesPk.push($scope.categoryForm.category.pk)
+    $scope.compositionQtyMap.push({'categoryPk':$scope.categoryForm.category.pk,'qty':$scope.categoryForm.qty})
+    $scope.categoryForm = {category : '',qty : 1}
+  }
+  $scope.editCategories = function(idx){
+    $scope.categoryForm = {
+      category : $scope.categoriesList[idx].category,
+      qty : $scope.categoriesList[idx].qty
+    }
+    $scope.categoriesList.splice(idx,1)
+    $scope.categoriesPk.splice(idx,1)
+    $scope.compositionQtyMap.splice(idx,1)
+  }
+  $scope.removeCategories = function(idx){
+    $scope.categoriesList.splice(idx,1)
+    $scope.categoriesPk.splice(idx,1)
+    $scope.compositionQtyMap.splice(idx,1)
   }
 
   $scope.save = function() {
@@ -489,16 +562,33 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       Flash.create('warning', 'Name can not be blank');
       return;
     }
+    if (f.price.length == 0) {
+      Flash.create('warning', 'MRP Is Required');
+      return;
+    }
     fd.append('name', f.name);
-    fd.append('productMeta', f.productMeta.pk);
     fd.append('price', f.price);
+    fd.append('cost', f.cost);
     fd.append('serialNo', f.serialNo);
     fd.append('description', f.description);
     fd.append('inStock', f.inStock);
-    fd.append('cost', f.cost);
     fd.append('logistics', f.logistics);
     fd.append('serialId', f.serialId);
     fd.append('reorderTrashold', f.reorderTrashold);
+    if (f.productMeta != null && typeof f.productMeta == 'object') {
+      console.log('cameeee');
+      fd.append('productMeta', f.productMeta.pk);
+    }
+    if ($scope.categoriesList.length > 0) {
+      fd.append('haveComposition', true);
+      fd.append('compositions',$scope.categoriesPk);
+      fd.append('compositionQtyMap',JSON.stringify($scope.compositionQtyMap));
+      console.log($scope.categoriesPk);
+      console.log($scope.compositionQtyMap);
+      console.log(JSON.stringify($scope.compositionQtyMap));
+    }else {
+      fd.append('haveComposition', false);
+    }
 
 
     console.log(f.displayPicture);
@@ -514,12 +604,12 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       }
     }).
     then(function(response) {
+      Flash.create('success', 'Saved')
       $scope.product.pk = response.data.pk;
       if ($scope.mode == 'new') {
         $scope.product.pk = response.data.pk;
         $scope.mode = 'edit';
       }
-      Flash.create('success', 'Saved')
     })
   }
 
@@ -558,8 +648,11 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       data: toSend
     }).
     then(function(response) {
-      $scope.productVerientForm.pk = response.data.pk;
       $scope.productData.push(response.data);
+      $scope.productVerientForm = {
+        'sku': '',
+        'unitPerpack': 1
+      }
       Flash.create('success', 'Saved');
     })
   }

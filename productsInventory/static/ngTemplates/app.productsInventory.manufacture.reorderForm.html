@@ -1,0 +1,57 @@
+
+<div class="modal-header">
+  <div class="row text-center">
+    <h3>Vendors List</h3>
+  </div>
+  <!-- <div class="col-md-8">
+  </div>
+  <div class="col-md-4 text-right">
+    <button type="button" class="btn btn-success" ng-click="create()">confirm</button>
+  </div> -->
+</div>
+<div class="modal-body" style="padding-right: 0px;">
+  <div class="row text-center text-muted" ng-if="vendors.length == 0">
+    <h3>No Vendors For This Product</h3>
+  </div>
+  <div class="container-fluid" style="height:70vh;overflow:auto;" ng-if="vendors.length > 0">
+    <div class="row" style="margin-top:15px;padding:5px 15px">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" class="form-control" ng-model="reorder.qty">
+        </div>
+      </div>
+      <div class="col-md-6 col-md-offset-1 text-right" ng-if="selectedVendor.vendor.pk">
+        <h3>PO Amount : {{reorder.qty*selectedVendor.rate}}</h3>
+      </div>
+    </div>
+    <div class="row" style="margin-top:15px;padding:5px 15px">
+      <div class="container-fluid card" style="margin: 10px;padding-top:15px" ng-repeat=" a in vendors">
+        <div class="row" style="height:7vh;">
+          <div class="col-md-6">
+            <h4>{{a.vendor.service.name}}</h4>
+            <span>Contact Person Name: {{a.vendor.contactPersonName}}</span><br>
+            <span>Contact Person Number: {{a.vendor.contactPersonNumber}}</span><br>
+            <span>Contact Email Id: {{a.vendor.contactPersonEmail}}</span><br>
+            <span>Payment Term: {{a.vendor.paymentTerm}}</span>
+          </div>
+          <div class="col-md-4 text-right">
+            <span>Rate: {{a.rate}}</span>
+          </div>
+          <div class="col-md-2 text-right">
+            <span style="font-size:30px;cursor:pointer;color:{{a.pk == selectedVendor.pk  ?'#77e030':'#e0452a'}}" ng-click="selectVendor(a)"><i class="fa fa-check-circle"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:15px;padding:5px 15px">
+      <button type="button" class="btn btn-success" ng-click="saveReorder()">Save</button>
+    </div>
+  </div>
+
+  <!-- <div class="row" style="padding:10px">
+    <div class="col-md-12 text-right">
+      <button type="button" class="btn btn-danger">cancel</button>
+    </div>
+  </div> -->
+</div>

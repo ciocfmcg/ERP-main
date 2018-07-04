@@ -5,15 +5,15 @@
 
 <div class="modal-body">
   <div class="row">
-    <div class="col-md-4">
-      <div class="container-fluid">
-        <img ng-src="{{product.displayPicture}}" style="width: 100%;">
+    <div class="col-md-5">
+      <div class="container-fluid" style="margin-left:20px">
+        <img ng-src="{{product.displayPicture}}" style="width:250px;height:250px">
       </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="row">
         <div class="col-md-4 text-right">
-          <strong>MRP:</strong>
+          <strong>MRP :</strong>
         </div>
         <div class="col-md-8">
           {{product.price}}
@@ -22,17 +22,103 @@
 
       <div class="row">
         <div class="col-md-4 text-right">
-          <strong>Serial No:</strong>
+          <strong>Serial No :</strong>
         </div>
         <div class="col-md-8">
           {{product.serialNo}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 text-right">
+          <strong>In Stock :</strong>
+        </div>
+        <div class="col-md-8">
+          {{product.inStock}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 text-right">
+          <strong>Logistics :</strong>
+        </div>
+        <div class="col-md-8">
+          {{product.logistics}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 text-right">
+          <strong>Serial Id :</strong>
+        </div>
+        <div class="col-md-8">
+          {{product.serialId}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 text-right">
+          <strong>Reorder Threshold :</strong>
+        </div>
+        <div class="col-md-8">
+          {{product.reorderTrashold}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 text-right">
+          <strong>Product Meta :</strong>
+        </div>
+        <div class="col-md-8">
+          {{product.productMeta.description}}
         </div>
       </div>
 
       <div class="row" style="margin-top:30px;">
         {{product.description}}
       </div>
+
     </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="row" ng-if="productData.length>0" style="margin-top:20px;padding:5px 20px">
+          <div class="row text-center">
+            <label>Secondary SKU </label>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Units / Pack</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="s in productData">
+                <td>{{s.sku}}</td>
+                <td>{{s.unitPerpack}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="row" ng-if="categoriesList.length>0" style="margin-top:20px;padding:5px 20px">
+          <div class="row text-center">
+            <label>Categories </label>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="c in categoriesList">
+                <td>{{c.category.name}}</td>
+                <td>{{c.qty}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <generic-Table data="data.productInfotableData" config-Obj="{{configProductInfo}}" callback-Fn="tableActionProductInfo"></generic-Table>
