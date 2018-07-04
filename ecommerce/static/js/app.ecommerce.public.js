@@ -257,11 +257,11 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
       $scope.category.fields[i].val = '';
     }
 
-    $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
     $http({method : 'GET' , url : '/api/ecommerce/listing/?parent='+ $scope.category.pk + '&recursive=1' }).
        then(function(response){
          $scope.listingSearch = response.data;
        })
+    $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
   }, 1500);
 
 
