@@ -33,6 +33,7 @@ from django.db.models.functions import Concat
 from django.db.models import Value
 import json
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
 # Create your views here.
 
 
@@ -149,6 +150,9 @@ class PageNumCanvas(canvas.Canvas):
 def invoice(response,inv):
     print '999999999999999999999999999999999999999'
     now = datetime.datetime.now()
+    print now
+    print 'indiaaaaaaaaaaa'
+    print datetime.datetime.now(timezone('Asia/Kolkata'))
     print inv.activePatient.dateOfDischarge,inv.activePatient.inTime
 
     # ad1 = str(inv.activePatient.inTime).split(' ')
@@ -156,13 +160,17 @@ def invoice(response,inv):
     # dd1 = str(inv.activePatient.dateOfDischarge).split(' ')
     # dd = dd1[0].split('-')
     # print dd
+    # count = Invoice.objects.filter(activePatient__outPatient=True,pk__lt=inv.pk).count()
+    # print 'counnnnnnnnnnnn',count,inv.pk
     if inv.activePatient.outPatient:
         refId = inv.activePatient.opNo
         a = ''
         d = ''
         txt = 'OP No.'
+        billNo = 1950 + Invoice.objects.filter(activePatient__outPatient=True,pk__lt=inv.pk).count()
     else:
         txt = 'IP No.'
+        billNo = 285 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count()
         a = defaultfilters.date(inv.activePatient.inTime, "d-m-Y , h:i A")
         d = defaultfilters.date(inv.activePatient.dateOfDischarge, "d-m-Y , h:i A")
         try:
@@ -177,7 +185,7 @@ def invoice(response,inv):
         #     d = dd[2]+'-'+dd[1]+'-'+dd[0]+' '+ dd1[1].split('.')[0]
         # except:
         #     d = ''
-
+    print billNo
     (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,a,d,inv.grandTotal)
     data = json.loads(inv.products)
     details = []
@@ -217,7 +225,7 @@ def invoice(response,inv):
     elements.append(Paragraph("<para fontSize=13 alignment='center'><b> RECEIPT / BILL </b></para>",styles['Normal']))
     elements.append(Spacer(1, 10))
     elements.append(Paragraph("<para fontSize=10 alignment='right' rightIndent=15><b> Date : {0}-{1}-{2}</b></para>".format(now.day,now.month,now.year),styles['Normal']))
-    elements.append(Paragraph("<para fontSize=10 alignment='left' leftIndent=30><b> Bill No. : {0}</b></para>".format(inv.pk),styles['Normal']))
+    elements.append(Paragraph("<para fontSize=10 alignment='left' leftIndent=30><b> Bill No. : {0}</b></para>".format(billNo),styles['Normal']))
     elements.append(Paragraph("<para fontSize=10 alignment='left' leftIndent=30><b> {0} : {1}</b></para>".format(txt,refId),styles['Normal']))
 
     elements.append(Spacer(1, 15))

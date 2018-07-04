@@ -12,10 +12,10 @@
           <div ng-if="addNewPatient" class="input-group-addon" style="cursor:pointer;" ng-click="addNewActivePatient(activePatientsForm.patient)">Add</div>
         </div>
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Ref ID</label>
         <input  type="text" class="form-control" ng-model="activePatientsForm.opNo">
-      </div>
+      </div> -->
       <div class="form-group">
         <label>Treating Consultant/s</label>
         <input type="text" class="form-control" ng-model="activePatientsForm.docName" uib-typeahead="user as user.name for user in doctorSearch($viewValue)" placeholder="Search By Doctor Name Here...">

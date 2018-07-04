@@ -158,11 +158,19 @@
               <h4><small><b>Telephone No. : </b></small>{{dischargeSummForm.patient.patient.phoneNo}}</h4>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="form-group">
               <!-- <label> Telephone No. </label>
               <input type="text" class="form-control" ng-model="dischargeSummForm.telephoneNo" placeholder=""> -->
               <h4><small><b>UHID No. : </b></small>{{dischargeSummForm.patient.patient.uniqueId}}</h4>
+            </div>
+
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <!-- <label> Telephone No. </label>
+              <input type="text" class="form-control" ng-model="dischargeSummForm.telephoneNo" placeholder=""> -->
+              <h4><small><b>IP No. : </b></small>{{dischargeSummForm.ipNo}}</h4>
             </div>
 
           </div>
@@ -204,12 +212,12 @@
 
           </div>
         </div>
-        <div class="row" style="padding:0px 15px;">
+        <!-- <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>IP No.</label>
             <input type="text" class="form-control" ng-model="dischargeSummForm.ipNo" placeholder="">
           </div>
-        </div>
+        </div> -->
         <div class="row" style="padding:0px 15px;">
           <div class="form-group">
             <label>Incharge Doctor</label>
@@ -294,7 +302,7 @@
           <div class="form-group">
             <label>History of alcholism, tabacco or substance abuse, if any</label>
             <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.historyOfAlchohol" ></textarea> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.historyOfAlchohol"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.historyOfAlchohol"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
@@ -336,7 +344,7 @@
           <div class="form-group">
             <label>Patient condition at the time of discharge</label>
             <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.patientCondition" ></textarea> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.patientCondition"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.patientCondition"></textarea>
           </div>
         </div>
         <div class="row" style="padding:0px 15px;">
@@ -357,7 +365,7 @@
           <div class="form-group">
             <label>In case of complicatoins such as</label>
             <!-- <textarea name="name" class="form-control" rows="4" cols="80" ng-model="dischargeSummForm.complications" ></textarea> -->
-            <textarea ui-tinymce="tinymceOptions" ng-model="dischargeSummForm.complications"></textarea>
+            <textarea ui-tinymce="tinymceOptionsSmall" ng-model="dischargeSummForm.complications"></textarea>
           </div>
         </div>
         <!-- <div class="row" style="padding:0px 15px;">
