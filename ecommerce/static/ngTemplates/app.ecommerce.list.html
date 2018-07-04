@@ -1,6 +1,6 @@
 <div class="row" style="margin-top:20px;margin:0px;">
   <div class="col-md-8 col-md-offset-2 ">
-    <div ng-repeat="l in listingProducts" >
+    <div ng-repeat="l in listingProducts">
       <div class="col-md-3 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
           <div class="row">
@@ -9,9 +9,9 @@
           </div>
           <div class="row">
             <div class=" card bg-white" style="padding-bottom:0px;">
-              <div class="row container-fluid" style="padding:10px 20px; " >
-                <h5 style="margin:0px;  height:80px;" >{{l.product.name}}</h5>
-                <span style="font-size:15px;" > Price : </span>
+              <div class="row container-fluid" style="padding:10px 20px; ">
+                <h5 style="margin:0px;  height:80px;">{{l.product.name}}</h5>
+                <span style="font-size:15px;"> Price : </span>
                 <span class="pull-right" style="font-size:15px;">
                 {{l.product.price}} <i class="fa fa-inr"></i>
                 </span>
@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<div class="row" style="margin:0px;">
+<!-- <div class="row" style="margin:0px;">
   <div class="col-md-offset-2 col-md-8 " style="padding:40px;" >
     <div style="padding:10px;" class="row card bg-white">
       <h4>Featured Categories</h4>
@@ -34,6 +34,27 @@
           <img style="width: 100%;height:180px" class="img" ng-src="{{p.visual}}" ng-if="p.visual.length>0">
           <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="p.visual==none">
         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="row" style="margin:0px;">
+  <div class="col-md-offset-2 col-md-8 " style="padding:40px;">
+    <div style="padding:10px;" class="row card bg-white">
+      <h4>Featured Categories</h4>
+      <div ng-repeat="p in products| limitTo:4" style="padding:0px;">
+        <div class="col-md-3 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : p.name})">
+            <div class="row">
+              <img style="width: 100%;height:180px" class="img" ng-src="{{p.visual}}" ng-if="p.visual.length>0">
+              <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="p.visual==none">
+            </div>
+            <div class="row">
+              <h5 class="text-center" style="margin:0px;">{{p.name}}</h5>
+            </div>
+          </div>
         </div>
       </div>
     </div>
