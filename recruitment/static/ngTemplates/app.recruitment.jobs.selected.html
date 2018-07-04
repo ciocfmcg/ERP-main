@@ -1,16 +1,18 @@
 <div ng-controller="recruitment.jobs.selected">
-  <div class="row">
-    <div class="text-center col-md-2 boardHeader {{$index | rainbow}}" ng-repeat="c in columns">
+  <div class="row" style="padding:15px">
+    <div class="text-center col-md-4 boardHeader {{$index | rainbow}}" ng-repeat="c in columns">
       <span style="font-size:17px;"><i class="fa {{c.icon}} fa-lg" style="margin-right:15px;"></i> {{c.text}}</span>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-2" style="padding:20px;" ng-repeat="col in columns">
-      <div class="row" style="min-height:70vh;" ng-drop="true" ng-drop-success="onDropComplete($data,$event , $index);">
+  <div class="row" style="padding:20px">
+    <div class="col-md-4" style="padding:20px;" ng-repeat="col in columns">
+      <div class="row" style="min-height:50vh;padding-left:25px" ng-drop="true" ng-drop-success="onDropComplete($data,$event , $index);">
         <div ng-click="exploreDeal(c , $event)" class="card draggable dealCard" ng-drag="true" ng-drag-data="c" data-allow-transform="true" ng-repeat="c in data[col.cat]">
-          <h4>{{c.name | humanize}}</h4>
-          <span><i class="fa fa-building-o"></i> {{c.company.name}}</span> <br> <br>
-          <img ng-src="{{c.contacts[0] | getCRMDP}}" class="img img-circle" style="width:30px;height:30px;"> {{c.contacts[0].name}}
+          <h4>{{c.firstname | humanize}} {{c.lastname | humanize}}</h4>
+          <h5>{{c.email}}</h5>
+          <h5>{{c.mobile}}</h5>
+          <!-- <span><i class="fa fa-building-o"></i> {{c.company.name}}</span> <br> <br>
+          <img ng-src="{{c.contacts[0] | getCRMDP}}" class="img img-circle" style="width:30px;height:30px;"> {{c.contacts[0].name}} -->
         </div>
       </div>
     </div>

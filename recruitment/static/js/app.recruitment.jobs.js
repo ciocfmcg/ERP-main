@@ -24,12 +24,26 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
     itemTemplate: '/static/ngTemplates/app.recruitment.jobs.item.html',
   }, ];
 
-
+  $scope.$watch('data.tableData', function(newValue, oldValue) {
+    console.log('******************',$scope.data);
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      $http({
+        method: 'GET',
+        url: '/api/recruitment/applyJob/?job=' + $scope.data.tableData[i].pk + '&status__in!=Created,Closed'
+      }).
+      then((function(i) {
+        return function(response){
+          console.log(response.data,'aaaaaaaaaaaaa');
+        $scope.data.tableData[i].screening=response.data;
+      }
+      })(i));
+    }
+  })
   $scope.config = {
     views: views,
     url: '/api/recruitment/job/',
     searchField: 'jobtype',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [2, 4, 6],
   }
 
   $scope.tableAction = function(target, action, mode) {
@@ -45,11 +59,11 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
           var title = 'Browse Jobs : ';
           var myapp = 'jobBrowse';
         }else if (action == 'selected') {
-          var title = 'Selected  : ';
+          var title = 'Manage Applications  : ';
           var myapp = 'selected';
         }
         $scope.addTab({
-          title: title + $scope.data.tableData[i].jobtype,
+          title: title + $scope.data.tableData[i].pk,
           cancel: true,
           app: myapp,
           data: {
@@ -236,7 +250,7 @@ $scope.listData();
   for (var i = 0; i < $scope.jobApplied.length; i++) {
     if($scope.jobApplied[i].select){
       console.log("aaaaaaa");
-      $scope.jobApplied[i].status='Screening'
+      $scope.jobApplied[i].status='TechInterviewing'
       var toSend = {
         status : $scope.jobApplied[i].status
       }
@@ -254,6 +268,30 @@ $scope.listData();
       })
     }
   }
+}
+
+$scope.rejected =function() {
+for (var i = 0; i < $scope.jobApplied.length; i++) {
+  if($scope.jobApplied[i].select){
+    console.log("aaaaaaa");
+    $scope.jobApplied[i].status='Closed'
+    var toSend = {
+      status : $scope.jobApplied[i].status
+    }
+    var method = 'PATCH';
+    var url = '/api/recruitment/applyJob/';
+    url += $scope.jobApplied[i].pk + '/';
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      $scope.listData();
+    })
+  }
+}
 }
 
 $scope.resumeView = function(data) {
@@ -294,15 +332,73 @@ app.controller("recruitment.resume.view", function($scope, $state, $users, $stat
 });
 
 app.controller("recruitment.jobs.selected", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+  $scope.jobDetails = $scope.data.tableData[$scope.tab.data.index]
+
   $scope.columns = [
     // {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
-    {icon : 'fa-phone' , text : 'Contacting' ,cat : 'contacted'},
-    {icon : 'fa-desktop' , text : 'Demo / POC' , cat : 'demo'},
-    {icon : 'fa-bars' , text : 'Requirements' , cat : 'requirements'},
-    {icon : 'fa-file-pdf-o' , text : 'Proposal' , cat : 'proposal'},
-    {icon : 'fa-money' , text : 'Negotiation' , cat : 'negotiation'},
-    {icon : 'fa-check' , text : 'Conclusion' , cat : 'conclusion'},
+    {icon : 'fa-desktop' , text : 'TechInterviewing' , cat : 'TechInterviewing'},
+    {icon : 'fa-bars' , text : 'HrInterviewing' , cat : 'HrInterviewing'},
+    {icon : 'fa-file-pdf-o' , text : 'Negotiation' , cat : 'Negotiation'},
+
   ]
+
+  $scope.fetchDeals = function() {
+     $http({method : 'GET' , url : '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status__in!=Created,Closed'}).
+     then(function(response) {
+       $scope.List = response.data;
+       $scope.data = { Written_test : [] , Technical_test : [] , Hr : []}
+       console.log(response.data);
+       for (var i = 0; i < response.data.length; i++) {
+         $scope.data[response.data[i].status].push(response.data[i])
+       }
+     });
+   }
+
+
+
+  $scope.fetchDeals();
+  $scope.isDragging = false;
+
+  // $scope.exploreDeal = function(deal , evt) {
+  //   if ($scope.isDragging) {
+  //     $scope.isDragging = false;
+  //   }else {
+  //     $scope.$emit('exploreDeal', {
+  //       deal: deal
+  //     });
+  //   }
+  // }
+
+  $scope.removeFromData = function(pk) {
+    for (var key in $scope.data) {
+      if ($scope.data.hasOwnProperty(key)) {
+        for (var i = 0; i < $scope.data[key].length; i++) {
+          if ($scope.data[key][i].pk ==pk) {
+            $scope.data[key].splice(i,1);
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  $scope.onDropComplete = function(data , evt , newState) {
+    if (data == null) {
+      return;
+    }
+    $scope.removeFromData(data.pk);
+    $scope.data[$scope.columns[newState].cat].push(data);
+
+    // var dataToSend = {state : $scope.columns[newState].cat}
+    //
+    // $http({method : 'PATCH' , url : '/api/clientRelationships/deal/' + data.pk + '/' , data : dataToSend}).
+    // then(function(Response) {
+    // }, function(err) {
+    //   Flash.create('danger' , 'Error while updating')
+    // });
+    console.log("drop complete");
+  }
 
 
 });

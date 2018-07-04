@@ -58,18 +58,24 @@
         </div>
         <div class="col-md-4">
           <i class="fa fa-check-circle fa-3x text-{{jobDetails.approved ? 'success': 'danger'}} pull-right" ng-model="jobDetails.approved" style="padding-top:10px" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
-            cancel-text="No" on-confirm="approve()" confirm-button-type="danger" cancel-button-type="default"></i><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approved :</span>
+            cancel-text="No" on-confirm="approve()" confirm-button-type="success" cancel-button-type="default"></i><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approved :</span>
         </div>
         <div class="col-md-4" ng-if="jobDetails.approved">
           <i class="fa  fa-check-circle fa-3x text-{{jobDetails.status=='Active' ? 'success': 'danger'}} pull-right" ng-model="jobDetails.status" style="padding-top:10px" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
-            cancel-text="No" on-confirm="active()" confirm-button-type="danger" cancel-button-type="default"></i><span class="pull-right" style="margin-top:10px;margin-right:20px;">Active :</span>
+            cancel-text="No" on-confirm="active()" confirm-button-type="success" cancel-button-type="default"></i><span class="pull-right" style="margin-top:10px;margin-right:20px;">Active :</span>
         </div>
       </div>
     </div>
   </div><br/>
+
     <div class="row" ng-if="jobApplied.length>0">
       <div class="col-md-12 text-right">
-        <button class="btn btn-primary" ng-click="selected()"><i class="fa fa-tick">Shortlist</i></button>
+        <div class="btn-group">
+        <button class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
+          cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default"><i class="fa fa-tick">Reject</i></button>
+        <button class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
+          cancel-text="No" on-confirm="selected()" confirm-button-type="success" cancel-button-type="default"><i class="fa fa-tick">Shortlist</i></button>
+      </div>
       </div>
     </div><br/>
 

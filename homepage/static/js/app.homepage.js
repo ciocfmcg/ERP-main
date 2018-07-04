@@ -134,7 +134,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.careers.modal.apply.html',
       size: 'lg',
-      backdrop: true,
+      backdrop: false,
       resolve: {
         data: function() {
           return $scope.jobs[idx];
@@ -343,7 +343,7 @@ app.controller('careers.modal.apply', function($scope, $state, $http, $timeout, 
         $scope.msg = 'Applied Sucessfully'
         $timeout(function () {
           $uibModalInstance.dismiss();
-        }, 5000);
+        }, 3000);
       }else {
         $scope.msg = 'Errors In The Form'
       }
