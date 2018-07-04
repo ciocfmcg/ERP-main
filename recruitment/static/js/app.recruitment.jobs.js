@@ -29,7 +29,7 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       $http({
         method: 'GET',
-        url: '/api/recruitment/applyJob/?job=' + $scope.data.tableData[i].pk + '&status_in!=Created,Closed'
+        url: '/api/recruitment/applyJob/?job=' + $scope.data.tableData[i].pk + '&status__in!=Created,Closed'
       }).
       then((function(i) {
         return function(response){
@@ -314,16 +314,16 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   $scope.columns = [
     // {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
     {icon : 'fa-desktop' , text : 'TechInterviewing' , cat : 'TechInterviewing'},
-    {icon : 'fa-bars' , text : 'HrInterviewing' , cat : 'HrInterviewing'},
-    {icon : 'fa-file-pdf-o' , text : 'Negotiation' , cat : 'Negotiation'},
+    {icon : 'fa-file-pdf-o' , text : 'HrInterviewing' , cat : 'HrInterviewing'},
+    {icon : 'fa-bars ' , text : 'Negotiation' , cat : 'Negotiation'},
 
   ]
 
   $scope.fetchDeals = function() {
-    $http({method : 'GET' , url : '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status_in!=Created,Closed'}).
+    $http({method : 'GET' , url : '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status__in!=Created,Closed'}).
     then(function(response) {
       $scope.List = response.data;
-      $scope.data = { Written_test : [] , Technical_test : [] , Hr : []}
+      $scope.data = { TechInterviewing : [] , HrInterviewing : [] , Negotiation : []}
       console.log(response.data);
       for (var i = 0; i < response.data.length; i++) {
         $scope.data[response.data[i].status].push(response.data[i])
@@ -363,14 +363,16 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
     }
     $scope.removeFromData(data.pk);
     $scope.data[$scope.columns[newState].cat].push(data);
+    console.log($scope.columns[newState].cat);
+    console.log(data);
 
-    // var dataToSend = {state : $scope.columns[newState].cat}
-    //
-    // $http({method : 'PATCH' , url : '/api/clientRelationships/deal/' + data.pk + '/' , data : dataToSend}).
-    // then(function(Response) {
-    // }, function(err) {
-    //   Flash.create('danger' , 'Error while updating')
-    // });
+    var dataToSend = {status : $scope.columns[newState].cat}
+
+    $http({method : 'PATCH' , url : '/api/recruitment/applyJob/' + data.pk + '/' , data : dataToSend}).
+    then(function(Response) {
+    }, function(err) {
+      Flash.create('danger' , 'Error while updating')
+    });
     console.log("drop complete");
   }
 

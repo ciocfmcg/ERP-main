@@ -36,20 +36,16 @@
         </div>
         <div class="row">
           <div class="col-md-5 text-right">
-            <strong>Skills Required :</strong>
-          </div>
-          <div class="col-md-7">
-            {{jobDetails.skill}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-5 text-right">
             <strong>Maximum CTC :</strong>
           </div>
           <div class="col-md-7">
             {{jobDetails.maximumCTC}}
           </div>
         </div>
+        <div ng-bind-html="jobDetails.skill" style="padding-top:20px"></div>
+        <!-- <div class="row">
+          <label>Description</label>
+        </div> -->
       </div>
     </div>
     <div class="col-md-7">
