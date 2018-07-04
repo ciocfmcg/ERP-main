@@ -1,0 +1,6 @@
+<div class="container-fluid" ng-controller="controller.ecommerce.account.saved" >
+  <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction" ></generic-Table>
+  <div class="row text-center" ng-if="data.tableData.length==0" style="padding-top:20vh;" >
+    <h2 class="text-muted text-center" >No Saved Items</h2>
+  </div>
+</div>

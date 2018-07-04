@@ -132,6 +132,10 @@ class listingSerializer(serializers.ModelSerializer):
         instance.product = Product.objects.get(pk = self.context['request'].data['product'])
         instance.save()
 
+        if 'specifications' in self.context['request'].data:
+            instance.specifications = self.context['request'].data['specifications']
+            instance.save()
+
         if 'files' in self.context['request'].data:
             for m in self.context['request'].data['files']:
                 instance.files.add(media.objects.get(pk = m))
@@ -144,7 +148,7 @@ class listingLiteSerializer(serializers.ModelSerializer):
     parentType = genericProductSerializer(many = False , read_only = True)
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source')
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

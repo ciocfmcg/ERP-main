@@ -57,10 +57,10 @@
             </div>
             <div class="col-md-3">
               <div class="row">
-                <span style="font-size:25px;">{{item.title}}</span>
+                <span style="font-size:25px;">{{item.product.name}}</span>
               </div>
               <div class="row">
-                <strong>Rate : </strong> {{offering.rate}}
+                <strong>Rate : </strong><i class="fa fa-inr"></i> {{item.product.price}}
                 <span ng-if="item.priceModel=='time'">/ per Hour</span>
                 <span ng-if="item.priceModel=='quantity'">/ per Piece</span>
                 <span ng-if="item.priceModel=='weight'">/ per Kg</span>

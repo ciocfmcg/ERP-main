@@ -1,4 +1,4 @@
-var app = angular.module('app' , ['ui.router', 'ui.bootstrap' ,'flash' ,'ngSanitize', 'ngAnimate', 'anim-in-out' ,'ui.bootstrap.datetimepicker']);
+var app = angular.module('app' , ['ui.router', 'ui.bootstrap' ,'flash' ,'ngSanitize', 'ngAnimate', 'anim-in-out' ,'ui.bootstrap.datetimepicker' ,'rzModule']);
 
 app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $provide, $locationProvider){
 
@@ -82,6 +82,11 @@ app.config(function($stateProvider ){
     url: "/support",
     templateUrl: '/static/ngTemplates/app.ecommerce.account.support.html',
     controller: 'controller.ecommerce.account.support'
+  })
+  .state('account.saved', {
+    url: "/saved",
+    templateUrl: '/static/ngTemplates/app.ecommerce.account.saved.html',
+    controller: 'controller.ecommerce.account.saved'
   })
 
 });
@@ -203,11 +208,32 @@ app.controller('controller.ecommerce.details' , function($scope , $state , $http
 
 });
 
-app.controller('controller.ecommerce.categories' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window){
+app.controller('controller.ecommerce.categories' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window ){
 
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
   $window.scrollTo(0,0)
   console.log($state.params);
+  $scope.minValue;
+  $scope.maxValue
+
+
+  $scope.slider = {
+    minValue: 200,
+    maxValue: 600,
+    options: {
+      floor: 0,
+      ceil: 1000,
+      step: 10,
+      noSwitching: true,
+      translate: function(value) {
+        return '₹' + value;
+      }
+    }
+  };
+
+  // $scope.cities = [{name:'Bangalore',selected: false},{name:'mysore',selected: false},{name:'Delhi NCR',selected: false},{name:'Mumbai',selected: false},{name:'Chennai',selected: false}];
+  // $scope.brands = [{name:'Dell',selected: false},{name:'hp',selected: false},{name:'Apple',selected: false}];
+
   $scope.breadcrumbList = [];
   $scope.category = {}
   $http({method : 'GET' , url : '/api/ecommerce/genericProduct/?name__iexact='+ $state.params.name}).
@@ -219,16 +245,58 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
         $scope.breadcrumbList.push(parent.name)
         parent = parent.parent
       }
+
   });
 
 
   $timeout(function () {
+    for (var i = 0; i < $scope.category.fields.length; i++) {
+      if ($scope.category.fields[i].data) {
+        $scope.category.fields[i].data = JSON.parse($scope.category.fields[i].data)
+      }
+      $scope.category.fields[i].val = '';
+    }
+
     $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
     $http({method : 'GET' , url : '/api/ecommerce/listing/?parent='+ $scope.category.pk + '&recursive=1' }).
        then(function(response){
          $scope.listingSearch = response.data;
        })
-  }, 1000);
+  }, 1500);
+
+
+
+
+
+  $scope.filter = function() {
+    console.log('in filerrrrr');
+    params = {minPrice: $scope.slider.minValue , maxPrice: $scope.slider.maxValue}
+
+    for (var i = 0; i < $scope.category.fields.length; i++) {
+      if ($scope.category.fields[i].val) {
+        var a = $scope.category.fields[i].name
+        params[a] = $scope.category.fields[i].val
+      }
+    }
+
+    console.log('paramsss',params);
+
+    // var cities = []
+    // for (var i = 0; i < $scope.cities.length; i++) {
+    //   if ($scope.cities[i].selected==true) {
+    //     cities.push($scope.cities[i].name)
+    //   }
+    // }
+    //
+    // if (cities.length>0) {
+    //   params.city = cities
+    // }
+
+    $http({method : 'GET' , url : '/api/ecommerce/listing/?parent='+ $scope.category.pk + '&recursive=1' , params:params }).
+       then(function(response){
+         $scope.listingSearch = response.data;
+       })
+  }
 
 
 });
@@ -240,12 +308,6 @@ app.controller('controller.ecommerce.account' , function($scope , $state , $http
 });
 
 app.controller('controller.ecommerce.account.cart' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
-
-  // $scope.views = [{name : 'list' , icon : 'fa-bars' ,
-  //   template : '/static/ngTemplates/app.ecommerce.account.cart.list.html' ,
-  //   itemTemplate : '/static/ngTemplates/app.ecommerce.account.cart.item.html',
-  //
-  // },];
 
   $scope.data = {
     tableData: [],
@@ -264,7 +326,7 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
     searchField: 'Name',
     getParams: [{key : 'user' , value : $scope.me.pk}],
     deletable: true,
-    itemsNumPerView: [4, 8, 16],
+    itemsNumPerView: [8, 16, 32],
   }
 
   $scope.tableAction = function(target, action, mode) {
@@ -300,6 +362,12 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
              })
             $scope.data.tableData[i].typ = 'favourite';
         }
+        else if (action == 'unfavourite'){
+          $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {typ: 'cart' } }).
+             then(function(response){
+             })
+            $scope.data.tableData[i].typ = 'cart';
+        }
       }
     }
   }
@@ -308,23 +376,78 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
     $scope.total = 0;
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       $scope.total = $scope.total + ($scope.data.tableData[i].product.product.price * $scope.data.tableData[i].qty)
-      console.log($scope.total);
     }
   }
 
   $timeout(function () {
     $scope.calcTotal();
+    console.log('table data',$scope.data.tableData);
   }, 1000);
 
+  $scope.checkout = function() {
+    $state.go('checkout')
+  }
+
+  // $scope.$watch('data.tableData', function(newValue, oldValue) {
+  //   console.log('watch',oldValue, newValue );
+  // });
+
+});
+
+app.controller('controller.ecommerce.account.saved' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
+
+  console.log('coming in save controller..');
+
+  $scope.data = {
+    tableData: [],
+  };
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.ecommerce.account.saved.item.html',
+  }, ];
+
+
+  $scope.config = {
+    views: views,
+    url: '/api/ecommerce/cart/',
+    searchField: 'Name',
+    getParams: [{key : 'user' , value : $scope.me.pk} , {key : 'typ' , value : 'favourite'}],
+    deletable: true,
+    itemsNumPerView: [8, 16, 32],
+  }
+
+  $scope.tableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableData);
+
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      if ($scope.data.tableData[i].pk == parseInt(target)) {
+        if (action == 'unfavourite') {
+          $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {typ: 'cart' } }).
+             then(function(response){
+             })
+            $scope.data.tableData.splice(i,1)
+        }
+      }
+    }
+
+  }
 
 
 
 });
 
-app.controller('controller.ecommerce.account.cart.item' , function($scope , $http , $state){
-  console.log("item loaded");
+app.controller('controller.ecommerce.account.saved.item' , function($scope , $http , $state){
+  console.log("saved item loaded");
+  console.log('saved',$scope.data);
+})
 
-  console.log('ffffffffffffff',$scope.data);
+app.controller('controller.ecommerce.account.cart.item' , function($scope , $http , $state){
+  console.log("cart item loaded");
+
+  console.log('cart',$scope.data);
 
   // $scope.data = $scope.$parent.$parent.data;
   // console.log($scope.data);
@@ -348,13 +471,6 @@ app.controller('controller.ecommerce.account.cart.item' , function($scope , $htt
   // $scope.view = function(){
   //   $state.go('details' , {id : $scope.data.pk})
   // }
-
-  $scope.deleteItem = function (itemPk) {
-    console.log('delete',itemPk);
-    $scope.data
-  }
-
-
 })
 
 app.controller('controller.ecommerce.account.orders' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
@@ -408,6 +524,8 @@ app.controller('controller.ecommerce.account.support' , function($scope , $state
 
 });
 
+
+
 app.controller('controller.ecommerce.account' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
 
 });
@@ -415,6 +533,10 @@ app.controller('controller.ecommerce.account' , function($scope , $state , $http
 
 app.controller('controller.ecommerce.checkout' , function($scope , $state, $http , $timeout , $uibModal , $users , Flash){
   $scope.me = $users.get('mySelf');
+
+  console.log('in checkout controllerrrrrr');
+  console.log($state.params.pk);
+
   $scope.data = {quantity : 1 , shipping :'express', stage : 'review' , address : { street : '' , pincode : '' , city : '' , state : '', mobile :'' }};
 
   $scope.$watch(function(){
@@ -430,23 +552,29 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
     $scope.data.address = response.data[0].address;
   })
 
-  $http({method : 'GET' , url : '/api/ecommerce/offering/' + $state.params.pk + '/'}).
-  then(function(response){
-    $scope.offering = response.data;
-    $scope.getBookingAmount = function(){
-      h = Math.ceil(($scope.data.dropInTime-$scope.data.pickUpTime)/3600000);
-      if (h<0){
-        return 0
-      }else {
-        return $scope.offering.rate * $scope.data.quantity*h
-      }
-    }
+  // $http({method : 'GET' , url : '/api/ecommerce/offering/' + $state.params.pk + '/'}).
+  // then(function(response){
+  //   $scope.offering = response.data;
+  //   $scope.getBookingAmount = function(){
+  //     h = Math.ceil(($scope.data.dropInTime-$scope.data.pickUpTime)/3600000);
+  //     if (h<0){
+  //       return 0
+  //     }else {
+  //       return $scope.offering.rate * $scope.data.quantity*h
+  //     }
+  //   }
+  //
+  //   $http({method : 'GET' , url : '/api/ecommerce/listing/' + response.data.item + '/'}).
+  //   then(function(response){
+  //     $scope.item = response.data;
+  //   })
+  // })
 
-    $http({method : 'GET' , url : '/api/ecommerce/listing/' + response.data.item + '/'}).
-    then(function(response){
-      $scope.item = response.data;
-    })
-  })
+  $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
+   then(function(response){
+     $scope.item = response.data;
+   })
+
 
 
   $scope.next = function(){
@@ -468,37 +596,43 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
     $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
     $scope.data.dropInTime = $scope.$parent.data.dropInTime;
     $scope.data.location = $scope.$parent.data.location;
+    $scope.data.stage = 'processing';
 
-    if ($scope.data.pickUpTime == null || $scope.data.dropInTime== null) {
-      Flash.create('danger' , 'No start date and end date provided');
-      return;
-    }
-    dataToSend = {
-      user : getPK($scope.me.url),
-      offer : $scope.offering.pk,
-      paymentType : 'COD',
-      rate : $scope.offering.rate,
-      quantity : $scope.data.quantity,
-      mobile : $scope.customerProfile.mobile,
-      coupon : $scope.data.coupon,
-      shipping : $scope.data.shipping,
-      start : $scope.data.pickUpTime,
-      end : $scope.data.dropInTime,
-    }
-    for (key in $scope.data.address) {
-      if (key == 'pk') {
-        continue;
-      }
-      dataToSend[key] = $scope.data.address[key];
-    }
-    $http({method : 'POST' , url : '/api/ecommerce/order/' , data : dataToSend}).
-    then(function(response){
+    $timeout(function () {
       $scope.data.stage = 'confirmation';
-      $scope.data.order = response.data;
-      Flash.create('success', response.status + ' : ' + response.statusText);
-    }, function(response){
-      Flash.create('danger', response.status + ' : ' + response.statusText);
-    })
+    }, 2000);
+
+
+    // if ($scope.data.pickUpTime == null || $scope.data.dropInTime== null) {
+    //   Flash.create('danger' , 'No start date and end date provided');
+    //   return;
+    // }
+    // dataToSend = {
+    //   user : getPK($scope.me.url),
+    //   offer : $scope.offering.pk,
+    //   paymentType : 'COD',
+    //   rate : $scope.offering.rate,
+    //   quantity : $scope.data.quantity,
+    //   mobile : $scope.customerProfile.mobile,
+    //   coupon : $scope.data.coupon,
+    //   shipping : $scope.data.shipping,
+    //   start : $scope.data.pickUpTime,
+    //   end : $scope.data.dropInTime,
+    // }
+    // for (key in $scope.data.address) {
+    //   if (key == 'pk') {
+    //     continue;
+    //   }
+    //   dataToSend[key] = $scope.data.address[key];
+    // }
+    // $http({method : 'POST' , url : '/api/ecommerce/order/' , data : dataToSend}).
+    // then(function(response){
+    //   $scope.data.stage = 'confirmation';
+    //   $scope.data.order = response.data;
+    //   Flash.create('success', response.status + ' : ' + response.statusText);
+    // }, function(response){
+    //   Flash.create('danger', response.status + ' : ' + response.statusText);
+    // })
   }
 
 
@@ -533,6 +667,17 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
       $scope.searchProduct.product = '';
     }
   }
+
+  $scope.$watch('searchProduct.product' , function(newValue, oldValue){
+    if (newValue != null && typeof newValue =='object') {
+      if (newValue.typ=='list') {
+        $state.go('details' , {id:newValue.pk})
+      }else {
+        $state.go('categories' , {name:newValue.name})
+      }
+      $scope.searchProduct.product = '';
+    }
+  }, true);
 
   $scope.slide = {banners : [] , active : 0};
 

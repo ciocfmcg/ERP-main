@@ -68,10 +68,9 @@ class listing(models.Model):
     specifications = models.TextField(max_length = 2000 , null = False) # JSON data with key from one of the spec and value as the value for this perticular item
     files = models.ManyToManyField(media , related_name='listings' ,blank=True)
     parentType = models.ForeignKey(genericProduct , related_name='products' , null = True)
-    source = models.TextField(max_length = 40000 , null = True ,blank=True)
-    # ths may contain the html source for the description giving the admin a way to full featured webpage description
+    source = models.TextField(max_length = 40000 , null = True ,blank=True)# ths may contain the html source for the description giving the admin a way to full featured webpage description
     def __repr__(self):
-        return  "Listing : " + self.product.name
+        return  "Listing : " + self.product.name + self.specifications
 
 
 class Category(models.Model):

@@ -278,7 +278,7 @@
         <div class="row" style="padding:10px;">
           <div class="col-md-6">
             <div class="row container-fluid text-center" style="background-color:#ec1616; color:white; padding:5px 0px;">
-              <span ng-click="buy(details.product)" style="cursor:pointer;">
+              <span ng-click="buy(details)" style="cursor:pointer;">
                 <span style="font-size:15px;"><b> Buy Now </b></span>
               <i class="fa fa-bolt fa-2x"></i>
               </span>
@@ -316,7 +316,7 @@
                 </td>
                 <td>
                   <span ng-if="f.fieldType=='choice'">
-                    {{f.value.name | humanize}}
+                    {{f.value | humanize}}
                   </span>
                   <span ng-if="f.fieldType=='date'">
                     {{f.value | date : 'dd-MMM-yyyy'}}
@@ -340,9 +340,6 @@
 
         </div>
         <hr>
-        <!-- <div class="row">
-          <div class="container-fluid" ng-bind-html="details.source"></div>
-        </div> -->
         <div class="row bg-blue text-center" style="margin:0px;margin-top:20px;">
           <h5 style="color:white;">Ratings and Review</h5>
         </div>

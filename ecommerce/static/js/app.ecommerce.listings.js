@@ -132,6 +132,7 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
     // }
     dataToSend.product = form['product'].pk;
     dataToSend.source = form['source'];
+    console.log('hhhhhhhhhhh',dataToSend);
     specs = [];
     for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
       f = $scope.data.genericProduct.fields[i];
@@ -146,6 +147,7 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
       specs.push(toPush);
     }
     dataToSend.specifications = JSON.stringify(specs)
+    console.log('sssssssssssssssssssss',specs);
     dataToSend.parentType = $scope.data.genericProduct.pk;
     console.log(dataToSend);
     $http({method : post.method , url : post.url , data : dataToSend}).

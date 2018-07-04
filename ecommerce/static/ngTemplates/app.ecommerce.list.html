@@ -1,22 +1,21 @@
 <div class="row" style="margin-top:20px;margin:0px;">
   <div class="col-md-8 col-md-offset-2 ">
     <div ng-repeat="l in listingProducts" >
-      <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+      <div class="col-md-3 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
-          <div class="row" >
-            <img style="width: 100%;height:300px" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-            <img style="width: 100%;height:300px" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
-            <!-- <img style="width: 100%;height:300px" class="img" src="/static/images/ecommerce.jpg"> -->
+          <div class="row">
+            <img style="width: 100%; height:100px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+            <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
           </div>
           <div class="row">
-            <div class="container-fluid card bg-white" style="padding:10px; height:150px;">
-              <h4>{{l.product.name}}</h4>
-              <!-- {{l.providerOptions.length}} {{l.providerOptions.length>1? 'Vendors' : 'Vendor'}} -->
-              <span class="pull-right">
-                Starts from  <span style="font-size:20px;margin-left:10px;">
-                  {{l.product.price}} <i class="fa fa-inr"></i>
+            <div class=" card bg-white" style="padding-bottom:0px;">
+              <div class="row container-fluid" style="padding:10px 20px; " >
+                <h5 style="margin:0px;  height:80px;" >{{l.product.name}}</h5>
+                <span style="font-size:15px;" > Price : </span>
+                <span class="pull-right" style="font-size:15px;">
+                {{l.product.price}} <i class="fa fa-inr"></i>
                 </span>
-              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -32,7 +31,6 @@
       <div class="row" style="">
         <div class="col-md-3" ng-repeat="p in products | limitTo:4" style="padding:0px;">
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : p.name})">
-          <!-- <img src="/static/images/photo1.png" style="width:100%;" alt="" class="img img-rounded"> -->
           <img style="width: 100%;height:180px" class="img" ng-src="{{p.visual}}" ng-if="p.visual.length>0">
           <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="p.visual==none">
         </div>

@@ -10,7 +10,7 @@ from django.core.mail import send_mail , EmailMessage
 from django.core import serializers
 from django.http import HttpResponse ,StreamingHttpResponse
 from django.utils import timezone
-from django.db.models import Min , Sum , Avg
+from django.db.models import Min , Sum , Avg , Q
 import mimetypes
 import hashlib, datetime, random
 from datetime import timedelta , date
@@ -109,6 +109,22 @@ class listingViewSet(viewsets.ModelViewSet):
                 for child in prnt.children.all():
                     toReturn = getProducts(toReturn , child)
 
+                if 'minPrice' in self.request.GET:
+                    minPrice = self.request.GET['minPrice']
+                    maxPrice = self.request.GET['maxPrice']
+                    toReturn = toReturn.filter(product__price__lte = maxPrice , product__price__gte = minPrice)
+
+                if 'city' in self.request.GET:
+                    cities = self.request.GET.getlist('city')
+                    cL = len(cities)
+                    for idx,c in enumerate(cities):
+                        if idx == 0:
+                            qry = Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
+                        else:
+                            qry = qry | Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
+
+                    toReturn = toReturn.filter(qry)
+
                 return toReturn
         else:
             return listing.objects.all()
@@ -150,4 +166,4 @@ class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['user']
+    filter_fields = ['user','typ']
