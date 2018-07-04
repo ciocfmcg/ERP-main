@@ -6,7 +6,7 @@
   </div>
   <div class="row" style="padding:15px">
     <div class="col-md-4" ng-repeat="col in columns">
-      <div class="row"  ng-drop="true" ng-drop-success="onDropComplete($data,$event , $index);">
+      <div class="row" style="min-height:50vh;" ng-drop="true" ng-drop-success="onDropComplete($data,$event , $index);">
         <div ng-click="exploreDeal(c , $event)" class="card draggable dealCard" ng-drag="true" ng-drag-data="c" data-allow-transform="true" ng-repeat="c in data[col.cat]" style="font-size:24px;padding-left:25px;">
           <i class="fa fa-user"></i> {{c.firstname | humanize}}<br>
           <i class="fa fa-envelope"></i> {{c.email}}<br>

@@ -43,7 +43,7 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
     views: views,
     url: '/api/recruitment/job/',
     searchField: 'jobtype',
-    itemsNumPerView: [2, 4, 6],
+    itemsNumPerView: [16, 32, 48],
   }
 
   $scope.tableAction = function(target, action, mode) {
