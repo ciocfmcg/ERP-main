@@ -67,13 +67,13 @@
       </div>
     </div>
   </div><br/>
-    <div class="row">
+    <div class="row" ng-if="jobApplied.length>0">
       <div class="col-md-12 text-right">
         <button class="btn btn-primary" ng-click="selected()"><i class="fa fa-tick">Shortlist</i></button>
       </div>
     </div><br/>
 
-  <div class="row" >
+  <div class="row" ng-if="jobApplied.length>0">
     <table class="ui fixed single line celled table striped sortable compact"  id="mytable" >
   <thead>
     <tr>
