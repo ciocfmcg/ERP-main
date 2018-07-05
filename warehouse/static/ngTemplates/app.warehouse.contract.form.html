@@ -21,7 +21,10 @@
           </div>
           <div class="form-group">
             <label>Quantity</label>
-            <input type="number" class="form-control" ng-model="contract.quantity">
+            <!-- <input type="number" class="form-control" ng-model="contract.quantity"> -->
+            <div class="well" style="padding:5px 10px;font-size:15px">
+              {{selectingAreas.length}}
+            </div>
           </div>
           <div class="form-group">
             <label>Contract Paper</label>
@@ -31,7 +34,10 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>Billing Frequency</label>
-            <input type="number" class="form-control" ng-model="contract.billingFrequency">
+            <!-- <input type="number" class="form-control" ng-model="contract.billingFrequency"> -->
+            <div class="well" style="padding:5px 10px;font-size:15px">
+              {{contract.billingFrequency}}
+            </div>
           </div>
           <div class="form-group">
             <label>Billing Dates</label>
@@ -42,10 +48,13 @@
           </div>
           <div class="form-group">
             <label>Unit Type</label>
-            <select class="form-control" ng-model="contract.unitType" >
+            <div class="well" style="padding:5px 10px;font-size:15px">
+              {{contract.unitType}}
+            </div>
+            <!-- <select class="form-control" ng-model="contract.unitType" >
               <option value="sqft">sqft</option>
               <option value="msq">msq</option>
-            </select>
+            </select> -->
           </div>
           <div class="form-group">
             <label>Other Docs</label>
@@ -57,6 +66,9 @@
             <label>Space</label>
             <input type="text" class="form-control" ng-model="contract.areas" uib-typeahead="space as space.name for space in spaceSearch($viewValue)" placeholder="Search For Spaces">
           </div>
+        </div>
+        <div class="row" ng-if="contract.areas.pk != none" style="margin-left:20px">
+          <h4><strong>Available Area : </strong> {{totalBoxes * contract.areas.areaLength}} Sqft</h4>
         </div>
       </div>
       <div class="row" style="margin-top: 27px;" ng-if="spaceData">
@@ -90,7 +102,7 @@
             <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
           </div>
           <div class="col-md-9">
-            <b>{{data.company}}</b><hr>
+            <b>{{data.company}} ( {{data.seletedBoxes * contract.areas.areaLength}} Sqft )</b><hr>
           </div>
         </div>
       </div>

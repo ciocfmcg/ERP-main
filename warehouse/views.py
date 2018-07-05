@@ -358,21 +358,21 @@ class PageNumCanvas(canvas.Canvas):
         compNameStyle.textColor = colors.white;
 
         p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
-        p.wrapOn(self , 50*mm , 10*mm)
-        p.drawOn(self , 85*mm  , 18*mm)
+        p.wrapOn(self , 70*mm , 10*mm)
+        p.drawOn(self , 80*mm  , 18*mm)
 
         p1 = Paragraph(settingsFields.get(name = 'companyAddress').value , compNameStyle)
-        p1.wrapOn(self , 150*mm , 10*mm)
-        p1.drawOn(self , 55*mm  , 10*mm)
+        p1.wrapOn(self , 210*mm , 10*mm)
+        p1.drawOn(self , 4*mm  , 10*mm)
 
 
         p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)
         p2.wrapOn(self , 200*mm , 10*mm)
-        p2.drawOn(self , 40*mm  , 4*mm)
+        p2.drawOn(self , 9*mm  , 4*mm)
 
         from svglib.svglib import svg2rlg
-        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'cioc_icon.svg'))
-        sx=sy=0.5
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'anchor_icon.svg'))
+        sx=sy=2
         drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
         drawing.scale(sx,sy)
         #if you want to see the box around the image
@@ -384,12 +384,8 @@ class PageNumCanvas(canvas.Canvas):
         # self.setFont("Helvetica", 9)
         # self.drawRightString(195*mm, 272*mm, page)
 
-#
-# <<<<<<< HEAD
-# def genInvoice(response , contract, invoicepk,request):
-# =======
+
 def genInvoice(response , contract, request):
-# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
 
 
     MARGIN_SIZE = 8 * mm
@@ -436,11 +432,8 @@ def genInvoice(response , contract, request):
     tableBodyStyle = styles['Normal'].clone('tableBodyStyle')
     tableBodyStyle.fontSize = 7
 
-# <<<<<<< HEAD
-#     invoiceobj=Invoice.objects.get(pk=invoicepk)
-# =======
+
     invoiceobj=Invoice.objects.get(contract=contract.pk)
-# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
     for i in json.loads(invoiceobj.data):
         print i
         pDescSrc = i['desc']
@@ -547,28 +540,7 @@ def genInvoice(response , contract, request):
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
 
-    # if invoice.status in ['billed' , 'approved' , 'recieved']:
-    #     summryParaSrc = settingsFields.get(name = 'regulatoryDetails').value
-    #     story.append(Paragraph(summryParaSrc , styleN))
-    #
-    #     summryParaSrc = settingsFields.get(name = 'bankDetails').value
-    #     story.append(Paragraph(summryParaSrc , styleN))
-    #
-    #     tncPara = settingsFields.get(name = 'tncInvoice').value
-    #
-    # else:
-# <<<<<<< HEAD
-#     #     tncPara = settingsFields.get(name = 'tncQuotation').value
-# =======
-#     # tncPara = settingsFields.get(name = 'tncQuotation').value
-# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
-    #
-    # story.append(Paragraph(tncPara , styleN))
 
-    # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
-    # for s in scans:
-    #     story.append(PageBreak())
-    #     story.append(FullPageImage(s))
 
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
@@ -583,23 +555,12 @@ class DownloadInvoice(APIView):
 
         response = HttpResponse(content_type='application/pdf')
         print request.GET['contract']
-# <<<<<<< HEAD
-#         print request.GET['invoice']
-#         invoicepk = request.GET['invoice']
-#         # invoice = request.GET['invoice']
-#         o = Contract.objects.get(id = request.GET['contract'])
-#         # o = Invoice.objects.get(contract = request.GET['contract'])
-#         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
-#         genInvoice(response , o , invoicepk,request)
-# =======
+
         o = Contract.objects.get(id = request.GET['contract'])
         # o = Invoice.objects.get(contract = request.GET['contract'])
         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
         genInvoice(response , o , request)
-# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
-        # f = open('./media_root/invoicedownload%s%s.pdf'%(o.pk, o.status) , 'wb')
-        # f.write(response.content)
-        # f.close()
+
         if 'saveOnly' in request.GET:
             return Response(status=status.HTTP_200_OK)
         return response

@@ -572,6 +572,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     if ($scope.spaceData) {
       console.log('entered');
       $scope.arr = JSON.parse($scope.contract.areas.areas);
+      $scope.totalBoxes = $scope.arr.length
       for (var i = 0; i < $scope.arr.length; i++) {
         var gx = $scope.arr[i].row
         var gy = $scope.arr[i].col
@@ -606,8 +607,10 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         $scope.selectedContractColour = $scope.getRandomColor();
         $scope.selectedCompaniesArea.push({
           color: $scope.selectedContractColour,
-          company: $scope.arrays[i].array.company.name
+          company: $scope.arrays[i].array.company.name,
+          seletedBoxes:$scope.arrays[i].array.occupancy.length
         })
+        $scope.totalBoxes = $scope.totalBoxes - $scope.arrays[i].array.occupancy.length
         for (var j = 0; j < $scope.arrays[i].array.occupancy.length; j++) {
           var gx = $scope.arrays[i].array.occupancy[j].row
           var gy = $scope.arrays[i].array.occupancy[j].col
@@ -635,8 +638,11 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         $scope.selectedContractColour = $scope.selectingColour;
         $scope.selectedCompaniesArea.push({
           color: $scope.selectedContractColour,
-          company: $scope.contract.company.name
+          company: $scope.contract.company.name,
+          seletedBoxes:$scope.selectingAreas.length
         })
+        console.log('selectedddddddddddd');
+        $scope.totalBoxes = $scope.totalBoxes - $scope.selectingAreas.length
         for (var i = 0; i < $scope.selectingAreas.length; i++) {
           var gx = $scope.selectingAreas[i].row
           var gy = $scope.selectingAreas[i].col
@@ -708,13 +714,16 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
             //   return;
             // }
           }
-          console.log('0000000000000');
           for (var j = 0; j < $scope.selectingAreas.length; j++) {
-            console.log('aaaaaaaaaaaaaaaaaaaaa');
+            // console.log('aaaaaaaaaaaaaaaaaaaaa');
             if ($scope.selectingAreas[j].row == gx && $scope.selectingAreas[j].col == gy) {
               console.log('selecting');
               $scope.selectingAreas.splice(j, 1);
               fill('white', gx, gy);
+              $scope.totalBoxes = $scope.totalBoxes + 1
+              if ($scope.mode == 'edit') {
+                $scope.selectedCompaniesArea[$scope.selectedCompaniesArea.length-1].seletedBoxes = $scope.selectingAreas.length
+              }
               $scope.canvasData = canvas;
               $scope.dataURL = $scope.canvasData.toDataURL();
               return
@@ -727,9 +736,13 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
             row: gx,
             col: gy
           });
+          $scope.totalBoxes = $scope.totalBoxes - 1
+          if ($scope.mode == 'edit') {
+            $scope.selectedCompaniesArea[$scope.selectedCompaniesArea.length-1].seletedBoxes = $scope.selectingAreas.length
+          }
+          console.log($scope.selectedCompaniesArea);
           $scope.canvasData = canvas;
           $scope.dataURL = $scope.canvasData.toDataURL();
-
 
           // console.log('66666666666',$scope.selectedArea);
           // state[gy][gx] = true;
@@ -839,7 +852,19 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
 
 
 
+  $scope.$watch('contract.billingDates', function(newValue, oldValue) {
+    console.log('cecking', newValue);
+    if ($scope.contract.billingDates.slice(-1) == ',') {
+      $scope.contract.billingDates = $scope.contract.billingDates.slice(0,-1)
+    }
+    console.log(newValue);
+    if ($scope.contract.billingDates.length > 0) {
+      $scope.contract.billingFrequency = $scope.contract.billingDates.split(',').length
+    }else {
+      $scope.contract.billingFrequency = 0
+    }
 
+  })
   $scope.save = function() {
     console.log('entered');
     if ($scope.clicked) {
@@ -895,7 +920,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     tosend.append('billingFrequency', f.billingFrequency);
     tosend.append('billingDates', f.billingDates);
     tosend.append('rate', f.rate);
-    tosend.append('quantity', f.quantity);
+    tosend.append('quantity', $scope.selectingAreas.length);
     tosend.append('unitType', f.unitType);
     tosend.append('dueDays', f.dueDays);
     tosend.append('areas', f.areas.pk);
