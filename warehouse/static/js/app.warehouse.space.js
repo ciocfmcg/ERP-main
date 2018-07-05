@@ -208,6 +208,7 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
     }
     if ($scope.mode == 'edit') {
       $scope.arr = JSON.parse($scope.form.areas)
+      $scope.totalBoxes = $scope.arr.length
       for (var i = 0; i < $scope.arr.length; i++) {
         var gx=$scope.arr[i].row
         var gy=$scope.arr[i].col
@@ -225,7 +226,8 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
       }
       for (var i = 0; i < $scope.arrays.length; i++) {
         $scope.contractColour = $scope.getRandomColor();
-        $scope.companiesArea.push({color: $scope.contractColour,company:$scope.arrays[i].array.company.name})
+        $scope.companiesArea.push({color: $scope.contractColour,company:$scope.arrays[i].array.company.name,seletedBoxes:$scope.arrays[i].array.occupancy.length})
+        $scope.totalBoxes = $scope.totalBoxes - $scope.arrays[i].array.occupancy.length
         for (var j = 0; j < $scope.arrays[i].array.occupancy.length; j++) {
           var gx=$scope.arrays[i].array.occupancy[j].row
           var gy=$scope.arrays[i].array.occupancy[j].col
@@ -278,6 +280,9 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
           $scope.arr.splice(i,1);
           console.log($scope.arr);
           fill('#87CEFA', gx, gy);
+          if ($scope.mode == 'edit') {
+            $scope.totalBoxes = $scope.arr.length
+          }
           return
         }
       }
@@ -290,13 +295,16 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
       // $scope.dataurl=canvas.toDataURL();
       // console.log($scope.dataurl);
       console.log($scope.arr);
+      if ($scope.mode == 'edit') {
+      $scope.totalBoxes = $scope.arr.length
+    }
     }
 
   }
   // $scope.form={'name':'sai','areas':'','code':''};
   $scope.resetForm = function() {
     $scope.mode = 'new';
-    $scope.form = {'name':'','areas':'','code':''}
+    $scope.form = {'name':'','areas':'','code':'','areaLength':1}
   }
 
 

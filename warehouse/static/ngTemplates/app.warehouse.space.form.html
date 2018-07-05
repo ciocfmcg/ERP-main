@@ -1,7 +1,8 @@
 <div ng-controller="businessManagement.warehouse.space.form">
   <div class="container-fluid">
-    <h3 ng-if="mode == 'edit'">Edit Space : <strong>{{form.name}}</strong></h3>
+    <h3 ng-if="mode == 'edit'">Edit Space : <strong>{{form.name}}</strong> <span class="pull-right">Available Area : <strong>{{totalBoxes * form.areaLength}} Sqft</span></h3>
     <h3 ng-if="mode == 'new'">Create a new Space</h3>
+
   </div>
   <div class="container-fluid">
     <div class="col-md-6">
@@ -17,6 +18,10 @@
         </div>
       </div>
       <div class="form-group">
+        <label>Area Per Box ( In Sqft )</label>
+        <input type="number" class="form-control" ng-model="form.areaLength" min="1">
+      </div>
+      <div class="form-group">
         <label>Code</label>
         <div class="input-group">
           <input type="text " class="form-control" ng-model="form.code">
@@ -25,6 +30,7 @@
           </span>
         </div>
       </div>
+
       <div class="form-group">
         <button type="button" class="btn btn-primary" ng-click="createSpace()" >Save</button>
       </div>
@@ -35,7 +41,7 @@
           <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
         </div>
         <div class="col-md-9" style="padding-left:0px">
-          <b>{{data.company}}</b>
+          <b>{{data.company}} ( {{data.seletedBoxes * form.areaLength}} Sqft )</b>
         </div><hr>
       </div>
     </div>

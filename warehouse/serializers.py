@@ -57,7 +57,7 @@ class SpaceSerializer(serializers.ModelSerializer):
     contractSpace = ContractLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Space
-        fields = ('pk' ,'name' , 'areas' , 'code' , 'contractSpace')
+        fields = ('pk' ,'name' , 'areas' , 'code' , 'contractSpace' , 'areaLength')
         read_only_fields = ('user' ,)
     def create(self , validated_data):
         s=Space(**validated_data)

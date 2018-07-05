@@ -58,6 +58,8 @@ class Space(models.Model):
     name = models.CharField(max_length = 100 , null = False)
     areas = models.CharField(max_length = 50000 , null = False)
     code = models.CharField(max_length = 100 , null = False)
+    areaLength = models.PositiveIntegerField(null = True,default=1)
+
 
 class Contract(models.Model):
     created = models.DateTimeField(auto_now_add = True)
