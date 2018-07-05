@@ -1,16 +1,10 @@
-<!-- <div class="col-md-6 col-md-offset-3" ng-controller="hospitalManagement.patients.explore">
-  <div class="text-center">
-    <h3>Edit Details</h3>
-  </div>
-</div> -->
 
 <div class="container-fluid" ng-controller="hospitalManagement.patients.edit" style="margin-top:20px;">
   <div class="row" style="margin-top:20px">
     <div class="row" style="margin-bottom:30px">
       <div class="col-md-4">
         <div class="row pull-right">
-          <img style="width: 120px;height:120px;" class="img" ng-if="form.displayPicture != null" ng-src="{{form.displayPicture}}" >
-          <img style="width: 120px;height:120px;" class="img" ng-if="form.displayPicture == null" src="/static/images/userIcon.png" >
+          <img style="width: 120px;height:120px;" class="img" src="/static/images/userIcon.png" >
         </div>
       </div>
       <div class="col-md-7 col-md-offset-1">
@@ -20,18 +14,13 @@
     <div class="col-md-8 col-md-offset-2">
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="form-group">
-            <label>First Name</label>
+            <label>Name</label>
             <input type="text" class="form-control" ng-model="editForm.firstName" placeholder="">
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Mobile</label>
-            <input type="text" class="form-control" ng-model="editForm.phoneNo" placeholder="">
-          </div>
-        </div>
+
       </div>
 
       <div class="row">
@@ -43,13 +32,13 @@
           </div>
         </div>
 
+
         <div class="col-md-6">
           <div class="form-group">
-            <label>Unique Id</label>
-            <input type="text" class="form-control" ng-model="editForm.uniqueId" placeholder="" disabled>
+            <label>Mobile</label>
+            <input type="text" class="form-control" ng-model="editForm.phoneNo" placeholder="">
           </div>
         </div>
-      </div>
       </div>
       <hr>
 
@@ -96,17 +85,9 @@
           </div>
         </div>
       </div>
-
       <hr>
       <div class="row">
-        <!-- <div class="col-md-6">
-          <div class="form-group">
-            <label>Mode of Payment</label> <br>
-            <div ng-repeat ="m in modeOfPay ">
-              <input type="checkbox" id="myCheck" ng-model="m.value" /> {{m.name}}
-            </div>
-          </div>
-        </div> -->
+
         <div class="col-md-6">
           <div class="form-group">
             <label>Gender</label>
@@ -128,9 +109,11 @@
           </div>
         </div>
       </div>
+      </div>
+
     </div>
     <div class="row" style="margin-top:25px;margin-bottom:25px">
-      <div class="col-md-5 col-md-offset-5">
+      <div class="col-md-6 col-md-offset-6">
         <button ng-click="savePatientDetails()" type="button" class="btn btn-primary">
           Save
         </button>

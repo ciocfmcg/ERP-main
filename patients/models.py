@@ -20,7 +20,7 @@ class Patient(models.Model):
     gender = models.CharField(max_length = 100 , null = False, blank = True)
     dateOfBirth = models.DateField( null= True)
     age = models.CharField(max_length = 150, null = True )
-    uniqueId = models.CharField(max_length = 100 , null = False, blank = True)
+    uniqueId = models.CharField(max_length = 100 , null = True, blank = True)
     email = models.CharField(max_length = 100 , null = True, blank = True)
     phoneNo = models.CharField(null=False , max_length = 100)
     emergencyContact1 = models.CharField(null=True , max_length = 100)

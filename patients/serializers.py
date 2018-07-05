@@ -5,6 +5,7 @@ from rest_framework.exceptions import *
 from django.db.models import Sum
 from .models import *
 import requests
+import datetime
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,8 +13,17 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = ('pk' ,'created', 'firstName','lastName','dateOfBirth','gender','uniqueId','email','phoneNo','emergencyContact1','emergencyContact2','street','city','pin','state','country' , 'age' )
 
     def create(self , validated_data):
+        print '****************************'
+        print validated_data
+        today = datetime.date.today()
+        dt = '%02d' % today.day
+        mt = '%02d' % today.month
+        uId = mt+dt
         p = Patient(**validated_data)
         p.save()
+        p.uniqueId = uId + str(p.pk)
+        p.save()
+
 
         requests.get("https://cioc.in/api/ERP/contacts/?name=" + p.firstName + "&email="+ str(p.email) + "&mobile=" + str(p.phoneNo) + "&age=" + str(p.age) + "&pincode=" + str(p.pin) )
 

@@ -10,8 +10,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-6">
-            <div class="row">
-              <!-- <label>Status : </label> -->
+            <!-- <div class="row">
               <h2 ng-if="data.status=='checkedIn'">Checked In</h2>
               <h2 ng-if="data.status=='onGoingTreatment'">Treatment On Going</h2>
               <h2 ng-if="data.status=='operation'">Operation</h2>
@@ -19,7 +18,7 @@
               <h2 ng-if="data.status=='readyToDischarged'">Ready To Discharged</h2>
               <h2 ng-if="data.status=='dishcharged'">Discharged</h2>
               <h2 ng-if="data.status=='settled'"> Settled </h2>
-            </div>
+            </div> -->
             <div class="row">
               <label>In Time : </label> {{data.inTime | date: 'dd-MM-yyyy:hh:mm a'}}
             </div>
@@ -29,15 +28,15 @@
             <div class="row">
               <label>Mode of payment : </label>
               <div class="text-center">
-                <span ng-if="data.mlc">Medical Legal Case </span> <br>
-                <span ng-if="data.insurance">Insurance </span> <br>
-                <span ng-if="data.cash">Cash </span> <br>
+                <span ng-if="data.mlc">Medical Legal Case <br></span>
+                <span ng-if="data.insurance">Insurance <br></span>
+                <span ng-if="data.cash">Cash <br></span> 
               </div>
             </div>
             <hr>
-            <div class="row" ng-if="data.status=='dishcharged'">
+            <!-- <div class="row" ng-if="data.status=='dishcharged'">
               <label>Discharge Time : </label> {{data.dateOfDischarge | date: 'dd-MM-yyyy:hh:mm a'}}
-            </div>
+            </div> -->
             <div class="row">
               <div class="form-group">
                 <label>Greeting Message</label>

@@ -95,9 +95,7 @@ app.controller('hospitalManagement.patients.edit', function($scope, $http, $asid
     if (typeof $scope.editForm.dateOfBirth == 'object' && $scope.editForm.dateOfBirth!=null ) {
       fd.append('dateOfBirth', $scope.editForm.dateOfBirth.toJSON().split('T')[0]);
     }
-    if ($scope.editForm.uniqueId != null && $scope.editForm.uniqueId.length != 0) {
-      fd.append('uniqueId', $scope.editForm.uniqueId);
-    }
+
     if ($scope.editForm.street != null && $scope.editForm.street.length != 0) {
       fd.append('street', $scope.editForm.street);
     }
@@ -250,7 +248,6 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
       // lastName: '',
       gender:'',
       // dateOfBirth:'',
-      uniqueId: '',
       // email: '',
       phoneNo: '',
       // emergencyContact1:'',
@@ -266,21 +263,21 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
   $scope.formRefresh();
 
 
-  $scope.generateUniqueId = function() {
-    $scope.newPatient.uniqueId = parseInt( new Date().getTime()/1000)
-  }
+  // $scope.generateUniqueId = function() {
+  //   $scope.newPatient.uniqueId = parseInt( new Date().getTime()/1000)
+  // }
 
   $scope.createPatient = function() {
 
-    if ($scope.newPatient.firstName=='') {
-      Flash.create('warning', 'Please fill First Name');
+    if ($scope.newPatient.firstName =='') {
+      Flash.create('warning', 'Please fill Name');
+      return
+    }
+    if ($scope.newPatient.age =='') {
+      Flash.create('warning', 'Please fill Age');
       return
     }
 
-    if ($scope.newPatient.uniqueId=='') {
-      Flash.create('warning', 'Please generate unique ID');
-      return
-    }
     if ($scope.newPatient.phoneNo=='') {
       Flash.create('warning', 'Please enter mobile no');
       return
@@ -290,13 +287,7 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
       $scope.newPatient.pin = 0
     }
 
-    // dataToSend = {
-    //   firstName: $scope.newPatient.firstName,
-    //   lastName: $scope.newPatient.lastName,
-    //   dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
-    //   gender: $scope.newPatient.gender,
-    //   uniqueId: $scope.newPatient.uniqueId
-    // };
+
 
     console.log('lklklkllklklklklkl', $scope.newPatient);
 
