@@ -18,7 +18,7 @@ app.controller("hospitalManagement.reports", function($scope, $rootScope, $state
   console.log(toDay);
 
 
-  $scope.dateForm = {'start':new Date(toDay.getFullYear(),toDay.getMonth(),1),'end':toDay}
+  $scope.dateForm = {'start':toDay,'end':toDay}
   console.log('datesssssssssssssssss',$scope.dateForm);
 
   $scope.tableData = []
@@ -27,6 +27,8 @@ app.controller("hospitalManagement.reports", function($scope, $rootScope, $state
     console.log($scope.dateForm);
     var s = $scope.dateForm.start
     s = new Date(s.getFullYear(),s.getMonth(),s.getDate()+1)
+    console.log(s);
+
     var d = $scope.dateForm.end
     d = new Date(d.getFullYear(),d.getMonth(),d.getDate()+2)
     console.log(d);
