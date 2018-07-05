@@ -47,7 +47,7 @@ class ActivePatientSerializer(serializers.ModelSerializer):
         a.save()
         if not a.outPatient:
             print ActivePatient.objects.filter(outPatient=False,pk__lt=a.pk).count()
-            count = 305 + ActivePatient.objects.filter(outPatient=False,pk__lt=a.pk).count()
+            count = 309 + ActivePatient.objects.filter(outPatient=False,pk__lt=a.pk).count()
             print count
             n = count if count>=1000 else '0'+str(count)
             ipn = 'RR/'+str(n)+'/18'

@@ -167,10 +167,12 @@ def invoice(response,inv):
         a = ''
         d = ''
         txt = 'OP No.'
-        billNo = 1950 + Invoice.objects.filter(activePatient__outPatient=True,pk__lt=inv.pk).count()
+        billNo = 1970 + Invoice.objects.filter(activePatient__outPatient=True,pk__lt=inv.pk).count()
     else:
         txt = 'IP No.'
-        billNo = 285 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count()
+        count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count()
+        n = count if count>=1000 else '0'+str(count)
+        billNo = 'CB'+str(n)+'/18'
         a = defaultfilters.date(inv.activePatient.inTime, "d-m-Y , h:i A")
         d = defaultfilters.date(inv.activePatient.dateOfDischarge, "d-m-Y , h:i A")
         try:
