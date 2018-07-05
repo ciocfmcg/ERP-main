@@ -10,6 +10,7 @@ from API.permissions import has_application_permission
 from ERP.serializers import serviceLiteSerializer, addressSerializer
 from POS.models import Product
 from POS.serializers import ProductSerializer
+import json
 
 
 class fieldSerializer(serializers.ModelSerializer):
@@ -105,13 +106,13 @@ class listingSerializer(serializers.ModelSerializer):
     # parentType = genericProductSerializer(many = False , read_only = True)
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source' )
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs' )
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
-        print validated_data
-        print self.context['request'].data['parentType'] , self.context['request'].data['product']
+        # print validated_data
+        # print self.context['request'].data['parentType'] , self.context['request'].data['product']
         l = listing(**validated_data)
         l.user =  u
         l.parentType = genericProduct.objects.get(pk = self.context['request'].data['parentType'])
@@ -120,6 +121,12 @@ class listingSerializer(serializers.ModelSerializer):
         if 'files' in self.context['request'].data:
             for m in self.context['request'].data['files']:
                 l.files.add(media.objects.get(pk = m))
+
+        for s in json.loads(l.specifications):
+            dF = DataField(name = s['name'], value = s['value'] , typ = s['fieldType'] )
+            dF.save()
+            l.dfs.add(dF)
+
         l.save()
         return l
 
@@ -135,6 +142,16 @@ class listingSerializer(serializers.ModelSerializer):
         if 'specifications' in self.context['request'].data:
             instance.specifications = self.context['request'].data['specifications']
             instance.save()
+
+            for d in instance.dfs.all():
+                DataField.objects.get(pk = d.pk).delete()
+
+            instance.dfs.clear()
+            print json.loads(instance.specifications)
+            for s in json.loads(instance.specifications):
+                dF = DataField(name = s['name'], value = s['value'] , typ = s['fieldType'] )
+                dF.save()
+                instance.dfs.add(dF)
 
         if 'files' in self.context['request'].data:
             for m in self.context['request'].data['files']:

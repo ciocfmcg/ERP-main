@@ -284,10 +284,23 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
     console.log(query);
     return $http.get('/api/ecommerce/genericProduct/?name__contains=' + query).
     then(function(response) {
-      console.log('**********************');
+      console.log('**********************',response);
       return response.data;
     })
   }
+
+  // $scope.parentFields = []
+  //
+  //
+  // $scope.$watch('form.parent' , function(newValue, oldValue){
+  //   if (newValue != null && typeof newValue =='object') {
+  //     if (newValue.data.fields) {
+  //       for (var i = 0; i < newValue.data.fields.length; i++) {
+  //         parentFields.push(newValue.data.fields[i].pk)
+  //       }
+  //     }
+  //   }
+  // }, true);
 
 
   $scope.addChoice = function() {

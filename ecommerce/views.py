@@ -49,6 +49,7 @@ from HR.models import accountsKey
 from django.core import serializers
 from django.http import JsonResponse
 from django.db.models import F ,Value,CharField,Prefetch
+import ast
 
 def ecommerceHome(request):
     return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
@@ -102,29 +103,69 @@ class listingViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        if 'recursive' in self.request.GET:
-            if self.request.GET['recursive'] == '1':
-                prnt = genericProduct.objects.get(id = self.request.GET['parent'])
+        data = self.request.GET
+        if 'recursive' in data:
+            if data['recursive'] == '1':
+                prnt = genericProduct.objects.get(id = data['parent'])
                 toReturn = listing.objects.filter(parentType = prnt)
                 for child in prnt.children.all():
                     toReturn = getProducts(toReturn , child)
 
-                if 'minPrice' in self.request.GET:
-                    minPrice = self.request.GET['minPrice']
-                    maxPrice = self.request.GET['maxPrice']
+                if 'minPrice' in data:
+                    minPrice = data['minPrice']
+                    maxPrice = data['maxPrice']
                     toReturn = toReturn.filter(product__price__lte = maxPrice , product__price__gte = minPrice)
 
-                if 'city' in self.request.GET:
-                    cities = self.request.GET.getlist('city')
-                    cL = len(cities)
-                    for idx,c in enumerate(cities):
-                        if idx == 0:
-                            qry = Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
-                        else:
-                            qry = qry | Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
+                if 'fields' in data:
+                    d = ast.literal_eval(data['fields'])
+                    if len(d)!=0:
+                        count = 0
+                        for k,v in d.items():
+                            if count == 0:
+                                count += 1
+                                if type(v)==list:
+                                    for idx,c in enumerate(v):
+                                        if idx == 0:
+                                            qry1 = Q(specifications__icontains = '"name":"{0}","value":"{1}"'.format(k,c))
+                                        else:
+                                            qry1 = qry1 | Q(specifications__icontains = '"name":"{0}","value":"{1}"'.format(k,c))
+                                    qry = qry1
+                                else:
+                                    # qry = Q(dfs__name=k,dfs__value=v)
+                                    qry = Q(specifications__icontains = '"name":"{0}","value":"{1}"'.format(k,v))
+                            else:
+                                if type(v)==list:
+                                    for idx,c in enumerate(v):
+                                        if idx == 0:
+                                            qry2 = Q(specifications__icontains = '"name":"{0}","value":"{1}"'.format(k,c))
+                                        else:
+                                            qry2 = qry2 | Q(specifications__icontains = '"name":"{0}","value":"{1}"'.format(k,c))
+                                    qry = qry & qry2
+                                else:
+                                    # qry = qry & Q(dfs__name=k,dfs__value=v)
+                                    qry = qry & Q(specifications__icontains = '"name":"{0}","value":"{1}"'.format(k,v))
+                        print 'gggggggggggqqqqqqqqqqq',qry
+                        toReturn = toReturn.filter(qry)
+                        print 'filtered',toReturn
+                        print len(toReturn)
 
-                    toReturn = toReturn.filter(qry)
 
+                # for idx,c in enumerate(self.request.GET[]):
+                #         if idx == 0:
+                #             qry = Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
+                #         else:
+                #             qry = qry | Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
+
+                # if 'city' in self.request.GET:
+                #     cities = self.request.GET.getlist('city')
+                #     cL = len(cities)
+                #     for idx,c in enumerate(cities):
+                #         if idx == 0:
+                #             qry = Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
+                #         else:
+                #             qry = qry | Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
+
+                    # toReturn = toReturn.filter(qry)
                 return toReturn
         else:
             return listing.objects.all()

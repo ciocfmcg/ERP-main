@@ -7,6 +7,7 @@ app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $prov
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
   $locationProvider.html5Mode(true);
+  // $cookies.set("time" : new Date())
 
 });
 
@@ -14,6 +15,16 @@ app.run([ '$rootScope', '$state', '$stateParams' , function ($rootScope,   $stat
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$on("$stateChangeError", console.log.bind(console));
+    $rootScope.$on("$stateChangeSuccess", function(params) {
+      var statePrev
+      now = new Date()
+      console.log(' state change',params.targetScope.$state.params);
+      console.log(' state url',params.targetScope.$state.current.url);
+
+
+      // $cookies.set("time" : new Date())
+
+    });
   }
 ]);
 
@@ -248,11 +259,21 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
 
   });
 
+  $scope.choices = {};
 
   $timeout(function () {
     for (var i = 0; i < $scope.category.fields.length; i++) {
       if ($scope.category.fields[i].data) {
         $scope.category.fields[i].data = JSON.parse($scope.category.fields[i].data)
+
+      }
+      if ($scope.category.fields[i].fieldType=='choice') {
+        console.log($scope.category.fields[i].data);
+        for (var j = 0; j < $scope.category.fields[i].data.length; j++) {
+          // console.log($scope.category.fields[i].data[j]);
+          $scope.category.fields[i].data[j] = {name:$scope.category.fields[i].data[j],selected:false}
+          // $scope.category.fields[i].choices.push()
+        }
       }
       $scope.category.fields[i].val = '';
     }
@@ -270,12 +291,31 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
 
   $scope.filter = function() {
     console.log('in filerrrrr');
-    params = {minPrice: $scope.slider.minValue , maxPrice: $scope.slider.maxValue}
+
+    console.log($scope.choices);
+    console.log($scope.category.fields);
+
+    params = {minPrice: $scope.slider.minValue , maxPrice: $scope.slider.maxValue , fields : {}}
 
     for (var i = 0; i < $scope.category.fields.length; i++) {
-      if ($scope.category.fields[i].val) {
-        var a = $scope.category.fields[i].name
-        params[a] = $scope.category.fields[i].val
+      if ($scope.category.fields[i].fieldType == 'choice') {
+        var arr = []
+        for (var j = 0; j < $scope.category.fields[i].data.length; j++) {
+          if ($scope.category.fields[i].data[j].selected) {
+            arr.push($scope.category.fields[i].data[j].name)
+          }
+        }
+        if (arr.length>0) {
+          var a = $scope.category.fields[i].name
+          // params.fields.push({a : arr})
+          params.fields[a] = arr
+        }
+      }else {
+        if ($scope.category.fields[i].val) {
+          var a = $scope.category.fields[i].name
+          // params.fields.push({a : $scope.category.fields[i].val})
+          params.fields[a] = $scope.category.fields[i].val
+        }
       }
     }
 
@@ -291,7 +331,7 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
     // if (cities.length>0) {
     //   params.city = cities
     // }
-
+    //
     $http({method : 'GET' , url : '/api/ecommerce/listing/?parent='+ $scope.category.pk + '&recursive=1' , params:params }).
        then(function(response){
          $scope.listingSearch = response.data;
@@ -324,7 +364,7 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
     views: views,
     url: '/api/ecommerce/cart/',
     searchField: 'Name',
-    getParams: [{key : 'user' , value : $scope.me.pk}],
+    getParams: [{key : 'user' , value : $scope.me.pk} , {key : 'typ' , value : 'cart'} ],
     deletable: true,
     itemsNumPerView: [8, 16, 32],
   }
@@ -361,6 +401,7 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
              then(function(response){
              })
             $scope.data.tableData[i].typ = 'favourite';
+          $scope.data.tableData.splice(i,1)
         }
         else if (action == 'unfavourite'){
           $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {typ: 'cart' } }).
@@ -385,7 +426,7 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
   }, 1000);
 
   $scope.checkout = function() {
-    $state.go('checkout')
+    $state.go('checkout', {pk : 'cart'})
   }
 
   // $scope.$watch('data.tableData', function(newValue, oldValue) {
@@ -570,10 +611,19 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   //   })
   // })
 
-  $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
-   then(function(response){
-     $scope.item = response.data;
-   })
+  if($state.params.pk=='cart') {
+    $http({method : 'GET' , url : '  /api/ecommerce/cart/?user='+ $scope.me.pk}).
+     then(function(response){
+       $scope.cartItems = response.data;
+     })
+  }else {
+    $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
+     then(function(response){
+       $scope.item = response.data;
+     })
+  }
+
+
 
 
 

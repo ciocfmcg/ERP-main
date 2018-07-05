@@ -59,6 +59,13 @@ class media(models.Model):
     attachment = models.FileField(upload_to = getEcommercePictureUploadPath , null = True ) # can be image , video or document
     mediaType = models.CharField(choices = MEDIA_TYPE_CHOICES , max_length = 10 , default = 'image')
 
+
+class DataField(models.Model):
+    name = models.CharField( null = False , max_length = 100)
+    value = models.CharField( null = True , max_length = 100)
+    typ = models.CharField( null = True , max_length = 100)
+
+
 class listing(models.Model):
     user = models.ForeignKey(User , related_name = 'ecommerceListings' , null = False)
     created = models.DateTimeField(auto_now_add = True)
@@ -69,8 +76,12 @@ class listing(models.Model):
     files = models.ManyToManyField(media , related_name='listings' ,blank=True)
     parentType = models.ForeignKey(genericProduct , related_name='products' , null = True)
     source = models.TextField(max_length = 40000 , null = True ,blank=True)# ths may contain the html source for the description giving the admin a way to full featured webpage description
+    dfs = models.ManyToManyField(DataField , blank = True)
     def __repr__(self):
         return  "Listing : " + self.product.name + self.specifications
+
+    #l.dfs = [{name : 'screenSize' , value : '5'} , {name : 'brand' , value : 'nokia'}]
+
 
 
 class Category(models.Model):
@@ -107,3 +118,21 @@ class Cart(models.Model):
     typ = models.CharField(choices = CART_TYPE_CHOICES , max_length = 10 , default = 'cart')
 
 User.cart = property(lambda u : Cart.objects.get_or_create(user = u)[0])
+
+ACTIVITIES_TYPE_CHOICES = (
+    ('productView' , 'productView'),
+    ('categoryView' , 'categoryView'),
+    ('checkingOut' , 'checkingOut'),
+    ('loggedIn' , 'loggedIn'),
+    ('productCmmts' , 'productCmmts'),
+    ('removeFromCart' , 'removeFromCart'),
+    ('pageView' , 'pageView'),
+)
+
+
+# class Activities(models.Model):
+#     user = models.ForeignKey(User, null = False)
+#     # product =
+#     typ =  models.CharField(choices = CART_TYPE_CHOICES , max_length = 10 , default='loggedIn')
+#      # choice - product view , category view , checling out , logged in , product cmts , remove from cart , ppage view
+#     data = models.CharField(max_length = 200 , null = True)

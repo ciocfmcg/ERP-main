@@ -36,6 +36,7 @@
 
       <div ng-repeat="f in data.genericProduct.fields">
         <div class="form-group">
+          <!-- {{f.data}} -->
           <label ng-if="f.fieldType != 'choice'">{{f.name | humanize}} {{f.unit==null || f.unit == ''? '': 'in (' + f.unit + ')' }}</label>
           <label ng-if="f.fieldType == 'choice'">{{f.name | humanize}} {{f.unit==null || f.unit == ''? '': '(choice parent label :  ' + f.unit + ')' }}</label>
           <input ng-if="f.fieldType == 'char'" type="text" class="form-control" ng-model="f.value">
@@ -48,8 +49,9 @@
             </span>
           </div>
           <!-- <input ng-if="f.fieldType == 'choice'" uib-typeahead="choice as choice.name for choice in choiceSearch($viewValue , f)" ng-model="f.value" type="text" class="form-control" placeholder="Search and select a choice"> -->
+          <!-- {{f.data}} {{f.fieldType}} -->
           <select ng-if="f.fieldType == 'choice'" class="form-control" ng-model="f.value">
-            <option ng-repeat="o in f.data" value="{{o}}" >{{o}}</option>
+            <option ng-repeat="o in  f.data" value="{{o}}" >{{o}}</option>
           </select>
           <p class="help-block">{{f.helpText}}.</p>
         </div>

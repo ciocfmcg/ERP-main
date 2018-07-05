@@ -136,6 +136,11 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
     specs = [];
     for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
       f = $scope.data.genericProduct.fields[i];
+      console.log('fffffffffff',f.value);
+      if (f.value==undefined | f.value =='') {
+        Flash.create('warning', 'please fill ' + f.name );
+        return
+      }
       toPush = {};
       toPush['name'] = f.name;
       toPush['value'] = f.value;
@@ -146,6 +151,8 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
       console.log(toPush);
       specs.push(toPush);
     }
+
+
     dataToSend.specifications = JSON.stringify(specs)
     console.log('sssssssssssssssssssss',specs);
     dataToSend.parentType = $scope.data.genericProduct.pk;
@@ -176,7 +183,6 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
 
   $scope.switchMediaMode = function(mode){
     $scope.data.form.mediaType = mode;
-
   }
 
   $scope.postMedia = function(){
@@ -215,10 +221,21 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
       then(function(response){
         gp =  response.data;
         specs = $scope.data.specifications;
+        console.log(gp);
+
+        for (var i = 0; i < gp.fields.length; i++) {
+          if (gp.fields[i].fieldType=='choice' && typeof gp.fields[i].data == 'string' ) {
+            gp.fields[i].data = JSON.parse(gp.fields[i].data)
+          }
+        }
+
+
         for (var i = 0; i < gp.fields.length; i++) {
           for (var j = 0; j < specs.length; j++) {
             if (gp.fields[i].name == specs[j].name) {
-              console.log(specs[j].name,specs[j].value);
+              if (specs[j].fieldType=='choice' && typeof specs[j].data == 'string') {
+                specs[j].data = JSON.parse(specs[j].data)
+              }
               gp.fields[i].value = specs[j].value;
               gp.fields[i].data = specs[j].data;
             }
@@ -226,6 +243,7 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
         }
 
         $scope.data.genericProduct = gp;
+
       })
     })
   }else {

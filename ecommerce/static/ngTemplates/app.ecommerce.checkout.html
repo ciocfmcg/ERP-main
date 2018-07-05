@@ -1,4 +1,4 @@
-<div class="container-fluid" >
+<div class="container-fluid">
   <div class="col-md-10 col-md-offset-1 card bg-white" style="display:block;position:relative;min-height:760px;padding-left:0px;margin-bottom:30px;">
 
     <div class="col-md-2  bg-purple" style="position:absolute; height:100%;">
@@ -13,34 +13,30 @@
       <div style="position:absolute;left:0px;width:100%;display:block;" class="bg-purple">
         <ul class="nav padded sidebar-checkout" style="width:100%;padding:0px;margin:0px;display:block;height:603px;">
           <li ng-class="{activeTab: data.stage == 'review'}">
-            <a >
+            <a>
               <div align="center">
-                <i class="fa fa-check fa-2x pull-left"></i>
-                Review
+                <i class="fa fa-check fa-2x pull-left"></i> Review
               </div>
             </a>
           </li>
           <li ng-class="{activeTab: data.stage == 'shippingDetails'}">
-            <a >
+            <a>
               <div align="center">
-                <i class="fa fa-truck fa-2x pull-left"></i>
-                Shipment details
+                <i class="fa fa-truck fa-2x pull-left"></i> Shipment details
               </div>
             </a>
           </li>
           <li ng-class="{activeTab: data.stage == 'payment'}">
-            <a  >
+            <a>
               <div align="center">
-                <i class="fa fa-credit-card fa-2x pull-left"></i>
-                Pay
+                <i class="fa fa-credit-card fa-2x pull-left"></i> Pay
               </div>
             </a>
           </li>
           <li ng-if="data.stage=='confirmation'" ng-class="{activeTab: data.stage == 'confirmation'}">
-            <a  >
+            <a>
               <div align="center">
-                <i class="fa fa-check-circle fa-2x pull-left"></i>
-                Confirmation
+                <i class="fa fa-check-circle fa-2x pull-left"></i> Confirmation
               </div>
             </a>
           </li>
@@ -51,13 +47,33 @@
     <div class="col-md-10 col-md-offset-2">
       <div class="container-fluid" style="margin-top:30px;">
         <div ng-if="data.stage == 'review'">
-          <div class="row">
+
+          <div ng-if="cartItems" class="row" ng-repeat="i in cartItems">
             <div class="col-md-3">
-              <img style="width: 100%;" class="img" ng-src="{{item.files[0].attachment}}" >
+              <div class="row">
+                <img style="width: 100%; height:100px;" class="img" ng-src="{{i.product.files[0].attachment}}">
+              </div>
+              <div class="row">
+                <div class=" card bg-white" style="padding-bottom:0px;">
+                  <div class="row container-fluid" style="padding:10px 20px; height:110px; ">
+                    <h5 style="margin:0px">{{i.product.product.name}}</h5>
+                    <span style="font-size:15px;"> Price : </span>
+                    <span class="pull-right" style="font-size:15px;">
+                  {{i.product.product.price}} <i class="fa fa-inr"></i>
+                  </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div ng-if="item" class="row">
+            <div class="col-md-3">
+              <img style="width: 100%; height:100px;" class="img" ng-src="{{item.files[0].attachment}}">
             </div>
             <div class="col-md-3">
               <div class="row">
-                <span style="font-size:25px;">{{item.product.name}}</span>
+                <span style="font-size:20px;">{{item.product.name}}</span>
               </div>
               <div class="row">
                 <strong>Rate : </strong><i class="fa fa-inr"></i> {{item.product.price}}
@@ -67,24 +83,24 @@
               </div>
               <div class="row">
                 <strong>Vendor : </strong> {{offering.service.name }} <br>
-                <!-- <uib-rating ng-model="rate" max="5" readonly="true" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
-                <br> Power Seller <i style="color:#db55e7;" class="fa fa-shield"></i> -->
+                <uib-rating ng-model="rate" max="5" readonly="true" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                <br> Power Seller <i style="color:#db55e7;" class="fa fa-shield"></i>
               </div>
             </div>
-            <!-- <div class="col-md-3" style="padding-top:10px;">
+            <div class="col-md-3" style="padding-top:10px;">
               <div class="input-group">
                 <span class="input-group-addon">#</span>
-                <input type="text" class="form-control" ng-model = "data.quantity">
+                <input type="text" class="form-control" ng-model="data.quantity">
                 <span class="input-group-addon" ng-if="item.priceModel=='time'">Bookings</span>
                 <span class="input-group-addon" ng-if="item.priceModel=='quantity'">Pieces</span>
                 <span class="input-group-addon" ng-if="item.priceModel=='weight'">Kgs</span>
               </div>
-              <div class="input-group pull-left"  style="margin-top:40px;">
+              <div class="input-group pull-left" style="margin-top:40px;">
                 <span class="input-group-addon">Coupon code</span>
                 <input ng-model="data.coupon" type="text" class="form-control">
               </div>
 
-            </div> -->
+            </div>
             <div class="col-md-6">
               <div ng-if="item.priceModel=='time'">
                 <span style="font-size:25px;">Trip details</span>
@@ -164,7 +180,7 @@
                 <div class="col-md-8" style="padding:0px;">
                   <div class="form-group">
                     <label>Driving license</label>
-                    <input type="file" file-model="data.attachment" class="form-control" >
+                    <input type="file" file-model="data.attachment" class="form-control">
                     <p class="help-block">Browse and upload a copy of your driving license.</p>
                   </div>
                 </div>
@@ -179,7 +195,7 @@
               </div>
             </div>
           </div>
-          <div class="row" >
+          <div class="row">
             <button type="button" class="btn btn-default pull-left" ng-click="prev()">
               Go back
             </button>
@@ -198,7 +214,7 @@
             </p>
           </div>
 
-          <div class="row" >
+          <div class="row">
             <button type="button" class="btn btn-default pull-left" ng-click="prev()">
               Go back
             </button>
