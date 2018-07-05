@@ -780,7 +780,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       contractPaper: emptyFile,
       billingFrequency: 0,
       billingDates: '',
-      unitType: 'sqrt',
+      unitType: 'sqft',
       otherDocs: emptyFile,
       occupancy: '',
       areas: '',

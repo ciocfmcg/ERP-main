@@ -281,7 +281,7 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
           console.log($scope.arr);
           fill('#87CEFA', gx, gy);
           if ($scope.mode == 'edit') {
-            $scope.totalBoxes = $scope.arr.length
+            $scope.totalBoxes = $scope.totalBoxes - 1
           }
           return
         }
@@ -296,7 +296,7 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
       // console.log($scope.dataurl);
       console.log($scope.arr);
       if ($scope.mode == 'edit') {
-      $scope.totalBoxes = $scope.arr.length
+      $scope.totalBoxes = $scope.totalBoxes + 1
     }
     }
 
