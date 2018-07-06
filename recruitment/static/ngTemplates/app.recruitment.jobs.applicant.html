@@ -10,13 +10,26 @@
           {{applicant.status}}</span></br>
         </br>
         <div class="row">
+          <div class="col-md-12" style="padding-bottom:20px">
+            <label> Applied History : </label>
+            <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="h in pastApplyHistory">
+              <div class="row">
+                <div class="col-md-12">
+                  <strong>Applied On : </strong> {{h.created | date : 'dd MMM yyyy , hh:mm:a'}}</br>
+                  <strong>Job Type : </strong> {{h.job.jobtype}}</br>
+                  <strong>Department : </strong> {{h.job.department.dept_name}}</br>
+                  <strong>Job Role : </strong> {{h.job.role.name}}</br>
+                  </div>
+                </div>
+              </div>
+            </div>
           <div class="col-md-12">
             <label>  Schedule: </label>
             <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="c in schedules">
               <div class="row">
                 <div class="col-md-10">
                   <i class="fa fa-users"></i> {{c.interviewer.first_name}} {{c.interviewer.last_name}}</br>
-                  <i class="fa fa-calendar"></i> {{c.interviewDate}}</br>
+                  <i class="fa fa-calendar"></i> {{c.interviewDate | date : 'dd MMM yyyy , hh:mm:a'}}</br>
                   <i class="fa fa-phone" ng-if="status==telephonic"></i> <i class="fa fa-users" ng-if="status==face-to-face"></i> {{c.mode}}</br>
                   <div ng-if="c.comment"><i class="fa fa-commented"></i> {{c.comment}}</br>
                   </div>

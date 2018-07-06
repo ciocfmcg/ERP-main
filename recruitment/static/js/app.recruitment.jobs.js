@@ -486,6 +486,14 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
         console.log( response.data,'dddddddddddddddd');
         $scope.schedules = response.data;
       });
+      $http({
+        method: 'GET',
+        url: '/api/recruitment/applyJob/?email=' + $scope.applicant.email + '&mobile=' + $scope.applicant.mobile
+      }).
+      then(function(response) {
+        console.log( response.data,'dddddddddddddddd');
+        $scope.pastApplyHistory = response.data;
+      });
     });
   }
   $scope.fetchDeal()
@@ -547,16 +555,16 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
       mode: $scope.form.mode
     }
     console.log('svchhhhhhhhhhhhhhhhh',toSend);
-    // $http({
-    //   method: 'POST',
-    //   url: '/api/recruitment/interview/',
-    //   data: toSend
-    // }).
-    // then(function(response) {
-    //   $scope.schedules.push(response.data);
-    //   Flash.create('success', 'Saved')
-    //   $scope.resetForm();
-    // })
+    $http({
+      method: 'POST',
+      url: '/api/recruitment/interview/',
+      data: toSend
+    }).
+    then(function(response) {
+      $scope.schedules.push(response.data);
+      Flash.create('success', 'Saved')
+      $scope.resetForm();
+    })
   }
 
   // $scope.comment=function(){

@@ -26,7 +26,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = JobApplicationSerializer
     queryset = JobApplication.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['job','status']
+    filter_fields = ['job','status' ,'email' ,'mobile']
 
 class JobsList(APIView):
     permission_classes = (permissions.AllowAny, )
