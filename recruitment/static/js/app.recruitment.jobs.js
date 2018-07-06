@@ -410,7 +410,6 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   //   }
   // }
   $scope.exploreApplicant = function(applicant, evt) {
-    console.log(applicant.pk, 'ddddddddddddd');
     if ($scope.isDragging) {
       $scope.isDragging = false;
     } else {
@@ -425,6 +424,9 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
       })
     }
   }
+  $scope.$on('draggable:start', function (data) {
+    $scope.isDragging=true;
+  });
 
   $scope.removeFromData = function(pk) {
     for (var key in $scope.data) {
@@ -521,30 +523,40 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
   }
   $scope.resetForm = function() {
     $scope.form = {
-      'interviewer': [],
-      'interviewDate': '',
+      'interviewer': '',
+      'interviewDate': new Date(),
+      'mode' : ''
     }
   }
   $scope.resetForm();
 
   $scope.schedule=function(){
     console.log($scope.form.interviewer.pk,'aaaaaaaaaaaaa');
+    if (typeof $scope.form.interviewer != 'object') {
+      Flash.create('warning','please Select Suggested Interviewer')
+      return
+    }
+    if ($scope.form.mode.length == 0) {
+      Flash.create('warning','please Select Interview Mode')
+      return
+    }
     var toSend = {
       interviewer:$scope.form.interviewer.pk,
       interviewDate: $scope.form.interviewDate,
       candidate: $scope.applicant.pk,
       mode: $scope.form.mode
     }
-    $http({
-      method: 'POST',
-      url: '/api/recruitment/interview/',
-      data: toSend
-    }).
-    then(function(response) {
-      $scope.schedules.push(response.data);
-      Flash.create('success', 'Saved')
-      $scope.resetForm();
-    })
+    console.log('svchhhhhhhhhhhhhhhhh',toSend);
+    // $http({
+    //   method: 'POST',
+    //   url: '/api/recruitment/interview/',
+    //   data: toSend
+    // }).
+    // then(function(response) {
+    //   $scope.schedules.push(response.data);
+    //   Flash.create('success', 'Saved')
+    //   $scope.resetForm();
+    // })
   }
 
   // $scope.comment=function(){
@@ -570,9 +582,8 @@ $scope.interviewerSearch = function(query) {
   })
 }
 $scope.getName = function(u) {
-  if (typeof u == 'undefined' || u == null) {
-    return '';
+  if (u != undefined && u.first_name != undefined) {
+    return u.first_name + '  ' + u.last_name;
   }
-  return u.first_name + '  ' + u.last_name;
 }
 });
