@@ -61,7 +61,7 @@ class InterviewSerializer(serializers.ModelSerializer):
     interviewer = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = Interview
-        fields = ('pk', 'interviewer','comment', 'interviewDate', 'mode' , 'score','candidate')
+        fields = ('pk', 'interviewer' ,'status' ,'comment', 'interviewDate', 'mode' , 'score','candidate')
     def create(self , validated_data):
         a = Interview(**validated_data)
         if 'candidate' in self.context['request'].data:

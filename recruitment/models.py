@@ -71,6 +71,6 @@ class Interview(models.Model):
     comment =  models.CharField(max_length = 1000 , null = True)
     interviewDate = models.DateTimeField(null = True)
     score = models.PositiveSmallIntegerField(default=0, null = True)
-    status = models.CharField(max_length = 15 , choices = STATUS_INTERVIEW_CHOICES , default = 'created' , null = True)
+    status = models.CharField(max_length = 15 , choices = STATUS_INTERVIEW_CHOICES , default = 'created')
     mode = models.CharField(max_length = 15 , choices = MODE_INTERVIEW_CHOICES , default = 'online', null = True )
     candidate = models.ForeignKey(JobApplication , related_name='candidates', blank = True, null = True)

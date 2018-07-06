@@ -38,11 +38,28 @@
           <div class="col-md-5  text-right">
             <strong>Skills Required :</strong>
           </div>
-          <div class="col-md-7" ng-bind-html = "details.candidate.job.skill">
+          <div class="col-md-7" ng-bind-html="details.candidate.job.skill">
             <!-- {{details.candidate.job.skill}} -->
           </div>
         </div>
 
+      </div>
+      <div class="row">
+        <div class="col-md-11">
+          <label><i class="fa fa-commenting"></i> Comments:</label>
+          <div class="container-fluid card" style="padding-top:20px;" ng-repeat="c in comment" ng-if="c.comment">
+            <div class="row">
+              <div class="col-md-12">
+                {{c.comment}}
+              </div>
+            </div></br>
+            <div class="row">
+              <div class="col-md-12 text-right ">
+                - {{c.interviewer.first_name}} {{c.interviewer.last_name}}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-md-7">
@@ -52,27 +69,27 @@
       <div class="row" style="padding-top:20px">
         <div class="col-md-4">
           <div class="btn-group">
-            <button style="width:150px" class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="primary" cancel-button-type="default"><i class="fa fa-tick">Suitable</i></button>
+            <button style="width:150px" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="selected()" confirm-button-type="success" cancel-button-type="default"><i class="fa fa-tick">Selected</i></button>
           </div>
         </div>
         <div class="col-md-4">
           <div class="btn-group">
-            <button style="width:150px" class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default"><i class="fa fa-tick">Not Suitable</i></button>
+            <button style="width:150px" class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default"><i class="fa fa-tick">Rejected</i></button>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4  text-right">
           <div class="btn-group">
-            <button style="width:150px" class="btn btn-default" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="primary" cancel-button-type="default"><i class="fa fa-tick">Recommend Other</i></button>
+            <button style="width:150px" class="btn btn-primary " mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="recommend()" confirm-button-type="primary" cancel-button-type="default"><i class="fa fa-tick">Recommend Other</i></button>
           </div>
         </div>
       </div>
-    </div>
-    <!-- <div class="col-md-3">
-      <div class="form-group">
-        <label><i class="fa fa-comment"></i> Leave A Comment: </label>
-        <textarea type="text" class="form-control" ng-model="allotmentForm.comments" placeholder="Your Comment Here........"></textarea>
+      <div class="row" style="padding-top:20px">
+        <div class="form-group">
+          <label><i class="fa fa-comment"></i> Leave A Comment: </label>
+          <textarea type="text" class="form-control" ng-model="comment.comment" placeholder="Your Comment Here........"></textarea>
+        </div>
+        <button class="btn btn-primary pull-right" ng-click="commented()"><i class="fa fa-tick">Suitable</i></button>
       </div>
     </div>
-      <button class="btn btn-primary pull-right" ><i class="fa fa-tick">Suitable</i></button> -->
   </div>
 </div>
