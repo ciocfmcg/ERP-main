@@ -283,8 +283,9 @@ app.controller("hospitalManagement.patients.form", function($scope, $rootScope, 
       return
     }
 
-    if ($scope.newPatient.pin=='') {
-      $scope.newPatient.pin = 0
+
+    if ($scope.newPatient.pin == '') {
+      delete $scope.newPatient.pin
     }
 
 

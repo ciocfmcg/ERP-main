@@ -564,7 +564,6 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
             gender: '',
             // dateOfBirth: '',
             age : '',
-            uniqueId: '',
             // email: '',
             phoneNo: '',
             // emergencyContact1: '',
@@ -581,25 +580,30 @@ app.controller('hospitalManagement.outPatient.form', function($scope, $http, $as
 
 
 
-        $scope.generateUniqueId = function() {
-          $scope.newPatient.uniqueId = parseInt(new Date().getTime()/1000)
-          console.log('generateeeee....');
-        }
+        // $scope.generateUniqueId = function() {
+        //   $scope.newPatient.uniqueId = parseInt(new Date().getTime()/1000)
+        //   console.log('generateeeee....');
+        // }
 
+        $scope.cancelPatient = function(){
+          $uibModalInstance.dismiss($scope.name);
+        }
         $scope.createPatient = function() {
 
           if ($scope.newPatient.firstName == '') {
             Flash.create('warning', 'Please fill First Name');
             return
           }
-
-          if ($scope.newPatient.uniqueId == '') {
-            Flash.create('warning', 'Please generate unique ID');
+          if ($scope.newPatient.age =='') {
+            Flash.create('warning', 'Please fill Age');
             return
           }
           if ($scope.newPatient.phoneNo == '') {
             Flash.create('warning', 'Please enter mobile no');
             return
+          }
+          if ($scope.newPatient.pin == '') {
+            delete $scope.newPatient.pin
           }
 
           $http({

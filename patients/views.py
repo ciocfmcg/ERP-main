@@ -34,6 +34,7 @@ from django.db.models import Value
 import json
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
+from django.template import defaultfilters
 # Create your views here.
 
 
@@ -284,7 +285,7 @@ def invoice(response,inv):
 
     doc.build(elements)
 
-from django.template import defaultfilters
+
 
 def dischargeSummary(response,dis):
     print '77777777777777777'
@@ -459,7 +460,6 @@ def dischargeSummary(response,dis):
     p18_1= Paragraph("<para fontSize=9 textColor=black><b>Treatment Given</b></para>",styles['Normal'])
     p18_2=Paragraph("<para  fontSize=9 textColor=black>: {0} </para>".format(p18),styles['Normal'])
 
-    print 'pppppppppppppppppppp',p18
     p19_1= Paragraph("<para fontSize=9 textColor=black><b>Course In The Hospital Including Complications, If Any</b></para>",styles['Normal'])
     p19_2=Paragraph("<para  fontSize=9 textColor=black><br/>: {0} </para>".format(p19),styles['Normal'])
 

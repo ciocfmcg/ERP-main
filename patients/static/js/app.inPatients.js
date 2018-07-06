@@ -757,54 +757,7 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
       },
       controller: function($scope, name, form, $uibModalInstance) {
         $scope.name = name
-        // $scope.newPatient = {
-        //   firstName: '',
-        //   lastName: '',
-        //   dateOfBirth: '',
-        //   gender: '',
-        //   uniqueId: ''
-        // };
-        //
-        // $scope.newPatient.firstName = $scope.name;
-        //
-        // $scope.generateUniqueId = function() {
-        //   $scope.newPatient.uniqueId = new Date().getTime()
-        //   console.log('generateeeee....');
-        // }
-        //
-        // $scope.createPatient = function() {
-        //
-        //   dataToSend = {
-        //     firstName: $scope.newPatient.firstName,
-        //     lastName: $scope.newPatient.lastName,
-        //     dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
-        //     gender: $scope.newPatient.gender,
-        //     uniqueId: $scope.newPatient.uniqueId
-        //   };
-        //
-        //   console.log('lklklkllklklklklkl', dataToSend);
-        //
-        //   $http({
-        //     method: 'POST',
-        //     url: '/api/patients/patient/',
-        //     data: dataToSend
-        //   }).
-        //   then(function(response) {
-        //     Flash.create('success', response.status + ' : ' + response.statusText);
-        //     $scope.newPatient = {
-        //       firstName: '',
-        //       lastName: '',
-        //       dateOfBirth: '',
-        //       gender: '',
-        //       uniqueId: ''
-        //     };
-        //     form.patient = response.data;
-        //     $uibModalInstance.dismiss(form.patient);
-        //   }, function(response) {
-        //     Flash.create('danger', response.status + ' : ' + response.statusText);
-        //   });
-        //
-        // }
+
 
         $scope.formRefresh = function() {
           $scope.newPatient = {
@@ -812,7 +765,6 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
             // lastName: '',
             gender:'',
             // dateOfBirth:'',
-            uniqueId: '',
             age : '',
             // email: '',
             phoneNo: '',
@@ -830,34 +782,32 @@ app.controller("hospitalManagement.activePatients.form", function($scope, $rootS
 
 
 
-        $scope.generateUniqueId = function() {
-          $scope.newPatient.uniqueId = new Date().getTime()
-          console.log('generateeeee....');
+        // $scope.generateUniqueId = function() {
+        //   $scope.newPatient.uniqueId = new Date().getTime()
+        //   console.log('generateeeee....');
+        // }
+        $scope.cancelPatient = function(){
+          $uibModalInstance.dismiss($scope.name);
         }
-
         $scope.createPatient = function() {
 
           if ($scope.newPatient.firstName=='') {
             Flash.create('warning', 'Please fill First Name');
             return
           }
-
-          if ($scope.newPatient.uniqueId=='') {
-            Flash.create('warning', 'Please generate unique ID');
+          if ($scope.newPatient.age =='') {
+            Flash.create('warning', 'Please fill Age');
             return
           }
+
           if ($scope.newPatient.phoneNo=='') {
             Flash.create('warning', 'Please enter mobile no');
             return
           }
+          if ($scope.newPatient.pin == '') {
+            delete $scope.newPatient.pin
+          }
 
-          // dataToSend = {
-          //   firstName: $scope.newPatient.firstName,
-          //   lastName: $scope.newPatient.lastName,
-          //   dateOfBirth: $scope.newPatient.dateOfBirth.toJSON().split('T')[0],
-          //   gender: $scope.newPatient.gender,
-          //   uniqueId: $scope.newPatient.uniqueId
-          // };
 
           console.log('lklklkllklklklklkl', $scope.newPatient);
 

@@ -8,18 +8,13 @@
     <div class="row" style="margin-top:20px">
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="form-group">
               <label>Name</label>
               <input type="text" class="form-control" ng-model="newPatient.firstName" placeholder="">
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Mobile</label>
-              <input type="text" class="form-control" ng-model="newPatient.phoneNo" placeholder="">
-            </div>
-          </div>
+
 
         </div>
 
@@ -45,18 +40,10 @@
               <input type="text" class="form-control" ng-model="newPatient.age" placeholder="">
             </div>
           </div>
-
           <div class="col-md-6">
-            <!-- <div class="form-group">
-            <label>Unique Id</label>
-            <input type="text" class="form-control" ng-model="newPatient.uniqueId" placeholder="">
-          </div> -->
             <div class="form-group">
-              <label>Unique Id</label>
-              <div class="input-group">
-                <input type="text" class="form-control" ng-model="newPatient.uniqueId" placeholder="Generate unique id" disabled>
-                <div class="input-group-addon" style="cursor:pointer;" ng-click="generateUniqueId()">Generate</div>
-              </div>
+              <label>Mobile</label>
+              <input type="text" class="form-control" ng-model="newPatient.phoneNo" placeholder="">
             </div>
           </div>
 
@@ -142,9 +129,10 @@
     </div>
     <div class="row" style="margin-top:25px;margin-bottom:25px">
       <div class="col-md-5 col-md-offset-5">
-        <button ng-click="createPatient()" type="button" class="btn btn-primary">
-        Save
-      </button>
+        <div class="btn-group ">
+          <button ng-click="createPatient()" type="button" class="btn btn-primary">Save</button>
+        <button ng-click="cancelPatient()" type="button" class="btn btn-default">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
