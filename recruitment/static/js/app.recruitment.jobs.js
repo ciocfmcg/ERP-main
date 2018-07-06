@@ -410,7 +410,6 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   //   }
   // }
   $scope.exploreApplicant = function(applicant, evt) {
-    console.log(applicant.pk, 'ddddddddddddd');
     if ($scope.isDragging) {
       $scope.isDragging = false;
     } else {
@@ -425,6 +424,9 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
       })
     }
   }
+  $scope.$on('draggable:start', function (data) {
+    $scope.isDragging=true;
+  });
 
   $scope.removeFromData = function(pk) {
     for (var key in $scope.data) {
@@ -483,6 +485,14 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
       then(function(response) {
         $scope.schedules = response.data;
       });
+      $http({
+        method: 'GET',
+        url: '/api/recruitment/applyJob/?email=' + $scope.applicant.email + '&mobile=' + $scope.applicant.mobile
+      }).
+      then(function(response) {
+        console.log( response.data,'dddddddddddddddd');
+        $scope.pastApplyHistory = response.data;
+      });
     });
   }
   $scope.fetchDeal()
@@ -508,23 +518,7 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
       first_name: $scope.applicant.firstname,
       last_name: $scope.applicant.lastname,
       emailID: $scope.applicant.email,
-      value : 'online'
-    }
-    $http({
-      method: 'POST',
-      url: '/api/recruitment/onlinelink/',
-      data: toSend
-    }).
-    then(function() {
-      Flash.create('success', 'Email sent successfully')
-    })
-  }
-  $scope.sendMail = function() {
-    var toSend = {
-      first_name: $scope.applicant.firstname,
-      last_name: $scope.applicant.lastname,
-      emailID: $scope.applicant.email,
-      value : 'interview'
+      value : 'online',
     }
     $http({
       method: 'POST',
@@ -536,22 +530,33 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     })
   }
 
+
   $scope.resetForm = function() {
     $scope.form = {
-      'interviewer': [],
-      'interviewDate': '',
+      'interviewer': '',
+      'interviewDate': new Date(),
+      'mode' : ''
     }
   }
   $scope.resetForm();
 
   $scope.schedule=function(){
     console.log($scope.form.interviewer.pk,'aaaaaaaaaaaaa');
+    if (typeof $scope.form.interviewer != 'object') {
+      Flash.create('warning','please Select Suggested Interviewer')
+      return
+    }
+    if ($scope.form.mode.length == 0) {
+      Flash.create('warning','please Select Interview Mode')
+      return
+    }
     var toSend = {
       interviewer:$scope.form.interviewer.pk,
       interviewDate: $scope.form.interviewDate,
       candidate: $scope.applicant.pk,
       mode: $scope.form.mode
     }
+    console.log('svchhhhhhhhhhhhhhhhh',toSend);
     $http({
       method: 'POST',
       url: '/api/recruitment/interview/',
@@ -571,10 +576,9 @@ $scope.interviewerSearch = function(query) {
   })
 }
 $scope.getName = function(u) {
-  if (typeof u == 'undefined' || u == null) {
-    return '';
+  if (u != undefined && u.first_name != undefined) {
+    return u.first_name + '  ' + u.last_name;
   }
-  return u.first_name + '  ' + u.last_name;
 }
 
 $scope.sendSMS=function(){
@@ -595,6 +599,47 @@ $scope.sendSMS=function(){
 
   });
 }
+$scope.sendMail=function(){
+  console.log("aaaaaaaaaaaaa");
+  $uibModal.open({
+    templateUrl: '/static/ngTemplates/app.recruitment.jobs.applicant.email.html',
+    size: 'lg',
+    backdrop: true,
+    resolve: {
+      data: function() {
+        return $scope.applicant;
+      }
+    },
+    controller: "workforceManagement.recruitment.jobs.applicant.email",
+  }).result.then(function() {
+
+  }, function() {
+
+  });
+}
 });
 app.controller("workforceManagement.recruitment.jobs.applicant.sms", function($scope, $state, $users, $stateParams, $http, Flash) {
+});
+app.controller("workforceManagement.recruitment.jobs.applicant.email", function($scope, $state, $users, $stateParams, $http, Flash, data) {
+  $scope.applicant=data,
+
+  $scope.send = function() {
+    var toSend = {
+      first_name: $scope.applicant.firstname,
+      last_name: $scope.applicant.lastname,
+      emailID: $scope.applicant.email,
+      status : $scope.applicant.status,
+      message : $scope.form.email,
+      subject : $scope.form.subject,
+      value : 'email'
+    }
+    $http({
+      method: 'POST',
+      url: '/api/recruitment/onlinelink/',
+      data: toSend
+    }).
+    then(function() {
+      Flash.create('success', 'Email sent successfully')
+    })
+  }
 });

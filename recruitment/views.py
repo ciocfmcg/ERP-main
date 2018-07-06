@@ -26,7 +26,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = JobApplicationSerializer
     queryset = JobApplication.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['job','status']
+    filter_fields = ['job','status' ,'email' ,'mobile']
 
 class JobsList(APIView):
     permission_classes = (permissions.AllowAny, )
@@ -73,9 +73,14 @@ class SendLinkAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self, request, format=None):
         contactData=[]
-        print request.data['value']
-        email_subject ="On Response to the post you have applied for:"
-        msgBody= "Hi" + request.data['first_name'] + " " + request.data['last_name'] + ",\n\n\t\t We are glad to inform you that you are been selected for the next level of interview i.e., Online Assesment. Please find the Assesment Link to complete as part of our interview process.\n\n Best of luck.\n\nThank You"
+        value = request.data['value']
+        if value=='online':
+            email_subject ="On Response to the post you have applied for:"
+            msgBody= "Hi " + request.data['first_name'] + " " + request.data['last_name'] + ",\n\n\t\t We are glad to inform you that you are been selected for the next level of interview i.e., Online Assesment. Please find the Assesment Link to complete as part of our interview process.\n\n Best of luck.\n\nThank You"
+        elif value=='email':
+            print request.data['subject'] ,'aaaaaaaaaaaaaaaa'
+            email_subject = request.data['subject']
+            msgBody= request.data['message']
         email=request.data['emailID']
         contactData.append(str(email))
         msg = EmailMessage(email_subject, msgBody,  to= contactData )
