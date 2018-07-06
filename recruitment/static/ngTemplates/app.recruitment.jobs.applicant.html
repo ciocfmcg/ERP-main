@@ -9,44 +9,62 @@
           {{applicant.status}}</span></br>
         </br>
         <div class="row">
-          <label><i class="fa fa-commenting" aria-hidden="true"></i>
-              Schedule: </label>
-          <div class="container-fluid card" style="padding:10px;" ng-repeat="c in schedules">
-            <div class="col-md-12">
-              <i class="fa fa-users"></i> {{c.interviewer.first_name}} {{c.interviewer.last_name}}</br>
-              <i class="fa fa-calendar"></i> {{c.interviewDate}}</br>
-              <i class="fa fa-phone" ng-if="status==telephonic" ></i> <i class="fa fa-users" ng-if="status==face-to-face" ></i> {{c.mode}}</br>
+          <div class="col-md-12">
+            <label>  Schedule: </label>
+            <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="c in schedules">
+              <div class="row">
+                <div class="col-md-10">
+                  <i class="fa fa-users"></i> {{c.interviewer.first_name}} {{c.interviewer.last_name}}</br>
+                  <i class="fa fa-calendar"></i> {{c.interviewDate}}</br>
+                  <i class="fa fa-phone" ng-if="status==telephonic"></i> <i class="fa fa-users" ng-if="status==face-to-face"></i> {{c.mode}}</br>
+                  <div ng-if="c.comment"><i class="fa fa-commented"></i> {{c.comment}}</br>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <i class="fa  fa-check-circle fa-2x text-success" ng-if="c.status=='suitable'"></i>
+                  <i class="fa  fa-check-circle fa-2x text-danger" ng-if="c.status=='un-suitable'"></i>
+                  <i class="fa  fa-check-circle fa-2x text-default" ng-if="c.status=='created'"></i>
+                  <i class="fa  fa-check-circle fa-2x text-primary" ng-if="c.status=='recommand-other-job'"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <object data='{{applicant.resume}}' type='application/pdf' width='100%' style="height:600px" /></br>
-        </br>
-        <!-- <users-Field data="form.interviewer" url="/api/HR/userSearch/" col="4" label="Interviwer"></users-Field> -->
-        <label>Interviewer: </label>
-        <input ng-model="form.interviewer" uib-typeahead="person as person.first_name for person in interviewerSearch($viewValue)" type="text" class="form-control" placeholder="Search using name">
-        <div class="form-group" style="padding-right:0px">
-          <label>Date: </label>
-          <div class="input-group">
-            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.interviewDate" is-open="statusDue.opened" ng-init="today" />
-            <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-          </span>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-12">
+            <object data='{{applicant.resume}}' type='application/pdf' width='100%' style="height:750px" />
           </div>
         </div>
-        <div class="form-group ">
-          <label class="radio-inline"> <input type="radio"  ng-model="form.mode" value="telephonic"> <i class="fa fa-phone" ></i></label>
-          <label class="radio-inline"><input type="radio" ng-model="form.mode" value="face-to-face">  <i class="fa fa-users" ></i></label>
+        <div class="row" style="margin-top:20px">
+          <div class="col-md-12 text-right">
+            <div class="btn-group">
+              <button class="btn btn-danger pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default" style="width:210px"><i class="fa fa-times"> Reject</i></button>
+              <button class="btn btn-default pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="onlineTest()" confirm-button-type="primary" cancel-button-type="default" style="width:210px"><i class="fa fa-user"> Send Test Link</i></button>
+            </div>
+          </div>
         </div>
-        <button class="btn btn-primary pull-right" ng-click="schedule()"> Schedule</button><br/><br/>
-      </div>
-      <div class="col-md-4">
-        <button class="btn btn-danger pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default" style="width:210px"><i class="fa fa-times"> Reject</i></button><br/><br/>
-        <button class="btn btn-default pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="onlineTest()" confirm-button-type="primary" cancel-button-type="default" style="width:210px"><i class="fa fa-user"> Send Test Link</i></button><br/><br/>
-        <!-- <label> <i class="fa fa-comment-o" aria-hidden="true"></i> Add Comment</label>
-        <textarea class="form-control" rows="3" placeholder="Your Comment Here......." ng-model="form.comment"></textarea> <br>
-        <button class="btn btn-primary pull-right" ng-click="comment()"> Comment</button><br/><br/> -->
+        <div class="row" style="margin-top:20px">
+          <div class="col-md-6">
+            <label>Interviewer: </label>
+            <input ng-model="form.interviewer" uib-typeahead="interviewer as getName(interviewer) for interviewer in interviewerSearch($viewValue)" type="text" class="form-control" placeholder="Search using name">
+            <div class="form-group" style="padding-right:0px">
+              <label>Date: </label>
+              <div class="input-group">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.interviewDate" is-open="statusDue.opened" ng-init="today" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+            <div class="form-group ">
+              <label class="radio-inline"> <input type="radio"  ng-model="form.mode" value="telephonic"> <i class="fa fa-phone" ></i></label>
+              <label class="radio-inline"><input type="radio" ng-model="form.mode" value="face-to-face">  <i class="fa fa-users" ></i></label>
+            </div>
+            <button class="btn btn-primary pull-right" ng-click="schedule()"> Schedule</button><br/><br/>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -564,12 +564,15 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
 // }
 
 $scope.interviewerSearch = function(query) {
-  if (query == '') {
-    return;
-  }
-  return $http.get('/api/HR/userSearch/?limit=10&search=' + query).
+  return $http.get('/api/HR/userSearch/?limit=10&username__contains=' + query).
   then(function(response) {
     return response.data.results;
   })
+}
+$scope.getName = function(u) {
+  if (typeof u == 'undefined' || u == null) {
+    return '';
+  }
+  return u.first_name + '  ' + u.last_name;
 }
 });

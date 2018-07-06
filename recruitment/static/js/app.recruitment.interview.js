@@ -91,4 +91,58 @@ app.controller("workforceManagement.recruitment.interview.explore", function($sc
 
   $scope.details = $scope.data.tableData[$scope.tab.data.index]
 
+  $scope.selected=function(){
+    var toSend = {
+      status :'suitable',
+    }
+    $http({method : 'PATCH' , url : '/api/recruitment/interview/'+  $scope.details.pk +'/' , data : toSend}).
+    then(function(response) {
+        Flash.create('success', 'Saved');
+    })
+  }
+  $scope.rejected=function(){
+    var toSend = {
+      status :'un-suitable',
+    }
+    $http({method : 'PATCH' , url : '/api/recruitment/interview/'+  $scope.details.pk +'/' , data : toSend}).
+    then(function(response) {
+        Flash.create('success', 'Saved');
+    })
+  }
+
+  $scope.recommend=function(){
+    var toSend = {
+      status :'recommand-other-job',
+    }
+    $http({method : 'PATCH' , url : '/api/recruitment/interview/'+  $scope.details.pk +'/' , data : toSend}).
+    then(function(response) {
+        Flash.create('success', 'Saved');
+    })
+  }
+  $scope.comment=[]
+  $scope.commented=function(){
+    var toSend = {
+      comment :$scope.comment.comment,
+    }
+    $http({method : 'PATCH' , url : '/api/recruitment/interview/'+  $scope.details.pk + '/' , data : toSend}).
+    then(function(response) {
+        Flash.create('success', 'Saved');
+        $scope.comment = response.data
+        $scope.comment.comment=''
+        $scope.comments();
+
+    })
+  }
+  $scope.comments=function(){
+    $http({
+      method: 'GET',
+      url: '/api/recruitment/interview/?candidate=' + $scope.details.candidate.pk
+    }).then(function(response) {
+      console.log(response.data,'aaaaaaaaaaaaaa');
+      $scope.comment = response.data;
+    })
+  }
+  $scope.comments();
+
+
 });
