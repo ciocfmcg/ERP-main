@@ -172,8 +172,8 @@ def invoice(response,inv):
     else:
         txt = 'IP No.'
         count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count()
-        n = count if count>=1000 else '0'+str(count)
-        billNo = 'CB'+str(n)+'/18'
+        # n = count if count>=1000 else '0'+str(count)
+        billNo = 'CB'+str(count).zfill(4)+'/18'
         a = defaultfilters.date(inv.activePatient.inTime, "d-m-Y , h:i A")
         d = defaultfilters.date(inv.activePatient.dateOfDischarge, "d-m-Y , h:i A")
         try:
