@@ -56,10 +56,10 @@
                 <tbody>
                   <tr ng-repeat="r in tableData">
                     <td style="text-align:center">{{$index + 1}}</td>
-                    <td style="text-align:center">{{r.pname}}</td>
+                    <td style="text-align:center">{{r.activePatient__patient__firstName}}</td>
                     <td style="text-align:center">{{r.invoiceName}}</td>
-                    <td style="text-align:center">{{r.refId}}</td>
-                    <td style="text-align:center">{{r.typ}}</td>
+                    <td style="text-align:center">{{r.activePatient__outPatient ? r.activePatient__opNo : r.activePatient__dischargeSummary__ipNo}}</td>
+                    <td style="text-align:center">{{r.activePatient__outPatient ? 'Out Patient' : 'In Patient'}}</td>
                     <td style="text-align:center">{{r.grandTotal}}</td>
                   </tr>
                   <!-- <tr>

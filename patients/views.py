@@ -575,8 +575,8 @@ class GetReports(APIView):
         start = request.GET['start']
         end = request.GET['end']
         print start,end
-        inpatientRecords =list( Invoice.objects.filter(created__range=(start,end),activePatient__outPatient=True).values('pk','invoiceName','grandTotal',pname = Concat('activePatient__patient__firstName', Value(' '), 'activePatient__patient__lastName'),refId=F('activePatient__opNo')).annotate(typ=Value('Out Patient',output_field=CharField())))
-        outPatientRecords = list( Invoice.objects.filter(created__range=(start,end),activePatient__outPatient=False).values('pk','invoiceName','grandTotal',pname=Concat('activePatient__patient__firstName', Value(' '), 'activePatient__patient__lastName'),refId=F('activePatient__dischargeSummary__ipNo')).annotate(typ=Value('In Patient',output_field=CharField())))
-        toSend = inpatientRecords+outPatientRecords
-        print '************',toSend
-        return Response(toSend,status = status.HTTP_200_OK)
+        Records =list( Invoice.objects.filter(created__range=(start,end)).values('pk','invoiceName','grandTotal','activePatient__outPatient','activePatient__patient__firstName','activePatient__dischargeSummary__ipNo','activePatient__opNo'))
+        # outPatientRecords = list( Invoice.objects.filter(created__range=(start,end),activePatient__outPatient=False).values('pk','invoiceName','grandTotal','activePatient__outPatient','activePatient__patient__firstName','activePatient__dischargeSummary__ipNo','activePatient__opNo'))
+        # toSend = inpatientRecords+outPatientRecords
+        print '************',Records
+        return Response(Records,status = status.HTTP_200_OK)
