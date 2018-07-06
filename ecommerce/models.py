@@ -100,6 +100,7 @@ class offerBanner(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     level = models.PositiveIntegerField(null = False) # level indicates the position of display , 1 means the main banner , 2 for side and 3 for flash messages
     image = models.ImageField(null = False , upload_to = getEcommerceBannerUploadPath)
+    imagePortrait =  models.ImageField(null = True , upload_to = getEcommerceBannerUploadPath)
     title = models.CharField(max_length = 20 , null = True)
     subtitle = models.CharField(max_length = 20 , null = True)
     state = models.CharField(max_length = 20 , null = True)
@@ -130,9 +131,8 @@ ACTIVITIES_TYPE_CHOICES = (
 )
 
 
-# class Activities(models.Model):
-#     user = models.ForeignKey(User, null = False)
-#     # product =
-#     typ =  models.CharField(choices = CART_TYPE_CHOICES , max_length = 10 , default='loggedIn')
-#      # choice - product view , category view , checling out , logged in , product cmts , remove from cart , ppage view
-#     data = models.CharField(max_length = 200 , null = True)
+class Activities(models.Model):
+    user = models.ForeignKey(User, null = False , related_name = 'ecommerceActivities')
+    # product =
+    typ =  models.CharField(choices = ACTIVITIES_TYPE_CHOICES , max_length = 10 , default='loggedIn')
+    data = models.CharField(max_length = 200 , null = True)

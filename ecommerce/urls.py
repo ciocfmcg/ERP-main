@@ -11,6 +11,7 @@ router.register(r'listingLite' , listingLiteViewSet , base_name = 'listingLite')
 router.register(r'category' , CategoryViewSet , base_name = 'category')
 router.register(r'offerBanner' , offerBannerViewSet , base_name='offerBanner')
 router.register(r'cart' , CartViewSet , base_name='cart')
+router.register(r'activities' , ActivitiesViewSet , base_name='activities')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

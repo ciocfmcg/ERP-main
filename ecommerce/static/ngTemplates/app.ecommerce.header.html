@@ -4,7 +4,7 @@
     <img ng-click="$state.go('ecommerce')" src="/static/images/mono_icon_inverted.svg" style="height:7vh;cursor:pointer;" alt="">
   </div>
 
-  <div style="padding-top:1.5vh;">
+  <div style="padding-top:1.5vh;" class="hidden-xs hidden-sm">
     <div class="col-xs-5" style="padding:0px;">
       <!-- <input type="text" class="" style="width:100%;color: #000;text-indent: 10px;outline: none;" placeholder="Search for products, brands and more.."> -->
       <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="Search for products, brands and more..">
@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div class="col-xs-1 text-center dropdown">
+  <div class="col-xs-1 text-center dropdown hidden-xs hidden-sm">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer" ng-if="me.pk" > {{me.pk | getName}}</span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
@@ -26,18 +26,55 @@
     </ul>
   </div>
 
-  <div class="col-xs-2 text-center">
+  <div class="col-xs-2 text-center hidden-xs hidden-sm">
     <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
   </div>
 
 
+  <div class="col-xs-offset-3 col-xs-3 text-center hidden-lg hidden-md">
+    <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+  </div>
 
+  <div class="col-xs-3 text-center dropdown hidden-lg hidden-md ">
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer" ng-if="me.pk" > {{me.pk | getName}}</span>
+    <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px; left:-80px;">
+      <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
+      <li><a ui-sref="account.orders" >Orders</a></li>
+      <li><a ui-sref="account">Account</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </div>
+
+</div>
+<div class="row bg-blue ecomNav hidden-lg hidden-md" style="padding-bottom:10px; height:7vh" >
+  <div class="col-xs-10" style="padding-right:0px; padding-left:30px;">
+    <!-- <input type="text" class="" style="width:100%;color: #000;text-indent: 10px;outline: none;" placeholder="Search for products, brands and more.."> -->
+    <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="Search for products, brands and more..">
+  </div>
+  <div class="col-xs-2 text-center" style="padding:0px;">
+    <div style="width:50px;height:29px;padding-top:3px;background-color:#e2e2e2;color:grey; cursor:pointer;" ng-click="search()">
+      <i class="fa fa-search"></i>
+    </div>
+  </div>
 </div>
 
 
 
-<div ng-if="$state.is('ecommerce')" style="position:relative;height:300px;margin-bottom:20px;width:64%;left:18%;display:border-box;overflow:hidden;" class="card">
+<div ng-if="$state.is('ecommerce')" style="position:relative;height:300px;margin-bottom:20px;width:64%;left:18%;display:border-box;overflow:hidden;" class="card hidden-xs hidden-sm">
   <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slide.banners[slide.active].state , slide.banners[slide.active].params)" style="width:100%;" ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.image}}"/>
+  <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
+    <ul style="padding:0px;">
+      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:20%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
+        <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;">
+          {{s.title | uppercase}}
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div ng-if="$state.is('ecommerce')" style="position:relative;height:86vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slide.banners[slide.active].state , slide.banners[slide.active].params)" style="width:100%;" ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.imagePortrait}}"/>
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
     <ul style="padding:0px;">
       <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:20%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
@@ -51,16 +88,14 @@
 
 
 
-
-
-
-<div ng-init="showFeedback=false;" class="bg-white card" style="position:fixed; top:350px;right:{{!showFeedback ? '-350' : '0'}}px;transition:right 0.1s linear;
-  width:350px;height:460px;z-index:10;border-left:solid 5px #136ab1;">
+<div ng-init="showFeedback=false;" class="bg-white card" style="position:fixed; top:40vh;right:{{!showFeedback ? '-350' : '0'}}px;transition:right 0.1s linear;
+  width:350px;height:460px; z-index:10;border-left:solid 5px #136ab1;">
   <div style="position:absolute;right:290px;width:150px;height:32px;top:100px;background-color:#136ab1;cursor:pointer;
     transform: rotate(-90deg);border-radius : 6px 6px 0px 0px; padding-right:20px;padding-left:20px;" ng-click="showFeedback = !showFeedback;">
     <span style="font-size:18px;color:white;letter-spacing: 3px;">Feedback
     </span>
   </div>
+
   <div class="container-fluid" style="margin:10px;">
     <div class="row">
       <strong>Send us your feeback / message / complaint or query.</strong>

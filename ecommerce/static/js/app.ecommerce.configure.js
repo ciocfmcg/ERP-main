@@ -1,7 +1,8 @@
 app.controller('businessManagement.ecommerce.configure.offerBanner', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
 
   $scope.form = {
-    image: emptyFile
+    image: emptyFile,
+    imagePortrait : emptyFile
   };
 
   if (angular.isUndefined($scope.data.pk)) {
@@ -34,11 +35,16 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
         return;
       } else {
         fd.append('image', $scope.form.image);
+        fd.append('imagePortrait', $scope.form.imagePortrait);
       }
     } else {
       fd.append('active', $scope.data.active);
       if ($scope.form.image != emptyFile) {
         fd.append('image', $scope.form.image);
+      }
+
+      if ($scope.form.imagePortrait != emptyFile) {
+        fd.append('imagePortrait', $scope.form.imagePortrait);
       }
     }
     $http({
@@ -56,6 +62,7 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
           title: '',
           subtitle: '',
           image: emptyFile,
+          imagePortraitL : emptyFile,
           level: 1,
           state: '',
           params: ''

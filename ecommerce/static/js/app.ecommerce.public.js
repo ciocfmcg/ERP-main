@@ -11,18 +11,66 @@ app.config(function($stateProvider ,  $urlRouterProvider , $httpProvider , $prov
 
 });
 
-app.run([ '$rootScope', '$state', '$stateParams' , function ($rootScope,   $state,   $stateParams ) {
+app.run([ '$rootScope', '$state', '$stateParams' ,'$users','$http' , function ($rootScope,   $state,   $stateParams ,$users ,$http  ) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    $rootScope.previousState;
+    $rootScope.currentState;
     $rootScope.$on("$stateChangeError", console.log.bind(console));
-    $rootScope.$on("$stateChangeSuccess", function(params) {
-      var statePrev
-      now = new Date()
-      console.log(' state change',params.targetScope.$state.params);
-      console.log(' state url',params.targetScope.$state.current.url);
+    $rootScope.$on("$stateChangeSuccess", function(params , to, toParams, from, fromParams) {
+      $rootScope.previousState = from.name;
+      $rootScope.currentState = to.name;
+      // var statePrev
+      // now = new Date()
+      // console.log(now);
+      // $cookies.set("time" , new Date())
+      var me = $users.get('mySelf');
+      console.log(me.pk);
+
+      var data = { time: new Date() ,
+                  currentPage:$rootScope.currentState ,
+                  prevPage: $rootScope.previousState ,
+                  timeSpent:'',
+                }
+
+      if ($rootScope.previousState=='') {
+        console.log('logged in ');
+        data = JSON.stringify(data)
+        dataToSend = {user: me.pk , typ:'loggedIn' , data: data}
+        // $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
+        // then(function(response){
+        //   console.log(response.data);
+        // })
+      }
 
 
-      // $cookies.set("time" : new Date())
+      if ($rootScope.currentState=='ecommerce') {
+        console.log($rootScope.currentState);
+      }else if ($rootScope.currentState=='details') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }else if ($rootScope.currentState=='categories') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }else if ($rootScope.currentState=='account') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }else if ($rootScope.currentState=='account.cart') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }else if ($rootScope.currentState=='account.saved') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }else if ($rootScope.currentState=='account.orders') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }else if ($rootScope.currentState=='account.support') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }else if ($rootScope.currentState=='checkout') {
+        console.log($rootScope.currentState);
+        console.log('params', params.targetScope.$state.params );
+      }
 
     });
   }
@@ -102,7 +150,7 @@ app.config(function($stateProvider ){
 
 });
 
-app.controller('controller.ecommerce.details' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window){
+app.controller('controller.ecommerce.details' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window ){
 
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime'
   console.log($scope.data);
@@ -343,11 +391,14 @@ app.controller('controller.ecommerce.categories' , function($scope , $state , $h
 
 
 
-app.controller('controller.ecommerce.account' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
+app.controller('controller.ecommerce.account' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash ){
 // for the dashboard of the account tab
 });
 
-app.controller('controller.ecommerce.account.cart' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
+app.controller('controller.ecommerce.account.cart' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $rootScope){
+
+  console.log('cartttttttt',$rootScope.currentState);
+  console.log($rootScope.previousState);
 
   $scope.data = {
     tableData: [],
@@ -739,7 +790,7 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
     //   s = s.split('}')[0];
     //   response.data[i].params = {id : parseInt(s)}
     // }
-    console.log('gggggggggggggggggggggg',response.data);
+    console.log('ggggggggggggggggggggggggggggggggggggg',response.data);
     $scope.slide.banners = response.data;
   })
   $scope.changeSlide = function(index){

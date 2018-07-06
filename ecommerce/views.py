@@ -208,3 +208,10 @@ class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','typ']
+
+class ActivitiesViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    serializer_class = ActivitiesSerializer
+    queryset = Activities.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user']

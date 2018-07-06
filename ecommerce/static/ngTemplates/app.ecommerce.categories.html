@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="col-md-2 card bg-white">
+  <div class="col-md-2 hidden-xs hidden-sm card bg-white">
     <div class="row" style="padding-top:80px; ">
       <div class="container-fluid">
         <form>
@@ -7,12 +7,6 @@
           <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
             <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
           </div>
-          <!-- <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
-            <span><b>Select City</b></span>
-            <div class="checkbox" ng-repeat="c in cities">
-              <label><input type="checkbox" value="" ng-model="c.selected" >{{c.name}}</label>
-            </div>
-          </div> -->
           <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;" ng-repeat="f in category.fields">
             <span ng-if="f.fieldType=='boolean'">
                <input type="checkbox" ng-model="f.val" > {{f.name}}
@@ -48,8 +42,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-8 card bg-white" style="margin-left:20px; padding-top:20px; ">
-
+  <div class="col-md-8 col-xs-12 card bg-white" style="margin-left:15px; margin-right:15px; padding-top:20px; ">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item" ng-repeat="b in breadcrumbList"><a style="cursor:pointer" ng-click="$state.go('categories', {name : b})">{{b}}</a></li>
@@ -60,7 +53,7 @@
     <div class="row">
       <div ng-if="listingSearch.length>0">
         <div ng-repeat="l in listingSearch">
-          <div class="col-md-3 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+          <div class="col-md-3 col-sm-4 col-xs-6 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
               <div class="row">
                 <img style="width: 100%; height:100px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
@@ -77,16 +70,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="row">
-                <div class="container-fluid card bg-white" style="padding:10px;">
-                  <h5 style="height:50px;margin:0px;">{{l.product.name}}</h5>
-                  <span class="pull-right">
-                      Starts from  <span style="font-size:20px;margin-left:10px;">
-                        {{l.product.price}} <i class="fa fa-inr"></i>
-                      </span>
-                  </span>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>

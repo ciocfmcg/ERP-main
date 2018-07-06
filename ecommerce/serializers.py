@@ -176,7 +176,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class offerBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = offerBanner
-        fields = ('pk' , 'user' , 'created'  , 'level' , 'image' , 'title' , 'subtitle' , 'state' , 'params' , 'active')
+        fields = ('pk' , 'user' , 'created'  , 'level' , 'image' ,'imagePortrait' , 'title' , 'subtitle' , 'state' , 'params' , 'active')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -195,3 +195,9 @@ class CartSerializer(serializers.ModelSerializer):
         c.product = listing.objects.get(pk = self.context['request'].data['product'])
         c.save()
         return c
+
+
+class ActivitiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activities
+        fields = ( 'pk', 'user' , 'typ' ,'data')

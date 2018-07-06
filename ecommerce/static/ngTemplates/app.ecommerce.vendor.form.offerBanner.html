@@ -15,10 +15,22 @@
       <label>Subtitle</label>
       <input type="text" class="form-control" ng-model="data.subtitle" placeholder="Enter Subtitle">
     </div>
-    <div class="form-group">
-      <label>Banner Image</label>
-      <input type="file" file-model="form.image">
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Banner Image</label>
+          <input type="file" file-model="form.image">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Banner Potrait Image</label>
+          <input type="file" file-model="form.imagePortrait">
+        </div>
+      </div>
     </div>
+
     <div class="form-group">
       <label>Level</label>
       <input type="number" class="form-control" ng-model="data.level">
