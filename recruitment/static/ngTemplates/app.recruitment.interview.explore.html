@@ -46,8 +46,8 @@
       </div>
       <div class="row">
         <div class="col-md-11">
-          <label><i class="fa fa-commenting"></i> Comments:</label>
-          <div class="container-fluid card" style="padding-top:20px;" ng-repeat="c in comment" ng-if="c.comment">
+          <label><i class="fa fa-comments"></i> Comments:</label>
+          <div class="container-fluid card" style="margin-top:20px;padding:10px;" ng-repeat="c in comment" ng-if="c.comment" ng-style="{'background-color': c.status === 'suitable' ? 'rgb(176, 236, 203)' : '' || c.status === 'un-suitable' ? 'rgb(237, 170, 164)' : ''||c.status === 'created' ? 'rgb(189, 182, 181)' : '' || c.status === 'recommand-other-job' ? 'rgb(162, 239, 246)' : ''}">
             <div class="row">
               <div class="col-md-12">
                 {{c.comment}}
@@ -72,7 +72,7 @@
             <button style="width:150px" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="selected()" confirm-button-type="success" cancel-button-type="default"><i class="fa fa-tick">Selected</i></button>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 text-center">
           <div class="btn-group">
             <button style="width:150px" class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default"><i class="fa fa-tick">Rejected</i></button>
           </div>
@@ -88,7 +88,7 @@
           <label><i class="fa fa-comment"></i> Leave A Comment: </label>
           <textarea type="text" class="form-control" ng-model="comment.comment" placeholder="Your Comment Here........"></textarea>
         </div>
-        <button class="btn btn-primary pull-right" ng-click="commented()"><i class="fa fa-tick">Suitable</i></button>
+        <button class="btn btn-primary pull-right" ng-click="commented()"><i class="fa fa-tick">Submit</i></button>
       </div>
     </div>
   </div>

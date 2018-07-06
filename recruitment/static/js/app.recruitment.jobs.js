@@ -251,7 +251,7 @@ app.controller("workforceManagement.recruitment.jobs.explore", function($scope, 
       if ($scope.jobApplied[i].select) {
         count += 1
         console.log("aaaaaaa");
-        $scope.jobApplied[i].status = 'TechInterviewing'
+        $scope.jobApplied[i].status = 'TechicalInterview'
         var toSend = {
           status: $scope.jobApplied[i].status
         }
@@ -350,13 +350,13 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
     // {icon : 'fa-pencil-square-o' , text : 'Created' , cat : 'created'},
     {
       icon: 'fa-desktop',
-      text: 'TechInterviewing',
-      cat: 'TechInterviewing'
+      text: 'Techical Interview',
+      cat: 'TechicalInterview'
     },
     {
-      icon: 'fa-file-pdf-o',
-      text: 'HrInterviewing',
-      cat: 'HrInterviewing'
+      icon: 'fa-user-circle-o ',
+      text: 'HR Interview',
+      cat: 'HRInterview'
     },
     {
       icon: 'fa-bars ',
@@ -374,8 +374,8 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
     then(function(response) {
       $scope.List = response.data;
       $scope.data = {
-        TechInterviewing: [],
-        HrInterviewing: [],
+        TechicalInterview: [],
+        HRInterview: [],
         Negotiation: []
       }
       console.log(response.data);
@@ -464,7 +464,7 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   }
 });
 
-app.controller("recruitment.applicant.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("recruitment.applicant.view", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.applicant = []
   $scope.schedules=[]
@@ -481,7 +481,6 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
         url: '/api/recruitment/interview/?candidate=' + $scope.applicant.pk
       }).
       then(function(response) {
-        console.log( response.data,'dddddddddddddddd');
         $scope.schedules = response.data;
       });
     });
@@ -508,7 +507,8 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     var toSend = {
       first_name: $scope.applicant.firstname,
       last_name: $scope.applicant.lastname,
-      emailID: $scope.applicant.email
+      emailID: $scope.applicant.email,
+      value : 'online'
     }
     $http({
       method: 'POST',
@@ -519,6 +519,23 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
       Flash.create('success', 'Email sent successfully')
     })
   }
+  $scope.sendMail = function() {
+    var toSend = {
+      first_name: $scope.applicant.firstname,
+      last_name: $scope.applicant.lastname,
+      emailID: $scope.applicant.email,
+      value : 'interview'
+    }
+    $http({
+      method: 'POST',
+      url: '/api/recruitment/onlinelink/',
+      data: toSend
+    }).
+    then(function() {
+      Flash.create('success', 'Email sent successfully')
+    })
+  }
+
   $scope.resetForm = function() {
     $scope.form = {
       'interviewer': [],
@@ -547,22 +564,6 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     })
   }
 
-  // $scope.comment=function(){
-  //   $scope.comments.push($scope.form.comment)
-  //   $scope.form.comment=''
-  // }
-//
-//   $scope.interviewerSearch = function(query) {
-//   if (query == '') {
-//     return;
-//   }
-//
-//   return $http.get('/api/HR/userSearch/' + query).
-//   then(function(response) {
-//     return response.data;
-//   })
-// }
-
 $scope.interviewerSearch = function(query) {
   return $http.get('/api/HR/userSearch/?limit=10&username__contains=' + query).
   then(function(response) {
@@ -575,4 +576,25 @@ $scope.getName = function(u) {
   }
   return u.first_name + '  ' + u.last_name;
 }
+
+$scope.sendSMS=function(){
+  console.log("aaaaaaaaaaaaa");
+  $uibModal.open({
+    templateUrl: '/static/ngTemplates/app.recruitment.jobs.applicant.sms.html',
+    size: 'sm',
+    backdrop: true,
+    // resolve: {
+    //   data: function() {
+    //     return $scope.data;
+    //   }
+    // },
+    controller: "workforceManagement.recruitment.jobs.applicant.sms",
+  }).result.then(function() {
+
+  }, function() {
+
+  });
+}
+});
+app.controller("workforceManagement.recruitment.jobs.applicant.sms", function($scope, $state, $users, $stateParams, $http, Flash) {
 });

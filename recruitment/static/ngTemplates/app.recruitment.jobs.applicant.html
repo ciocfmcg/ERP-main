@@ -5,26 +5,30 @@
         <span style="font-size:20px;"><i class="fa fa-user"></i> {{applicant.firstname | humanize}} {{applicant.lastname}}</span> <br>
         <span style="font-size:17px;"><i class="fa fa-envelope"></i> {{applicant.email}}</span></br>
         <span style="font-size:17px;"><i class="fa fa-phone"></i> {{applicant.mobile}}</span></br>
-        <span style="font-size:17px;"><i class="fa fa-hand-peace-o"></i>
-          {{applicant.status}}</span></br>
+        <span style="font-size:25px;" ng-if="applicant.status=='TechicalInterview'"><i class="fa fa-desktop"></i> Technical Interview</span>
+        <span style="font-size:25px;" ng-if="applicant.status=='HRInterview'"><i class="fa fa-user-circle-o "></i> HR Interview</span>
+        <span style="font-size:25px;" ng-if="applicant.status=='Negotiation'"><i class="fa fa-bars "></i> Negotiation</span>
         </br>
         <div class="row">
           <div class="col-md-12">
             <label>  Schedule: </label>
-            <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="c in schedules">
+            <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="c in schedules" ng-style="{'background-color': c.status === 'suitable' ? 'rgb(176, 236, 203)' : '' || c.status === 'un-suitable' ? 'rgb(237, 170, 164)' : ''||c.status === 'created' ? 'rgb(189, 182, 181)' : '' || c.status === 'recommand-other-job' ? 'rgb(162, 239, 246)' : ''}">
               <div class="row">
-                <div class="col-md-10">
+                <div class="col-md-6">
                   <i class="fa fa-users"></i> {{c.interviewer.first_name}} {{c.interviewer.last_name}}</br>
                   <i class="fa fa-calendar"></i> {{c.interviewDate}}</br>
-                  <i class="fa fa-phone" ng-if="status==telephonic"></i> <i class="fa fa-users" ng-if="status==face-to-face"></i> {{c.mode}}</br>
-                  <div ng-if="c.comment"><i class="fa fa-commented"></i> {{c.comment}}</br>
+                  <i class="fa fa-phone" ng-if="c.mode=='telephonic'"></i> <i class="fa fa-user-o" ng-if="c.mode=='face-to-face'"></i> {{c.mode}}</br>
                   </div>
-                </div>
-                <div class="col-md-2">
+                <div class="col-md-6 text-right">
                   <i class="fa  fa-check-circle fa-2x text-success" ng-if="c.status=='suitable'"></i>
                   <i class="fa  fa-check-circle fa-2x text-danger" ng-if="c.status=='un-suitable'"></i>
                   <i class="fa  fa-check-circle fa-2x text-default" ng-if="c.status=='created'"></i>
                   <i class="fa  fa-check-circle fa-2x text-primary" ng-if="c.status=='recommand-other-job'"></i>
+                </div>
+              </div>
+              <div class="row" ng-if="c.comment">
+                <div class="col-md-12 text-center" style="font-size:15px">
+                    <i class="fa fa-comment"></i> {{c.comment}}
                 </div>
               </div>
             </div>
@@ -40,13 +44,13 @@
         <div class="row" style="margin-top:20px">
           <div class="col-md-12 text-right">
             <div class="btn-group">
-              <button class="btn btn-danger pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default" style="width:210px"><i class="fa fa-times"> Reject</i></button>
-              <button class="btn btn-default pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="onlineTest()" confirm-button-type="primary" cancel-button-type="default" style="width:210px"><i class="fa fa-user"> Send Test Link</i></button>
+              <button class="btn btn-danger pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default" style="width:150px"><i class="fa fa-times"> Reject</i></button>
+              <button class="btn btn-success pull-right" ng-click="sendSMS()"  style="width:150px"><i class="fa fa-envelope"> Send SMS</i></button>
+              <button class="btn btn-primary pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendMail()" confirm-button-type="primary" cancel-button-type="default" style="width:150px"><i class="fa fa-paper-plane"> Send Mail</i></button>
+              <button class="btn btn-default pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="onlineTest()" confirm-button-type="primary" cancel-button-type="default" style="width:150px"><i class="fa fa-pencil-square-o "> Send Test Link</i></button>
             </div>
           </div>
         </div>
-
-        
         <div class="row" style="margin-top:20px">
           <div class="col-md-6">
             <label>Interviewer: </label>
@@ -64,7 +68,7 @@
               <label class="radio-inline"> <input type="radio"  ng-model="form.mode" value="telephonic"> <i class="fa fa-phone" ></i></label>
               <label class="radio-inline"><input type="radio" ng-model="form.mode" value="face-to-face">  <i class="fa fa-users" ></i></label>
             </div>
-            <button class="btn btn-primary pull-right" ng-click="schedule()"> Schedule</button><br/><br/>
+            <button class="btn btn-primary pull-right" ng-click="schedule()"> Submit</button><br/><br/>
           </div>
         </div>
       </div>

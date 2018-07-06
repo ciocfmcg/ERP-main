@@ -73,6 +73,7 @@ class SendLinkAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self, request, format=None):
         contactData=[]
+        print request.data['value']
         email_subject ="On Response to the post you have applied for:"
         msgBody= "Hi" + request.data['first_name'] + " " + request.data['last_name'] + ",\n\n\t\t We are glad to inform you that you are been selected for the next level of interview i.e., Online Assesment. Please find the Assesment Link to complete as part of our interview process.\n\n Best of luck.\n\nThank You"
         email=request.data['emailID']

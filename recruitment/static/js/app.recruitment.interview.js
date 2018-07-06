@@ -98,6 +98,7 @@ app.controller("workforceManagement.recruitment.interview.explore", function($sc
     $http({method : 'PATCH' , url : '/api/recruitment/interview/'+  $scope.details.pk +'/' , data : toSend}).
     then(function(response) {
         Flash.create('success', 'Saved');
+        $scope.comments();
     })
   }
   $scope.rejected=function(){
@@ -107,6 +108,7 @@ app.controller("workforceManagement.recruitment.interview.explore", function($sc
     $http({method : 'PATCH' , url : '/api/recruitment/interview/'+  $scope.details.pk +'/' , data : toSend}).
     then(function(response) {
         Flash.create('success', 'Saved');
+        $scope.comments();
     })
   }
 
@@ -117,6 +119,7 @@ app.controller("workforceManagement.recruitment.interview.explore", function($sc
     $http({method : 'PATCH' , url : '/api/recruitment/interview/'+  $scope.details.pk +'/' , data : toSend}).
     then(function(response) {
         Flash.create('success', 'Saved');
+        $scope.comments();
     })
   }
   $scope.comment=[]
@@ -138,11 +141,12 @@ app.controller("workforceManagement.recruitment.interview.explore", function($sc
       method: 'GET',
       url: '/api/recruitment/interview/?candidate=' + $scope.details.candidate.pk
     }).then(function(response) {
-      console.log(response.data,'aaaaaaaaaaaaaa');
       $scope.comment = response.data;
     })
   }
   $scope.comments();
+
+
 
 
 });
