@@ -52,3 +52,25 @@ class JobApplication(models.Model):
     status = models.CharField(max_length = 15 , choices = STATUS_LIST_CHOICES  , default = 'Created' )
     job = models.ForeignKey(Jobs , null = True , related_name = "jobs_applied")
     aggree = models.BooleanField(default = False)
+
+STATUS_INTERVIEW_CHOICES = (
+        ('created' , 'created'),
+        ('suitable' , 'suitable'),
+        ('un-suitable' , 'un-suitable'),
+        ('recommand-other-job' , 'recommand-other-job'),
+)
+
+MODE_INTERVIEW_CHOICES = (
+        ('online' , 'online'),
+        ('telephonic' , 'telephonic'),
+        ('face-to-face' , 'face-to-face'),
+)
+
+class Interview(models.Model):
+    interviewer = models.ForeignKey(User , related_name='interviwer', blank = True, null = True)
+    comment =  models.CharField(max_length = 1000 , null = True)
+    interviewDate = models.DateTimeField(null = True)
+    score = models.PositiveSmallIntegerField(default=0, null = True)
+    status = models.CharField(max_length = 15 , choices = STATUS_INTERVIEW_CHOICES , default = 'created' , null = True)
+    mode = models.CharField(max_length = 15 , choices = MODE_INTERVIEW_CHOICES , default = 'online', null = True )
+    candidate = models.ForeignKey(JobApplication , related_name='candidates', blank = True, null = True)
