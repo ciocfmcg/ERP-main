@@ -168,10 +168,10 @@ def invoice(response,inv):
         a = ''
         d = ''
         txt = 'OP No.'
-        billNo = 1970 + Invoice.objects.filter(activePatient__outPatient=True,pk__lt=inv.pk).count()
+        billNo = 1970 + Invoice.objects.filter(activePatient__outPatient=True,pk__lt=inv.pk).count() - 18
     else:
         txt = 'IP No.'
-        count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count()
+        count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count() - 25
         # n = count if count>=1000 else '0'+str(count)
         billNo = 'CB'+str(count).zfill(4)+'/18'
         a = defaultfilters.date(inv.activePatient.inTime, "d-m-Y , h:i A")
@@ -578,5 +578,12 @@ class GetReports(APIView):
         Records =list( Invoice.objects.filter(created__range=(start,end)).values('pk','invoiceName','grandTotal','activePatient__outPatient','activePatient__patient__firstName','activePatient__dischargeSummary__ipNo','activePatient__opNo'))
         # outPatientRecords = list( Invoice.objects.filter(created__range=(start,end),activePatient__outPatient=False).values('pk','invoiceName','grandTotal','activePatient__outPatient','activePatient__patient__firstName','activePatient__dischargeSummary__ipNo','activePatient__opNo'))
         # toSend = inpatientRecords+outPatientRecords
+        for i in Records:
+            print i['activePatient__outPatient']
+            if i['activePatient__outPatient']:
+                i['billNo'] = 1970 + Invoice.objects.filter(activePatient__outPatient=True,pk__lt=i['pk']).count() - 18
+            else:
+                count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=i['pk']).count() - 25
+                i['billNo'] = 'CB'+str(count).zfill(4)+'/18'
         print '************',Records
         return Response(Records,status = status.HTTP_200_OK)

@@ -47,7 +47,8 @@
                     <th style="text-align:center">S.No.</th>
                     <th style="text-align:center">Patient Name</th>
                     <th style="text-align:center">Invoice Name</th>
-                    <th style="text-align:center">Ref Id.</th>
+                    <!-- <th style="text-align:center">Ref Id.</th> -->
+                    <th style="text-align:center">Bill No.</th>
                     <th style="text-align:center">Type</th>
                     <th style="text-align:center">Total</th>
                   </tr>
@@ -58,7 +59,8 @@
                     <td style="text-align:center">{{$index + 1}}</td>
                     <td style="text-align:center">{{r.activePatient__patient__firstName}}</td>
                     <td style="text-align:center">{{r.invoiceName}}</td>
-                    <td style="text-align:center">{{r.activePatient__outPatient ? r.activePatient__opNo : r.activePatient__dischargeSummary__ipNo}}</td>
+                    <!-- <td style="text-align:center">{{r.activePatient__outPatient ? r.activePatient__opNo : r.activePatient__dischargeSummary__ipNo}}</td> -->
+                    <td style="text-align:center">{{r.billNo}}</td>
                     <td style="text-align:center">{{r.activePatient__outPatient ? 'Out Patient' : 'In Patient'}}</td>
                     <td style="text-align:center">{{r.grandTotal}}</td>
                   </tr>
