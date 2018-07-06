@@ -15,13 +15,9 @@ class PatientSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         print '****************************'
         print validated_data
-        today = datetime.date.today()
-        dt = '%02d' % today.day
-        mt = '%02d' % today.month
-        uId = mt+dt
         p = Patient(**validated_data)
         p.save()
-        p.uniqueId = uId + str(p.pk)
+        p.uniqueId = str(p.pk).zfill(5)
         p.save()
 
 
@@ -59,8 +55,8 @@ class ActivePatientSerializer(serializers.ModelSerializer):
             print ActivePatient.objects.filter(outPatient=False,pk__lt=a.pk).count()
             count = 180 + ActivePatient.objects.filter(outPatient=False,pk__lt=a.pk).count()
             print count
-            n = count if count>=1000 else '0'+str(count)
-            ipn = 'RR/'+str(n)+'/18'
+            # n = count if count>=1000 else '0'+str(count)
+            ipn = 'RR/'+str(count).zfill(4)+'/18'
             print ipn
             d = DischargeSummary.objects.create(patient=a,ipNo=ipn)
         else:
