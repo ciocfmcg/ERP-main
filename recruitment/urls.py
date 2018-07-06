@@ -10,4 +10,5 @@ router.register(r'interview' , InterviewViewSet , base_name = 'interview')
 urlpatterns = [
      url(r'^', include(router.urls)),
      url(r'jobsList/$' , JobsList.as_view()),
+     url(r'onlinelink/$' , SendLinkAPIView.as_view() ),
  ]

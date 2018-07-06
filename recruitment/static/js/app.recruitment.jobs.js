@@ -183,7 +183,7 @@ app.controller("workforceManagement.recruitment.roles.form", function($scope, $s
   }
 
 });
-app.controller("workforceManagement.recruitment.jobs.explore", function($scope,Flash, $state, $users, $stateParams, $http, Flash, $uibModal, $aside) {
+app.controller("workforceManagement.recruitment.jobs.explore", function($scope, Flash, $state, $users, $stateParams, $http, Flash, $uibModal, $aside) {
 
   $scope.jobDetails = $scope.data.tableData[$scope.tab.data.index]
   $scope.jobApplied = []
@@ -409,10 +409,11 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   //     });
   //   }
   // }
-  $scope.exploreApplicant = function(applicant , evt) {
+  $scope.exploreApplicant = function(applicant, evt) {
+    console.log(applicant.pk, 'ddddddddddddd');
     if ($scope.isDragging) {
       $scope.isDragging = false;
-    }else {
+    } else {
       $scope.addTab({
         "title": "Applicant : " + applicant.firstname,
         "cancel": true,
@@ -461,4 +462,114 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
     });
     console.log("drop complete");
   }
+});
+
+app.controller("recruitment.applicant.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+  $scope.applicant = []
+  $scope.schedules=[]
+  $scope.fetchDeal = function() {
+
+    $http({
+      method: 'GET',
+      url: '/api/recruitment/applyJob/' + $scope.tab.data.pk
+    }).
+    then(function(response) {
+      $scope.applicant = response.data;
+      $http({
+        method: 'GET',
+        url: '/api/recruitment/interview/?candidate=' + $scope.applicant.pk
+      }).
+      then(function(response) {
+        console.log( response.data,'dddddddddddddddd');
+        $scope.schedules = response.data;
+      });
+    });
+  }
+  $scope.fetchDeal()
+
+  $scope.rejected = function() {
+    var toSend = {
+      status: 'Closed'
+    }
+    var method = 'PATCH';
+    var url = '/api/recruitment/applyJob/' + $scope.applicant.pk + '/';
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Done !');
+    })
+  }
+
+  $scope.onlineTest = function() {
+    var toSend = {
+      first_name: $scope.applicant.firstname,
+      last_name: $scope.applicant.lastname,
+      emailID: $scope.applicant.email
+    }
+    $http({
+      method: 'POST',
+      url: '/api/recruitment/onlinelink/',
+      data: toSend
+    }).
+    then(function() {
+      Flash.create('success', 'Email sent successfully')
+    })
+  }
+  $scope.resetForm = function() {
+    $scope.form = {
+      'interviewer': [],
+      'interviewDate': '',
+    }
+  }
+  $scope.resetForm();
+
+  $scope.schedule=function(){
+    console.log($scope.form.interviewer.pk,'aaaaaaaaaaaaa');
+    var toSend = {
+      interviewer:$scope.form.interviewer.pk,
+      interviewDate: $scope.form.interviewDate,
+      candidate: $scope.applicant.pk,
+      mode: $scope.form.mode
+    }
+    $http({
+      method: 'POST',
+      url: '/api/recruitment/interview/',
+      data: toSend
+    }).
+    then(function(response) {
+      $scope.schedules.push(response.data);
+      Flash.create('success', 'Saved')
+      $scope.resetForm();
+    })
+  }
+
+  // $scope.comment=function(){
+  //   $scope.comments.push($scope.form.comment)
+  //   $scope.form.comment=''
+  // }
+//
+//   $scope.interviewerSearch = function(query) {
+//   if (query == '') {
+//     return;
+//   }
+//
+//   return $http.get('/api/HR/userSearch/' + query).
+//   then(function(response) {
+//     return response.data;
+//   })
+// }
+
+$scope.interviewerSearch = function(query) {
+  if (query == '') {
+    return;
+  }
+  return $http.get('/api/HR/userSearch/?limit=10&search=' + query).
+  then(function(response) {
+    return response.data.results;
+  })
+}
 });

@@ -7,6 +7,7 @@ from django.conf import settings as globalSettings
 from rest_framework.response import Response
 from organization.models import *
 from organization.serializers import *
+from HR.serializers import userSearchSerializer
 
 class JobsSerializer(serializers.ModelSerializer):
     unit = UnitsLiteSerializer(many = False , read_only = True)
@@ -56,10 +57,17 @@ class JobApplicationSerializer(serializers.ModelSerializer):
         return i
 
 class InterviewSerializer(serializers.ModelSerializer):
+    candidate = JobApplicationSerializer(many = False , read_only = True)
+    interviewer = userSearchSerializer(many = False , read_only = True)
     class Meta:
-        model = JobApplication
-        fields = ('pk', 'person','comment', 'interviewDate', 'slot' , 'score')
+        model = Interview
+        fields = ('pk', 'interviewer','comment', 'interviewDate', 'mode' , 'score','candidate')
     def create(self , validated_data):
-        i = JobApplication(**validated_data)
-        i.save()
-        return i
+        a = Interview(**validated_data)
+        if 'candidate' in self.context['request'].data:
+            a.candidate = JobApplication.objects.get(pk = self.context['request'].data['candidate'])
+            print  self.context['request'].data['interviewer'],'aaaaaaaaaaaaaaaaaaaaaaaaa'
+        if 'interviewer' in self.context['request'].data:
+            a.interviewer= User.objects.get(pk = self.context['request'].data['interviewer'])
+        a.save()
+        return a
