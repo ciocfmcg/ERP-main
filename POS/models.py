@@ -64,6 +64,7 @@ class Product(models.Model):
     haveComposition = models.BooleanField(default = False)
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
+    discount = models.PositiveIntegerField(default = 0)
     def __str__(self):
         return self.name
 

@@ -173,7 +173,6 @@ class listingViewSet(viewsets.ModelViewSet):
 class listingLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (readOnly, )
     serializer_class = listingLiteSerializer
-
     def get_queryset(self):
         # u = self.request.user
         # has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
@@ -212,6 +211,10 @@ class CartViewSet(viewsets.ModelViewSet):
 class ActivitiesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
     serializer_class = ActivitiesSerializer
-    queryset = Activities.objects.all()
+    # queryset = Activities.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['user']
+    filter_fields = ['user','typ','product']
+    def get_queryset(self):
+        # a = Activities.objects.values("pk").annotate(n=models.Count("pk"))
+        # print a
+        return Activities.objects.all().order_by('-created')

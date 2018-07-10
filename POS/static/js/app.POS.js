@@ -540,9 +540,9 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   }
 
   $scope.save = function() {
-    console.log('entered');
-    console.log($scope.product.productMeta);
-    console.log($scope.product.productMeta.pk);
+    console.log('entered', $scope.product.discount);
+    // console.log($scope.product.productMeta);
+    // console.log($scope.product.productMeta.pk);
 
     var f = $scope.product;
     var url = '/api/POS/product/';
@@ -566,6 +566,11 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       Flash.create('warning', 'MRP Is Required');
       return;
     }
+    console.log('fffffffff',f.discount);
+    if (f.discount < 0 || f.discount > 100) {
+      Flash.create('warning', 'discount should in range 0-100');
+      return;
+    }
     fd.append('name', f.name);
     fd.append('price', f.price);
     fd.append('cost', f.cost);
@@ -575,6 +580,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     fd.append('logistics', f.logistics);
     fd.append('serialId', f.serialId);
     fd.append('reorderTrashold', f.reorderTrashold);
+    fd.append('discount', f.discount);
     if (f.productMeta != null && typeof f.productMeta == 'object') {
       console.log('cameeee');
       fd.append('productMeta', f.productMeta.pk);

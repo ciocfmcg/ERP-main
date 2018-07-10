@@ -1,222 +1,5 @@
-<!-- <div class="container-fluid">
-  <div class="col-md-8 col-md-offset-2 card bg-white">
-    <div class="row container-fluid" style="padding:0px;margin-top:150px;position:relative;">
-      <div class="col-md-1" style="padding:0px; cursor:pointer;">
-        <img ng-repeat="f in details.files" ng-click="changePicture($index)" style="{{details.files[pictureInView].attachment==f.attachment?'width: 100%; border:1px solid grey':'width: 100%'}}" class="img"  ng-src="{{f.attachment}}" >
-      </div>
-      <div class="col-md-5" style="padding:0px;">
-        <img style="width: 100%;" class="img img-responsive" ng-src="{{details.files[pictureInView].attachment}}" >
-      </div>
-      <div class="col-md-6" style="position:absolute;height:100%;right:0px;">
-        <div class="row container-fluid">
-          <p style="padding-bottom:0px;">
-            <strong style="font-size:20px;">{{details.product.name}}</strong>
-          </p>
-          <hr style="margin-top:0px;margin-bottom:5px;">
-        </div>
-        <div class="row container-fluid">
-          <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating>
-          {{reviewsCount}} Reviews
-        </div>
-        <div class="row container-fluid" style="padding-top:14px;">
-          <i class="fa fa-money fa-1x text-muted" ></i> Cash on {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br>
-          <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br>
-        </div>
-        <div class="row container-fluid" style="margin-top:10px;">
-        </div>
-        <span style="position:absolute;bottom:100px;right:15px;">
-          <strong>Provided by</strong> <br>
-          <span class="pull-right">{{data.providerOptions[offeringInView].service.name}}</span> <br>
-        </span>
-        <span style="position:absolute;bottom:50px;right:15px;">
-          <span style="font-size:30px;"><i class="fa fa-inr"></i> {{data.providerOptions[offeringInView].rate}}</span>
-          <span ng-if="data.priceModel=='time'">/ per Hour</span>
-          <span ng-if="data.priceModel=='quantity'">/ per Piece</span>
-          <span ng-if="data.priceModel=='weight'">/ per Kg</span>
-        </span>
-        <div class="row" style="position:absolute;bottom:0px;width:100%;">
-          <span ng-click="addToCart(data)" style="margin-left:20px;bottom:20px;position:relative;cursor:pointer;">
-            <span style="bottom:5px;position:relative;padding-right:20px;">Add to cart </span>
-            <i class="fa fa-shopping-cart fa-2x" ></i> <i class="fa fa-plus fa-lg"></i>
-          </span>
-          <button ng-if="data.providerOptions[offeringInView].available==true" type="button" style="border-radius:0px;margin-right:10px;margin-bottom:10px;"
-            ng-click="buy(data.providerOptions[offeringInView])"  class="btn btn-success pull-right">{{data.priceModel=='time' ? 'Book':'Buy'}}
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="row" style="margin-top:5px;">
-      <div ng-repeat="p in data.providerOptions">
-        <div style="padding:0px;border-left:5px solid #0fa295;">
-          <div class="container-fluid" style="padding:10px;">
-            <div class="col-md-2">
-              <strong> Rate : </strong> <i class="fa fa-inr"></i> {{p.rate}} <br>
-              <strong> Vendor : </strong> {{p.service.name}}
-            </div>
-            <div class="col-md-3">
-              <div class="col-md-8">
-                <strong>City</strong><br>
-                {{p.service.address.city}}
-              </div>
-              <div class="col-md-4 text-center">
-                <i class="fa fa-map-marker fa-3x" style="cursor:pointer;" ng-click="showMap($index)"></i> <br>
-                Map
-              </div>
-            </div>
-
-            <div class="col-md-5">
-              <p class="text-success" ng-if="p.available==true">
-                Available
-              </p>
-              <p class="text-error" ng-if="p.available==false">
-                Sold Out
-              </p>
-              <p style="color:#042e59;" ng-if="p.available=='error'">
-                No date and time specified, please choose a time period
-              </p>
-            </div>
-            <div class="col-md-2">
-              <button type="button" class="btn btn-default" style="position:absolute;right:0px;" ng-click="buy(data.providerOptions[$index])" ng-if="p.available==true">
-                {{data.priceModel=='time' ? 'Book':'Buy'}}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-    {{details}}
-    <div class="row ">
-      <div class="container-fluid" style="padding:10px;">
-        <div class="row">
-          <div class="col-md-6 pull-right">
-            <strong>Description : </strong> {{data.description}}
-          </div>
-          <div class="col-md-6">
-            <table class="table table-striped">
-              <th>
-                Property
-              </th>
-              <th>
-                Value
-              </th>
-              <tr ng-repeat="f in data.specifications">
-                <td>
-                  {{f.name | humanize}}
-                </td>
-                <td>
-                  <span ng-if="f.fieldType=='choice'">
-                    {{f.value.name | humanize}}
-                  </span>
-                  <span ng-if="f.fieldType=='date'">
-                    {{f.value | date : 'dd-MMM-yyyy'}}
-                  </span>
-                  <span ng-if="f.fieldType=='boolean'">
-                    {{f.value == 'true'? 'Yes' : 'No'}}
-                  </span>
-                  <span ng-if="['choice' , 'date' , 'boolean'].indexOf(f.fieldType) == -1">
-                    {{f.value}} {{f.unit !='' && f.unit != null ? '(' + f.unit + ')': ''}}
-                  </span>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-        </div>
-        <hr>
-        <div class="row">
-          <div class="container-fluid" ng-bind-html="data.source"></div>
-        </div>
-        <div class="row bg-blue text-center" style="margin:0px;margin-top:20px;">
-          <h5 style="color:white;">Rattings and Review</h5>
-        </div>
-        <div class="row">
-          <div class="col-md-4" style="padding-top:20px;">
-            <div class="col-md-5 text-center" >
-              <span>{{ratings.averageRating.rating__avg == null ? 0 : ratings.averageRating.rating__avg | limitTo:4}}/5</span> <br>
-              <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
-            </div>
-            <div class="col-md-7">
-              <div class="container-fluid" ng-repeat="m in ratings.meta">
-                <span style="margin-right:10px;">{{ratings.counts[$index]}}</span>
-                <uib-rating ng-model="m" max="m" readonly="true" style="font-size:15px;color:#e2a900;"></uib-rating> <br>
-              </div>
-            </div>
-            <div class="col-md-3">
-            </div>
-          </div>
-          <div class="col-md-8">
-            <h5>Have you used this product before ?  <small style="margin-left:20px;">Give us your review</small> </h5>
-            <uib-rating ng-model="form.rating" max="5" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" on-leave="sendReview('rating')"></uib-rating> <br>
-            <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor">
-              <i class="fa fa-pencil-square-o"></i>  Write a review
-            </button>
-            <div ng-if="form.reviewEditor">
-              <div class="col-md-10">
-                <input type="text" placeholder="Heading.." ng-model="form.reviewHeading">
-                <textarea class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
-              </div>
-              <div class="col-md-2 btn-group-vertical">
-                <button type="button" class="btn btn-success" ng-click="sendReview('text')">
-                  Send
-                </button>
-                <button type="button" class="btn btn-default" ng-click="form.reviewEditor = false">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr>
-        <div class="row text-center" ng-if="reviewsCount==0">
-          <h4>No reviews yet. Be the first to review</h4>
-        </div>
-        <div class="row" ng-if="reviewsCount>0">
-          <div class="container-fluid">
-            <h5>Recent reviews <small>{{reviewsCount < 5 ? reviewsCount : 5}} out of {{reviewsCount}}</small> </h5>
-          </div>
-          <div class="container-fluid">
-            <div ng-repeat="r in data.reviews" ng-if="r.text.length>4">
-              <div class="row container-fluid">
-                <div class="col-md-3" style="padding-left:50px;">
-                  <div class="row">
-                    <uib-rating ng-model="r.rating" max="5" readonly="false" style="font-size:17px;color:#e2a900;"></uib-rating> <br>
-                  </div>
-                  <div class="row">
-                    {{r.user | getName}} <br>
-                    {{r.created | date : 'dd-MMM-yyyy'}} <br>
-                    <span ng-if="r.verified" class="btn btn-xs btn-success">
-                      Verified
-                    </span>
-                    <img style="width: 50px;height:50px;margin: 0 auto;" class="img-circle" ng-src="{{r.user | getDP}}" >
-                  </div>
-                </div>
-                <div class="col-md-9">
-                  <div class="row container-fluid">
-                    <h5>{{r.heading}}</h5>
-                    <p>
-                      {{r.text}}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <hr>
-            </div>
-            <nav>
-              <ul class="pager">
-                <li><a href="" ng-click="prevReviews()">Previous</a></li>
-                <li><a href="" ng-click="nextReviews()">Next</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div class="container-fluid">
-  <div class="col-md-8 col-md-offset-2 card bg-white">
+  <div class="col-md-8 col-md-offset-1 card bg-white">
     <div class="row" style="margin:20px 0px 30px 0px">
 
       <nav aria-label="breadcrumb">
@@ -270,7 +53,14 @@
               <span ng-if="data.priceModel=='weight'">/ per Kg</span>
             </span> -->
             <div class="row">
-              <span style="font-size:30px;"><i class="fa fa-inr"></i>{{details.product.price}}</span>
+              <span style="font-size:30px;"><i class="fa fa-inr"></i>
+                <span ng-if="details.product.discount>0"> {{details.product.discountedPrice.toFixed(2)}} </span>
+                <span ng-if="details.product.discount>0" class="text-muted" > <strike> {{details.product.price}} </strike> </span>
+                <span ng-if="details.product.discount==0">{{details.product.price}} </span>
+              </span>
+            </div>
+            <div class="row">
+              <span ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;" >{{details.product.discount}} % Off</span>
             </div>
 
           </div>
@@ -423,6 +213,38 @@
       </div>
     </div>
   </div>
+
+  <div class="col-md-2 " style="margin-left:15px; position:sticky; top:10px; ">
+    <h4>Recently Viewed</h4>
+    <div style="padding:10px;" class="row card bg-white">
+        <div class="col-md-12 anim-in-out anim-zoom-out">
+          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : recentlyViewed.product.pk})">
+            <div class="row">
+              <img style="width: 100%; height:100px;" class="img" ng-src="{{recentlyViewed.product.files[0].attachment}}" ng-if="recentlyViewed.product.files.length>0">
+              <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="recentlyViewed.product.files==null">
+            </div>
+            <div class="row container-fluid" style="padding-top:5px; ">
+              <h5 ng-if="recentlyViewed.product.product.name.length>30" style="margin:0px;  height:60px;">{{recentlyViewed.product.product.name.slice(0,30)}}...</h5>
+              <h5 ng-if="recentlyViewed.product.product.name.length<=30" style="margin:0px;  height:60px;">{{recentlyViewed.product.product.name}}</h5>
+              <span style="font-size:15px;"> Price : </span>
+              <span class="pull-right" style="font-size:15px; ">
+                <span ng-if="recentlyViewed.product.product.discount>0" class="text-muted" >
+                  <strike>{{recentlyViewed.product.product.price}}</strike>
+                </span>
+                <span ng-if="recentlyViewed.product.product.discount==0" >
+                  {{recentlyViewed.product.product.price}} <i class="fa fa-inr"></i>
+                </span>
+              </span>
+
+              <span ng-if="recentlyViewed.product.product.discount>0" class="pull-right" style="font-size:15px;">
+              {{recentlyViewed.product.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="row anim-in-out anim-zoom-out" style="position:fixed; bottom:20px; left:0px;z-index:100;" ng-if="showGoToTop">

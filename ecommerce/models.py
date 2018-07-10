@@ -132,7 +132,8 @@ ACTIVITIES_TYPE_CHOICES = (
 
 
 class Activities(models.Model):
+    created = models.DateTimeField(auto_now_add = True , null = True)
     user = models.ForeignKey(User, null = False , related_name = 'ecommerceActivities')
-    # product =
+    product = models.ForeignKey(listing, null = True)
     typ =  models.CharField(choices = ACTIVITIES_TYPE_CHOICES , max_length = 10 , default='loggedIn')
     data = models.CharField(max_length = 200 , null = True)

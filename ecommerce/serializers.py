@@ -20,7 +20,6 @@ class fieldSerializer(serializers.ModelSerializer):
 
 class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
-        print 'ddddddddddddddddddddddddddddddddddd',self.parent
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
 
@@ -50,7 +49,6 @@ class genericProductSerializer(serializers.ModelSerializer):
 
         gp.save()
         flds = self.context['request'].data['fields']
-        print flds, type(flds)
         if isinstance(flds , str) or isinstance(flds , unicode):
             flds = flds.split(',')
         for f in flds:
@@ -72,10 +70,8 @@ class genericProductSerializer(serializers.ModelSerializer):
         instance.fields.clear()
         instance.save()
         flds = self.context['request'].data['fields']
-        print flds, type(flds)
         if isinstance(flds , str) or isinstance(flds , unicode):
             flds = flds.split(',')
-        print flds
         for f in flds:
             instance.fields.add(field.objects.get(pk = f))
         instance.save()
@@ -95,10 +91,19 @@ class mediaSerializer(serializers.ModelSerializer):
         return m
 
 class POSProductSerializer(serializers.ModelSerializer):
+    discountedPrice = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name' , 'price')
-
+        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice')
+    def get_discountedPrice(self, obj):
+        if obj.discount>0:
+            # discountedPrice = obj.price - ((obj.discount / obj.price )* 100)
+            print obj.discount , obj.price
+            discountedPrice =  obj.price - (obj.discount / 100.00 ) *  obj.price
+            print 'gggggggggggg',discountedPrice
+            return discountedPrice
+        else:
+            return obj.price
 
 class listingSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
@@ -198,6 +203,13 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class ActivitiesSerializer(serializers.ModelSerializer):
+    product = listingSerializer(many = False , read_only = True)
     class Meta:
         model = Activities
-        fields = ( 'pk', 'user' , 'typ' ,'data')
+        fields = ( 'pk','created','product', 'user', 'typ' ,'data')
+    def create(self , validated_data):
+        a = Activities(**validated_data)
+        if 'product' in self.context['request'].data:
+            a.product = listing.objects.get(pk = self.context['request'].data['product'])
+        # a.save()
+        # return a

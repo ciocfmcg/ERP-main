@@ -31,14 +31,14 @@ class CustomerSerializer(serializers.ModelSerializer):
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock')
+        fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock','discount')
 
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
     compositions=ProductLiteSerializer(many=True,read_only=True)
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -75,7 +75,7 @@ class ProductSerializer(serializers.ModelSerializer):
             il = InventoryLog(before = instance.inStock , after = validated_data['inStock'],product = instance,typ = 'user' , user = self.context['request'].user)
             il.save()
 
-        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description', 'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap']:
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

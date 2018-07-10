@@ -1,20 +1,33 @@
 <div class="row" style="margin-top:20px;margin:0px;">
-  <div class="col-md-8 col-md-offset-2 col-xs-12 ">
+  <div class="col-md-8 col-md-offset-2 hidden-xs hidden-sm">
     <div ng-repeat="l in listingProducts">
-      <div class="col-md-3 col-sm-4 col-xs-6 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+      <div class="col-md-3 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
           <div class="row">
-            <img style="width: 100%; height:100px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-            <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
+            <img style="width: 100%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+            <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
           </div>
           <div class="row">
             <div class=" card bg-white" style="padding-bottom:0px;">
               <div class="row container-fluid" style="padding:10px 20px; ">
-                <h5 style="margin:0px;  height:80px;">{{l.product.name}}</h5>
+                <h5 ng-if="l.product.name.length>35" style="margin:0px;  height:60px;">{{l.product.name.slice(0,35)}}...</h5>
+                <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;">{{l.product.name}}</h5>
                 <span style="font-size:15px;"> Price : </span>
-                <span class="pull-right" style="font-size:15px;">
-                {{l.product.price}} <i class="fa fa-inr"></i>
+
+                <span class="pull-right" style="font-size:15px; padding-left:10px; ">
+                  <span ng-if="l.product.discount>0" class="text-muted" >
+                    <strike>{{l.product.price}}</strike>
+                  </span>
+                  <span ng-if="l.product.discount==0" >
+                    {{l.product.price}} <i class="fa fa-inr"></i>
+                  </span>
                 </span>
+
+                <span ng-if="l.product.discount>0" class="pull-right" style="font-size:15px;">
+                {{l.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+                </span>
+
+
               </div>
             </div>
           </div>
@@ -22,37 +35,61 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- <div class="row" style="margin:0px;">
-  <div class="col-md-offset-2 col-md-8 " style="padding:40px;" >
-    <div style="padding:10px;" class="row card bg-white">
-      <h4>Featured Categories</h4>
-      <div class="row" style="">
-        <div class="col-md-3" ng-repeat="p in products | limitTo:4" style="padding:0px;">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : p.name})">
-          <img style="width: 100%;height:180px" class="img" ng-src="{{p.visual}}" ng-if="p.visual.length>0">
-          <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="p.visual==none">
-        </div>
+  <div class="col-md-8 col-md-offset-2 hidden-md hidden-lg">
+    <div ng-repeat="l in listingProducts">
+      <div class="col-xs-6 col-sm-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
+          <div class="row">
+            <img style="width: 100%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+            <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
+          </div>
+          <div class="row">
+            <div class=" card bg-white" style="padding-bottom:0px;">
+              <div class="row container-fluid" style="padding:10px 20px; ">
+                <h6 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;">{{l.product.name.slice(0,28)}}...</h6>
+                <h6 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;">{{l.product.name}}</h6>
+                <span style="font-size:12px;"> Price : </span>
+                <span class="pull-right" style="font-size:12px; ">
+                  <span ng-if="l.product.discount>0" class="text-muted" >
+                    <strike>{{l.product.price}}</strike>
+                  </span>
+                  <span ng-if="l.product.discount==0" >
+                    {{l.product.price}} <i class="fa fa-inr"></i>
+                  </span>
+                </span>
+
+                <span ng-if="l.product.discount>0" class="pull-right" style="font-size:12px;">
+                {{l.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+                </span>
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div> -->
+
+
+
+
+</div>
+
 
 <div class="row" style="margin:0px;">
-  <div class="col-md-offset-2 col-md-8 col-xs-12 " style="padding:40px;">
+  <div class="col-md-offset-2 col-md-8" style="padding:40px;">
     <div style="padding:10px;" class="row card bg-white">
       <h4>Featured Categories</h4>
-      <div ng-repeat="p in products| limitTo:4" style="padding:0px;">
-        <div class="col-md-3 col-sm-4 col-xs-6 anim-in-out anim-zoom-out">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : p.name})">
+      <div ng-repeat="g in genericProducts| limitTo:4" style="padding:0px;">
+        <div class="col-md-3 anim-in-out anim-zoom-out">
+          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name})">
             <div class="row">
-              <img style="width: 100%;height:180px" class="img" ng-src="{{p.visual}}" ng-if="p.visual.length>0">
-              <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="p.visual==none">
+              <img style="width: 100%;height:180px" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
+              <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
             </div>
             <div class="row" style="padding-top:5px;">
-              <h5 class="text-center" style="margin:0px;">{{p.name}}</h5>
+              <h5 class="text-center" style="margin:0px;">{{g.name}}</h5>
             </div>
           </div>
         </div>
@@ -61,27 +98,39 @@
   </div>
 </div>
 
-<!-- <div class="row" style="margin:20px;">
-  <div class="col-md-8 col-md-offset-2 ">
-    <div ng-repeat="l in products" >
-      <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
-        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
-          <div class="row" >
-            <img style="width: 100%;height:300px" class="img" ng-src="{{l.visual}}" ng-if="l.visual.length>0">
-            <img style="width: 100%;height:300px" class="img" src="/static/images/ecommerce.jpg" ng-if="l.visual==none">
-          </div>
-          <div class="row" >
-            <div class="container-fluid card bg-white" style="padding:10px;">
-              <h4>{{l.name}}</h4>
-              <span class="pull-right">
-                Starts from  <span style="font-size:20px;margin-left:10px;">
-                  {{l.minCost}} <i class="fa fa-inr"></i>
+<div class="row" style="margin:0px;">
+  <div class="col-md-offset-2 col-md-8" style="padding:40px; padding-top:0px;">
+    <div style="padding:10px;" class="row card bg-white">
+      <h4>Recently Viewed</h4>
+      <div ng-repeat="r in recentlyViewed" style="padding:0px;">
+        <div class="col-md-3 anim-in-out anim-zoom-out">
+          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.product.pk})">
+            <div class="row">
+              <img style="width: 100%; height:120px;" class="img" ng-src="{{r.product.files[0].attachment}}" ng-if="r.product.files.length>0">
+              <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.product.files==null">
+            </div>
+            <div class="row container-fluid" style="padding-top:5px; ">
+              <h5 ng-if="r.product.product.name.length>35" style="margin:0px;  height:60px;">{{r.product.product.name.slice(0,35)}}...</h5>
+              <h5 ng-if="r.product.product.name.length<=35" style="margin:0px;  height:60px;">{{r.product.product.name}}</h5>
+              <span style="font-size:15px;"> Price : </span>
+
+              <span class="pull-right" style="font-size:15px; padding-left:10px; ">
+                <span ng-if="r.product.product.discount>0" class="text-muted" >
+                  <strike>{{r.product.product.price}}</strike>
+                </span>
+                <span ng-if="r.product.product.discount==0" >
+                  {{r.product.product.price}} <i class="fa fa-inr"></i>
                 </span>
               </span>
+
+              <span ng-if="r.product.product.discount>0" class="pull-right" style="font-size:15px;">
+              {{r.product.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+              </span>
+
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div> -->
+</div>

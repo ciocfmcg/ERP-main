@@ -75,6 +75,12 @@
         </button> <br> {{product.productMeta.description}} <br><strong>Code Type : </strong> {{product.productMeta.typ}} <br> <strong>Code : </strong> {{product.productMeta.code}} <br> <strong>Tax Rate :</strong>{{product.productMeta.taxRate}}</span>
       </div>
 
+      <div class="form-group">
+        <label>Discount Offered</label>
+        <span class="text-muted" >(in %)</span>
+        <input type="number" class="form-control" ng-model="product.discount">
+      </div>
+
 
     </div>
     <div class="col-md-4">

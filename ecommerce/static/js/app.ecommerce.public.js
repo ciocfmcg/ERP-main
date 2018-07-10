@@ -16,6 +16,7 @@ app.run([ '$rootScope', '$state', '$stateParams' ,'$users','$http' , function ($
     $rootScope.$stateParams = $stateParams;
     $rootScope.previousState;
     $rootScope.currentState;
+    var startTime = new Date();
     $rootScope.$on("$stateChangeError", console.log.bind(console));
     $rootScope.$on("$stateChangeSuccess", function(params , to, toParams, from, fromParams) {
       $rootScope.previousState = from.name;
@@ -25,51 +26,45 @@ app.run([ '$rootScope', '$state', '$stateParams' ,'$users','$http' , function ($
       // console.log(now);
       // $cookies.set("time" , new Date())
       var me = $users.get('mySelf');
-      console.log(me.pk);
 
-      var data = { time: new Date() ,
-                  currentPage:$rootScope.currentState ,
-                  prevPage: $rootScope.previousState ,
-                  timeSpent:'',
-                }
+      var now   = new Date();
+      var timeSpent = (now.getTime() - startTime.getTime()) / 1000;
+      startTime = new Date();
+      console.log('time spent',timeSpent , 'on' , $rootScope.previousState );
 
       if ($rootScope.previousState=='') {
         console.log('logged in ');
-        data = JSON.stringify(data)
-        dataToSend = {user: me.pk , typ:'loggedIn' , data: data}
+        dataToSend = {user: me.pk , typ : 'loggedIn' }
         // $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
         // then(function(response){
         //   console.log(response.data);
         // })
       }
 
+      if ($rootScope.previousState=='details') {
+        var data = {
+                    timeSpent:timeSpent,
+                    product : fromParams.id
+                  }
+        data = JSON.stringify(data)
+        dataToSend = {user: me.pk , typ : 'productView',product : fromParams.id , data: data }
+        $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
+        then(function(response){
+          console.log(response.data);
+        })
+      }
 
-      if ($rootScope.currentState=='ecommerce') {
-        console.log($rootScope.currentState);
-      }else if ($rootScope.currentState=='details') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
-      }else if ($rootScope.currentState=='categories') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
-      }else if ($rootScope.currentState=='account') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
-      }else if ($rootScope.currentState=='account.cart') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
-      }else if ($rootScope.currentState=='account.saved') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
-      }else if ($rootScope.currentState=='account.orders') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
-      }else if ($rootScope.currentState=='account.support') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
-      }else if ($rootScope.currentState=='checkout') {
-        console.log($rootScope.currentState);
-        console.log('params', params.targetScope.$state.params );
+      if ($rootScope.previousState=='categories') {
+        var data = {
+                    timeSpent:timeSpent,
+                    category : fromParams.name
+                  }
+        data = JSON.stringify(data)
+        dataToSend = {user: me.pk , typ : 'categoryView' , data: data  }
+        $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
+        then(function(response){
+          console.log(response.data);
+        })
       }
 
     });
@@ -264,6 +259,17 @@ app.controller('controller.ecommerce.details' , function($scope , $state , $http
   // then(function(response) {
   //
   // });
+
+  $http({method : 'GET' , url : '/api/ecommerce/activities/?user=' + $scope.me.pk +'&typ=productView&limit=2' }).
+  then(function(response) {
+    console.log('%%%%%%%%',response.data.results);
+    $scope.recentlyViewed = response.data.results[0]
+    if ($scope.recentlyViewed.product.pk==$scope.details.pk) {
+      $scope.recentlyViewed = response.data.results[1]
+    }
+
+  })
+
 
 });
 
@@ -467,7 +473,7 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
   $scope.calcTotal = function () {
     $scope.total = 0;
     for (var i = 0; i < $scope.data.tableData.length; i++) {
-      $scope.total = $scope.total + ($scope.data.tableData[i].product.product.price * $scope.data.tableData[i].qty)
+      $scope.total = $scope.total + ($scope.data.tableData[i].product.product.discountedPrice * $scope.data.tableData[i].qty)
     }
   }
 
@@ -662,17 +668,27 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   //   })
   // })
 
+
+
   if($state.params.pk=='cart') {
     $http({method : 'GET' , url : '  /api/ecommerce/cart/?user='+ $scope.me.pk}).
      then(function(response){
        $scope.cartItems = response.data;
+       $scope.total = 0;
+       for (var i = 0; i < $scope.cartItems.length; i++) {
+         $scope.total =  $scope.total + ( $scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
+       }
      })
   }else {
     $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
      then(function(response){
        $scope.item = response.data;
+       $scope.total = 0;
+       $scope.total = $scope.item.product.price
      })
   }
+
+
 
 
 
@@ -812,20 +828,6 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
 
 
 
-  $http({method : 'GET' , url : '/api/ecommerce/listingLite/'}).
-  then(function(response) {
-    console.log('******************',response.data);
-    $scope.listingProducts = response.data;
-  })
-  $http({method : 'GET' , url : '/api/ecommerce/genericProduct/'}).
-  then(function(response) {
-    console.log('******************',response.data);
-    $scope.products = response.data;
-  })
-
-
-
-
 
 
 
@@ -900,71 +902,94 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
 
 app.controller('controller.ecommerce.list' , function($scope , $state , $http , $users){
 
-  $scope.fetchListings = function(){
-    url = '/api/ecommerce/listingLite/?'
-    $scope.listings = [];
-    parent = $scope.$parent;
-    if (parent.data.location != null && typeof parent.data.location!='string') {
-      l = parent.data.location;
-      pin = parent.params.location.formatted_address.match(/[0-9]{6}/);
-      if (pin != null) {
-        url += 'geo=' + pin[0].substring(0,3);
-      } else {
-        return;
-      }
-
-    }
-
-    $http({method : "GET" , url : url}).
-    then(function(response){
-      for (var i = 0; i < response.data.length; i++) {
-        l = response.data[i];
-        index = 0
-        if (l.providerOptions.length == 0) {
-          continue;
-        }
-        min = l.providerOptions[index].rate;
-        for (var j = 1; j < l.providerOptions.length; j++) {
-          if (l.providerOptions[j].rate < min) {
-            min = l.providerOptions[j].rate;
-            index = j;
-          }
-        }
-        l.bestOffer = l.providerOptions[index];
-        $scope.listings.push(l);
-      }
-    })
-  }
-
-  $scope.listings = [];
+  // $scope.fetchListings = function(){
+  //   url = '/api/ecommerce/listingLite/?'
+  //   $scope.listings = [];
+  //   parent = $scope.$parent;
+  //   if (parent.data.location != null && typeof parent.data.location!='string') {
+  //     l = parent.data.location;
+  //     pin = parent.params.location.formatted_address.match(/[0-9]{6}/);
+  //     if (pin != null) {
+  //       url += 'geo=' + pin[0].substring(0,3);
+  //     } else {
+  //       return;
+  //     }
+  //
+  //   }
+  //
+  //   $http({method : "GET" , url : url}).
+  //   then(function(response){
+  //     for (var i = 0; i < response.data.length; i++) {
+  //       l = response.data[i];
+  //       index = 0
+  //       if (l.providerOptions.length == 0) {
+  //         continue;
+  //       }
+  //       min = l.providerOptions[index].rate;
+  //       for (var j = 1; j < l.providerOptions.length; j++) {
+  //         if (l.providerOptions[j].rate < min) {
+  //           min = l.providerOptions[j].rate;
+  //           index = j;
+  //         }
+  //       }
+  //       l.bestOffer = l.providerOptions[index];
+  //       $scope.listings.push(l);
+  //     }
+  //   })
+  // }
+  //
+  // $scope.listings = [];
   $scope.me = $users.get('mySelf');
 
-  $scope.addToCart = function(input){
-    dataToSend = {
-      category : 'cart',
-      user : getPK($scope.me.url),
-      item : input.pk,
-    }
-    $http({method : 'POST' , url : '/api/ecommerce/saved/' , data : dataToSend }).
-    then(function(response){
-      for (var i = 0; i < $scope.inCart.length; i++) {
-        if ($scope.inCart[i].pk == response.data.pk){
-          return;
-        }
-      }
-      $scope.inCart.push(response.data);
-    })
-  }
+  // $scope.addToCart = function(input){
+  //   dataToSend = {
+  //     category : 'cart',
+  //     user : getPK($scope.me.url),
+  //     item : input.pk,
+  //   }
+  //   $http({method : 'POST' , url : '/api/ecommerce/saved/' , data : dataToSend }).
+  //   then(function(response){
+  //     for (var i = 0; i < $scope.inCart.length; i++) {
+  //       if ($scope.inCart[i].pk == response.data.pk){
+  //         return;
+  //       }
+  //     }
+  //     $scope.inCart.push(response.data);
+  //   })
+  // }
+  //
+  // $scope.buy = function(input){
+  //   $state.go('checkout' , {pk : input.pk})
+  // }
+  //
+  // $scope.changePicture = function(parent , pic){
+  //   $scope.listings[$scope.listings.indexOf(parent)].pictureInView = pic;
+  // }
 
-  $scope.buy = function(input){
-    $state.go('checkout' , {pk : input.pk})
-  }
 
-  $scope.changePicture = function(parent , pic){
-    $scope.listings[$scope.listings.indexOf(parent)].pictureInView = pic;
-  }
 
   // $scope.fetchListings()
+
+
+  $http({method : 'GET' , url : '/api/ecommerce/listingLite/'}).
+  then(function(response) {
+    $scope.listingProducts = response.data;
+    console.log('sssssssssss',$scope.listingProducts);
+  })
+
+  $http({method : 'GET' , url : '/api/ecommerce/genericProduct/'}).
+  then(function(response) {
+    $scope.genericProducts = response.data;
+  })
+
+  // $scope.recentlyViewed = [];
+  // $scope.recentViewsArr = [];
+  //
+  $http({method : 'GET' , url : '/api/ecommerce/activities/?user=' + $scope.me.pk +'&typ=productView&limit=4' }).
+  then(function(response) {
+    console.log('%%%%%%%%',response.data.results);
+    $scope.recentlyViewed = response.data.results
+  })
 
 
 });

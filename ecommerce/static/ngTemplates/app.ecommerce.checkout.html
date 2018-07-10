@@ -47,29 +47,88 @@
     <div class="col-md-10 col-md-offset-2">
       <div class="container-fluid" style="margin-top:30px;">
         <div ng-if="data.stage == 'review'">
-
-          <div ng-if="cartItems" class="row" ng-repeat="i in cartItems">
-            <div class="col-md-3">
-              <div class="row">
-                <img style="width: 100%; height:100px;" class="img" ng-src="{{i.product.files[0].attachment}}">
+          <!-- <div ng-if="cartItems" ng-repeat="c in cartItems" style="padding:0px;">
+            <div class="col-md-3" style="padding-bottom:30px;" >
+              <div class="container-fluid">
+                <div class="row" >
+                  <img style="width: 100%; height:100px;" class="img" ng-src="{{c.product.files[0].attachment}}" ng-if="c.product.files.length>0">
+                  <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
+                </div>
+                <div class="row" >
+                    <div class=" card bg-white" style="padding-bottom:0px;">
+                      <div class="row container-fluid" style="padding:10px 20px; height:120px; " >
+                        <h5 ng-if="c.product.product.name.length>28" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,28)}}...</h5>
+                        <h5 ng-if="c.product.product.name.length<=28" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5>
+                        <span style="font-size:15px;" > Price : </span>
+                        <span class="pull-right" style="font-size:15px;">
+                        {{c.product.product.price}} <i class="fa fa-inr"></i>
+                      </span> <br>
+                        <span style="font-size:15px;" > Qty : </span>
+                        <span class="pull-right" style="font-size:15px;">
+                        {{c.qty}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="row">
-                <div class=" card bg-white" style="padding-bottom:0px;">
-                  <div class="row container-fluid" style="padding:10px 20px; height:110px; ">
-                    <h5 style="margin:0px">{{i.product.product.name}}</h5>
-                    <span style="font-size:15px;"> Price : </span>
-                    <span class="pull-right" style="font-size:15px;">
-                  {{i.product.product.price}} <i class="fa fa-inr"></i>
-                  </span>
+          </div> -->
+
+          <div class="row">
+            <div class="col-md-6">
+              <div ng-if="item">
+                <div class="col-md-6">
+                  <img style="width: 100%; height:100px;" class="img" ng-src="{{item.files[0].attachment}}" ng-if="item.files.length>0" >
+                  <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="item.files==null">
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <h5 ng-if="item.product.name.length>28" style="margin:0px;  height:50px;">{{item.product.name.slice(0,28)}}...</h5>
+                    <h5 ng-if="item.product.name.length<=28" style="margin:0px;  height:50px;">{{item.product.name}}</h5>
+                  </div>
+                  <div class="row">
+                    <strong>Rate : </strong><i class="fa fa-inr"></i> {{item.product.price}}
+                  </div>
+                  <!-- <div class="row">
+                    <strong>Vendor : </strong> {{offering.service.name }} <br>
+                    <uib-rating ng-model="rate" max="5" readonly="true" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                    <br> Power Seller <i style="color:#db55e7;" class="fa fa-shield"></i>
+                  </div> -->
+                </div>
+              </div>
+              <div ng-if="cartItems" ng-repeat="c in cartItems" >
+                <div class="container-fluid" style="padding-top:20px;" >
+                  <div class="col-md-6">
+                    <img style="width: 100%; height:100px;" class="img" ng-src="{{c.product.files[0].attachment}}" ng-if="c.product.files.length>0" >
+                    <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
+                  </div>
+                  <div class="col-md-6" style="height:100px;" >
+                    <div class="row">
+                      <h5 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h5>
+                      <h5 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5>
+                    </div>
+                    <div class="row">
+                      <strong>Rate : </strong><i class="fa fa-inr"></i> {{c.product.product.discountedPrice.toFixed(2)}}
+                    </div>
+                    <div class="row">
+                      <strong>Qty : </strong> {{c.qty}}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="col-md-6">
+              <!-- <div class="pull-right" style="margin-top:40px;">
+                <span >Coupon code</span>
+                <input ng-model="data.coupon" type="text" class="form-control">
+              </div> -->
+            </div>
           </div>
 
-          <div ng-if="item" class="row">
+          <!-- <div ng-if="item" class="row">
             <div class="col-md-3">
-              <img style="width: 100%; height:100px;" class="img" ng-src="{{item.files[0].attachment}}">
+              <img style="width: 100%; height:100px;" class="img" ng-src="{{item.files[0].attachment}}" ng-if="item.files.length>0" >
+              <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="{item.files==null">
             </div>
             <div class="col-md-3">
               <div class="row">
@@ -77,9 +136,6 @@
               </div>
               <div class="row">
                 <strong>Rate : </strong><i class="fa fa-inr"></i> {{item.product.price}}
-                <span ng-if="item.priceModel=='time'">/ per Hour</span>
-                <span ng-if="item.priceModel=='quantity'">/ per Piece</span>
-                <span ng-if="item.priceModel=='weight'">/ per Kg</span>
               </div>
               <div class="row">
                 <strong>Vendor : </strong> {{offering.service.name }} <br>
@@ -95,11 +151,10 @@
                 <span class="input-group-addon" ng-if="item.priceModel=='quantity'">Pieces</span>
                 <span class="input-group-addon" ng-if="item.priceModel=='weight'">Kgs</span>
               </div>
-              <div class="input-group pull-left" style="margin-top:40px;">
-                <span class="input-group-addon">Coupon code</span>
+              <div class="pull-left" style="margin-top:40px;">
+                <span >Coupon code</span>
                 <input ng-model="data.coupon" type="text" class="form-control">
               </div>
-
             </div>
             <div class="col-md-6">
               <div ng-if="item.priceModel=='time'">
@@ -134,14 +189,14 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <hr>
           <div class="row" style="margin-top:30px;padding:10px;">
             <div class="col-md-6">
               <div class="row">
                 <span class="text-muted" style="font-size:20px;">Subtotal</span>
                 <br>
-                <i class="fa fa-2x fa-inr"></i> {{getBookingAmount()}}
+                <i class="fa fa-2x fa-inr"></i> <span class="text-muted" style="font-size:20px;">{{total.toFixed(2)}}</span>
               </div>
             </div>
             <div class="col-md-6">
@@ -210,7 +265,7 @@
           <div class="row">
             <h1>COD</h1>
             <p>
-              <strong>Total amount payable :</strong>{{getBookingAmount()}}
+              <strong>Total amount payable :</strong>{{total}}
             </p>
           </div>
 
