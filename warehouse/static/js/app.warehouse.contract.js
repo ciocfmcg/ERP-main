@@ -7,6 +7,8 @@ app.config(function($stateProvider) {
   });
 });
 
+var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'yearly', 'user']
+
 app.controller("businessManagement.warehouse.contract.quote", function($scope, $state, $users, $stateParams, $http, Flash, $uibModalInstance, quoteData, ) {
   $scope.quote = quoteData;
   $scope.firstQuote = false;
@@ -112,59 +114,59 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
 });
 
 
-// app.controller("businessManagement.warehouse.contract.notification", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside , quote , deal , $uibModalInstance) {
-//   $scope.quote = quote;
-//   // $scope.deal = deal;
-//   $scope.send = function() {
-//     var contacts = []
-//     for (var i = 0; i < $scope.contacts.length; i++) {
-//       if ($scope.contacts[i].checked) {
-//         contacts.push($scope.contacts[i].pk);
-//       }
-//     }
-//
-//     var internal = []
-//     for (var i = 0; i < $scope.internalUsers.length; i++) {
-//       internal.push($scope.internalUsers[i]);
-//     }
-//
-//     var toSend = {
-//       sendEmail : $scope.sendEmail,
-//       sendSMS : $scope.sendSMS,
-//       internal : internal,
-//       contacts : contacts,
-//       type : $scope.notificationType,
-//       contract : $scope.quote.pk
-//     }
-//     $http({method : 'POST' , url : '/api/clientRelationships/sendNotification/' , data : toSend}).
-//     then(function() {
-//
-//     }, function() {
-//       $scope.reset();
-//     })
-//   }
-//
-//
-//
-//
-//   $scope.cancel = function(e) {
-//     $uibModalInstance.dismiss();
-//   };
-//
-//   $scope.reset = function() {
-//     for (var i = 0; i < $scope.contacts.length; i++) {
-//       $scope.deal.contacts[i].checked = false;
-//     }
-//     $scope.notificationType = 'Please select';
-//     $scope.sendEmail = false;
-//     $scope.sendSMS = false;
-//     $scope.internalUsers = [];
-//   }
-//
-//   $scope.reset();
-//
-//
-// });
+app.controller("businessManagement.warehouse.contract.notification", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside , quote , deal , $uibModalInstance) {
+  $scope.quote = quote;
+  // $scope.deal = deal;
+  $scope.send = function() {
+    var contacts = []
+    for (var i = 0; i < $scope.contacts.length; i++) {
+      if ($scope.contacts[i].checked) {
+        contacts.push($scope.contacts[i].pk);
+      }
+    }
+
+    var internal = []
+    for (var i = 0; i < $scope.internalUsers.length; i++) {
+      internal.push($scope.internalUsers[i]);
+    }
+
+    var toSend = {
+      sendEmail : $scope.sendEmail,
+      sendSMS : $scope.sendSMS,
+      internal : internal,
+      contacts : contacts,
+      type : $scope.notificationType,
+      contract : $scope.quote.pk
+    }
+    $http({method : 'POST' , url : '/api/clientRelationships/sendNotification/' , data : toSend}).
+    then(function() {
+
+    }, function() {
+      $scope.reset();
+    })
+  }
+
+
+
+
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+
+  $scope.reset = function() {
+    for (var i = 0; i < $scope.contacts.length; i++) {
+      $scope.deal.contacts[i].checked = false;
+    }
+    $scope.notificationType = 'Please select';
+    $scope.sendEmail = false;
+    $scope.sendSMS = false;
+    $scope.internalUsers = [];
+  }
+
+  // $scope.reset();
+
+
+});
 
 
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
@@ -210,7 +212,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
           $http({method : 'PATCH' , url : '/api/warehouse/invoice/' + $scope.contract.invoice[indx].pk + '/' , data : {status : status , dueDate : $scope.contract.invoice[indx].dueDate.toISOString().substring(0, 10) }}).
           then(function(response) {
-            $http({method : 'GET' , url : '/api/clientRelationships/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            $http({method : 'GET' , url : '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
             then(function(response) {
               Flash.create('success' , 'Saved')
             }, function(err) {
@@ -275,26 +277,26 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
   }
 
 
-  // $scope.sendNotification = function(indx){
-  //
-  //   $scope.quote = $scope.contract.invoice[indx];
-  //
-  //   $aside.open({
-  //     templateUrl : '/static/ngTemplates/app.clientRelationships.quote.notification.html',
-  //     placement: 'right',
-  //     size: 'lg',
-  //     backdrop : false,
-  //     resolve: {
-  //       quote : function() {
-  //         return $scope.quote;
-  //       },
-  //       // deal : function() {
-  //       //   return $scope.contracts;
-  //       // },
-  //     },
-  //     controller : 'businessManagement.warehouse.contract.notification'
-  //   })
-  // }
+  $scope.sendNotification = function(indx){
+
+    $scope.quote = $scope.contract.invoice[indx];
+
+    $aside.open({
+      templateUrl : '/static/ngTemplates/app.warehouse.quote.notification.html',
+      placement: 'right',
+      size: 'lg',
+      backdrop : false,
+      resolve: {
+        quote : function() {
+          return $scope.quote;
+        },
+        deal : function() {
+          return $scope.contract;
+        },
+      },
+      controller : 'businessManagement.warehouse.contract.notification'
+    })
+  }
 
   $scope.contract = $scope.tab.data;
   console.log('invoice');

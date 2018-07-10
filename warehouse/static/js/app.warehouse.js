@@ -13,7 +13,7 @@ app.config(function($stateProvider){
         },
         "@businessManagement.warehouse": {
           templateUrl: '/static/ngTemplates/app.warehouse.default.html',
-          // controller : 'businessManagement.warehouse.default',
+          controller : 'businessManagement.warehouse.default',
         }
     }
   })
@@ -26,11 +26,17 @@ app.config(function($stateProvider){
 });
 
 
-// app.controller('businessManagement.warehouse.default' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
-//   // settings main page controller
-//
-//
-// })
+app.controller('businessManagement.warehouse.default' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+  // settings main page controller
+  console.log('ssssssssssssssssss');
+  $scope.sai='kiran'
+  $http({method : 'GET' , url : '/api/warehouse/invoices/?status!=received'}).
+  then(function(response) {
+    Flash.create('success' , 'Saved')
+  }, function(err) {
+    Flash.create('danger' , 'Error occured')
+  })
+})
 // app.config(function($stateProvider){
 //
 //   $stateProvider

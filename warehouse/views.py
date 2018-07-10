@@ -54,7 +54,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
     queryset = Invoice.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['contract']
+    filter_fields = ['contract','status']
 
 class SpaceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
@@ -385,7 +385,7 @@ class PageNumCanvas(canvas.Canvas):
         # self.drawRightString(195*mm, 272*mm, page)
 
 
-def genInvoice(response , contract, request):
+def genInvoice(response , contract,invoiceobj, request):
 
 
     MARGIN_SIZE = 8 * mm
@@ -433,7 +433,6 @@ def genInvoice(response , contract, request):
     tableBodyStyle.fontSize = 7
 
 
-    invoiceobj=Invoice.objects.get(contract=contract.pk)
     for i in json.loads(invoiceobj.data):
         print i
         pDescSrc = i['desc']
@@ -550,17 +549,21 @@ def genInvoice(response , contract, request):
 class DownloadInvoice(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
+        print 'cccccccccccccccccccccccccc'
         if 'contract' not in request.GET:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        if 'saveOnly' in request.GET:
+            return Response(status=status.HTTP_200_OK)
 
         response = HttpResponse(content_type='application/pdf')
         print request.GET['contract']
 
         o = Contract.objects.get(id = request.GET['contract'])
+        invoiceobj=Invoice.objects.get(contract=request.GET['contract'],pk=request.GET['inoicePk'])
+        print o
         # o = Invoice.objects.get(contract = request.GET['contract'])
         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
-        genInvoice(response , o , request)
+        genInvoice(response , o ,invoiceobj, request)
 
-        if 'saveOnly' in request.GET:
-            return Response(status=status.HTTP_200_OK)
+
         return response
