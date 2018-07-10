@@ -1,11 +1,66 @@
 <div>
   <breadcrumb></breadcrumb>
-  <p style="text-align:center;padding-top:200px;">
+  <div class="row"style="margin:15px">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Filter By Company Name..." ng-model="serchField">
+    </div>
+    <div class="row" style="margin:20px" ng-if="invData.length==0">
+      <span class="text-center text-muted"><h2>No Invoices...</h2><br></span>
+    </div>
+    <div class="row" style="margin:20px" ng-if="invData.length>0">
+      <span class="text-center"><h3>Invoices</h3><br></span>
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <th>Invoice No.</th>
+            <th>Company Name</th>
+            <th>Status.</th>
+          </tr>
+          <tr ng-repeat="i in invData">
+            <td>{{i.pk}}</td>
+            <td>{{i.contract__company__name}}</td>
+            <td>{{i.status | humanize}}
+              <div class="btn-group btn-group-sm pull-right">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                  Change status <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="" ng-click="changeStatus('quoted', $index)">Quoted</a></li>
+                  <li><a href="" ng-click="changeStatus('approved', $index)">Approved</a></li>
+                  <li><a href="" ng-click="changeStatus('billed', $index)">Billed</a></li>
+                  <li><a href="" ng-click="changeStatus('received', $index)">Received</a></li>
+                  <li><a href="" ng-click="changeStatus('cancelled', $index)">Cancelled</a></li>
+                  <li><a href="" ng-click="changeStatus('dueElapsed', $index)">Due Elapsed</a></li>
+                </ul>
+              </div>
+              <!-- <br>
+              <span ng-if="c.status == 'billed'"> <strong>Due Date:</strong> {{i.dueDate | date : 'dd-MMM-yyyy'}}</span> -->
+            </td>
+            <!-- <td>
+              <div class="btn-group btn-group-sm pull-right">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                  Change status <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="" ng-click="changeStatus('quoted', $index)">Quoted</a></li>
+                  <li><a href="" ng-click="changeStatus('approved', $index)">Approved</a></li>
+                  <li><a href="" ng-click="changeStatus('billed', $index)">Billed</a></li>
+                  <li><a href="" ng-click="changeStatus('received', $index)">Received</a></li>
+                  <li><a href="" ng-click="changeStatus('cancelled', $index)">Cancelled</a></li>
+                  <li><a href="" ng-click="changeStatus('dueElapsed', $index)">Due Elapsed</a></li>
+                </ul>
+              </div>
+            </td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- <p style="text-align:center;padding-top:200px;">
     <i class="fa fa-search-plus fa-5x"></i>
     <i class="fa fa-building-o fa-5x "></i>
     <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for Warehouse portal {{sai}}</h3>
-  </p>
+    <h3 class="text-muted" style="text-align:center;"> Dashboard for Warehouse portal</h3>
+  </p> -->
 </div>
 
 <!-- <div class="shaddowed card bg-white " style="position:relative;min-height:92vh;">

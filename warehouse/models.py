@@ -95,6 +95,10 @@ class Invoice(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
     status = models.CharField(choices = CONTRACT_STATE_CHOICES , max_length=12 , default = 'quoted')
+    dueDate = models.DateField(null = True)
+    billedDate = models.DateTimeField(null = True)
+    recievedDate = models.DateTimeField(null = True)
+    archivedDate = models.DateTimeField(null = True)
 
 class Checkin(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -125,3 +129,13 @@ class Checkout(models.Model):
     initial = models.FloatField(null = False)
     value = models.FloatField(null = False)
     final = models.FloatField(null = False)
+
+@receiver(pre_save, sender=Invoice, dispatch_uid="update_invoice_details")
+def update_invoice_details(sender, instance, **kwargs):
+    print "setting the dates"
+    if instance.status == 'billed':
+        instance.billedDate = datetime.now(pytz.timezone('Asia/Kolkata'))
+    elif instance.status == 'received':
+        instance.recievedDate = datetime.now(pytz.timezone('Asia/Kolkata'))
+    elif instance.status == 'cancelled':
+        instance.archivedDate = datetime.now(pytz.timezone('Asia/Kolkata'))

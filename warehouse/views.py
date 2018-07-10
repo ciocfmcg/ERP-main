@@ -26,6 +26,7 @@ import requests
 from .models import *
 from .serializers import *
 from django.conf import settings as globalSettings
+from django.db.models import Q
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
@@ -567,3 +568,15 @@ class DownloadInvoice(APIView):
 
 
         return response
+
+class DashboardInvoices(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print 'cccccccccccccccccccccccccc'
+        if 'cName' in request.GET:
+            print request.GET['cName']
+            toReturn = Invoice.objects.filter(~Q(status='received'),contract__company__name__icontains=request.GET['cName']).values('pk','contract__company__name','status')
+        else:
+            toReturn = Invoice.objects.filter(~Q(status='received')).values('pk','contract__company__name','status')
+        print toReturn
+        return Response(toReturn, status=status.HTTP_200_OK)

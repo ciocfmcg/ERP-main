@@ -101,9 +101,10 @@ class ContractSerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
+    contract = ContractLiteSerializer(many = False , read_only = True)
     class Meta:
         model=Invoice
-        fields = ('pk','contract','data','value','status','created' ,'updated')
+        fields = ('pk','contract','data','value','status','created' ,'updated' ,'dueDate')
 
 class CheckinsSerializer(serializers.ModelSerializer):
     contract=ContractSerializer(many=False,read_only=True)

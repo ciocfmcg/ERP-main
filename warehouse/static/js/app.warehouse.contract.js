@@ -308,11 +308,13 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
     }).
     then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
+        console.log(i,response.data[i].contract,$scope.contract.pk);
         if (response.data[i].contract == $scope.contract.pk) {
           response.data[i].data = JSON.parse(response.data[i].data);
           $scope.contract.invoice.push(response.data[i]);
         }
       }
+      console.log(88888888888888888888,$scope.contract.invoice);
     })
   }
   $scope.fetchInvoice();
