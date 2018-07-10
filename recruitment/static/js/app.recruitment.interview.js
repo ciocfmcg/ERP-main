@@ -2,7 +2,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('workforceManagement.recruitment.interview', {
-      url: "/jobs",
+      url: "/interview",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.recruitment.interview.html',
@@ -36,8 +36,6 @@ $scope.config = {
 }
 
 $scope.tableAction = function(target, action, mode) {
-  console.log(target, action, mode);
-  console.log("fdg", $scope.data.tableData);
 
   for (var i = 0; i < $scope.data.tableData.length; i++) {
     if ($scope.data.tableData[i].pk == parseInt(target)) {

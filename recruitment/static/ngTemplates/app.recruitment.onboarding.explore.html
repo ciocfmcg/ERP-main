@@ -1,0 +1,72 @@
+<div class="container-fluid" ng-controller="workforceManagement.recruitment.onboarding.explore">
+  <div class="row">
+    <div class="col-md-5">
+      <div class="container-fluid" style="padding-top:20px;">
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Name :</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.firstname}}   {{candidate.lastname}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Email :</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.email}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Phone :</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.mobile}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Job Type :</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.job.jobtype}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Job :</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.job.role.name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Department :</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.job.department.dept_name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Sallary:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.sallary}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Date Of Joining:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.dateOfJoin | date : 'dd MMM yyyy , hh:mm:a'}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

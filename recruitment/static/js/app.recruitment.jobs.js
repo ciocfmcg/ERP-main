@@ -29,7 +29,7 @@ app.controller("workforceManagement.recruitment.jobs", function($scope, $http, $
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       $http({
         method: 'GET',
-        url: '/api/recruitment/applyJob/?job=' + $scope.data.tableData[i].pk + '&status__in!=Created,Closed'
+        url: '/api/recruitment/applyJob/?job=' + $scope.data.tableData[i].pk + '&status__in!=Created,Closed,Onboarding'
       }).
       then((function(i) {
         return function(response) {
@@ -369,7 +369,7 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
   $scope.fetchDeals = function() {
     $http({
       method: 'GET',
-      url: '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status__in!=Created,Closed'
+      url: '/api/recruitment/applyJob/?job=' + $scope.jobDetails.pk + '&status__in!=Created,Closed,Onboarding'
     }).
     then(function(response) {
       $scope.List = response.data;
@@ -513,6 +513,22 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     })
   }
 
+  $scope.onBoard = function() {
+    var toSend = {
+      status: 'Onboarding'
+    }
+    var method = 'PATCH';
+    var url = '/api/recruitment/applyJob/' + $scope.applicant.pk + '/';
+    $http({
+      method: method,
+      url: url,
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Done !');
+    })
+  }
+
   $scope.onlineTest = function() {
     var toSend = {
       first_name: $scope.applicant.firstname,
@@ -535,7 +551,9 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     $scope.form = {
       'interviewer': '',
       'interviewDate': new Date(),
-      'mode' : ''
+      'mode' : '',
+      'sallary':'',
+      'dateOfJ': new Date(),
     }
   }
   $scope.resetForm();
@@ -563,9 +581,35 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
       data: toSend
     }).
     then(function(response) {
+      $scope.callleter(response.data);
       $scope.schedules.push(response.data);
       Flash.create('success', 'Saved')
       $scope.resetForm();
+    })
+  }
+
+  $scope.saveData=function(){
+    if (typeof $scope.form.sallary == '') {
+      Flash.create('warning','please Enter Sallary')
+      return
+    }
+    if ($scope.form.dateOfJoin == '') {
+      Flash.create('warning','please Select Date Of Joining')
+      return
+    }
+    var toSend = {
+      sallary:$scope.form.sallary,
+      dateOfJoin:$scope.form.dateOfJoin
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/recruitment/applyJob/'+ $scope.applicant.pk + '/',
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved')
+      $scope.resetForm();
+      $scope.fetchDeal()
     })
   }
 
@@ -617,13 +661,71 @@ $scope.sendMail=function(){
 
   });
 }
+  $scope.callleter=function(data){
+
+    var toSend = {
+      first_name: $scope.applicant.firstname,
+      last_name: $scope.applicant.lastname,
+      emailID: $scope.applicant.email,
+      status : $scope.applicant.status,
+      dateSch : data.interviewDate,
+      value: data.mode,
+    }
+    $http({
+      method: 'POST',
+      url: '/api/recruitment/inviteInterview/',
+      data: toSend
+    }).
+    then(function() {
+      Flash.create('success', 'Email sent successfully')
+    })
+    var sendData = {
+      first_name: $scope.applicant.firstname,
+      last_name: $scope.applicant.lastname,
+      resume:$scope.applicant.resume,
+      interviewer: data.interviewer.profile.pk,
+      interviewer_firstname: data.interviewer.first_name,
+      interviewer_lastname: data.interviewer.last_name,
+      status : $scope.applicant.status,
+      dateSch : data.interviewDate,
+      value: data.mode,
+      jobType:$scope.applicant.job.jobtype,
+      job : $scope.applicant.job.role.name,
+    }
+    $http({
+      method: 'POST',
+      url: '/api/recruitment/scheduleInterview/',
+      data: sendData
+    }).
+    then(function() {
+      Flash.create('success', 'Email sent successfully')
+    })
+  }
+$scope.download=function(){
+  $http({method : 'GET' , url : '/api/recruitment/downloadCallLeter/?value=' + $scope.applicant.pk}).
+  then(function(response) {
+    Flash.create('success' , 'Saved')
+  }, function(err) {
+    Flash.create('danger' , 'Error occured')
+  })
+
+}
 });
 app.controller("workforceManagement.recruitment.jobs.applicant.sms", function($scope, $state, $users, $stateParams, $http, Flash) {
 });
 app.controller("workforceManagement.recruitment.jobs.applicant.email", function($scope, $state, $users, $stateParams, $http, Flash, data) {
   $scope.applicant=data,
-
+  $scope.resetEmail=function(){
+    $scope.form={
+      subject:'',
+      email:''
+    }
+  }
+  $scope.resetEmail();
   $scope.send = function() {
+    if($scope.form.email==''){
+          Flash.create('warning', 'Email body is Empty')
+    }
     var toSend = {
       first_name: $scope.applicant.firstname,
       last_name: $scope.applicant.lastname,
@@ -640,6 +742,7 @@ app.controller("workforceManagement.recruitment.jobs.applicant.email", function(
     }).
     then(function() {
       Flash.create('success', 'Email sent successfully')
+      $scope.resetEmail();
     })
   }
 });

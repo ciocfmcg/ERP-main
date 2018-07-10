@@ -11,6 +11,17 @@
         <span style="font-size:25px;" ng-if="applicant.status=='Negotiation'"><i class="fa fa-bars "></i> Negotiation</span>
         </br>
         <div class="row">
+          <div class="col-md-12" style="padding-bottom:20px" ng-if="applicant.dateOfJoin">
+            <label> Compensation Details : </label>
+            <div class="container-fluid card" style="padding:10px;margin-top:20px;">
+              <div class="row">
+                <div class="col-md-12">
+                  <strong>Date Of Joining : </strong> {{applicant.dateOfJoin | date : 'dd MMM yyyy , hh:mm:a'}}</br>
+                  <strong>Sallary: </strong> {{applicant.sallary}}</br>
+                  </div>
+                </div>
+              </div>
+            </div>
           <div class="col-md-12" style="padding-bottom:20px">
             <label> Applied History : </label>
             <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="h in pastApplyHistory">
@@ -26,7 +37,7 @@
             </div>
           <div class="col-md-12">
             <label>  Schedule: </label>
-            <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="c in schedules" ng-style="{'background-color': c.status === 'suitable' ? 'rgb(176, 236, 203)' : '' || c.status === 'un-suitable' ? 'rgb(237, 170, 164)' : ''||c.status === 'created' ? 'rgb(189, 182, 181)' : '' || c.status === 'recommand-other-job' ? 'rgb(162, 239, 246)' : ''}">
+            <div class="container-fluid card" style="padding:10px;margin-top:20px;" ng-repeat="c in schedules" ng-style="{'background-color': c.status === 'suitable' ? 'rgb(171, 237, 172)' : '' || c.status === 'un-suitable' ? 'rgb(237, 170, 164)' : ''||c.status === 'created' ? 'rgb(189, 182, 181)' : '' || c.status === 'recommand-other-job' ? 'rgb(162, 239, 246)' : ''}">
               <div class="row">
                 <div class="col-md-6">
                   <i class="fa fa-users"></i> {{c.interviewer.first_name}} {{c.interviewer.last_name}}</br>
@@ -58,21 +69,19 @@
             <div class="btn-group">
               <button class="btn btn-danger pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default" style="width:150px"><i class="fa fa-times"> Reject</i></button>
               <button class="btn btn-success pull-right" ng-click="sendSMS()"  style="width:150px"><i class="fa fa-envelope"> Send SMS</i></button>
-              <button class="btn btn-primary pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendMail()" confirm-button-type="primary" cancel-button-type="default" style="width:150px"><i class="fa fa-paper-plane"> Send Email</i></button>
-              <button class="btn btn-default pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="onlineTest()" confirm-button-type="primary" cancel-button-type="default" style="width:150px"><i class="fa fa-pencil-square-o "> Send Test Link</i></button>
+              <button class="btn btn-primary pull-right" ng-click="sendMail()" style="width:150px"><i class="fa fa-paper-plane"> Send Email</i></button>
+              <button  ng-if="applicant.status!='Negotiation'" class="btn btn-default pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="onlineTest()" confirm-button-type="primary" cancel-button-type="default" style="width:200px"><i class="fa fa-pencil-square-o "> Send Test Link</i></button>
+              <button  ng-if="applicant.dateOfJoin" class="btn btn-default pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-flag'></i>" cancel-text="No" on-confirm="onBoard()" confirm-button-type="primary" cancel-button-type="default" style="width:200px"><i class="fa fa-flag "> On-Boarding</i></button>
+                <a href="/api/recruitment/downloadCallLeter/?value={{applicant.pk}}" target="_blank"><button  ng-if="applicant.dateOfJoin" class="btn btn-primary pull-right"><i class="fa fa-download "></i></button></a>
             </div>
           </div>
         </div>
-
-
-        <div class="row" style="margin:30px 10px">
-          <div class="col-md-10 col-md-offset-1">
+        <div class="row" style="margin:30px 10px" >
+          <div class="col-md-10 col-md-offset-1" ng-if="applicant.status!='Negotiation'">
             <label>Interviewer: </label>
             <input ng-model="form.interviewer" uib-typeahead="interviewer as getName(interviewer) for interviewer in interviewerSearch($viewValue)" type="text" class="form-control" placeholder="Search using name">
             <div class="row">
-
               <div class="col-md-8">
-
                 <div class="form-group">
                   <label class="control-label col-sm-1" style="margin-top:40px;padding:0px;">Date : </label>
                   <div class="col-md-6">
@@ -91,7 +100,6 @@
                 </div>
               </div>
               <div class="col-md-4">
-
                 <div class="form-group" style="margin-top:35px;">
                   <label>Mode : </label>
                   <label class="radio-inline"> &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio"  ng-model="form.mode" value="telephonic"> <i class="fa fa-phone fa-2x" style="padding-left:15px"></i></label>
@@ -101,6 +109,33 @@
             </div>
             <div class="row text-center" style="padding-top:20px">
               <button class="btn btn-primary" ng-click="schedule()"> Schedule</button><br/><br/>
+            </div>
+          </div>
+          <div class="col-md-10 col-md-offset-1" ng-if="applicant.status=='Negotiation'">
+            <label>Sallary: </label>
+            <input ng-model="form.sallary" type="text" class="form-control" placeholder="Search using name">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" style="margin-top:40px;padding:0px;">Date Of Joining: </label>
+                  <div class="col-md-6">
+                    <div class="input-group" style="margin-top:35px;">
+                      <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.dateOfJoin" is-open="status.opened" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="row container-fluid">
+                      <uib-timepicker ng-model="form.dateOfJoin" hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row text-center" style="padding-top:20px">
+              <button class="btn btn-primary" ng-click="saveData()"> Save</button><br/><br/>
             </div>
 
           </div>

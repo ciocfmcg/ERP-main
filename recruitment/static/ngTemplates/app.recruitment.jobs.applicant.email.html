@@ -11,8 +11,8 @@
     <textarea ui-tinymce="tinymceOptions" ng-model="form.email"></textarea>
   </div>
   <div class="btn-group">
-    <button type="button" class="btn btn-primary" ng-click="send()">
-      <i class="fa fa-floppy"></i> Save
+    <button type="button" class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()" confirm-button-type="primary" cancel-button-type="default">
+      Send
     </button>
   </div>
 </div>

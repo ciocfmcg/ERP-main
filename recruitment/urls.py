@@ -11,4 +11,7 @@ urlpatterns = [
      url(r'^', include(router.urls)),
      url(r'jobsList/$' , JobsList.as_view()),
      url(r'onlinelink/$' , SendLinkAPIView.as_view() ),
+     url(r'scheduleInterview/$' , ScheduleInterviewAPIView.as_view() ),
+     url(r'inviteInterview/$' , InviteInterviewAPIView.as_view() ),
+     url(r'downloadCallLeter/$' , DownloadCallLetter.as_view() ),
  ]
