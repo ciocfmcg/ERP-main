@@ -136,3 +136,17 @@ class Activities(models.Model):
     # product =
     typ =  models.CharField(choices = ACTIVITIES_TYPE_CHOICES , max_length = 10 , default='loggedIn')
     data = models.CharField(max_length = 200 , null = True)
+
+class Address(models.Model):
+    user = models.ForeignKey(User , related_name = 'userAddress' , null = True , blank = True)
+    title = models.CharField(max_length=100 , null = True , blank = True)
+    street = models.CharField(max_length=300 , null = True , blank = True)
+    city = models.CharField(max_length=100 , null = True , blank = True)
+    state = models.CharField(max_length=50 , null = True , blank = True)
+    pincode = models.PositiveIntegerField(null = True , blank = True)
+    lat = models.CharField(max_length=15 ,null = True , blank = True)
+    lon = models.CharField(max_length=15 ,null = True , blank = True)
+    country = models.CharField(max_length = 50 , null = True , blank = True)
+
+    def __unicode__(self):
+        return '< street :%s>,<city :%s>,<state :%s>' %(self.street ,self.city, self.state)

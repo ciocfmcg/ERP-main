@@ -154,7 +154,7 @@
         <!-- review page ends here  -->
         <div ng-if="data.stage == 'shippingDetails'">
           <div class="row">
-            <div class="col-md-6 col-md-offset-2">
+            <!-- <div class="col-md-6">
               <h2>Address</h2>
               <div class="form-group">
                 <label>Address : </label>
@@ -193,9 +193,95 @@
               <div ng-if="attachment != null">
                 Attached License : <a target="_blank" ng-href="{{attachment.attachment}}">{{attachment.name}}</a>
               </div>
+            </div> -->
+            <div class="col-md-7">
+              <h4>Address</h4>
+              <div class="form-group" >
+                <label for="street">Street : </label>
+                <textarea ng-model="data.address.street" class="form-control" id="street"></textarea>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="city">City : </label>
+                    <input ng-model="data.address.city" type="text" class="form-control" id="city">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="state">State : </label>
+                    <input ng-model="data.address.state" type="text" class="form-control" id="state">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pincode">Pincode : </label>
+                    <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="country">Country : </label>
+                    <input ng-model="data.address.country" type="text" class="form-control" id="country">
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="margin-bottom:35px">
+                <span><i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i><i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> BookMark This Address</i></span>
+              </div>
+              <h4>Contact Details</h4>
+              <div class="form-group">
+                <label for="mob">Mobile no. : </label>
+                <input ng-model="customerProfile.mobile" type="text" class="form-control" id="mob">
+              </div>
             </div>
+
+            <div class="col-md-5" style="padding-left:55px" ng-if="savedAddress.length>0">
+              <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
+              <div class="row" ng-repeat="adr in savedAddress" style="padding:5px 30px;margin-bottom:15px">
+                <div class="row card">
+                  <div class="row text-center">
+                    <div class="col-md-12" style="font-size:19px">
+                      <strong>{{adr.title}}</strong>
+                    </div>
+                  </div>
+                  <div class="row" style="padding-left:15px;font-size:16px">
+                    <div class="col-md-12">
+                      <strong>Street :</strong> {{adr.street}}
+                    </div>
+                  </div>
+                  <div class="row" style="padding-left:15px;font-size:16px">
+                    <div class="col-md-6">
+                      <strong>City :</strong> {{adr.city}}
+                    </div>
+                    <div class="col-md-6">
+                      <strong>State :</strong> {{adr.state}}
+                    </div>
+
+
+                  </div>
+                  <div class="row" style="padding-left:15px;font-size:16px">
+                    <div class="col-md-6">
+                      <strong>PinCode :</strong> {{adr.pincode}}
+                    </div>
+                    <div class="col-md-6">
+                      <strong>Country :</strong> {{adr.country}}
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class=" btn btn-block btn-primary" ng-click="ChangeAdd($index)">
+                    Use This Address
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
-          <div class="row">
+          <div class="row" style="margin-top:55px">
             <button type="button" class="btn btn-default pull-left" ng-click="prev()">
               Go back
             </button>

@@ -215,3 +215,10 @@ class ActivitiesViewSet(viewsets.ModelViewSet):
     queryset = Activities.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user']
+
+class AddressViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user','pincode']
