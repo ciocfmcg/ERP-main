@@ -553,7 +553,7 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
       'interviewDate': new Date(),
       'mode' : '',
       'sallary':'',
-      'dateOfJ': new Date(),
+      'dateOfJoin': new Date(),
     }
   }
   $scope.resetForm();
