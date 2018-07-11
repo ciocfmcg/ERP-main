@@ -92,9 +92,51 @@ class CreateOrderAPI(APIView):
     renderer_classes = (JSONRenderer,)
     # permission_classes = (permissions.IsAuthenticated ,)
     def post(self , request , format = None):
-        print self.request.POST
         print request.data
-        return Response({}, status = status.HTTP_200_OK)
+        oQMp = []
+        totalAmount = 0
+        msg = 'Error'
+        userCart = Cart.objects.filter(user=request.user)
+        print userCart.count(),userCart
+        for i in request.data['products']:
+            pObj = listing.objects.get(pk = i['pk'])
+            pp = pObj.product.price
+            if pp > 0:
+                a = pp - (pObj.product.discount*pp)/100
+                b = a - (request.data['promoCodeDiscount']*a)/100
+            else:
+                b=0
+            totalAmount += b * i['qty']
+            print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
+            oQMp.append(oQMObj)
+        else:
+            data = {
+            'user':User.objects.get(pk=request.user.pk),
+            'totalAmount' : round(totalAmount,2),
+            'paymentMode' : str(request.data['modeOfPayment']),
+            'modeOfShopping' : str(request.data['modeOfShopping']),
+            'paidAmount' : str(request.data['paidAmount']),
+            'landMark' : str(request.data['address']['landMark']),
+            'street' : str(request.data['address']['street']),
+            'city' : str(request.data['address']['city']),
+            'state' : str(request.data['address']['state']),
+            'pincode' : str(request.data['address']['pincode']),
+            'country' : str(request.data['address']['country']),
+            'mobileNo' : str(request.data['address']['mobile']),
+            }
+            if len(str(request.data['promoCode'])) > 0:
+                data['promoCode'] = str(request.data['promoCode'])
+            print data
+            orderObj = Order.objects.create(**data)
+            for i in oQMp:
+                orderObj.orderQtyMap.add(i)
+            orderObj.save()
+            msg = 'Sucess'
+            userCart.delete()
+
+
+        return Response({'msg':msg}, status = status.HTTP_200_OK)
 
 
 class fieldViewSet(viewsets.ModelViewSet):
@@ -253,6 +295,21 @@ class AddressViewSet(viewsets.ModelViewSet):
     serializer_class = AddressSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','pincode']
+
+class TrackingLogViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = TrackingLog.objects.all()
+    serializer_class = TrackingLogSerializer
+
+class OrderQtyMapViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = OrderQtyMap.objects.all()
+    serializer_class = OrderQtyMapSerializer
+
+class OrderViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
 class PromocodeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )

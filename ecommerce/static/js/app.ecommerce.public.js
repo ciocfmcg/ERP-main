@@ -605,7 +605,7 @@ app.controller('controller.ecommerce.account.orders' , function($scope , $state 
 
   $scope.config = {
     views: views,
-    url: '/api/ecommerce/cart/',
+    url: '/api/ecommerce/order/',
     searchField: 'Name',
     getParams: [{key : 'user' , value : $scope.me.pk} ],
     deletable: true,
@@ -716,7 +716,7 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   console.log('in checkout controllerrrrrr');
   console.log($state.params.pk);
 
-  $scope.data = {quantity : 1 , shipping :'express', stage : 'review', promoCode: '' , modeOfPayment : 'Card', address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :$scope.me.profile.mobile}};
+  $scope.data = {quantity : 1 , shipping :'express', stage : 'review', promoCode: '' , modeOfPayment : 'Card', address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :$scope.me.profile.mobile , landMark:''}};
 
   // $scope.promoCode = '';
   $scope.products = [];
@@ -747,6 +747,7 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
           $scope.data.address = $scope.savedAddress[i]
           console.log($scope.data.address);
           $scope.data.address.mobile = ''
+          $scope.data.address.landMark = ''
         }
       }
     })
@@ -756,9 +757,10 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   $scope.ChangeAdd = function(idx){
     $scope.data.address = $scope.savedAddress[idx]
     $scope.data.address.mobile = ''
+    $scope.data.address.landMark = ''
   }
   $scope.resetAdd = function(){
-    $scope.data.address = { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :''}
+    $scope.data.address = { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :'',landMark:''}
   }
   $scope.saveAdd = function(){
     if ($scope.data.address.street.length == 0) {
@@ -865,7 +867,7 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   $scope.changeQty = function() {
     $scope.calcTotal();
   }
-
+  $scope.promoDiscount = 0
   $scope.applyPromo = function () {
     console.log($scope.data.promoCode);
     if ($scope.msg=='') {
@@ -891,10 +893,11 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
     if ($scope.data.stage == 'review') {
       $scope.data.stage = 'shippingDetails';
       $scope.dataToSend.promoCode = $scope.data.promoCode;
+      $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
       $scope.dataToSend.products = $scope.products;
     } else if ($scope.data.stage == 'shippingDetails') {
       console.log($scope.data.address);
-      if ($scope.data.address.street=='' || $scope.data.address.city=='' || $scope.data.address.pincode=='' || $scope.data.address.country=='' || $scope.data.address.state=='' || $scope.data.address.mobile=='' ) {
+      if ($scope.data.address.street=='' || $scope.data.address.city=='' || $scope.data.address.pincode=='' || $scope.data.address.country=='' || $scope.data.address.state=='' || $scope.data.address.mobile=='' || $scope.data.address.landMark=='' ) {
         Flash.create('warning','Please fill all details')
         return
       }else {
@@ -921,6 +924,12 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
 
   $scope.order = function(){
     $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
+    $scope.dataToSend.modeOfShopping = 'online'
+    if ($scope.dataToSend.modeOfPayment == 'COD') {
+      $scope.dataToSend.paidAmount = 0
+    }else {
+      $scope.dataToSend.paidAmount = 0
+    }
     console.log($scope.dataToSend);
 
     // $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;

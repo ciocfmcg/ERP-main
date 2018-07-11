@@ -12,10 +12,10 @@
           <span style="font-size:15px;" > Payment Mode : {{data.paymentMode}} </span>
         </div>
         <div class="col-md-3">
-          <span style="font-size:15px;" > Approved : {{data.approved}} </span>
+          <span style="font-size:15px;" >  Approved :{{data.approved}} </span>
         </div>
         <div class="col-md-3">
-          <span style="font-size:15px;" > Status : {{data.orderQtyMap.status}} </span>
+          <span style="font-size:15px;" > Status : {{data.status}} </span>
         </div>
       </div>
       <div class="row">
@@ -29,7 +29,7 @@
            <i class="fa fa-info fa-2x" style="cursor:pointer;" ng-click="rowActionClicked('toggleInfo')"></i>
         </div>
         <div class="col-md-6">
-          <button type="button" name="button" class="btn btn-success" > Cancel </button>
+          <!-- <button type="button" name="button" class="btn btn-success" > Cancel </button> -->
         </div>
       </div>
     </div>
@@ -37,25 +37,36 @@
   <div class="row anim-in-out anim-fade"  data-anim-speed="200" ng-if="data.showInfo">
     <hr>
     <div class="container-fluid">
-      <div class="col-md-10">
+      <div class="col-md-4">
         <div class="row">
-          <div class="col-md-2">
-            Address
-          </div>
           <div class="col-md-5">
-            {{data.street}} <br>
+            <strong>Address :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.street}} ,
             {{data.city}} <br>
-            {{data.state}} <br>
-            {{data.landMark}} <br>
+            {{data.state}} ,
+            {{data.landMark}} (landmark) <br>
             {{data.pincode}}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-2">
-            Mobile
-          </div>
           <div class="col-md-5">
+              <strong>Mobile :</strong>
+          </div>
+          <div class="col-md-7">
             {{data.mobileNo}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <strong>Items :</strong>
+          <div ng-repeat="i in data.orderQtyMap">
+            <span>{{i.qty}} -</span>
+            <span> {{i.productName}}</span>
+            <span>for {{i.totalAmount * i.qty}}</span>
+
           </div>
         </div>
       </div>
