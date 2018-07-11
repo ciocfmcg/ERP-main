@@ -147,6 +147,8 @@ app.config(function($stateProvider ){
 
 app.controller('controller.ecommerce.details' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window ){
 
+  console.log('cominggggggggggggggggggggg');
+
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime'
   console.log($scope.data);
   $scope.breadcrumbList = [];
@@ -201,9 +203,18 @@ app.controller('controller.ecommerce.details' , function($scope , $state , $http
 
   for (var i = 0; i < $scope.inCart.length; i++) {
     if ($scope.inCart[i].product.pk==dataToSend.product) {
+      if ($scope.inCart[i].typ=='cart') {
         Flash.create('warning' , 'This Product is already in cart');
         console.log('in cart',$scope.inCart);
         return
+      }else {
+        $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.inCart[i].pk + '/' , data : {typ: 'cart' } }).
+           then(function(response){
+           })
+           return
+        $scope.inCart[i].typ = 'cart'
+      }
+
     }
   }
     $http({method : 'POST' , url : '/api/ecommerce/cart/' , data : dataToSend }).
@@ -426,6 +437,8 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
     itemsNumPerView: [8, 16, 32],
   }
 
+  console.log('in cartttttttttt',$scope.inCart);
+
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
     console.log($scope.data.tableData);
@@ -438,6 +451,7 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
                Flash.create('success', 'Item removed from cart');
              })
           $scope.data.tableData.splice(i,1)
+          $scope.inCart.splice(i,1)
           $scope.calcTotal();
         }else if (action == 'addQty') {
           $scope.data.tableData[i].qty = $scope.data.tableData[i].qty + 1;
@@ -457,8 +471,9 @@ app.controller('controller.ecommerce.account.cart' , function($scope , $state , 
           $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {typ: 'favourite' } }).
              then(function(response){
              })
-            $scope.data.tableData[i].typ = 'favourite';
+          $scope.data.tableData[i].typ = 'favourite';
           $scope.data.tableData.splice(i,1)
+          $scope.inCart[i].typ = 'favourite'
         }
         else if (action == 'unfavourite'){
           $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {typ: 'cart' } }).
@@ -526,7 +541,9 @@ app.controller('controller.ecommerce.account.saved' , function($scope , $state ,
           $http({method : 'PATCH' , url : '/api/ecommerce/cart/'+ $scope.data.tableData[i].pk + '/' , data : {typ: 'cart' } }).
              then(function(response){
              })
+             // $scope.inCart.push($scope.data.tableData[i])
             $scope.data.tableData.splice(i,1)
+            $scope.inCart[i].typ='cart'
         }
       }
     }
@@ -580,25 +597,54 @@ app.controller('controller.ecommerce.account.orders' , function($scope , $state 
 });
 
 app.controller('controller.ecommerce.account.settings' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
-  $scope.form = {address : { street : '' , pincode : '' , city : '' , state : '', mobile :'' }}
+  $scope.me = $users.get('mySelf');
+  console.log($scope.me);
+  $scope.refresh = function(){
+    $scope.form = {title : '' ,street : '' , city : '' , state : '', pincode : '' , country :'India' ,primary : false}
+  }
+  $scope.refresh()
+  $scope.update = function(idx){
+    $scope.form = $scope.savedAddress[idx]
+    if ($scope.savedAddress[idx].pk == $scope.pa) {
+      $scope.form.primary = true
+    }else {
+      $scope.form.primary = false
+    }
+    $scope.savedAddress.splice(idx,1)
+  }
 
-  $http({method : 'GET' , url : '/api/ecommerce/profile/'}).
+$scope.fetchaddress = function(){
+  $http({method : 'GET' , url : '/api/ecommerce/address/?user='+$scope.me.pk}).
   then(function(response){
-    // for(key in response.data[0])
-    $scope.customerProfile = response.data[0];
-    $scope.form.address = response.data[0].address;
-    console.log($scope.customerProfile);
+    $scope.savedAddress = response.data
+    $scope.pa = 0
+    for (var i = 0; i < $scope.savedAddress.length; i++) {
+      if ($scope.me.profile.primaryAddress == $scope.savedAddress[i].pk) {
+        $scope.pa = $scope.savedAddress[i].pk
+      }
+    }
   })
+}
+$scope.fetchaddress()
 
 
   $scope.saveAddress = function(){
     console.log($scope.form);
-    dataToSend = $scope.form.address;
-    dataToSend.sendUpdates  = $scope.customerProfile.sendUpdates;
-    dataToSend.mobile  = $scope.customerProfile.mobile;
-    $http({method : 'PATCH' , url : '/api/ecommerce/profile/' + $scope.customerProfile.pk + '/' , data : dataToSend }).
+    dataToSend = $scope.form;
+    if ($scope.form.pincode.length == 0) {
+      delete dataToSend.pincode
+    }
+    var method = 'POST'
+    var url = '/api/ecommerce/address/'
+    if ($scope.form.pk != undefined) {
+      method = 'PATCH'
+      url = url + $scope.form.pk + '/'
+    }
+    $http({method : method , url : url , data : dataToSend }).
     then(function(response){
-      Flash.create('success', response.status + ' : ' + response.statusText);
+      Flash.create('success', 'Added');
+      $scope.refresh()
+      $scope.fetchaddress()
     }, function(response){
       Flash.create('danger', response.status + ' : ' + response.statusText);
     })
@@ -635,20 +681,91 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   console.log('in checkout controllerrrrrr');
   console.log($state.params.pk);
 
-  $scope.data = {quantity : 1 , shipping :'express', stage : 'review' , address : { street : '' , pincode : '' , city : '' , state : '', mobile :'' }};
+  $scope.data = {quantity : 1 , shipping :'express', stage : 'review' , address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :''}};
 
-  $scope.$watch(function(){
-    $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
-    $scope.data.dropInTime = $scope.$parent.data.dropInTime;
-    $scope.data.location = $scope.$parent.data.location;
-  })
+  // $scope.$watch(function(){
+  //   $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
+  //   $scope.data.dropInTime = $scope.$parent.data.dropInTime;
+  //   $scope.data.location = $scope.$parent.data.location;
+  // })
 
 
-  $http({method : 'GET' , url : '/api/ecommerce/profile/'}).
-  then(function(response){
-    $scope.customerProfile = response.data[0];
-    $scope.data.address = response.data[0].address;
-  })
+  // $http({method : 'GET' , url : '/api/ecommerce/profile/'}).
+  // then(function(response){
+  //   $scope.customerProfile = response.data[0];
+  //   $scope.data.address = response.data[0].address;
+  // })
+
+  $scope.fetchaddress = function(){
+    $http({method : 'GET' , url : '/api/ecommerce/address/?user='+$scope.me.pk}).
+    then(function(response){
+      $scope.savedAddress = response.data
+      console.log($scope.savedAddress);
+      $scope.pa = 0
+      for (var i = 0; i < $scope.savedAddress.length; i++) {
+        if ($scope.me.profile.primaryAddress == $scope.savedAddress[i].pk) {
+          $scope.pa = $scope.savedAddress[i].pk
+          $scope.data.address = $scope.savedAddress[i]
+        }
+      }
+    })
+  }
+  $scope.fetchaddress()
+  console.log('sssssssssssssssssssssssssss');
+  $scope.ChangeAdd = function(idx){
+    $scope.data.address = $scope.savedAddress[idx]
+  }
+  $scope.resetAdd = function(){
+    $scope.data.address = { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :''}
+  }
+  $scope.saveAdd = function(){
+    if ($scope.data.address.street.length == 0) {
+      Flash.create('danger' , 'Please Fill Address Details');
+      return;
+    }
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.checkout.addressmodel.html',
+      size: 'md',
+      backdrop : true,
+      resolve : {
+        add : function() {
+          return $scope.data.address;
+        }
+      },
+      controller: function($scope , $state, $http , $timeout , $uibModal , $users , Flash ,$uibModalInstance,add){
+        $scope.adrForm = add;
+        $scope.adrForm.title = ''
+        $scope.adrForm.primary = false
+        console.log(add);
+        $scope.saveAdrForm = function(){
+          if ($scope.adrForm.title.length == 0) {
+            Flash.create('danger' , 'Please Mention Some Title');
+            return;
+          }
+          if ($scope.adrForm.pincode.length == 0) {
+            delete $scope.adrForm.pincode
+          }
+
+          $http({method : 'POST' , url : '/api/ecommerce/address/' , data : $scope.adrForm }).
+          then(function(response){
+            Flash.create('success', 'Added');
+            $scope.adrForm = response.data
+            $uibModalInstance.dismiss($scope.adrForm);
+          }, function(response){
+            Flash.create('danger', response.status + ' : ' + response.statusText);
+          })
+
+        }
+      },
+    }).result.then(function () {
+
+    }, function (f) {
+      console.log('777777777777777777777777',f);
+      $scope.data.address.pk = f.pk
+      $scope.savedAddress.push($scope.data.address)
+
+    });
+  }
 
   // $http({method : 'GET' , url : '/api/ecommerce/offering/' + $state.params.pk + '/'}).
   // then(function(response){
@@ -668,16 +785,20 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   //   })
   // })
 
+  $scope.calcTotal = function() {
+    $scope.total = 0;
+    for (var i = 0; i < $scope.cartItems.length; i++) {
+      $scope.total =  $scope.total + ( $scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
+    }
+  }
+
 
 
   if($state.params.pk=='cart') {
     $http({method : 'GET' , url : '  /api/ecommerce/cart/?user='+ $scope.me.pk}).
      then(function(response){
        $scope.cartItems = response.data;
-       $scope.total = 0;
-       for (var i = 0; i < $scope.cartItems.length; i++) {
-         $scope.total =  $scope.total + ( $scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
-       }
+       $scope.calcTotal();
      })
   }else {
     $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
@@ -688,10 +809,10 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
      })
   }
 
-
-
-
-
+  $scope.changeQty = function(item) {
+    console.log('fffffffffffffffff',item);
+    $scope.calcTotal();
+  }
 
 
   $scope.next = function(){
@@ -718,6 +839,25 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
     $timeout(function () {
       $scope.data.stage = 'confirmation';
     }, 2000);
+
+    var products = [];
+
+    for (var i = 0; i < $scope.cartItems.length; i++) {
+      products.push({pk: $scope.cartItems[i].product.pk , qty: $scope.cartItems[i].qty })
+    }
+
+    $timeout(function () {
+      dataToSend = {
+        user : $scope.me.pk,
+        totalAmount : $scope.total.toFixed(2),
+        products : products,
+        paymentMode: 'COD',
+        modeOfShopping: 'online',
+        paidAmount: '',
+        paymentStatus: '',
+      }
+      console.log(dataToSend);
+    }, 1000);
 
 
     // if ($scope.data.pickUpTime == null || $scope.data.dropInTime== null) {
@@ -859,7 +999,7 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
   $scope.data.pickUpTime = null;
   $scope.data.dropInTime = null;
 
-  $http({method : 'GET' , url : '/api/ecommerce/cart/'}).
+  $http({method : 'GET' , url : '/api/ecommerce/cart/?user='+ $scope.me.pk + '&typ=cart'}).
   then(function(response){
     for (var i = 0; i < response.data.length; i++) {
       if (response.data[i].typ=='cart'){
@@ -867,6 +1007,7 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
       }
     }
   })
+
 
   $scope.headerUrl = '/static/ngTemplates/app.ecommerce.header.html';
   $scope.footerUrl = '/static/ngTemplates/app.ecommerce.footer.html';

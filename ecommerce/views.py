@@ -218,3 +218,10 @@ class ActivitiesViewSet(viewsets.ModelViewSet):
         # a = Activities.objects.values("pk").annotate(n=models.Count("pk"))
         # print a
         return Activities.objects.all().order_by('-created')
+
+class AddressViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user','pincode']

@@ -10,7 +10,7 @@ class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:
         model = profile
-        fields = ('displayPicture' , 'prefix' )
+        fields = ('displayPicture' , 'prefix' ,'primaryAddress')
 
 class userSearchSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -45,8 +45,8 @@ class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:
         model = profile
-        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' )
-        read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' , )
+        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'primaryAddress' , 'addresses')
+        read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity'  )
 
 class userProfileAdminModeSerializer(serializers.ModelSerializer):
     """ Only admin """
@@ -55,7 +55,7 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
         fields = ( 'pk', 'empID', 'dateOfBirth' , 'anivarsary' , 'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry',
         'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry' , 'prefix', 'gender' , 'email', 'email2', 'mobile' , 'emergency' , 'tele' , 'website',
         'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV',
-        'note1' , 'note2' , 'note3')
+        'note1' , 'note2' , 'note3' , 'primaryAddress' , 'addresses')
 
 
 class payrollSerializer(serializers.ModelSerializer):

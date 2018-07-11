@@ -137,3 +137,80 @@ class Activities(models.Model):
     product = models.ForeignKey(listing, null = True)
     typ =  models.CharField(choices = ACTIVITIES_TYPE_CHOICES , max_length = 10 , default='loggedIn')
     data = models.CharField(max_length = 200 , null = True)
+
+class Address(models.Model):
+    user = models.ForeignKey(User , related_name = 'userAddress' , null = True , blank = True)
+    title = models.CharField(max_length=100 , null = True , blank = True)
+    street = models.CharField(max_length=300 , null = True , blank = True)
+    city = models.CharField(max_length=100 , null = True , blank = True)
+    state = models.CharField(max_length=50 , null = True , blank = True)
+    pincode = models.PositiveIntegerField(null = True , blank = True)
+    lat = models.CharField(max_length=15 ,null = True , blank = True)
+    lon = models.CharField(max_length=15 ,null = True , blank = True)
+    country = models.CharField(max_length = 50 , null = True , blank = True)
+
+    def __unicode__(self):
+        return '< street :%s>,<city :%s>,<state :%s>' %(self.street ,self.city, self.state)
+
+PAYMENTMODE_CHOICES = (
+    ('COD' , 'COD'),
+    ('card' , 'card'),
+    ('cash' , 'cash'),
+)
+
+ORDERSTATUS_CHOICES = (
+    ('created' , 'created'),
+    ('failed' , 'failed'),
+    ('ordered' , 'ordered'),
+    ('completed' , 'completed'),
+)
+
+SHOPPINGMODE_CHOICES = (
+    ('online' , 'online'),
+    ('offline' , 'offline'),
+)
+
+ORDERQTYMAP_CHOICES = (
+    ('created' , 'created'),
+    ('packed' , 'packed'),
+    ('shipped' , 'shipped'),
+    ('inTransit' , 'inTransit'),
+    ('reachedNearestHub' , 'reachedNearestHub'),
+    ('outForDelivery' , 'outForDelivery'),
+    ('delivered' , 'delivered'),
+    ('cancelled' , 'cancelled'),
+    ('returnToOrigin' , 'returnToOrigin'),
+    ('returned' , 'returned'),
+)
+
+class TrackingLog(models.Model):
+    logTxt = models.CharField(max_length=200 ,null = True )
+    time = models.DateTimeField(auto_now_add = True)
+
+class OrderQtyMap(models.Model):
+    trackingLog = models.ManyToManyField(TrackingLog , related_name='orderTrackLog' ,blank=True)
+    product = models.ForeignKey(listing)
+    qty = models.PositiveIntegerField(null = True , blank = True)
+    totalAmount = models.PositiveIntegerField(null = True , blank = True)
+    status = models.CharField(choices = ORDERQTYMAP_CHOICES , max_length = 10)
+    updated = models.DateTimeField(auto_now=True)
+    refundAmount = models.PositiveIntegerField(null = True , blank = True)
+    discountAmount = models.PositiveIntegerField(null = True , blank = True)
+    toBeRefunded = models.PositiveIntegerField(null = True , blank = True)
+    cancellable = models.BooleanField(default = False)
+
+class Order(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    user =  models.ForeignKey(User, null = False , related_name = 'orderUser')
+    totalAmount = models.PositiveIntegerField(null = True , blank = True)
+    orderQtyMap = models.ManyToManyField(OrderQtyMap , related_name='orderQty' ,blank=True)
+    paymentMode = models.CharField(choices = PAYMENTMODE_CHOICES , max_length = 10)
+    paymentRefId =  models.CharField(max_length=100 ,null = True , blank = True)
+    paymentChannel = models.CharField(max_length=100 ,null = True , blank = True)
+    modeOfShopping = models.CharField(choices = SHOPPINGMODE_CHOICES , max_length = 10)
+    paidAmount = models.PositiveIntegerField(null = True , blank = True)
+    paymentStatus = models.BooleanField(default = False)
+    promoCode = models.CharField(max_length=100 ,null = True , blank = True)
+    approved = models.BooleanField(default = False)
+    status = models.CharField(choices = ORDERSTATUS_CHOICES , max_length = 10)

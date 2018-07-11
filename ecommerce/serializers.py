@@ -11,6 +11,7 @@ from ERP.serializers import serviceLiteSerializer, addressSerializer
 from POS.models import Product
 from POS.serializers import ProductSerializer
 import json
+from HR.models import profile
 
 
 class fieldSerializer(serializers.ModelSerializer):
@@ -213,3 +214,34 @@ class ActivitiesSerializer(serializers.ModelSerializer):
             a.product = listing.objects.get(pk = self.context['request'].data['product'])
         # a.save()
         # return a
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ('pk' ,'user' , 'title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country')
+    def create(self , validated_data):
+        print '******************'
+        a = Address(**validated_data)
+        a.user=User.objects.get(pk=self.context['request'].user.pk)
+        a.save()
+        profObj = profile.objects.get(user = self.context['request'].user)
+        if self.context['request'].data['primary']:
+            profObj.primaryAddress = a
+        profObj.addresses.add(a)
+        profObj.save()
+        return a
+    def update(self ,instance, validated_data):
+        for key in ['title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        profObj = profile.objects.get(user = self.context['request'].user)
+        if self.context['request'].data['primary']:
+            print 'trueeeeeeeeeee'
+            profObj.primaryAddress = instance
+        elif profObj.primaryAddress and profObj.primaryAddress.pk == instance.pk:
+            profObj.primaryAddress = None
+        profObj.save()
+        return instance

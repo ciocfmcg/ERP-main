@@ -7,6 +7,7 @@ from allauth.socialaccount.signals import social_account_added
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.contrib import admin
+from ecommerce.models import Address
 
 
 
@@ -114,6 +115,8 @@ class profile(models.Model):
     note1 = models.TextField(max_length = 500 , null = True , blank = True)
     note2 = models.TextField(max_length = 500 , null = True , blank = True)
     note3 = models.TextField(max_length = 500 , null = True , blank = True)
+    primaryAddress = models.ForeignKey(Address , related_name = "primaryAddress" , null = True , blank = True)
+    addresses = models.ManyToManyField(Address)
 
 User.profile = property(lambda u : profile.objects.get_or_create(user = u)[0])
 
