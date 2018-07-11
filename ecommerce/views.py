@@ -50,6 +50,7 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.db.models import F ,Value,CharField,Prefetch
 import ast
+from django.utils import timezone
 
 def ecommerceHome(request):
     return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
@@ -67,6 +68,75 @@ class SearchProductAPI(APIView):
             tosend = genericProd + listProd
             print tosend[0:l]
             return Response(tosend[0:l], status = status.HTTP_200_OK)
+
+class PromoCheckAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    # permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        if 'name' in self.request.GET:
+            print self.request.GET['name']
+            promObj = Promocode.objects.filter(name = self.request.GET['name'])
+            val = 0
+            if len(promObj)>0:
+                if timezone.now()<=promObj[0].endDate:
+                    orderCount = Order.objects.filter(~Q(status='failed'),user=request.user,promoCode=self.request.GET['name']).count()
+                    toReturn = 'Success' if orderCount<promObj[0].validTimes else 'Already Used'
+                    val = promObj[0].discount if toReturn=='Success' else 0
+                else:
+                    toReturn = 'Promocode Has Expired'
+            else:
+                toReturn = 'Invalid Promocode'
+            return Response({'msg':toReturn,'val':val}, status = status.HTTP_200_OK)
+
+class CreateOrderAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    # permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        print request.data
+        oQMp = []
+        totalAmount = 0
+        msg = 'Error'
+        userCart = Cart.objects.filter(user=request.user)
+        print userCart.count(),userCart
+        for i in request.data['products']:
+            pObj = listing.objects.get(pk = i['pk'])
+            pp = pObj.product.price
+            if pp > 0:
+                a = pp - (pObj.product.discount*pp)/100
+                b = a - (request.data['promoCodeDiscount']*a)/100
+            else:
+                b=0
+            totalAmount += b * i['qty']
+            print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
+            oQMp.append(oQMObj)
+        else:
+            data = {
+            'user':User.objects.get(pk=request.user.pk),
+            'totalAmount' : round(totalAmount,2),
+            'paymentMode' : str(request.data['modeOfPayment']),
+            'modeOfShopping' : str(request.data['modeOfShopping']),
+            'paidAmount' : str(request.data['paidAmount']),
+            'landMark' : str(request.data['address']['landMark']),
+            'street' : str(request.data['address']['street']),
+            'city' : str(request.data['address']['city']),
+            'state' : str(request.data['address']['state']),
+            'pincode' : str(request.data['address']['pincode']),
+            'country' : str(request.data['address']['country']),
+            'mobileNo' : str(request.data['address']['mobile']),
+            }
+            if len(str(request.data['promoCode'])) > 0:
+                data['promoCode'] = str(request.data['promoCode'])
+            print data
+            orderObj = Order.objects.create(**data)
+            for i in oQMp:
+                orderObj.orderQtyMap.add(i)
+            orderObj.save()
+            msg = 'Sucess'
+            userCart.delete()
+
+
+        return Response({'msg':msg}, status = status.HTTP_200_OK)
 
 
 class fieldViewSet(viewsets.ModelViewSet):
@@ -225,6 +295,21 @@ class AddressViewSet(viewsets.ModelViewSet):
     serializer_class = AddressSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','pincode']
+
+class TrackingLogViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = TrackingLog.objects.all()
+    serializer_class = TrackingLogSerializer
+
+class OrderQtyMapViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = OrderQtyMap.objects.all()
+    serializer_class = OrderQtyMapSerializer
+
+class OrderViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
 class PromocodeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )

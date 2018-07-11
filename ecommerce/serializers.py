@@ -246,6 +246,22 @@ class AddressSerializer(serializers.ModelSerializer):
         profObj.save()
         return instance
 
+class TrackingLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrackingLog
+        fields = ( 'pk', 'logTxt' , 'time')
+
+class OrderQtyMapSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderQtyMap
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable')
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo',)
+        read_only_fields = ('user',)
+
 class PromocodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Promocode

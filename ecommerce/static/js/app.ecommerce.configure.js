@@ -299,6 +299,7 @@ app.controller('businessManagement.ecommerce.configure.promocode.form', function
       Flash.create('success', $scope.msg + 'd');
       $rootScope.$broadcast('forceRefetch', {});
       $scope.promoForm = {name:'',discount:1,validTimes:1,endDate:new Date()}
+      $scope.mode = 'new'
     })
 
   }

@@ -1,4 +1,4 @@
-<div class="container-fluid" style="margin-top:20px;margin-bottom:20px;" >
+<div class="container-fluid" style="margin-top:20px;margin-bottom:20px;">
   <div class="col-md-10 col-md-offset-1 card bg-white" style="display:block;position:relative;min-height:760px;padding-left:0px;margin-bottom:30px;">
 
     <div class="col-md-2  bg-purple" style="position:absolute; height:100%;">
@@ -47,145 +47,126 @@
       <div class="container-fluid" style="margin-top:30px;">
         <div ng-if="data.stage == 'review'">
           <div class="row">
-              <!-- <div ng-if="item">
-                <div class="col-md-6">
-                  <img style="width: 100%; height:100px;" class="img" ng-src="{{item.files[0].attachment}}" ng-if="item.files.length>0">
-                  <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="item.files==null">
+            <div class="container-fluid">
+
+              <div class="row">
+                <div class="col-md-3 ">
+                  <span> <strong>Product</strong> </span>
                 </div>
-                <div class="col-md-6">
-                  <div class="row">
-                    <h5 ng-if="item.product.name.length>28" style="margin:0px;  height:50px;">{{item.product.name.slice(0,28)}}...</h5>
-                    <h5 ng-if="item.product.name.length<=28" style="margin:0px;  height:50px;">{{item.product.name}}</h5>
-                  </div>
-                  <div class="row">
-                    <strong>Rate : </strong><i class="fa fa-inr"></i> {{item.product.price}}
-                  </div>
-                  <div class="row">
-                    <strong>Qty : </strong>
-                    <input type="number" ng-model="c.qty" name="" value="">
-                  </div>
-                </div>
-              </div> -->
-              <div class="container-fluid ">
-                <div class="col-md-3">
-                  <strong>Product</strong>
-                </div>
-                <div class="col-md-offset-3 col-md-2">
-                  <strong class="pull-right">Price</strong>
+                <div class="col-md-offset-3 col-md-3 text-center">
+                  <strong >Price</strong>
                 </div>
                 <div class="col-md-offset-1 col-md-1">
                   <strong>Qty</strong>
                 </div>
                 <div class="col-md-1">
-                  <strong class="pull-right" >Total</strong>
+                  <strong>Total</strong>
                 </div>
               </div>
+
+              <div ng-if="item">
+                <div class="row" style="padding-top:30px;">
+                  <div class="col-md-3">
+                    <img style="width: 100%; height:100px;" class="img" ng-src="{{item.files[0].attachment}}" ng-if="item.files.length>0">
+                    <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="item.files==null">
+                  </div>
+                  <div class="col-md-3" style="height:100px;">
+                    <h5 ng-if="item.product.name.length>30" style="margin:0px;  height:50px;">{{item.product.name.slice(0,30)}}...</h5>
+                    <h5 ng-if="item.product.name.length<=30" style="margin:0px;  height:50px;">{{item.product.name}}</h5>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="row container-fluid">
+                      <div class="col-md-6">
+                          <span class="pull-right"  ng-if="item.product.discount>0" > <strike> <i class="fa fa-inr"></i> {{item.product.price.toFixed(2)}} </strike> </span>
+                      </div>
+                      <div class="col-md-6">
+                          <span><i class="fa fa-inr"></i>{{item.product.discountedPrice.toFixed(2)}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-1">
+                    <p> X </p>
+                  </div>
+                  <div class="col-md-1">
+                    <input type="number" ng-change="changeQty()" ng-model="item.qty" name="" value="" style="width: 60px;">
+                  </div>
+                  <div class="col-md-1">
+                    <p> <i class="fa fa-inr"></i> {{(item.product.discountedPrice * item.qty).toFixed(2) }} </p>
+                  </div>
+                </div>
+              </div>
+
               <div ng-if="cartItems" ng-repeat="c in cartItems">
-                <div class="container-fluid" style="padding-top:30px;">
+                <div class="row" style="padding-top:30px;">
                   <div class="col-md-3">
                     <img style="width: 100%; height:100px;" class="img" ng-src="{{c.product.files[0].attachment}}" ng-if="c.product.files.length>0">
                     <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
                   </div>
                   <div class="col-md-3" style="height:100px;">
-                    <div class="row">
-                      <h5 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h5>
-                      <h5 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5>
+                    <h5 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h5>
+                    <h5 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="row container-fluid">
+                      <div class="col-md-6">
+                          <span class="pull-right"  ng-if="c.product.product.discount>0" > <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
+                      </div>
+                      <div class="col-md-6">
+                          <span><i class="fa fa-inr"></i> {{c.product.product.discountedPrice.toFixed(2)}}</span>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-2">
-                    <div class="pull-right ">
-                      <i class="fa fa-inr"></i> {{c.product.product.discountedPrice.toFixed(2)}}
-                    </div>
-
+                  <div class="col-md-1">
+                    <p> X </p>
                   </div>
                   <div class="col-md-1">
-                    <p class="text-center" > X </p>
+                    <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;">
                   </div>
                   <div class="col-md-1">
-                    <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;" >
+                    <p > <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
                   </div>
-                  <div class="col-md-2">
-                    <p class="text-center" > <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice.toFixed(2) * c.qty).toFixed(2) }} </p>
-                  </div>
-
-
                 </div>
               </div>
+
+            </div>
+          </div>
+          <hr>
+
+          <div class="row" style="margin-top:30px;padding:10px;">
+            <div class="col-md-4">
+              <div class="input-group">
+                <input type="text" class="form-control" ng-model="data.promoCode" placeholder="Apply Promo Code..." />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-primary" ng-click="applyPromo()">Apply</button>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <span style="color: {{msg=='Success'?'green':'red'}};" > {{msg}}</span>
+              <!-- <span  ng-if="promo=='notApplied'" style="color: red;" > This Promocode is invalid! </span> -->
+            </div>
 
           </div>
 
-          <!-- <div ng-if="item" class="row">
-            <div class="col-md-3">
-              <img style="width: 100%; height:100px;" class="img" ng-src="{{item.files[0].attachment}}" ng-if="item.files.length>0" >
-              <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="{item.files==null">
-            </div>
-            <div class="col-md-3">
-              <div class="row">
-                <span style="font-size:20px;">{{item.product.name}}</span>
-              </div>
-              <div class="row">
-                <strong>Rate : </strong><i class="fa fa-inr"></i> {{item.product.price}}
-              </div>
-              <div class="row">
-                <strong>Vendor : </strong> {{offering.service.name }} <br>
-                <uib-rating ng-model="rate" max="5" readonly="true" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
-                <br> Power Seller <i style="color:#db55e7;" class="fa fa-shield"></i>
-              </div>
-            </div>
-            <div class="col-md-3" style="padding-top:10px;">
-              <div class="input-group">
-                <span class="input-group-addon">#</span>
-                <input type="text" class="form-control" ng-model="data.quantity">
-                <span class="input-group-addon" ng-if="item.priceModel=='time'">Bookings</span>
-                <span class="input-group-addon" ng-if="item.priceModel=='quantity'">Pieces</span>
-                <span class="input-group-addon" ng-if="item.priceModel=='weight'">Kgs</span>
-              </div>
-              <div class="pull-left" style="margin-top:40px;">
-                <span >Coupon code</span>
-                <input ng-model="data.coupon" type="text" class="form-control">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div ng-if="item.priceModel=='time'">
-                <span style="font-size:25px;">Trip details</span>
-                <p>
-                  <strong>Starts : </strong><br> {{data.pickUpTime | date : 'dd-MMM-yyyy: hh:mm a'}} {{data.pickUpTime ? '':'Not selected'}}
-                </p>
-                <p>
-                  <strong>Ends : </strong> <br> {{data.dropInTime | date : 'dd-MMM-yyyy: hh:mm a'}} {{data.dropInTime? '':'Not selected'}}
-                </p>
-              </div>
-              <div ng-if="item.priceModel=='quantity'">
-                <span class="text-muted" style="font-size:20px;">Shipping method</span>
-                <br>
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="optionsRadios" value="express" ng-model="data.shipping">
-                    One day express {{data.expressShipping}}
-                  </label>
-                  <p class="help-block">
-                    <i class="fa fa-inr"></i> 30 additional charge
-                  </p>
-                </div>
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="optionsRadios" value="normal" ng-model="data.shipping">
-                     7 Day
-                  </label>
-                  <p class="help-block">
-                    <i class="fa fa-inr"></i> No additional charge
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <hr>
-          <div class="row" style="margin-top:30px;padding:10px;">
+          <div class="row" style="margin-top:30px;padding:10px;" >
             <div class="col-md-6">
               <div class="row">
-                <span class="text-muted" style="font-size:20px;">Subtotal</span>
+                <span style="font-size:20px;">Total </span>
                 <br>
-                <i class="fa fa-2x fa-inr"></i> <span class="text-muted" style="font-size:20px;">{{total.toFixed(2)}}</span>
+                <i class="fa fa-2x fa-inr"></i> <span ng-if="total!=totalAfterDiscount" style="font-size:20px;"> <strike> {{total.toFixed(2)}}  </strike> </span>
+                <span style="font-size:20px;"> {{totalAfterDiscount.toFixed(2)}} </span>
+              </div>
+              <!-- <div ng-if="promo=='applied'" class="row">
+                <p> Promocode discount {{promoDiscount}} % </p>
+              </div> -->
+              <div ng-if="msg=='Success'" class="row">
+                <span style="font-size:20px;">  Total Payable <br>
+                <i class="fa fa-inr"></i> {{totalAfterPromo.toFixed(2)}}</span>
+                <span style="font-size:18px; padding-left:10px; " class="text-muted" >(promocode discount {{promoDiscount}} % )</span>
+              </div>
+              <div class="row">
+                <p ng-if="total!=totalAfterDiscount && msg!='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterDiscount).toFixed(2)}} on this order</p>
+                <p ng-if="msg=='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterPromo).toFixed(2)}} on this order</p>
               </div>
             </div>
             <div class="col-md-6">
@@ -198,46 +179,6 @@
         <!-- review page ends here  -->
         <div ng-if="data.stage == 'shippingDetails'">
           <div class="row">
-            <!-- <div class="col-md-6">
-              <h2>Address</h2>
-              <div class="form-group">
-                <label>Address : </label>
-                <textarea ng-model="data.address.street" class="form-control"></textarea>
-              </div>
-              <div class="form-group">
-                <label>Pincode : </label>
-                <input ng-model="data.address.pincode" type="number" class="form-control">
-              </div>
-              <div class="form-group">
-                <label>City : </label>
-                <input ng-model="data.address.city" type="text" class="form-control">
-              </div>
-              <div class="form-group">
-                <label>State : </label>
-                <input ng-model="data.address.state" type="text" class="form-control">
-              </div>
-              <div class="form-group">
-                <label>Mobile no. : </label>
-                <input ng-model="customerProfile.mobile" type="text" class="form-control">
-              </div>
-              <div ng-if="attachment == null" style="padding:0px;">
-                <div class="col-md-8" style="padding:0px;">
-                  <div class="form-group">
-                    <label>Driving license</label>
-                    <input type="file" file-model="data.attachment" class="form-control">
-                    <p class="help-block">Browse and upload a copy of your driving license.</p>
-                  </div>
-                </div>
-                <div class="col-md-4" style="padding:0px;">
-                  <button type="button" class="btn btn-primary pull-right" ng-click="uploadAttachment()">
-                    Upload
-                  </button>
-                </div>
-              </div>
-              <div ng-if="attachment != null">
-                Attached License : <a target="_blank" ng-href="{{attachment.attachment}}">{{attachment.name}}</a>
-              </div>
-            </div> -->
             <div class="col-md-7">
               <h4>Address</h4>
               <div class="form-group">
@@ -273,12 +214,16 @@
                 </div>
               </div>
               <div class="row" style="margin-bottom:35px">
-                <span><i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i><i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> BookMark This Address</i></span>
+                <span><i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i><i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> Save for later use</i></span>
               </div>
               <h4>Contact Details</h4>
               <div class="form-group">
+                <label for="ldm">Land Mark : </label>
+                <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark">
+              </div>
+              <div class="form-group">
                 <label for="mob">Mobile no. : </label>
-                <input type="text" class="form-control" id="mob">
+                <input type="text" class="form-control" id="mob" ng-model="data.address.mobile">
               </div>
             </div>
 
@@ -343,8 +288,12 @@
               <option value="card" >Card</option>
             </select> -->
           </div>
-          <div class="row" style="padding:20px;" >
-            <span style="font-size:20px;" >Mode of Patment : COD<span >
+          <div class="row" style="padding:20px;">
+            <span style="font-size:20px;">Select Mode of Payment<span >
+          </div>
+          <div class="row" style="padding:20px;">
+            <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD"> COD
+            <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="Card"> Card
           </div>
           <div class="row" style="padding:20px;" >
             <p>
@@ -357,7 +306,7 @@
               Go back
             </button>
             <button type="button" class="btn btn-success btn-lg pull-right" ng-click="pay()">
-              Pay
+              {{data.modeOfPayment=='COD'? 'Order': 'Pay'}}
             </button>
           </div>
         </div>
@@ -366,25 +315,25 @@
             <div class="text-center">
               <i class="fa fa-spinner fa-spin fa-5x"></i> <br>
               <span>Please wait</span>
-            </div>
           </div>
         </div>
-        <div ng-if="data.stage == 'confirmation'">
-          <h1>Thank you</h1>
-          <h2>Your order details are as follows</h2>
-          <strong> Order No. : </strong> {{data.order.id}}<br>
-          <strong> Order date and time : </strong> {{data.order.created | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
-          <strong> Item ID : </strong> {{data.order.offer}}<br>
-          <strong> Payment mode. : </strong> {{data.order.paymentType}}<br>
-          <hr>
-          <strong> Booking starts from : </strong> {{data.order.start | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
-          <strong> Booking ends at : </strong> {{data.order.end | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
-        </div>
       </div>
-
-
+      <div ng-if="data.stage == 'confirmation'">
+        <h1>Thank you</h1>
+        <h2>Your order details are as follows</h2>
+        <strong> Order No. : </strong> {{data.order.id}}<br>
+        <strong> Order date and time : </strong> {{data.order.created | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+        <strong> Item ID : </strong> {{data.order.offer}}<br>
+        <strong> Payment mode. : </strong> {{data.order.paymentType}}<br>
+        <hr>
+        <strong> Booking starts from : </strong> {{data.order.start | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+        <strong> Booking ends at : </strong> {{data.order.end | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+      </div>
     </div>
 
 
   </div>
+
+
+</div>
 </div>
