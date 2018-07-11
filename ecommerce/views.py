@@ -225,3 +225,10 @@ class AddressViewSet(viewsets.ModelViewSet):
     serializer_class = AddressSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','pincode']
+
+class PromocodeViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = Promocode.objects.all()
+    serializer_class = PromocodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']

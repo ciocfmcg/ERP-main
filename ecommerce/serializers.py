@@ -245,3 +245,8 @@ class AddressSerializer(serializers.ModelSerializer):
             profObj.primaryAddress = None
         profObj.save()
         return instance
+
+class PromocodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Promocode
+        fields = ( 'pk', 'created' , 'updated', 'name' ,'endDate' , 'discount' , 'validTimes')

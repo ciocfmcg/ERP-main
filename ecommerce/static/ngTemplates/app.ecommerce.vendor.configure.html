@@ -27,6 +27,13 @@
       </uib-tab-heading>
       <generic-Table data="tableData.offerBanners" config-Obj="{{offerBannersConfig}}" callback-Fn="tableAction"></generic-Table>
     </uib-tab>
+    <uib-tab>
+      <uib-tab-heading>
+        Promocodes
+      </uib-tab-heading>
+      <div ng-include="'/static/ngTemplates/app.ecommerce.vendor.configure.promocode.html'"></div>
+      <!-- <generic-Table data="tableData.tablePromocodeData" config-Obj="{{promocodesConfig}}" callback-Fn="tablePromocodeAction"></generic-Table> -->
+    </uib-tab>
 
     <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
       <uib-tab-heading>

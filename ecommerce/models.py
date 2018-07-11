@@ -214,3 +214,11 @@ class Order(models.Model):
     promoCode = models.CharField(max_length=100 ,null = True , blank = True)
     approved = models.BooleanField(default = False)
     status = models.CharField(choices = ORDERSTATUS_CHOICES , max_length = 10)
+
+class Promocode(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100 ,null = False)
+    endDate = models.DateTimeField(null=False)
+    discount = models.IntegerField(null=False)
+    validTimes = models.IntegerField(null=False)

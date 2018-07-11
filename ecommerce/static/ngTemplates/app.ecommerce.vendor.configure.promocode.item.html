@@ -1,0 +1,13 @@
+<div class="col-md-4" ng-click="rowActionClicked('editPromocode')" style="cursor:pointer;margin-bottom:15px">
+  <div class="container-fluid card card-cascade">
+
+      <div class="text-center">
+        <h4 ><strong>{{data.name}}</strong></h4>
+      </div>
+      <div class="" style="font-size:15px">
+        <strong>Discount : </strong> {{data.discount}} %<br>
+        <strong>Number Of Times : </strong> {{data.validTimes}}<br>
+        <strong>End Date : </strong> {{data.endDate | date : 'dd-MMM-yyyy'}}<br>
+      </div>
+  </div>
+</div>
