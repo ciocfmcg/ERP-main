@@ -589,10 +589,45 @@ app.controller('controller.ecommerce.account.cart.item' , function($scope , $htt
 })
 
 app.controller('controller.ecommerce.account.orders' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
-  $scope.views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
-    ];
 
-  $scope.getParams = [{key : 'mode', value : 'consumer'}];
+
+
+  $scope.data = {
+    tableData: [],
+  };
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.ecommerce.account.orders.item.html',
+  }, ];
+
+
+  $scope.config = {
+    views: views,
+    url: '/api/ecommerce/cart/',
+    searchField: 'Name',
+    getParams: [{key : 'user' , value : $scope.me.pk} ],
+    deletable: true,
+    itemsNumPerView: [8, 16, 32],
+  }
+
+  for (var i = 0; i < $scope.data.tableData.length; i++) {
+    $scope.data.tableData[i].showInfo = false;
+  }
+
+  $scope.tableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableData);
+
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      if ($scope.data.tableData[i].pk == parseInt(target)) {
+        if (action == 'toggleInfo') {
+          $scope.data.tableData[i].showInfo = !$scope.data.tableData[i].showInfo;
+        }
+      }
+    }
+  }
 
 });
 
@@ -681,7 +716,7 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   console.log('in checkout controllerrrrrr');
   console.log($state.params.pk);
 
-  $scope.data = {quantity : 1 , shipping :'express', stage : 'review', promoCode: '' , modeOfPayment : 'Card', address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :''}};
+  $scope.data = {quantity : 1 , shipping :'express', stage : 'review', promoCode: '' , modeOfPayment : 'Card', address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :$scope.me.profile.mobile}};
 
   // $scope.promoCode = '';
   $scope.products = [];
@@ -833,7 +868,7 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
 
   $scope.applyPromo = function () {
     console.log($scope.data.promoCode);
-    if ($scope.data.promoCode=='') {
+    if ($scope.msg=='') {
       return
     }
     $http({method : 'GET' , url : '  /api/ecommerce/promoCheck/?name='+ $scope.data.promoCode}).
@@ -849,9 +884,6 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
      })
   }
 
-  $scope.$watch('modeOfPayment' , function(newValue, oldValue){
-
-  }, true);
 
   $scope.dataToSend = {}
 
@@ -861,11 +893,9 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
       $scope.dataToSend.promoCode = $scope.data.promoCode;
       $scope.dataToSend.products = $scope.products;
     } else if ($scope.data.stage == 'shippingDetails') {
-      console.log('in shippingggg');
       console.log($scope.data.address);
       if ($scope.data.address.street=='' || $scope.data.address.city=='' || $scope.data.address.pincode=='' || $scope.data.address.country=='' || $scope.data.address.state=='' || $scope.data.address.mobile=='' ) {
         Flash.create('warning','Please fill all details')
-        console.log('somethinggggggggggg');
         return
       }else {
         $scope.dataToSend.address = $scope.data.address
@@ -874,29 +904,36 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
 
     }
   }
+
   $scope.prev = function(){
     if ($scope.data.stage == 'shippingDetails') {
       $scope.data.stage = 'review';
     } else if ($scope.data.stage == 'payment') {
       $scope.data.stage = 'shippingDetails';
+    }else if ($scope.data.stage == 'onlinePayment') {
+      $scope.data.stage = 'payment';
     }
   }
 
-  $scope.pay = function(){
+  $scope.pay = function () {
+    $scope.data.stage = 'onlinePayment'
+  }
+
+  $scope.order = function(){
     $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
     console.log($scope.dataToSend);
-    console.log($scope.data.modeOfPayment);
+
     // $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
     // $scope.data.dropInTime = $scope.$parent.data.dropInTime;
     // $scope.data.location = $scope.$parent.data.location;
-    // $scope.data.stage = 'processing';
+
+    $scope.data.stage = 'processing';
 
     $http({method : 'POST' , url : '  /api/ecommerce/createOrder/' , data: $scope.dataToSend}).
      then(function(response){
        console.log(response.data);
-       // $scope.data.stage = 'confirmation';
+       $scope.data.stage = 'confirmation';
      })
-
 
 
     // var products = [];
