@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from time import time
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from datetime import datetime
 import pytz
 from ERP.models import service
 
@@ -99,6 +100,7 @@ class Invoice(models.Model):
     billedDate = models.DateTimeField(null = True)
     recievedDate = models.DateTimeField(null = True)
     archivedDate = models.DateTimeField(null = True)
+    grandTotal = models.PositiveIntegerField(default=0)
 
 class Checkin(models.Model):
     created = models.DateTimeField(auto_now_add = True)

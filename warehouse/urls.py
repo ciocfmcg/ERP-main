@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),
     url(r'dashboardInvoices/$' , DashboardInvoices.as_view() ),
+    url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
 ]

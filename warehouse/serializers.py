@@ -104,7 +104,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
     contract = ContractLiteSerializer(many = False , read_only = True)
     class Meta:
         model=Invoice
-        fields = ('pk','contract','data','value','status','created' ,'updated' ,'dueDate')
+        fields = ('pk','contract','data','value','status','created' ,'updated' ,'dueDate','grandTotal')
+    def create(self , validated_data):
+        print 'enttttttttttttttt'
+        i=Invoice(**validated_data)
+        i.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
+        i.save()
+        return i
 
 class CheckinsSerializer(serializers.ModelSerializer):
     contract=ContractSerializer(many=False,read_only=True)

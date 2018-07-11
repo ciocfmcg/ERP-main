@@ -1,22 +1,22 @@
-app.config(function($stateProvider){
+app.config(function($stateProvider) {
 
   $stateProvider
-  .state('businessManagement.warehouse', {
-    url: "/warehouse",
-    views: {
-       "": {
+    .state('businessManagement.warehouse', {
+      url: "/warehouse",
+      views: {
+        "": {
           templateUrl: '/static/ngTemplates/genericAppBase.html',
-       },
-       "menu@businessManagement.warehouse": {
+        },
+        "menu@businessManagement.warehouse": {
           templateUrl: '/static/ngTemplates/genericMenu.html',
-          controller : 'controller.generic.menu',
+          controller: 'controller.generic.menu',
         },
         "@businessManagement.warehouse": {
           templateUrl: '/static/ngTemplates/app.warehouse.default.html',
-          controller : 'businessManagement.warehouse.default',
+          controller: 'businessManagement.warehouse.default',
         }
-    }
-  })
+      }
+    })
   // .state('businessManagement.warehouse.expenses', {
   //   url: "/service",
   //   templateUrl: '/static/ngTemplates/app.warehouse.service.html',
@@ -26,67 +26,84 @@ app.config(function($stateProvider){
 });
 
 
-app.controller('businessManagement.warehouse.default' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('businessManagement.warehouse.default', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $aside, $timeout, $uibModal) {
   // settings main page controller
   console.log('ssssssssssssssssss');
   $scope.serchField = ''
   $scope.$watch('serchField', function(newValue, oldValue) {
     console.log(newValue);
-    if (newValue.length==0) {
+    if (newValue.length == 0) {
       var url = '/api/warehouse/dashboardInvoices/'
-    }else {
-      var url = '/api/warehouse/dashboardInvoices/?cName='+newValue
+    } else {
+      var url = '/api/warehouse/dashboardInvoices/?cName=' + newValue
     }
-    $http({method : 'GET' , url : url}).
+    $http({
+      method: 'GET',
+      url: url
+    }).
     then(function(response) {
       console.log(response);
       $scope.invData = response.data
     })
   })
 
-  $scope.changeStatus = function(status , indx) {
+  $scope.changeStatus = function(status, indx) {
     $scope.invData[indx].status = status;
+
 
     if (status == 'billed') {
       $uibModal.open({
-        template: '<div style="padding:30px;"><div class="form-group"><label>Due Date</label>'+
-            '<div class="input-group" >'+
-                '<input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="contract.dueDate" is-open="status.opened" />' +
-                '<span class="input-group-btn">'+
-                  '<button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>'+
-                '</span>'+
-              '</div><p class="help-block">Auto set based on Deal due period.</p>'+
+        template: '<div style="padding:30px;"><div class="form-group"><label>Due Date</label>' +
+          '<div class="input-group" >' +
+          '<input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="contract.dueDate" is-open="status.opened" />' +
+          '<span class="input-group-btn">' +
+          '<button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>' +
+          '</span>' +
+          '</div><p class="help-block">Auto set based on Deal due period.</p>' +
           '</div></div>',
         size: 'sm',
-        backdrop : true,
-        resolve : {
-          contract : function() {
-            return $scope.deal.contracts[indx];
+        backdrop: true,
+        resolve: {
+          contract: function() {
+            return $scope.invData[indx];
           },
         },
-        controller: function($scope , contract, deal){
+        controller: function($scope, contract) {
           $scope.contract = contract;
           var dueDate = new Date();
-          dueDate.setDate(dueDate.getDate() + deal.duePeriod);
+          // dueDate.setDate(dueDate.getDate() + contract.duePeriod);
+          console.log('kkkkkkkkkkk', $scope.contract.dueDate);
           if ($scope.contract.dueDate == null) {
+            console.log('sssssssss', dueDate);
             $scope.contract.dueDate = dueDate;
           }
-          $scope.deal = deal;
+          console.log($scope.contract.dueDate);
+          // $scope.deal = deal;
         },
-      }).result.then(function () {
+      }).result.then(function() {
 
       }, (function(indx, status) {
-        return function () {
+        return function() {
           console.log(indx);
-          console.log($scope.deal.contracts[indx].dueDate);
+          console.log($scope.invData[indx].dueDate);
 
-          $http({method : 'PATCH' , url : '/api/clientRelationships/contract/' + $scope.deal.contracts[indx].pk + '/' , data : {status : status , dueDate : $scope.deal.contracts[indx].dueDate.toISOString().substring(0, 10) }}).
+          $http({
+            method: 'PATCH',
+            url: '/api/warehouse/invoice/' + $scope.invData[indx].pk + '/',
+            data: {
+              status: status,
+              dueDate: $scope.invData[indx].dueDate.toISOString().substring(0, 10)
+            }
+          }).
           then(function(response) {
-            $http({method : 'GET' , url : '/api/clientRelationships/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            $http({
+              method: 'GET',
+              url: '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk
+            }).
             then(function(response) {
-              Flash.create('success' , 'Saved')
+              Flash.create('success', 'Saved')
             }, function(err) {
-              Flash.create('danger' , 'Error occured')
+              Flash.create('danger', 'Error occured')
             })
           })
 
@@ -97,50 +114,84 @@ app.controller('businessManagement.warehouse.default' , function($scope , $http 
 
 
 
-    }else if (status == 'dueElapsed') {
+    } else if (status == 'dueElapsed') {
 
       var sacCode = 998311;
-      var c = $scope.deal.contracts[indx];
+      var c = $scope.invData[indx];
       for (var i = 0; i < c.data.length; i++) {
         if (c.data[i].taxCode == sacCode) {
           return;
         }
       }
 
-      var fineAmount = $scope.deal.contracts[indx].value * $scope.deal.duePenalty*(1/100)
+      var fineAmount = $scope.invData[indx].value * $scope.deal.duePenalty * (1 / 100)
 
-      $http({method : 'GET' , url : '/api/clientRelationships/productMeta/?code='+ sacCode}).
+      $http({
+        method: 'GET',
+        url: '/api/clientRelationships/productMeta/?code=' + sacCode
+      }).
       then((function(indx) {
         return function(response) {
-          var quoteInEditor = $scope.deal.contracts[indx]
+          var quoteInEditor = $scope.invData[indx]
           var productMeta = response.data[0];
-          var subTotal = fineAmount*(1+productMeta.taxRate/100)
-          quoteInEditor.data.push({currency : $scope.deal.currency , type : 'onetime' , tax: productMeta.taxRate, desc : 'Late payment processing charges' , rate : fineAmount , quantity : 1, taxCode : productMeta.code , totalTax : fineAmount*(productMeta.taxRate/100), subtotal : subTotal })
+          var subTotal = fineAmount * (1 + productMeta.taxRate / 100)
+          quoteInEditor.data.push({
+            currency: $scope.deal.currency,
+            type: 'onetime',
+            tax: productMeta.taxRate,
+            desc: 'Late payment processing charges',
+            rate: fineAmount,
+            quantity: 1,
+            taxCode: productMeta.code,
+            totalTax: fineAmount * (productMeta.taxRate / 100),
+            subtotal: subTotal
+          })
 
           quoteInEditor.value += subTotal
-          var url = '/api/clientRelationships/contract/' + quoteInEditor.pk + '/'
+          var url = '/api/warehouse/invoice/' + quoteInEditor.pk + '/'
           var method = 'PATCH'
-          var dataToSend = {deal : $scope.deal.pk , data : JSON.stringify(quoteInEditor.data) , value : quoteInEditor.value};
-          $http({method : method , url : url , data : dataToSend}).
+          var dataToSend = {
+            deal: $scope.deal.pk,
+            data: JSON.stringify(quoteInEditor.data),
+            value: quoteInEditor.value
+          };
+          $http({
+            method: method,
+            url: url,
+            data: dataToSend
+          }).
           then(function(response) {
-            $http({method : 'GET' , url : '/api/clientRelationships/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            $http({
+              method: 'GET',
+              url: '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk
+            }).
             then(function(response) {
-              Flash.create('success' , 'Saved')
+              Flash.create('success', 'Saved')
             }, function(err) {
-              Flash.create('error' , 'Error occured')
+              Flash.create('error', 'Error occured')
             })
           })
         }
       })(indx))
 
 
-    }else {
+    } else {
 
-      $http({method : 'PATCH' , url : '/api/clientRelationships/contract/' + $scope.deal.contracts[indx].pk + '/' , data : {status : status}}).
+      $http({
+        method: 'PATCH',
+        url: '/api/warehouse/invoice/' + $scope.invData[indx].pk + '/',
+        data: {
+          status: status
+        }
+      }).
       then(function(response) {
-
+        Flash.create('success', 'Saved')
       })
 
+    }
+
+    if (status == 'received') {
+      $scope.invData.splice(indx, 1)
     }
 
 

@@ -19,7 +19,6 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
 from reportlab.graphics import barcode , renderPDF
 from reportlab.graphics.shapes import *
 from reportlab.graphics.barcode.qr import QrCodeWidget
-import datetime
 import json
 import pytz
 import requests
@@ -27,6 +26,9 @@ from .models import *
 from .serializers import *
 from django.conf import settings as globalSettings
 from django.db.models import Q
+import datetime
+from django.template.loader import render_to_string, get_template
+from django.core.mail import send_mail, EmailMessage
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
@@ -87,6 +89,7 @@ styleH = styles['Heading1']
 
 
 settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+
 
 
 class FullPageImage(Flowable):
@@ -357,6 +360,7 @@ class PageNumCanvas(canvas.Canvas):
         # print dir(self)
         compNameStyle = styleN.clone('footerCompanyName')
         compNameStyle.textColor = colors.white;
+        print '*******************',settingsFields.get(name = 'bankDetails').value
 
         p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
         p.wrapOn(self , 70*mm , 10*mm)
@@ -473,6 +477,8 @@ def genInvoice(response , contract,invoiceobj, request):
         data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodyTotal, pBodyTax , pBodySubTotal])
 
     contract.subTotal = grandTotal
+    invoiceobj.grandTotal = grandTotal
+    invoiceobj.save()
     # invoice.saveInvoiceForm()
 
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
@@ -540,7 +546,8 @@ def genInvoice(response , contract,invoiceobj, request):
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
 
-
+    summryParaSrc = settingsFields.get(name = 'bankDetails').value
+    story.append(Paragraph(summryParaSrc , styleN))
 
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
@@ -575,8 +582,95 @@ class DashboardInvoices(APIView):
         print 'cccccccccccccccccccccccccc'
         if 'cName' in request.GET:
             print request.GET['cName']
-            toReturn = Invoice.objects.filter(~Q(status='received'),contract__company__name__icontains=request.GET['cName']).values('pk','contract__company__name','status')
+            toReturn = Invoice.objects.filter(~Q(status='received'),contract__company__name__icontains=request.GET['cName']).values('pk','contract__company__name','status','dueDate','billedDate')
         else:
-            toReturn = Invoice.objects.filter(~Q(status='received')).values('pk','contract__company__name','status')
+            toReturn = Invoice.objects.filter(~Q(status='received')).values('pk','contract__company__name','status','dueDate','billedDate')
         print toReturn
         return Response(toReturn, status=status.HTTP_200_OK)
+
+class SendNotificationAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        print request.data
+        toEmail = []
+        cc = []
+
+        if request.data['sendEmail']:
+            for c in request.data['contacts']:
+                em = Contact.objects.get(pk=c).email
+                if em is not None:
+                    toEmail.append(em)
+            print toEmail
+
+            for c in request.data['internal']:
+                p = profile.objects.get(user_id = c)
+                u = User.objects.get(pk = c)
+                cc.append(u.email)
+            print cc
+
+        toSMS = []
+        if request.data['sendSMS']:
+            for c in request.data['contacts']:
+                mob = Contact.objects.get(pk=c).mobile
+                if mob is not None:
+                    toSMS.append(mob)
+            print toSMS
+
+        c = Invoice.objects.get(pk = request.data['contract'])
+
+        # print dir(att)
+        # return Response(status=status.HTTP_200_OK)
+
+        docID = '%s%s%s' %(c.contract.pk, c.billedDate.year , c.pk)
+        value = c.grandTotal
+
+        typ = request.data['type']
+        print "will send invoice generated mail to " , toEmail , cc , toSMS
+        print docID , value
+        if typ == 'invoiceGenerated':
+            email_subject = 'Invoice %s generated'%(docID)
+            heading = 'Invoice Generated'
+            msgBody = ['We are pleased to share invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong>.' %(docID , value) , 'The due date to make payment is <strong>%s</strong>.' %(c.dueDate) , 'In case you have any query please contact us.']
+            smsBody = 'Invoice %s generated for the amount of INR %s. Due date is %s. Please check youe email for more information.'%(docID , value, c.dueDate)
+        elif typ == 'dueDateReminder':
+            email_subject = 'Payment reminder for invoice %s'%(docID)
+            heading = 'Payment reminder'
+            msgBody = ['We are sorry but invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> is still unpaid.' %(docID , value) , 'The due date to make the payment is <strong>%s</strong>. Please make payment at the earliest to avoid late payment fee.' %(c.dueDate) , 'In case you have any query please contact us.']
+            smsBody = 'REMINDER : Invoice no. %s is sill unpaid. Due date is %s. Please ignore if paid.'%(docID , c.dueDate)
+        elif typ == 'dueDateElapsed':
+            email_subject = 'Payment overdue for invoice number %s'%(docID)
+            heading = 'Due date missed'
+            msgBody = ['We are pleased to share the updated copy of invoice number <strong>%s</strong> for the amount of INR <strong>%s</strong> including the late payment fees.' %(docID , value) , 'The payment is now due <strong>Immediately</strong>.' , 'In case you have any query please contact us.']
+            smsBody = 'ALERT : Invoice no. %s updated to include late payment fee. Please pay immediately. Check your email for more info.'%(docID)
+
+        ctx = {
+            'heading' : heading,
+            'recieverName' : Contact.objects.get(pk=request.data['contacts'][0]).name,
+            'message': msgBody,
+            'linkUrl': 'cioc.co.in',
+            'linkText' : 'View Online',
+            'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+            'sendersPhone' : '841101',
+            'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+            'fbUrl' : 'facebook.com',
+            'twitterUrl' : 'twitter.com',
+        }
+
+        email_body = get_template('app.clientRelationships.email.html').render(ctx)
+        msg = EmailMessage(email_subject, email_body, to= toEmail, cc= cc, from_email= 'do_not_reply@cioc.co.in' )
+        msg.content_subtype = 'html'
+
+        if typ != 'dueDateReminder':
+            fp = open('./media_root/clientRelationships/doc%s%s_%s.pdf'%(c.contract.pk, c.pk, c.status) , 'rb')
+            att = MIMEApplication(fp.read(),_subtype="pdf")
+            fp.close()
+            att.add_header('Content-Disposition','attachment',filename=fp.name.split('/')[-1])
+            msg.attach(att)
+
+        msg.send()
+
+        for n in toSMS:
+            url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(n , smsBody)
+            requests.get(url)
+
+        return Response(status=status.HTTP_200_OK)

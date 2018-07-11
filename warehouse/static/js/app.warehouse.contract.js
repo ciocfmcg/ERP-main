@@ -116,12 +116,14 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
 
 app.controller("businessManagement.warehouse.contract.notification", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside , quote , deal , $uibModalInstance) {
   $scope.quote = quote;
-  // $scope.deal = deal;
+  $scope.deal = deal;
+  console.log('AAAAAAAAAA',$scope.deal);
   $scope.send = function() {
     var contacts = []
-    for (var i = 0; i < $scope.contacts.length; i++) {
-      if ($scope.contacts[i].checked) {
-        contacts.push($scope.contacts[i].pk);
+    for (var i = 0; i < $scope.deal.contact.length; i++) {
+      if ($scope.deal.contact[i].checked) {
+        console.log('CCCCCCCCC',$scope.deal.contact[i].pk);
+        contacts.push($scope.deal.contact[i].pk);
       }
     }
 
@@ -138,7 +140,7 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
       type : $scope.notificationType,
       contract : $scope.quote.pk
     }
-    $http({method : 'POST' , url : '/api/clientRelationships/sendNotification/' , data : toSend}).
+    $http({method : 'POST' , url : '/api/warehouse/sendNotification/' , data : toSend}).
     then(function() {
 
     }, function() {
@@ -154,8 +156,8 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
   };
 
   $scope.reset = function() {
-    for (var i = 0; i < $scope.contacts.length; i++) {
-      $scope.deal.contacts[i].checked = false;
+    for (var i = 0; i < $scope.deal.contact.length; i++) {
+      $scope.deal.contact[i].checked = false;
     }
     $scope.notificationType = 'Please select';
     $scope.sendEmail = false;
@@ -163,7 +165,7 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
     $scope.internalUsers = [];
   }
 
-  // $scope.reset();
+  $scope.reset();
 
 
 });
@@ -197,10 +199,13 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         controller: function($scope , contract){
           $scope.contract = contract;
           var dueDate = new Date();
-          dueDate.setDate(dueDate.getDate() + contract.duePeriod);
+          // dueDate.setDate(dueDate.getDate() + contract.duePeriod);
+          console.log('kkkkkkkkkkk',$scope.contract.dueDate);
           if ($scope.contract.dueDate == null) {
+            console.log('sssssssss',dueDate);
             $scope.contract.dueDate = dueDate;
           }
+          console.log($scope.contract.dueDate);
           // $scope.deal = deal;
         },
       }).result.then(function () {
@@ -253,7 +258,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           var dataToSend = {deal : $scope.deal.pk , data : JSON.stringify(quoteInEditor.data) , value : quoteInEditor.value};
           $http({method : method , url : url , data : dataToSend}).
           then(function(response) {
-            $http({method : 'GET' , url : '/api/clientRelationships/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            $http({method : 'GET' , url : '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
             then(function(response) {
               Flash.create('success' , 'Saved')
             }, function(err) {
@@ -276,6 +281,8 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
   }
 
+  $scope.contract = $scope.tab.data;
+  console.log('999999999999999999',$scope.contract);
 
   $scope.sendNotification = function(indx){
 
@@ -298,7 +305,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
     })
   }
 
-  $scope.contract = $scope.tab.data;
   console.log('invoice');
   $scope.fetchInvoice = function() {
     $scope.contract.invoice = [];
@@ -308,8 +314,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
     }).
     then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
-        console.log(i,response.data[i].contract,$scope.contract.pk);
-        if (response.data[i].contract == $scope.contract.pk) {
+        if (response.data[i].contract.pk == $scope.contract.pk) {
           response.data[i].data = JSON.parse(response.data[i].data);
           $scope.contract.invoice.push(response.data[i]);
         }

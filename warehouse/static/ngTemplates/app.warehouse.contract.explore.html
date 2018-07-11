@@ -69,6 +69,7 @@
     <div class="row" style="margin-top:10px;">
       <div class="container-fluid">
         <label class="text-muted">Requirements</label>
+        <span class="pull-right">Selected Area : {{contract.quantity * contract.areas.areaLength}} Sqft</span>
       </div>
     </div>
     <div class="row" style="margin-top:10px;margin-left:20px">
@@ -188,7 +189,7 @@
     <hr>
     <div class="row">
       <div class="container-fluid">
-        <label class="text-muted">Finances</label>{{contract.invoice}}
+        <label class="text-muted">Finances</label>
         <button type="button" class="btn btn-default btn-md pull-right" ng-click="editQuote()">
           <i class="fa fa-plus"></i> Quote
         </button><br>
@@ -226,9 +227,9 @@
                       <button ng-if="c.status != 'cancelled'" type="button" class="btn btn-default" ng-click="editQuote($index)">
                         <i class="fa fa-pencil"></i>
                       </button>
-                      <button type="button" class="btn btn-info" ng-click="sendNotification($index)" ng-if="['billed' , 'received', 'dueElapsed'].indexOf(c.status) != -1">
+                      <!-- <button type="button" class="btn btn-info" ng-click="sendNotification($index)" ng-if="['billed' , 'received', 'dueElapsed'].indexOf(c.status) != -1">
                         <i class="fa fa-envelope-o"></i>
-                      </button>
+                      </button> -->
                       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                         Change status <span class="caret"></span></button>
                       <ul class="dropdown-menu" role="menu">

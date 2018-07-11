@@ -86,9 +86,9 @@
           <label>Recipients</label>
           <div class="row">
             <div class="container-fluid">
-              <div class="row" ng-repeat="c in deal.contacts" style="margin-bottom:15px;">
+              <div class="row" ng-repeat="c in deal.contact" style="margin-bottom:15px;">
                 <div class="col-md-2 text-right">
-                  <img ng-src="{{c | getCRMDP}}" class="img img-circle" style="width:60px;height:60px;">
+                  <img src="/static/images/userIcon.png" class="img img-circle" style="width:60px;height:60px;">
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                   {{c.name}}
