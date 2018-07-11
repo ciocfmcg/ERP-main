@@ -50,6 +50,7 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.db.models import F ,Value,CharField,Prefetch
 import ast
+from django.utils import timezone
 
 def ecommerceHome(request):
     return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
@@ -67,6 +68,33 @@ class SearchProductAPI(APIView):
             tosend = genericProd + listProd
             print tosend[0:l]
             return Response(tosend[0:l], status = status.HTTP_200_OK)
+
+class PromoCheckAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    # permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        if 'name' in self.request.GET:
+            print self.request.GET['name']
+            promObj = Promocode.objects.filter(name = self.request.GET['name'])
+            val = 0
+            if len(promObj)>0:
+                if timezone.now()<=promObj[0].endDate:
+                    orderCount = Order.objects.filter(~Q(status='failed'),user=request.user,promoCode=self.request.GET['name']).count()
+                    toReturn = 'Success' if orderCount<promObj[0].validTimes else 'Already Used'
+                    val = promObj[0].discount if toReturn=='Success' else 0
+                else:
+                    toReturn = 'Promocode Has Expired'
+            else:
+                toReturn = 'Invalid Promocode'
+            return Response({'msg':toReturn,'val':val}, status = status.HTTP_200_OK)
+
+class CreateOrderAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    # permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        print self.request.POST
+        print request.data
+        return Response({}, status = status.HTTP_200_OK)
 
 
 class fieldViewSet(viewsets.ModelViewSet):
@@ -225,3 +253,10 @@ class AddressViewSet(viewsets.ModelViewSet):
     serializer_class = AddressSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','pincode']
+
+class PromocodeViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = Promocode.objects.all()
+    serializer_class = PromocodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']

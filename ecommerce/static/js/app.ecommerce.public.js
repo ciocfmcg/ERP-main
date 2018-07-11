@@ -681,7 +681,10 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   console.log('in checkout controllerrrrrr');
   console.log($state.params.pk);
 
-  $scope.data = {quantity : 1 , shipping :'express', stage : 'review' , address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :''}};
+  $scope.data = {quantity : 1 , shipping :'express', stage : 'review', promoCode: '' , modeOfPayment : 'Card', address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :''}};
+
+  // $scope.promoCode = '';
+  $scope.products = [];
 
   // $scope.$watch(function(){
   //   $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
@@ -702,10 +705,13 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
       $scope.savedAddress = response.data
       console.log($scope.savedAddress);
       $scope.pa = 0
+      console.log($scope.data.address);
       for (var i = 0; i < $scope.savedAddress.length; i++) {
         if ($scope.me.profile.primaryAddress == $scope.savedAddress[i].pk) {
           $scope.pa = $scope.savedAddress[i].pk
           $scope.data.address = $scope.savedAddress[i]
+          console.log($scope.data.address);
+          $scope.data.address.mobile = ''
         }
       }
     })
@@ -714,6 +720,7 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   console.log('sssssssssssssssssssssssssss');
   $scope.ChangeAdd = function(idx){
     $scope.data.address = $scope.savedAddress[idx]
+    $scope.data.address.mobile = ''
   }
   $scope.resetAdd = function(){
     $scope.data.address = { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :''}
@@ -806,12 +813,16 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
      then(function(response){
        $scope.cartItems = response.data;
        $scope.calcTotal();
+       for (var i = 0; i < $scope.cartItems.length; i++) {
+         $scope.products.push({pk:$scope.cartItems[i].product.pk , qty :$scope.cartItems[i].qty})
+       }
      })
   }else {
     $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
      then(function(response){
        $scope.item = response.data;
        $scope.item.qty = 1;
+       $scope.products.push({pk:$scope.item.pk, qty : $scope.item.qty })
        $scope.calcTotal();
      })
   }
@@ -820,26 +831,47 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
     $scope.calcTotal();
   }
 
-  $scope.applyPromo = function (promoCode) {
-    if (promoCode==undefined) {
+  $scope.applyPromo = function () {
+    console.log($scope.data.promoCode);
+    if ($scope.data.promoCode=='') {
       return
     }
-
-    if (promoCode=='GRAB10') {
-      $scope.promo = 'applied';
-      $scope.promoDiscount = 10;
-      $scope.totalAfterPromo = $scope.totalAfterDiscount - ($scope.promoDiscount/100) * $scope.totalAfterDiscount
-    }else {
-      $scope.promo = 'notApplied';
-    }
+    $http({method : 'GET' , url : '  /api/ecommerce/promoCheck/?name='+ $scope.data.promoCode}).
+     then(function(response){
+       console.log(response.data);
+       $scope.msg = response.data.msg
+       if (response.data.msg=='Success') {
+         $scope.promoDiscount = response.data.val;
+         $scope.totalAfterPromo = $scope.totalAfterDiscount - ($scope.promoDiscount/100) * $scope.totalAfterDiscount
+       }else {
+         $scope.data.promoCode = ''
+       }
+     })
   }
 
+  $scope.$watch('modeOfPayment' , function(newValue, oldValue){
+
+  }, true);
+
+  $scope.dataToSend = {}
 
   $scope.next = function(){
     if ($scope.data.stage == 'review') {
       $scope.data.stage = 'shippingDetails';
+      $scope.dataToSend.promoCode = $scope.data.promoCode;
+      $scope.dataToSend.products = $scope.products;
     } else if ($scope.data.stage == 'shippingDetails') {
+      console.log('in shippingggg');
+      console.log($scope.data.address);
+      if ($scope.data.address.street=='' || $scope.data.address.city=='' || $scope.data.address.pincode=='' || $scope.data.address.country=='' || $scope.data.address.state=='' || $scope.data.address.mobile=='' ) {
+        Flash.create('warning','Please fill all details')
+        console.log('somethinggggggggggg');
+        return
+      }else {
+        $scope.dataToSend.address = $scope.data.address
+      }
       $scope.data.stage = 'payment';
+
     }
   }
   $scope.prev = function(){
@@ -851,33 +883,40 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   }
 
   $scope.pay = function(){
-    $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
-    $scope.data.dropInTime = $scope.$parent.data.dropInTime;
-    $scope.data.location = $scope.$parent.data.location;
-    $scope.data.stage = 'processing';
+    $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
+    console.log($scope.dataToSend);
+    console.log($scope.data.modeOfPayment);
+    // $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
+    // $scope.data.dropInTime = $scope.$parent.data.dropInTime;
+    // $scope.data.location = $scope.$parent.data.location;
+    // $scope.data.stage = 'processing';
 
-    $timeout(function () {
-      $scope.data.stage = 'confirmation';
-    }, 2000);
+    $http({method : 'POST' , url : '  /api/ecommerce/createOrder/' , data: $scope.dataToSend}).
+     then(function(response){
+       console.log(response.data);
+       // $scope.data.stage = 'confirmation';
+     })
 
-    var products = [];
 
-    for (var i = 0; i < $scope.cartItems.length; i++) {
-      products.push({pk: $scope.cartItems[i].product.pk , qty: $scope.cartItems[i].qty })
-    }
 
-    $timeout(function () {
-      dataToSend = {
-        user : $scope.me.pk,
-        totalAmount : $scope.total.toFixed(2),
-        products : products,
-        paymentMode: 'COD',
-        modeOfShopping: 'online',
-        paidAmount: '',
-        paymentStatus: '',
-      }
-      console.log(dataToSend);
-    }, 1000);
+    // var products = [];
+    //
+    // for (var i = 0; i < $scope.cartItems.length; i++) {
+    //   products.push({pk: $scope.cartItems[i].product.pk , qty: $scope.cartItems[i].qty })
+    // }
+
+    // $timeout(function () {
+    //   dataToSend = {
+    //     user : $scope.me.pk,
+    //     totalAmount : $scope.total.toFixed(2),
+    //     products : products,
+    //     paymentMode: 'COD',
+    //     modeOfShopping: 'online',
+    //     paidAmount: '',
+    //     paymentStatus: '',
+    //   }
+    //   console.log(dataToSend);
+    // }, 1000);
 
 
     // if ($scope.data.pickUpTime == null || $scope.data.dropInTime== null) {

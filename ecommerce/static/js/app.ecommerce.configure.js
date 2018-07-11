@@ -2,7 +2,7 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
 
   $scope.form = {
     image: emptyFile,
-    imagePortrait : emptyFile
+    imagePortrait: emptyFile
   };
 
   if (angular.isUndefined($scope.data.pk)) {
@@ -62,7 +62,7 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
           title: '',
           subtitle: '',
           image: emptyFile,
-          imagePortraitL : emptyFile,
+          imagePortraitL: emptyFile,
           level: 1,
           state: '',
           params: ''
@@ -79,23 +79,35 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
 });
 
 
-app.controller('businessManagement.ecommerce.configure', function($scope,$uibModal, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+app.controller('businessManagement.ecommerce.configure', function($scope, $uibModal, $http, $aside, $state, Flash, $users, $filter, $permissions , $rootScope) {
 
 
 
   $scope.data = {
     tableFieldData: [],
     tableproductData: [],
+    tablePromocodeData: [],
   };
 
-  var fieldViews = [{name : 'list' , icon : 'fa-th-large' ,
-        template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
+  var fieldViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
     itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.configure.field.item.html',
   }, ];
 
-  var productViews = [{name : 'list' , icon : 'fa-th-large' ,
-        template : '/static/ngTemplates/genericTable/genericSearchList.html' ,
+  var productViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
     itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.configure.product.item.html',
+  }, ];
+
+  var promocodeViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.configure.promocode.item.html',
   }, ];
 
 
@@ -116,14 +128,26 @@ app.controller('businessManagement.ecommerce.configure', function($scope,$uibMod
     itemsNumPerView: [12, 24, 48],
   }
 
+  $scope.promocodesConfig = {
+    views: promocodeViews,
+    url: '/api/ecommerce/promocode/',
+    searchField: 'name',
+    deletable: true,
+    itemsNumPerView: [12, 24, 48],
+  }
+
 
   $scope.offerBannersConfig = {
-    views : [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'}, ],
-    url : '/api/ecommerce/offerBanner/',
-    deletable : true,
+    views: [{
+      name: 'table',
+      icon: 'fa-bars',
+      template: '/static/ngTemplates/genericTable/tableDefault.html'
+    }, ],
+    url: '/api/ecommerce/offerBanner/',
+    deletable: true,
     searchField: 'name',
-    canCreate : true,
-    editorTemplate : '/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.html',
+    canCreate: true,
+    editorTemplate: '/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.html',
   }
 
 
@@ -135,27 +159,27 @@ app.controller('businessManagement.ecommerce.configure', function($scope,$uibMod
     console.log(target, action, mode);
     console.log($scope.data.tableFieldData);
 
-      for (var i = 0; i < $scope.data.tableFieldData.length; i++) {
-        if ($scope.data.tableFieldData[i].pk == parseInt(target)) {
-          if (action == 'edit') {
-            console.log('editing');
-            var title ='Edit Field : '
-            var appType = 'editField'
-          }else {
-            var title ='Field Explore : '
-            var appType = 'fieldExplore'
-          }
-          // i clicked this $scope.data.tableFieldData[i]
-          $scope.addTab({
-            title:  title + $scope.data.tableFieldData[i].pk,
-            cancel: true,
-            app: appType,
-            data: {
-              pk: target,
-              field: $scope.data.tableFieldData[i]
-            },
-            active: true
-          })
+    for (var i = 0; i < $scope.data.tableFieldData.length; i++) {
+      if ($scope.data.tableFieldData[i].pk == parseInt(target)) {
+        if (action == 'edit') {
+          console.log('editing');
+          var title = 'Edit Field : '
+          var appType = 'editField'
+        } else {
+          var title = 'Field Explore : '
+          var appType = 'fieldExplore'
+        }
+        // i clicked this $scope.data.tableFieldData[i]
+        $scope.addTab({
+          title: title + $scope.data.tableFieldData[i].pk,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            field: $scope.data.tableFieldData[i]
+          },
+          active: true
+        })
       }
     }
 
@@ -165,27 +189,42 @@ app.controller('businessManagement.ecommerce.configure', function($scope,$uibMod
     console.log(target, action, mode);
     console.log($scope.data.tableproductData);
 
-      for (var i = 0; i < $scope.data.tableproductData.length; i++) {
-        if ($scope.data.tableproductData[i].pk == parseInt(target)) {
-          if (action == 'edit') {
-            console.log('editing');
-            var title ='Edit Product : '
-            var appType = 'editproduct'
-          }else {
-            var title ='Product Explore : '
-            var appType = 'productExplore'
-          }
-          // i clicked this $scope.data.tableproductData[i]
-          $scope.addTab({
-            title:  title + $scope.data.tableproductData[i].pk,
-            cancel: true,
-            app: appType,
-            data: {
-              pk: target,
-              field: $scope.data.tableproductData[i]
-            },
-            active: true
-          })
+    for (var i = 0; i < $scope.data.tableproductData.length; i++) {
+      if ($scope.data.tableproductData[i].pk == parseInt(target)) {
+        if (action == 'edit') {
+          console.log('editing');
+          var title = 'Edit Product : '
+          var appType = 'editproduct'
+        } else {
+          var title = 'Product Explore : '
+          var appType = 'productExplore'
+        }
+        // i clicked this $scope.data.tableproductData[i]
+        $scope.addTab({
+          title: title + $scope.data.tableproductData[i].pk,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            field: $scope.data.tableproductData[i]
+          },
+          active: true
+        })
+      }
+    }
+
+  }
+
+  $scope.tablePromocodeAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tablePromocodeData);
+
+    for (var i = 0; i < $scope.data.tablePromocodeData.length; i++) {
+      if ($scope.data.tablePromocodeData[i].pk == parseInt(target)) {
+        if (action == 'editPromocode') {
+          console.log('editPromocode');
+          $rootScope.$broadcast('promoUpdate', {data:$scope.data.tablePromocodeData[i]});
+        }
       }
     }
 
@@ -221,6 +260,52 @@ app.controller('businessManagement.ecommerce.configure', function($scope,$uibMod
 
 });
 
+app.controller('businessManagement.ecommerce.configure.promocode.form', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions,$rootScope) {
+  $scope.promoForm = {name:'',discount:1,validTimes:1,endDate:new Date()}
+  $scope.mode = 'new'
+  $scope.msg = 'Create'
+
+  $scope.$on('promoUpdate', function(event, input) {
+    console.log("recieved");
+    console.log(input.data);
+    $scope.msg = 'Update'
+    $scope.promoForm = input.data
+    $scope.mode = 'edit'
+
+  });
+
+  $scope.savePromocode = function(){
+    console.log('7777777777777777777',$scope.promoForm);
+    if ($scope.promoForm.name.length ==0 || $scope.promoForm.discount.length == 0 || $scope.promoForm.validTimes.length == 0) {
+      Flash.create('warning', 'Please Fill All The Fields')
+      return;
+    }
+
+    var method = 'POST'
+    var url = '/api/ecommerce/promocode/'
+    if ($scope.mode == 'edit') {
+      method = 'PATCH'
+      url = url + $scope.promoForm.pk + '/'
+    }
+    var f = $scope.promoForm
+    dataToSend = {
+      name : f.name,
+      discount : f.discount,
+      validTimes : f.validTimes,
+      endDate : f.endDate
+    }
+    $http({method : method , url : url, data : dataToSend }).
+    then(function(response) {
+      Flash.create('success', $scope.msg + 'd');
+      $rootScope.$broadcast('forceRefetch', {});
+      $scope.promoForm = {name:'',discount:1,validTimes:1,endDate:new Date()}
+      $scope.mode = 'new'
+    })
+
+  }
+
+})
+
 
 app.controller('businessManagement.ecommerce.configure.form', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
 
@@ -241,19 +326,19 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
 
   $scope.resetForm = function() {
     $scope.form = {
-        mode: 'field',
-        fieldType: 'char',
-        parent: '',
-        name: '',
-        choiceLabel: '',
-        unit: '',
-        helpText: '',
-        default: '',
-        fields: [],
-        minCost: 0,
-        visual: emptyFile
-      }
-      $scope.editing = false
+      mode: 'field',
+      fieldType: 'char',
+      parent: '',
+      name: '',
+      choiceLabel: '',
+      unit: '',
+      helpText: '',
+      default: '',
+      fields: [],
+      minCost: 0,
+      visual: emptyFile
+    }
+    $scope.editing = false
   }
 
   $scope.resetForm();
@@ -269,14 +354,14 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
     $scope.form = $scope.tab.data.field;
     if ('fields' in $scope.tab.data.field) {
       $scope.form.mode = 'genericProduct'
-    }else {
+    } else {
 
       $scope.form.mode = 'field'
     }
     if ($scope.form.fieldType == 'choice') {
-        $scope.ChoiceValues = JSON.parse($scope.form.data)
-      }
-    console.log('ffffffffff',$scope.ChoiceValues);
+      $scope.ChoiceValues = JSON.parse($scope.form.data)
+    }
+    console.log('ffffffffff', $scope.ChoiceValues);
     $scope.editing = true
 
   }
@@ -291,7 +376,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
     console.log(query);
     return $http.get('/api/ecommerce/genericProduct/?name__contains=' + query).
     then(function(response) {
-      console.log('**********************',response);
+      console.log('**********************', response);
       return response.data;
     })
   }

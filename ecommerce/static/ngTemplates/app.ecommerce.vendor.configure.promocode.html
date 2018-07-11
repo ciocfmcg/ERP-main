@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="container-fluid">
+    <div class="col-md-4">
+      <div class="row" ng-controller="businessManagement.ecommerce.configure.promocode.form" style="margin:20px 15px">
+        <span class="text-center"><h4>{{msg}} Promocode</h4></span>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" ng-model="promoForm.name">
+        </div>
+        <div class="form-group">
+          <label>Discount (in % )</label>
+          <input type="number" class="form-control" ng-model="promoForm.discount" min="1">
+        </div>
+        <div class="form-group">
+          <label>Number Of Times</label>
+          <input type="number" class="form-control" ng-model="promoForm.validTimes" min="1">
+        </div>
+        <div class="form-group" style="padding-right:25px">
+          <label class="control-label col-sm-2" style="margin-top:45px;padding:0px;">Valid Till</label>
+          <div class="col-md-6">
+            <div class="input-group" style="margin-top:35px;">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="promoForm.endDate" is-open="status.opened" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="row container-fluid">
+              <uib-timepicker ng-model="promoForm.endDate" hour-step="1" minute-step="30" show-meridian="true"></uib-timepicker>
+            </div>
+          </div>
+        </div>
+        <div class="btn btn-success col-md-4 col-md-offset-4" style="margin-top:40px;font-size:19px" ng-click="savePromocode()">
+          Save
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="row" style="margin:20px 15px">
+        <generic-Table data="data.tablePromocodeData" config-Obj="{{promocodesConfig}}" callback-Fn="tablePromocodeAction"></generic-Table>
+      </div>
+    </div>
+  </div>
+</div>

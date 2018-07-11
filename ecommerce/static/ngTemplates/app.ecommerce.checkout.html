@@ -135,15 +135,15 @@
           <div class="row" style="margin-top:30px;padding:10px;">
             <div class="col-md-4">
               <div class="input-group">
-                <input type="text" class="form-control" ng-model="promoCode" placeholder="Apply Promo Code..." />
+                <input type="text" class="form-control" ng-model="data.promoCode" placeholder="Apply Promo Code..." />
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-primary" ng-click="applyPromo(promoCode)">Apply</button>
+                  <button type="button" class="btn btn-primary" ng-click="applyPromo()">Apply</button>
                 </span>
               </div>
             </div>
             <div class="col-md-8">
-              <span ng-if="promo =='applied'" style="color: green;" > Promocode Applied! </span>
-              <span  ng-if="promo=='notApplied'" style="color: red;" > This Promocode is invalid! </span>
+              <span style="color: {{msg=='Success'?'green':'red'}};" > {{msg}}</span>
+              <!-- <span  ng-if="promo=='notApplied'" style="color: red;" > This Promocode is invalid! </span> -->
             </div>
 
           </div>
@@ -159,14 +159,14 @@
               <!-- <div ng-if="promo=='applied'" class="row">
                 <p> Promocode discount {{promoDiscount}} % </p>
               </div> -->
-              <div ng-if="promo=='applied'" class="row">
+              <div ng-if="msg=='Success'" class="row">
                 <span style="font-size:20px;">  Total Payable <br>
                 <i class="fa fa-inr"></i> {{totalAfterPromo.toFixed(2)}}</span>
                 <span style="font-size:18px; padding-left:10px; " class="text-muted" >(promocode discount {{promoDiscount}} % )</span>
               </div>
               <div class="row">
-                <p ng-if="total!=totalAfterDiscount && promo!='applied'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterDiscount).toFixed(2)}} on this order</p>
-                <p ng-if="promo =='applied'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterPromo).toFixed(2)}} on this order</p>
+                <p ng-if="total!=totalAfterDiscount && msg!='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterDiscount).toFixed(2)}} on this order</p>
+                <p ng-if="msg=='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterPromo).toFixed(2)}} on this order</p>
               </div>
             </div>
             <div class="col-md-6">
@@ -214,12 +214,12 @@
                 </div>
               </div>
               <div class="row" style="margin-bottom:35px">
-                <span><i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i><i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> BookMark This Address</i></span>
+                <span><i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i><i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> Save for later use</i></span>
               </div>
               <h4>Contact Details</h4>
               <div class="form-group">
                 <label for="mob">Mobile no. : </label>
-                <input type="text" class="form-control" id="mob">
+                <input type="text" class="form-control" id="mob" ng-model="data.address.mobile">
               </div>
             </div>
 
@@ -285,7 +285,11 @@
             </select> -->
           </div>
           <div class="row" style="padding:20px;">
-            <span style="font-size:20px;">Mode of Patment : COD<span >
+            <span style="font-size:20px;">Select Mode of Payment<span >
+          </div>
+          <div class="row" style="padding:20px;">
+            <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD"> COD
+            <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="Card"> Card
           </div>
           <div class="row" style="padding:20px;" >
             <p>
@@ -298,7 +302,7 @@
               Go back
             </button>
             <button type="button" class="btn btn-success btn-lg pull-right" ng-click="pay()">
-              Pay
+              {{data.modeOfPayment=='COD'? 'Order': 'Pay'}}
             </button>
           </div>
         </div>
