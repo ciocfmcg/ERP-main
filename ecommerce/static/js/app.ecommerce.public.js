@@ -787,8 +787,15 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
 
   $scope.calcTotal = function() {
     $scope.total = 0;
-    for (var i = 0; i < $scope.cartItems.length; i++) {
-      $scope.total =  $scope.total + ( $scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
+    $scope.totalAfterDiscount = 0;
+    if($state.params.pk=='cart') {
+      for (var i = 0; i < $scope.cartItems.length; i++) {
+        $scope.total =  $scope.total + ( $scope.cartItems[i].product.product.price * $scope.cartItems[i].qty)
+        $scope.totalAfterDiscount =  $scope.totalAfterDiscount + ( $scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
+      }
+    }else {
+      $scope.total = $scope.item.product.price * $scope.item.qty
+      $scope.totalAfterDiscount =   $scope.item.product.discountedPrice * $scope.item.qty
     }
   }
 
@@ -804,14 +811,27 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
     $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
      then(function(response){
        $scope.item = response.data;
-       $scope.total = 0;
-       $scope.total = $scope.item.product.price
+       $scope.item.qty = 1;
+       $scope.calcTotal();
      })
   }
 
-  $scope.changeQty = function(item) {
-    console.log('fffffffffffffffff',item);
+  $scope.changeQty = function() {
     $scope.calcTotal();
+  }
+
+  $scope.applyPromo = function (promoCode) {
+    if (promoCode==undefined) {
+      return
+    }
+
+    if (promoCode=='GRAB10') {
+      $scope.promo = 'applied';
+      $scope.promoDiscount = 10;
+      $scope.totalAfterPromo = $scope.totalAfterDiscount - ($scope.promoDiscount/100) * $scope.totalAfterDiscount
+    }else {
+      $scope.promo = 'notApplied';
+    }
   }
 
 
