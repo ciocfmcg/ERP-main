@@ -230,3 +230,9 @@ class Promocode(models.Model):
     endDate = models.DateTimeField(null=False)
     discount = models.IntegerField(null=False)
     validTimes = models.IntegerField(null=False)
+
+class FrequentlyQuestions(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    user =  models.ForeignKey(User, null = False , related_name = 'frequentlyQuestions')
+    ques = models.CharField(max_length=500 , null = False)
+    Ans = models.CharField(max_length=5000 , null = False)
