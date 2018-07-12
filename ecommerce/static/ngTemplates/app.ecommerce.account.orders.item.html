@@ -1,16 +1,107 @@
-<div class="container-fluid card" ng-controller="controller.ecommerce.account.orders.item" style="padding:10px;border-left:4px solid #0c9a9e;position:relative;">
+ <div class="container-fluid card" style="padding:20px; border-left:4px solid #0c9a9e;position:relative;">
+  <div class="row">
+    <strong> Order No. : #{{data.pk}} </strong>
+  </div>
+  <div class="row">
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-3">
+          <span style="font-size:15px;" > Total Amount : <i class="fa fa-inr"></i> {{data.totalAmount}} </span>
+        </div>
+        <div class="col-md-3">
+          <span style="font-size:15px;" > Payment Mode : {{data.paymentMode}} </span>
+        </div>
+        <div class="col-md-3">
+          <span style="font-size:15px;" >  Approved :{{data.approved}} </span>
+        </div>
+        <div class="col-md-3">
+          <span style="font-size:15px;" > Status : {{data.status}} </span>
+        </div>
+      </div>
+      <div class="row">
+
+      </div>
+
+    </div>
+    <div class="col-md-3">
+      <div class="row">
+        <div class="col-md-6">
+           <i class="fa fa-info fa-2x" style="cursor:pointer;" ng-click="rowActionClicked('toggleInfo')"></i>
+        </div>
+        <div class="col-md-6">
+          <!-- <button type="button" name="button" class="btn btn-success" > Cancel </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row anim-in-out anim-fade"  data-anim-speed="200" ng-if="data.showInfo">
+    <hr>
+    <div class="container-fluid">
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-5">
+            <strong>Address :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.street}} ,
+            {{data.city}} <br>
+            {{data.state}} ,
+            {{data.landMark}} (landmark) <br>
+            {{data.pincode}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+              <strong>Mobile :</strong>
+          </div>
+          <div class="col-md-7">
+            {{data.mobileNo}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <strong>Items :</strong>
+          <div ng-repeat="i in data.orderQtyMap">
+            <span>{{i.qty}} -</span>
+            <span> {{i.productName}}</span>
+            <span>for {{i.totalAmount * i.qty}}</span>
+
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-2">
+        <div class="btn-group-vertical">
+          <button type="button" ng-click="requestConfirmation('sms')" class="btn btn-default">
+            Request SMS
+          </button>
+          <button type="button" ng-click="requestConfirmation('email')" class="btn btn-default">
+            Request Email
+          </button>
+          <button type="button" ng-click="showMap()" class="btn btn-success">
+            Show map
+            <i class="fa fa-map-marker"></i>
+          </button>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+<!-- <div class="container-fluid card" style="padding:10px;border-left:4px solid #0c9a9e;position:relative;">
   <div class="row">
     <div class="col-md-2">
       <div class="row" style="padding-left:17px;">
         <i class="fa fa-motorcycle fa-3x"></i>
       </div>
       <div class="row" style="margin-top:10px;">
-        <span style="font-size:20px;margin-left:13px;">{{data.item.title}}</span>
+        <span style="font-size:20px;margin-left:13px;">Title</span>
       </div>
     </div>
     <div class="col-md-4">
       <div class="row" style="padding-left:10px;">
-        <i class="fa fa-calendar fa-2x"></i> <span style="font-size : 18px;margin-left:10px;">Booking # {{data.id}}</span>
+        <i class="fa fa-calendar fa-2x"></i> <span style="font-size : 18px;margin-left:10px;">Booking # {{data.pk}}</span>
       </div>
       <div class="row" style="margin-top:10px;">
         <div class="col-md-3">
@@ -112,4 +203,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
