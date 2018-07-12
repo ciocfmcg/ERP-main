@@ -286,22 +286,16 @@ class ActivitiesViewSet(viewsets.ModelViewSet):
     filter_fields = ['user','typ','product']
     def get_queryset(self):
         a = Activities.objects.filter(user=self.request.user).order_by('-created')
-        print a.count(),a
-        toReturn = []
         pPk = []
-        count = 0
-        for idx,i in enumerate(a):
-            print i,idx
-            if i.product.pk not in pPk:
-                pPk.append(i.product.pk)
-            else:
-                del a[i]
-                # toReturn.append(i)
-                # count += 1
-                # if count > 4:
-                #     break
-        print a
-        return Activities.objects.all().order_by('-created')
+        aPk = []
+        for i in a :
+            if i.product:
+                if i.product.pk not in pPk:
+                    pPk.append(i.product.pk)
+                    aPk.append(i.pk)
+                else:
+                    a = a.exclude(product=i.product)
+        return Activities.objects.filter(pk__in=aPk).order_by('-created')
 
 class AddressViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
@@ -322,8 +316,10 @@ class OrderQtyMapViewSet(viewsets.ModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
-    queryset = Order.objects.all()
+    # queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    def get_queryset(self):
+        return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
 
 class PromocodeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
@@ -331,3 +327,10 @@ class PromocodeViewSet(viewsets.ModelViewSet):
     serializer_class = PromocodeSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
+
+class FrequentlyQuestionsViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    queryset = FrequentlyQuestions.objects.all()
+    serializer_class = FrequentlyQuestionsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['ques']

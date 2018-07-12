@@ -65,7 +65,7 @@
 
           </div>
         </div>
-        <div class="row" style="padding:10px;">
+        <div class="row" style="padding:10px;" ng-if="me != null">
           <div class="col-md-6">
             <div class="row container-fluid text-center" style="background-color:#ec1616; color:white; padding:5px 0px;">
               <span ng-click="buy(details)" style="cursor:pointer;">
@@ -149,7 +149,7 @@
           <div class="col-md-8">
             <h5>Have you used this product before ?  <small style="margin-left:20px;">Give us your review</small> </h5>
             <uib-rating ng-model="form.rating" max="5" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" on-leave="sendReview('rating')"></uib-rating> <br>
-            <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor">
+            <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
               <i class="fa fa-pencil-square-o"></i>  Write a review
             </button>
             <div ng-if="form.reviewEditor">
@@ -183,7 +183,7 @@
                   <div class="row">
                     <uib-rating ng-model="r.rating" max="5" readonly="false" style="font-size:17px;color:#e2a900;"></uib-rating> <br>
                   </div>
-                  <div class="row">
+                  <div class="row" ng-if="me != null">
                     {{r.user | getName}} <br> {{r.created | date : 'dd-MMM-yyyy'}} <br>
                     <span ng-if="r.verified" class="btn btn-xs btn-success">
                       Verified

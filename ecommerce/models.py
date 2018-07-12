@@ -235,4 +235,4 @@ class FrequentlyQuestions(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     user =  models.ForeignKey(User, null = False , related_name = 'frequentlyQuestions')
     ques = models.CharField(max_length=500 , null = False)
-    Ans = models.CharField(max_length=5000 , null = False)
+    ans = models.CharField(max_length=5000 , null = False)

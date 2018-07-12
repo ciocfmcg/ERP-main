@@ -78,6 +78,57 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
 
 });
 
+app.controller('businessManagement.ecommerce.configure.fAQ.form', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions,$rootScope) {
+
+  if (angular.isUndefined($scope.data.pk)) {
+    $scope.mode = 'new';
+    $scope.msg = 'Create';
+    $scope.data = {
+      ques: '',
+      ans: '',
+    };
+    $scope.url = '/api/ecommerce/frequentlyQuestions/';
+    $scope.method = 'POST';
+  } else {
+    $scope.mdoe = 'edit';
+    $scope.msg = 'Update';
+    $scope.url = '/api/ecommerce/frequentlyQuestions/' + $scope.data.pk + '/?mode=configure';
+    $scope.method = 'PATCH';
+  }
+
+  $scope.saveFAQ = function() {
+    var f = $scope.data
+    if (f.ques.length == 0) {
+      Flash.create('warning', 'Please Write The Question');
+      return;
+    }
+    if (f.ans.length == 0) {
+      Flash.create('warning', 'Please Write The Answer');
+      return;
+    }
+    var toSend = {ques:f.ques,ans:f.ans}
+    console.log(toSend);
+    $http({
+      method: $scope.method,
+      url: $scope.url,
+      data: toSend,
+    }).
+    then(function(response) {
+      if ($scope.mode == 'new') {
+        $scope.data = {
+          ques: '',
+          ans: '',
+        };
+        $rootScope.$broadcast('forceRefetch', {});
+      }
+      Flash.create('success', response.status + ' : ' + response.statusText);
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
+    });
+  }
+
+});
+
 
 app.controller('businessManagement.ecommerce.configure', function($scope, $uibModal, $http, $aside, $state, Flash, $users, $filter, $permissions , $rootScope) {
 
@@ -148,6 +199,19 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     searchField: 'name',
     canCreate: true,
     editorTemplate: '/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.html',
+  }
+
+  $scope.fAQConfig = {
+    views: [{
+      name: 'table',
+      icon: 'fa-bars',
+      template: '/static/ngTemplates/genericTable/tableDefault.html'
+    }, ],
+    url: '/api/ecommerce/frequentlyQuestions/',
+    deletable: true,
+    searchField: 'ques',
+    canCreate: false,
+    editorTemplate: '/static/ngTemplates/app.ecommerce.vendor.configure.FAQ.form.html',
   }
 
 

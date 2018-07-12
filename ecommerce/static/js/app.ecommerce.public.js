@@ -32,40 +32,43 @@ app.run([ '$rootScope', '$state', '$stateParams' ,'$users','$http' , function ($
       startTime = new Date();
       console.log('time spent',timeSpent , 'on' , $rootScope.previousState );
 
-      if ($rootScope.previousState=='') {
-        console.log('logged in ');
-        dataToSend = {user: me.pk , typ : 'loggedIn' }
-        // $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
-        // then(function(response){
-        //   console.log(response.data);
-        // })
+      if (me != null) {
+        if ($rootScope.previousState=='') {
+          console.log('logged in ');
+          dataToSend = {user: me.pk , typ : 'loggedIn' }
+          // $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
+          // then(function(response){
+          //   console.log(response.data);
+          // })
+        }
+
+        if ($rootScope.previousState=='details') {
+          var data = {
+            timeSpent:timeSpent,
+            product : fromParams.id
+          }
+          data = JSON.stringify(data)
+          dataToSend = {user: me.pk , typ : 'productView',product : fromParams.id , data: data }
+          $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
+          then(function(response){
+            console.log(response.data);
+          })
+        }
+
+        if ($rootScope.previousState=='categories') {
+          var data = {
+            timeSpent:timeSpent,
+            category : fromParams.name
+          }
+          data = JSON.stringify(data)
+          dataToSend = {user: me.pk , typ : 'categoryView' , data: data  }
+          $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
+          then(function(response){
+            console.log(response.data);
+          })
+        }
       }
 
-      if ($rootScope.previousState=='details') {
-        var data = {
-                    timeSpent:timeSpent,
-                    product : fromParams.id
-                  }
-        data = JSON.stringify(data)
-        dataToSend = {user: me.pk , typ : 'productView',product : fromParams.id , data: data }
-        $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
-        then(function(response){
-          console.log(response.data);
-        })
-      }
-
-      if ($rootScope.previousState=='categories') {
-        var data = {
-                    timeSpent:timeSpent,
-                    category : fromParams.name
-                  }
-        data = JSON.stringify(data)
-        dataToSend = {user: me.pk , typ : 'categoryView' , data: data  }
-        $http({method : 'POST' , url : '/api/ecommerce/activities/' , data : dataToSend }).
-        then(function(response){
-          console.log(response.data);
-        })
-      }
 
     });
   }
@@ -147,7 +150,8 @@ app.config(function($stateProvider ){
 
 app.controller('controller.ecommerce.details' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash , $window ){
 
-  console.log('cominggggggggggggggggggggg');
+  $scope.me = $users.get('mySelf');
+  console.log('cominggggggggggggggggggggg',$scope.me);
 
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime'
   console.log($scope.data);
@@ -270,16 +274,17 @@ app.controller('controller.ecommerce.details' , function($scope , $state , $http
   // then(function(response) {
   //
   // });
+  if ($scope.me != null) {
+    $http({method : 'GET' , url : '/api/ecommerce/activities/?user=' + $scope.me.pk +'&typ=productView&limit=2' }).
+    then(function(response) {
+      console.log('%%%%%%%%',response.data.results);
+      $scope.recentlyViewed = response.data.results[0]
+      if ($scope.recentlyViewed.product.pk==$scope.details.pk) {
+        $scope.recentlyViewed = response.data.results[1]
+      }
 
-  $http({method : 'GET' , url : '/api/ecommerce/activities/?user=' + $scope.me.pk +'&typ=productView&limit=2' }).
-  then(function(response) {
-    console.log('%%%%%%%%',response.data.results);
-    $scope.recentlyViewed = response.data.results[0]
-    if ($scope.recentlyViewed.product.pk==$scope.details.pk) {
-      $scope.recentlyViewed = response.data.results[1]
-    }
-
-  })
+    })
+  }
 
 
 });
@@ -688,6 +693,11 @@ $scope.fetchaddress()
 });
 
 app.controller('controller.ecommerce.account.support' , function($scope , $state , $http , $timeout , $uibModal , $users , Flash){
+
+  $http({method : 'GET' , url : '/api/ecommerce/frequentlyQuestions/'}).
+  then(function(response){
+    $scope.fAQ = response.data
+  })
 
   $scope.message = {subject : '' , body : ''};
   $scope.sendMessage = function(){
@@ -1103,15 +1113,17 @@ app.controller('ecommerce.main' , function($scope , $state , $http , $timeout , 
 
   $scope.data.pickUpTime = null;
   $scope.data.dropInTime = null;
-
-  $http({method : 'GET' , url : '/api/ecommerce/cart/?user='+ $scope.me.pk + '&typ=cart'}).
-  then(function(response){
-    for (var i = 0; i < response.data.length; i++) {
-      if (response.data[i].typ=='cart'){
-        $scope.inCart.push(response.data[i])
+  console.log('777777777777',$scope.me);
+  if ($scope.me != null) {
+    $http({method : 'GET' , url : '/api/ecommerce/cart/?user='+ $scope.me.pk + '&typ=cart'}).
+    then(function(response){
+      for (var i = 0; i < response.data.length; i++) {
+        if (response.data[i].typ=='cart'){
+          $scope.inCart.push(response.data[i])
+        }
       }
-    }
-  })
+    })
+  }
 
 
   $scope.headerUrl = '/static/ngTemplates/app.ecommerce.header.html';
@@ -1231,11 +1243,13 @@ app.controller('controller.ecommerce.list' , function($scope , $state , $http , 
   // $scope.recentlyViewed = [];
   // $scope.recentViewsArr = [];
   //
-  $http({method : 'GET' , url : '/api/ecommerce/activities/?user=' + $scope.me.pk +'&typ=productView&limit=4' }).
-  then(function(response) {
-    console.log('%%%%%%%%',response.data.results);
-    $scope.recentlyViewed = response.data.results
-  })
+  if ($scope.me != null) {
+    $http({method : 'GET' , url : '/api/ecommerce/activities/?user=' + $scope.me.pk +'&typ=productView&limit=4' }).
+    then(function(response) {
+      console.log('%%%%%%%%',response.data.results);
+      $scope.recentlyViewed = response.data.results
+    })
+  }
 
 
 });

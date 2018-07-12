@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="container-fluid">
+    <div class="col-md-4">
+      <div ng-include="'/static/ngTemplates/app.ecommerce.vendor.configure.FAQ.form.html'"></div>
+    </div>
+    <div class="col-md-8">
+      <div class="row" style="margin:20px 15px">
+        <generic-Table data="tableData.fAQ" config-Obj="{{fAQConfig}}" callback-Fn="tableAction"></generic-Table>
+      </div>
+    </div>
+  </div>
+</div>

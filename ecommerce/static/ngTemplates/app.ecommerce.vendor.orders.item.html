@@ -1,4 +1,38 @@
-<div class="container-fluid card" ng-controller="businessManagement.ecommerce.orders.item" style="padding:10px;border-left:4px solid #0c9a9e;position:relative;">
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" >
+  <div class="container-fluid card" style="padding-bottom:10px;" ng-click="data.status!='created'?rowActionClicked('info'):''" ng-style="data.status!='created' && {'cursor':'pointer'}">
+    <div class="row" style="border-bottom: 1px solid #dedede;height:80px">
+      <span class="pull-right" style="padding-right:15px"><h4>#{{data.pk}}</h4></span>
+      <span class="text-center" style="padding:10px"><h3>{{data.service.name}}</h3></span>
+    </div>
+    <div class="row container-fluid" style="padding-top:20px;height:70px;">
+      <div class="col-md-10">
+        <strong>Status:</strong> {{data.status}} <br>
+        <span >{{data.products.length}} Item Selected</span><br>
+        <strong>Total Value:</strong> <i class="fa fa-inr"></i> {{data.totalamount}} <br>
+      </div>
+      <div class="col-md-2" ng-if="data.status=='created'">
+        <div style="padding-right:20px;">
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
+            <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+          </span>
+        </div><br>
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('info')">
+            <i class="fa fa-info fa-lg" style="margin-top:0px;"></i>
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- <div class="container-fluid card" ng-controller="businessManagement.ecommerce.orders.item" style="padding:10px;border-left:4px solid #0c9a9e;position:relative;">
   <div class="col-md-2">
     <div class="row" style="padding-left:10px;">
       <i class="fa fa-motorcycle fa-3x"></i>
@@ -72,4 +106,4 @@
 
 
 
-</div>
+</div> -->

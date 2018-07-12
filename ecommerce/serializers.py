@@ -212,8 +212,8 @@ class ActivitiesSerializer(serializers.ModelSerializer):
         a = Activities(**validated_data)
         if 'product' in self.context['request'].data:
             a.product = listing.objects.get(pk = self.context['request'].data['product'])
-        # a.save()
-        # return a
+        a.save()
+        return a
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -275,3 +275,15 @@ class PromocodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Promocode
         fields = ( 'pk', 'created' , 'updated', 'name' ,'endDate' , 'discount' , 'validTimes')
+
+class FrequentlyQuestionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FrequentlyQuestions
+        fields = ('pk' ,'created' , 'user' , 'ques' , 'ans')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        print '******************'
+        f = FrequentlyQuestions(**validated_data)
+        f.user=self.context['request'].user
+        f.save()
+        return f

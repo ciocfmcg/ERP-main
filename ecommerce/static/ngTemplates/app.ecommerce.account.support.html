@@ -1,24 +1,36 @@
 <div class="container-fluid">
-  <h3>Contact us</h3>
-  <hr>
-  <div class="col-md-6">
-    <strong>Toll free no : </strong> 180012345678 <br>
-    <strong>e-mail : </strong> care@ecommerce.com <br>
-
+  <div class="col-md-6" style="padding-right:35px;border-right:1px solid #eeeeee;">
+    <h3>Top Queries</h3>
     <hr>
-    <h4>Send a message</h4>
-    <div class="form-group">
-      <label>Subject</label>
-      <input ng-model="message.subject" type="text" class="form-control" placeholder="Subject">
+    <div class="row" ng-repeat="q in fAQ" style="padding-top:15px;font-size:18px">
+      <span style="cursor:pointer" data-toggle="collapse" data-target="#collapseExample{{$index}}" ><strong>{{q.ques}}</strong></span>
+      <div class="collapse" id="collapseExample{{$index}}">
+        {{q.ans}}
+      </div>
     </div>
-    <div class="form-group">
-      <label>Message</label>
-      <textarea ng-model="message.body" class="form-control" rows="8" cols="40"></textarea>
-    </div>
-    <button ng-click="sendMessage()" type="button" class="btn btn-default">
-      Send
-    </button>
+  </div>
+  <div class="col-md-6" style="padding-left:25px">
+    <h3>Contact us</h3>
+    <hr>
+    <div class="col-md-12">
+      <strong>Toll free no : </strong> 180012345678 <br>
+      <strong>e-mail : </strong> care@ecommerce.com <br>
 
+      <hr>
+      <h4>Send a message</h4>
+      <div class="form-group">
+        <label>Subject</label>
+        <input ng-model="message.subject" type="text" class="form-control" placeholder="Subject">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea ng-model="message.body" class="form-control" rows="8" cols="40"></textarea>
+      </div>
+      <button ng-click="sendMessage()" type="button" class="btn btn-default">
+        Send
+      </button>
+
+    </div>
   </div>
 
 </div>
