@@ -79,5 +79,4 @@ app.controller("workforceManagement.recruitment.onboarding", function($scope, $s
 app.controller("workforceManagement.recruitment.onboarding.explore", function($scope, Flash, $state, $users, $stateParams, $http, Flash, $uibModal, $aside) {
 
   $scope.candidate = $scope.data.tableData[$scope.tab.data.index]
-  console.log($scope.candidate,'aaaaaaaaaaaaaaaaaaaaaaahgjhgjhgjha');
   });

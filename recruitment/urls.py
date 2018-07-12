@@ -14,4 +14,5 @@ urlpatterns = [
      url(r'scheduleInterview/$' , ScheduleInterviewAPIView.as_view() ),
      url(r'inviteInterview/$' , InviteInterviewAPIView.as_view() ),
      url(r'downloadCallLeter/$' , DownloadCallLetter.as_view() ),
+     url(r'sendCallLetter/$' , SendCallLetter.as_view() ),
  ]

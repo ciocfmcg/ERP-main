@@ -424,8 +424,8 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
       })
     }
   }
-  $scope.$on('draggable:start', function (data) {
-    $scope.isDragging=true;
+  $scope.$on('draggable:start', function(data) {
+    $scope.isDragging = true;
   });
 
   $scope.removeFromData = function(pk) {
@@ -469,7 +469,7 @@ app.controller("recruitment.jobs.selected", function($scope, $state, $users, $st
 app.controller("recruitment.applicant.view", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.applicant = []
-  $scope.schedules=[]
+  $scope.schedules = []
   $scope.fetchDeal = function() {
 
     $http({
@@ -490,7 +490,7 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
         url: '/api/recruitment/applyJob/?email=' + $scope.applicant.email + '&mobile=' + $scope.applicant.mobile
       }).
       then(function(response) {
-        console.log( response.data,'dddddddddddddddd');
+        console.log(response.data, 'dddddddddddddddd');
         $scope.pastApplyHistory = response.data;
       });
     });
@@ -513,28 +513,48 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     })
   }
 
-  $scope.onBoard = function() {
+  // $scope.onBoard = function() {
+  //   var toSend = {
+  //     status: 'Onboarding'
+  //   }
+  //   var method = 'PATCH';
+  //   var url = '/api/recruitment/applyJob/' + $scope.applicant.pk + '/';
+  //   $http({
+  //     method: method,
+  //     url: url,
+  //     data: toSend
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', 'Done !');
+  //   })
+  // }
+  $scope.offer=function(){
+    console.log("aaaaaaaaaaa");
     var toSend = {
-      status: 'Onboarding'
+      first_name: $scope.applicant.firstname,
+      last_name: $scope.applicant.lastname,
+      emailID: $scope.applicant.email,
+      value: $scope.applicant.pk,
+      jobType: $scope.applicant.job.jobtype,
+      job: $scope.applicant.job.role.name,
     }
-    var method = 'PATCH';
-    var url = '/api/recruitment/applyJob/' + $scope.applicant.pk + '/';
     $http({
-      method: method,
-      url: url,
+      method: 'POST',
+      url: '/api/recruitment/sendCallLetter/',
       data: toSend
     }).
-    then(function(response) {
-      Flash.create('success', 'Done !');
+    then(function() {
+      Flash.create('success', 'Email sent successfully')
     })
   }
+
 
   $scope.onlineTest = function() {
     var toSend = {
       first_name: $scope.applicant.firstname,
       last_name: $scope.applicant.lastname,
       emailID: $scope.applicant.email,
-      value : 'online',
+      value: 'online',
     }
     $http({
       method: 'POST',
@@ -551,30 +571,28 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     $scope.form = {
       'interviewer': '',
       'interviewDate': new Date(),
-      'mode' : '',
-      'sallary':'',
-      'dateOfJoin': new Date(),
+      'mode': '',
     }
   }
   $scope.resetForm();
 
-  $scope.schedule=function(){
-    console.log($scope.form.interviewer.pk,'aaaaaaaaaaaaa');
+  $scope.schedule = function() {
+    console.log($scope.form.interviewer.pk, 'aaaaaaaaaaaaa');
     if (typeof $scope.form.interviewer != 'object') {
-      Flash.create('warning','please Select Suggested Interviewer')
+      Flash.create('warning', 'please Select Suggested Interviewer')
       return
     }
     if ($scope.form.mode.length == 0) {
-      Flash.create('warning','please Select Interview Mode')
+      Flash.create('warning', 'please Select Interview Mode')
       return
     }
     var toSend = {
-      interviewer:$scope.form.interviewer.pk,
+      interviewer: $scope.form.interviewer.pk,
       interviewDate: $scope.form.interviewDate,
       candidate: $scope.applicant.pk,
       mode: $scope.form.mode
     }
-    console.log('svchhhhhhhhhhhhhhhhh',toSend);
+    console.log('svchhhhhhhhhhhhhhhhh', toSend);
     $http({
       method: 'POST',
       url: '/api/recruitment/interview/',
@@ -588,87 +606,99 @@ app.controller("recruitment.applicant.view", function($scope, $state, $users, $s
     })
   }
 
-  $scope.saveData=function(){
-    if (typeof $scope.form.sallary == '') {
-      Flash.create('warning','please Enter Sallary')
-      return
-    }
-    if ($scope.form.dateOfJoin == '') {
-      Flash.create('warning','please Select Date Of Joining')
+  $scope.saveData = function() {
+    if ($scope.applicant.joiningDate == null) {
+      Flash.create('warning', 'please Select Date Of Joining')
       return
     }
     var toSend = {
-      sallary:$scope.form.sallary,
-      dateOfJoin:$scope.form.dateOfJoin
+      hra: $scope.applicant.hra,
+      basic: $scope.applicant.basic,
+      lta: $scope.applicant.lta,
+      special: $scope.applicant.special,
+      taxSlab: $scope.applicant.taxSlab,
+      adHoc: $scope.applicant.adHoc,
+      al: $scope.applicant.al,
+      ml: $scope.applicant.ml,
+      adHocLeaves: $scope.applicant.adHocLeaves,
+      amount: $scope.applicant.amount,
+      notice: $scope.applicant.notice,
+      probation: $scope.applicant.probation,
+      off: $scope.applicant.off,
+      probationNotice: $scope.applicant.probationNotice,
+      noticePeriodRecovery: $scope.applicant.noticePeriodRecovery
+    }
+    if (typeof $scope.applicant.joiningDate == 'object') {
+      toSend.joiningDate = $scope.applicant.joiningDate.toJSON().split('T')[0]
+    } else {
+      toSend.joiningDate = $scope.applicant.joiningDate
     }
     $http({
       method: 'PATCH',
-      url: '/api/recruitment/applyJob/'+ $scope.applicant.pk + '/',
+      url: '/api/recruitment/applyJob/' + $scope.applicant.pk + '/',
       data: toSend
     }).
     then(function(response) {
       Flash.create('success', 'Saved')
-      $scope.resetForm();
-      $scope.fetchDeal()
     })
   }
 
-$scope.interviewerSearch = function(query) {
-  return $http.get('/api/HR/userSearch/?limit=10&username__contains=' + query).
-  then(function(response) {
-    return response.data.results;
-  })
-}
-$scope.getName = function(u) {
-  if (u != undefined && u.first_name != undefined) {
-    return u.first_name + '  ' + u.last_name;
+  $scope.interviewerSearch = function(query) {
+    return $http.get('/api/HR/userSearch/?limit=10&username__contains=' + query).
+    then(function(response) {
+      return response.data.results;
+    })
   }
-}
+  $scope.getName = function(u) {
+    if (u != undefined && u.first_name != undefined) {
+      return u.first_name + '  ' + u.last_name;
+    }
+  }
 
-$scope.sendSMS=function(){
-  console.log("aaaaaaaaaaaaa");
-  $uibModal.open({
-    templateUrl: '/static/ngTemplates/app.recruitment.jobs.applicant.sms.html',
-    size: 'sm',
-    backdrop: true,
-    // resolve: {
-    //   data: function() {
-    //     return $scope.data;
-    //   }
-    // },
-    controller: "workforceManagement.recruitment.jobs.applicant.sms",
-  }).result.then(function() {
+  $scope.sendSMS = function() {
+    console.log("aaaaaaaaaaaaa");
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.recruitment.jobs.applicant.sms.html',
+      size: 'sm',
+      backdrop: true,
+      // resolve: {
+      //   data: function() {
+      //     return $scope.data;
+      //   }
+      // },
+      controller: "workforceManagement.recruitment.jobs.applicant.sms",
+    }).result.then(function() {
 
-  }, function() {
+    }, function() {
 
-  });
-}
-$scope.sendMail=function(){
-  console.log("aaaaaaaaaaaaa");
-  $uibModal.open({
-    templateUrl: '/static/ngTemplates/app.recruitment.jobs.applicant.email.html',
-    size: 'lg',
-    backdrop: true,
-    resolve: {
-      data: function() {
-        return $scope.applicant;
-      }
-    },
-    controller: "workforceManagement.recruitment.jobs.applicant.email",
-  }).result.then(function() {
+    });
+  }
+  $scope.sendMail = function() {
+    console.log("aaaaaaaaaaaaa");
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.recruitment.jobs.applicant.email.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return $scope.applicant;
+        }
+      },
+      controller: "workforceManagement.recruitment.jobs.applicant.email",
+    }).result.then(function() {
 
-  }, function() {
+    }, function() {
 
-  });
-}
-  $scope.callleter=function(data){
+    });
+  }
+  $scope.callleter = function(data) {
 
     var toSend = {
       first_name: $scope.applicant.firstname,
       last_name: $scope.applicant.lastname,
       emailID: $scope.applicant.email,
-      status : $scope.applicant.status,
-      dateSch : data.interviewDate,
+      status: $scope.applicant.status,
+      dateSch: data.interviewDate,
       value: data.mode,
     }
     $http({
@@ -682,15 +712,15 @@ $scope.sendMail=function(){
     var sendData = {
       first_name: $scope.applicant.firstname,
       last_name: $scope.applicant.lastname,
-      resume:$scope.applicant.resume,
+      resume: $scope.applicant.resume,
       interviewer: data.interviewer.profile.pk,
       interviewer_firstname: data.interviewer.first_name,
       interviewer_lastname: data.interviewer.last_name,
-      status : $scope.applicant.status,
-      dateSch : data.interviewDate,
+      status: $scope.applicant.status,
+      dateSch: data.interviewDate,
       value: data.mode,
-      jobType:$scope.applicant.job.jobtype,
-      job : $scope.applicant.job.role.name,
+      jobType: $scope.applicant.job.jobtype,
+      job: $scope.applicant.job.role.name,
     }
     $http({
       method: 'POST',
@@ -701,39 +731,43 @@ $scope.sendMail=function(){
       Flash.create('success', 'Email sent successfully')
     })
   }
-$scope.download=function(){
-  $http({method : 'GET' , url : '/api/recruitment/downloadCallLeter/?value=' + $scope.applicant.pk}).
-  then(function(response) {
-    Flash.create('success' , 'Saved')
-  }, function(err) {
-    Flash.create('danger' , 'Error occured')
-  })
+  $scope.download = function() {
+    $http({
+      method: 'GET',
+      url: '/api/recruitment/downloadCallLeter/?value=' + $scope.applicant.pk
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved')
+    }, function(err) {
+      Flash.create('danger', 'Error occured')
+    })
 
-}
-});
-app.controller("workforceManagement.recruitment.jobs.applicant.sms", function($scope, $state, $users, $stateParams, $http, Flash) {
-});
-app.controller("workforceManagement.recruitment.jobs.applicant.email", function($scope, $state, $users, $stateParams, $http, Flash, data) {
-  $scope.applicant=data,
-  $scope.resetEmail=function(){
-    $scope.form={
-      subject:'',
-      email:''
-    }
   }
+});
+app.controller("workforceManagement.recruitment.jobs.applicant.sms", function($scope, $state, $users, $stateParams, $http, Flash) {});
+
+
+app.controller("workforceManagement.recruitment.jobs.applicant.email", function($scope, $state, $users, $stateParams, $http, Flash, data) {
+  $scope.applicant = data,
+    $scope.resetEmail = function() {
+      $scope.form = {
+        subject: '',
+        email: ''
+      }
+    }
   $scope.resetEmail();
   $scope.send = function() {
-    if($scope.form.email==''){
-          Flash.create('warning', 'Email body is Empty')
+    if ($scope.form.email == '') {
+      Flash.create('warning', 'Email body is Empty')
     }
     var toSend = {
       first_name: $scope.applicant.firstname,
       last_name: $scope.applicant.lastname,
       emailID: $scope.applicant.email,
-      status : $scope.applicant.status,
-      message : $scope.form.email,
-      subject : $scope.form.subject,
-      value : 'email'
+      status: $scope.applicant.status,
+      message: $scope.form.email,
+      subject: $scope.form.subject,
+      value: 'email'
     }
     $http({
       method: 'POST',

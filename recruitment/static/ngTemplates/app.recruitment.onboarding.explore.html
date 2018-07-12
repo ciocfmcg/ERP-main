@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="workforceManagement.recruitment.onboarding.explore">
   <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-6">
       <div class="container-fluid" style="padding-top:20px;">
         <div class="row">
           <div class="col-md-5 text-right">
@@ -52,21 +52,120 @@
         </div>
         <div class="row">
           <div class="col-md-5 text-right">
-            <strong>Sallary:</strong>
+            <strong>Date Of Joining:</strong>
           </div>
           <div class="col-md-7">
-            {{candidate.sallary}}
+            {{candidate.joiningDate}}
           </div>
         </div>
         <div class="row">
           <div class="col-md-5 text-right">
-            <strong>Date Of Joining:</strong>
+            <strong>Basic:</strong>
           </div>
           <div class="col-md-7">
-            {{candidate.dateOfJoin | date : 'dd MMM yyyy , hh:mm:a'}}
+            {{candidate.basic}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>HRA:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.hra}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>LTA:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.lta}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Special Allowance:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.special}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Tax Slab:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.taxSlab}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>AdHOC:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.adHoc}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Annual Leaves:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.al}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Medical Leaves:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.ml}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>AdHOC Leaves:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.adHoc}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Medical Insurance Amount:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.amount}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Notice Period:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.notice}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Probation Period:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.probation}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Notice Period During Probation Period:</strong>
+          </div>
+          <div class="col-md-7">
+            {{candidate.probationNotice}}
           </div>
         </div>
       </div>
+    </div>
+    <div class="col-md-6 pll-right">
+      <button class="btn btn-primary pull-right" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-user'></i>" cancel-text="No" on-confirm="add()" confirm-button-type="primary" cancel-button-type="default" style="width:150px"><i class="fa fa-user"> Add as User</i></button>
     </div>
   </div>
 </div>
