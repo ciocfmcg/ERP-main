@@ -96,7 +96,16 @@ class ArchivedDocumentSerializer(serializers.ModelSerializer):
         ad.user = self.context['request'].user
         from scripts.PDFReader.reader2 import read
         ad.save()
-        pages = read(self.context['request'].FILES['pdf'] )
+
+        import StringIO
+
+
+        f = StringIO.StringIO(self.context['request'].FILES['pdf'].open())
+
+        print dir(self.context['request'].FILES['pdf'])
+
+        print  "string io : ", f , f.len
+        pages = read( f.read())
         titles = []
 
         for pg in pages:
