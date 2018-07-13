@@ -729,7 +729,8 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
   $scope.data = {quantity : 1 , shipping :'express', stage : 'review', promoCode: '' , modeOfPayment : 'Card', address : { street : '' ,  city : '' , state : '', pincode : '' ,country: 'India',mobile :$scope.me.profile.mobile , landMark:''}};
 
   // $scope.promoCode = '';
-  $scope.products = [];
+  $scope.cartProducts = [];
+  $scope.itemProduct = [];
 
   // $scope.$watch(function(){
   //   $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
@@ -856,20 +857,22 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
 
 
   if($state.params.pk=='cart') {
-    $http({method : 'GET' , url : '  /api/ecommerce/cart/?user='+ $scope.me.pk}).
+    console.log('carttttttttttttttttttttt');
+    $http({method : 'GET' , url : '  /api/ecommerce/cart/?user='+ $scope.me.pk+'&typ=cart'}).
      then(function(response){
        $scope.cartItems = response.data;
        $scope.calcTotal();
-       for (var i = 0; i < $scope.cartItems.length; i++) {
-         $scope.products.push({pk:$scope.cartItems[i].product.pk , qty :$scope.cartItems[i].qty})
-       }
+      //  for (var i = 0; i < $scope.cartItems.length; i++) {
+      //    $scope.cartProducts.push({pk:$scope.cartItems[i].product.pk , qty :$scope.cartItems[i].qty})
+      //  }
      })
   }else {
+    console.log('itemmmmmmmmmmmmmmmmmmmmmmmmmm');
     $http({method : 'GET' , url : '/api/ecommerce/listing/' + $state.params.pk + '/'}).
      then(function(response){
        $scope.item = response.data;
        $scope.item.qty = 1;
-       $scope.products.push({pk:$scope.item.pk, qty : $scope.item.qty })
+      //  $scope.itemProduct.push({pk:$scope.item.pk, qty : $scope.item.qty })
        $scope.calcTotal();
      })
   }
@@ -904,7 +907,16 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
       $scope.data.stage = 'shippingDetails';
       $scope.dataToSend.promoCode = $scope.data.promoCode;
       $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
-      $scope.dataToSend.products = $scope.products;
+      if ($scope.cartItems != undefined) {
+        for (var i = 0; i < $scope.cartItems.length; i++) {
+          $scope.cartProducts.push({pk:$scope.cartItems[i].product.pk , qty :$scope.cartItems[i].qty})
+        }
+        $scope.dataToSend.products = $scope.cartProducts
+      }else {
+        $scope.itemProduct.push({pk:$scope.item.pk, qty : $scope.item.qty })
+        $scope.dataToSend.products = $scope.itemProduct
+      }
+      console.log('aaaaaaaaaaaaaaaaaaaaaaaaaa',$scope.dataToSend.products);
     } else if ($scope.data.stage == 'shippingDetails') {
       console.log($scope.data.address);
       if ($scope.data.address.street=='' || $scope.data.address.city=='' || $scope.data.address.pincode=='' || $scope.data.address.country=='' || $scope.data.address.state=='' || $scope.data.address.mobile=='' || $scope.data.address.landMark=='' ) {
@@ -942,17 +954,23 @@ app.controller('controller.ecommerce.checkout' , function($scope , $state, $http
     }
     console.log($scope.dataToSend);
 
+    $scope.data.stage = 'processing';
+
+    $http({method : 'POST' , url : '  /api/ecommerce/createOrder/' , data: $scope.dataToSend}).
+    then(function(response){
+      console.log(response.data);
+      $scope.data.stage = 'confirmation';
+      $scope.inCart = [];
+    })
+
+
+
+
+
     // $scope.data.pickUpTime = $scope.$parent.data.pickUpTime;
     // $scope.data.dropInTime = $scope.$parent.data.dropInTime;
     // $scope.data.location = $scope.$parent.data.location;
 
-    $scope.data.stage = 'processing';
-
-    $http({method : 'POST' , url : '  /api/ecommerce/createOrder/' , data: $scope.dataToSend}).
-     then(function(response){
-       console.log(response.data);
-       $scope.data.stage = 'confirmation';
-     })
 
 
     // var products = [];

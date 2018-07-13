@@ -252,20 +252,26 @@ class TrackingLogSerializer(serializers.ModelSerializer):
         fields = ( 'pk', 'logTxt' , 'time')
 
 class OrderQtyMapSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable')
-
-class OrderQtyMapLiteSerializer(serializers.ModelSerializer):
     productName = serializers.SerializerMethodField()
+    productPrice = serializers.SerializerMethodField()
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'product', 'qty' ,'totalAmount' , 'status','productName')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','productName','productPrice')
     def get_productName(self, obj):
         return obj.product.product.name
+    def get_productPrice(self, obj):
+        return obj.product.product.price
+
+# class OrderQtyMapLiteSerializer(serializers.ModelSerializer):
+#     productName = serializers.SerializerMethodField()
+#     class Meta:
+#         model = OrderQtyMap
+#         fields = ( 'pk', 'product', 'qty' ,'totalAmount' , 'status','productName')
+#     def get_productName(self, obj):
+#         return obj.product.product.name
 
 class OrderSerializer(serializers.ModelSerializer):
-    orderQtyMap = OrderQtyMapLiteSerializer(many = True , read_only = True)
+    orderQtyMap = OrderQtyMapSerializer(many = True , read_only = True)
     class Meta:
         model = Order
         fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo',)
