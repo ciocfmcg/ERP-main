@@ -673,7 +673,7 @@ app.controller('controller.ecommerce.account.orders' , function($scope ,$rootSco
                 $scope.amtToBeRefunded = 0;
 
                 for (var i = 0; i < $scope.items.length; i++) {
-                  $scope.amtToBeRefunded =   $scope.amtToBeRefunded + ($scope.items[i].totalAmount * $scope.items[i].qty)
+                  $scope.amtToBeRefunded =   $scope.amtToBeRefunded + ( ($scope.items[i].totalAmount - $scope.items[i].discountAmount ) * $scope.items[i].qty)
                 }
 
                 $scope.cancel = function () {
@@ -735,7 +735,7 @@ app.controller('controller.ecommerce.account.orders' , function($scope ,$rootSco
                 $scope.amtToBeRefunded = 0;
 
                 for (var i = 0; i < $scope.items.length; i++) {
-                  $scope.amtToBeRefunded =   $scope.amtToBeRefunded + ($scope.items[i].totalAmount * $scope.items[i].qty)
+                  $scope.amtToBeRefunded =   $scope.amtToBeRefunded + (($scope.items[i].totalAmount - $scope.items[i].discountAmount) * $scope.items[i].qty)
                 }
 
                 $scope.return = function () {

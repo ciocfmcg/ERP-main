@@ -55,11 +55,11 @@
           <div class="col-md-offset-1 col-md-4">
             <strong>Products </strong>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <strong>Qty </strong>
           </div>
-          <div class="col-md-2">
-            <strong>Amount </strong>
+          <div class="col-md-3">
+            <strong>Amount Paid</strong>
           </div>
           <div class="col-md-3">
             <strong>Status </strong>
@@ -72,11 +72,11 @@
           <div class="col-md-4">
             {{i.productName.slice(0,25)}}
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             {{i.qty}}
           </div>
-          <div class="col-md-2">
-            <i class="fa fa-inr"></i> {{i.totalAmount * i.qty}}
+          <div class="col-md-3">
+            <i class="fa fa-inr"></i> {{i.totalAmount -  i.discountAmount}}
           </div>
           <div class="col-md-3">
             {{i.status}}
@@ -85,10 +85,10 @@
       </div>
       <div class="col-md-2">
         <div class="row">
-          <button  type="button" name="button" class="btn btn-default" ng-click="rowActionClicked('cancel')" > Cancel </button>
+          <button  type="button" name="button" class="btn btn-primary" ng-click="rowActionClicked('cancel')" > Cancel </button>
         </div>
         <div class="row" style="padding-top:10px; padding-bottom:10px;">
-          <button  type="button" name="button" class="btn btn-default" ng-click="rowActionClicked('return')" > Return </button>
+          <button  type="button" name="button" class="btn btn-primary" ng-click="rowActionClicked('return')" > Return </button>
         </div>
         <div class="row">
           <span class="text-muted"> Select one or more item to cancel or return </span>
