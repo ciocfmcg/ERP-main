@@ -145,9 +145,82 @@
 
 app.controller('businessManagement.ecommerce.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce) {
 
-  console.log('KKKKKKKKKKKKKKKK',$scope.tab.data.order);
+  console.log('KKKKKKKKKKKKKKKK', $scope.tab.data.order);
   $scope.order = $scope.tab.data.order
   $scope.expanded = false;
+  // $scope.sts = 'aaa'
+  $scope.orderItemCancel = function(idx) {
+    console.log(idx, $scope.order.orderQtyMap[idx]);
+    $http({
+      method: 'PATCH',
+      url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[idx].pk + '/',
+      data: {
+        status: 'cancelled'
+      }
+    }).
+    then((function(idx) {
+      return function(response) {
+        console.log(response.data);
+        Flash.create('success', 'Item Has Cancelled');
+        $scope.order.orderQtyMap[idx].status = response.data.status
+        $scope.order.orderQtyMap[idx].refundAmount = response.data.refundAmount
+        $scope.order.orderQtyMap[idx].refundStatus = response.data.refundStatus
+        $scope.saveLog(idx, 'This Item Has Cancelled')
+      }
+    })(idx))
+  }
+  $scope.orderApproved = function(pk) {
+    console.log(pk);
+    $http({
+      method: 'PATCH',
+      url: '/api/ecommerce/order/' + pk + '/',
+      data: {
+        approved: true
+      }
+    }).
+    then(function(response) {
+      console.log(response.data);
+      Flash.create('success', 'Approved');
+      $scope.order.approved = response.data.approved
+    })
+  }
+  $scope.saveLog = function(idx, msg) {
+    console.log(idx, $scope.order.orderQtyMap[idx], msg);
+    var tosend = {
+      logTxt: msg,
+      qMapPk: $scope.order.orderQtyMap[idx].pk
+    }
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/trackingLog/',
+      data: tosend
+    }).
+    then((function(idx) {
+      return function(response) {
+        console.log(response.data);
+        $scope.order.orderQtyMap[idx].logText = ''
+        $scope.order.orderQtyMap[idx].trackingLog.push(response.data)
+      }
+    })(idx))
+  }
+  $scope.changeStatus = function(idx, sts) {
+    console.log('ssssssssssssssssssssss', idx, sts);
+    $http({
+      method: 'PATCH',
+      url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[idx].pk + '/',
+      data: {
+        status: sts
+      }
+    }).
+    then((function(idx, sts) {
+      return function(response) {
+        Flash.create('success', 'Status Changed To ' + sts);
+        console.log(response.data);
+        $scope.order.orderQtyMap[idx].status = response.data.status
+        $scope.saveLog(idx, 'This Item Has ' + sts)
+      }
+    })(idx, sts))
+  }
 
 });
 
