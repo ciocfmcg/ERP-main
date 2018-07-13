@@ -1,28 +1,16 @@
 <div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" >
-  <div class="container-fluid card" style="padding-bottom:10px;" ng-click="data.status!='created'?rowActionClicked('info'):''" ng-style="data.status!='created' && {'cursor':'pointer'}">
-    <div class="row" style="border-bottom: 1px solid #dedede;height:80px">
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row" style="border-bottom: 1px solid #dedede;">
       <span class="pull-right" style="padding-right:15px"><h4>#{{data.pk}}</h4></span>
-      <span class="text-center" style="padding:10px"><h3>{{data.service.name}}</h3></span>
+      <span class="text-center"><h3>{{data.created | date : dd-MMM-yyyy}}</h3></span>
     </div>
-    <div class="row container-fluid" style="padding-top:20px;height:70px;">
-      <div class="col-md-10">
-        <strong>Status:</strong> {{data.status}} <br>
-        <span >{{data.products.length}} Item Selected</span><br>
-        <strong>Total Value:</strong> <i class="fa fa-inr"></i> {{data.totalamount}} <br>
-      </div>
-      <div class="col-md-2" ng-if="data.status=='created'">
-        <div style="padding-right:20px;">
-          <div class="row">
-            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
-            <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
-          </span>
-        </div><br>
-          <div class="row">
-            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('info')">
-            <i class="fa fa-info fa-lg" style="margin-top:0px;"></i>
-          </span>
-          </div>
-        </div>
+    <div class="row container-fluid" style="padding-top:20px;">
+      <div class="col-md-12">
+        <strong>Amount :</strong> <i class="fa fa-inr"></i> {{data.totalAmount}} <br>
+        <strong>Shopping :</strong> {{data.modeOfShopping}} <br>
+        <strong>Order City :</strong> {{data.city}} <br>
+        <strong>Order State :</strong> {{data.state}} <br>
+        <span class="pull-right" ><i class="fa fa-info-circle fa-2x" ng-click="rowActionClicked('info')" style="cursor:pointer"></i></span>
       </div>
     </div>
   </div>

@@ -143,48 +143,11 @@
 
 
 
-app.controller('businessManagement.ecommerce.orders.item', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce) {
-  $scope.bookingTime = function() {
-    return Math.ceil((new Date($scope.data.end) - new Date($scope.data.start)) / 3600000);
-  }
-  $scope.getBookingAmount = function() {
-    h = $scope.bookingTime()
-    if (h < 0) {
-      return 0
-    } else {
-      return $scope.data.rate * $scope.data.quantity * h
-    }
-  }
-  $scope.$watch('data.offer', function(newValue, oldValue) {
-    if (typeof $scope.data.offer != 'number') {
-      return;
-    }
-    $http({
-      method: 'GET',
-      url: '/api/ecommerce/offering/' + $scope.data.offer + '/'
-    }).
-    then(function(response) {
-      $scope.data.offer = response.data;
-      $http({
-        method: 'GET',
-        url: '/api/ecommerce/listing/' + response.data.item + '/'
-      }).
-      then(function(response) {
-        $scope.data.item = response.data;
-      })
-    })
-  });
-  $scope.getStatusClass = function(input) {
-    if (input == 'inProgress') {
-      return 'fa-spin fa-spinner';
-    } else if (input == 'complete') {
-      return 'fa-check';
-    } else if (input == 'canceledByVendor') {
-      return 'fa-ban';
-    } else if (input == 'new') {
-      return 'fa-file'
-    }
-  }
+app.controller('businessManagement.ecommerce.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce) {
+
+  console.log('KKKKKKKKKKKKKKKK',$scope.tab.data.order);
+  $scope.order = $scope.tab.data.order
+  $scope.expanded = false;
 
 });
 
@@ -216,34 +179,19 @@ app.controller('businessManagement.ecommerce.orders', function($scope, $http, $a
 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
-        if (action == 'edit') {
-          var title = 'Edit Contact :';
-          var appType = 'contactEditor';
-        } else if (action == 'details') {
-          var title = 'Details :';
-          var appType = 'contactExplorer';
+        if (action == 'info') {
+          var title = 'Order Details : ';
+          var appType = 'orderInfo';
         }
 
-
-        console.log({
-          title: title + $scope.data.tableData[i].name,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i
-          },
-          active: true
-        });
-
-
         $scope.addTab({
-          title: title + $scope.data.tableData[i].name,
+          title: title + $scope.data.tableData[i].pk,
           cancel: true,
           app: appType,
           data: {
             pk: target,
-            index: i
+            index: i,
+            order: $scope.data.tableData[i]
           },
           active: true
         })
