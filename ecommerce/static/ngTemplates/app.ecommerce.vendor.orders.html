@@ -13,8 +13,8 @@
             {{tab.title}}
             <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
         </uib-tab-heading>
-        <div ng-if="tab.app == 'contactExplorer'">
-            <div ng-include="'/static/ngTemplates/app.clientRelationships.contact.explore.html'"></div>
+        <div ng-if="tab.app == 'orderInfo'">
+            <div ng-include="'/static/ngTemplates/app.ecommerce.vendor.orders.explore.html'"></div>
         </div>
     </uib-tab>
 

@@ -96,24 +96,24 @@ class CreateOrderAPI(APIView):
         oQMp = []
         totalAmount = 0
         msg = 'Error'
-        userCart = Cart.objects.filter(user=request.user)
+        userCart = Cart.objects.filter(user=request.user,typ='cart')
         print userCart.count(),userCart
         for i in request.data['products']:
             pObj = listing.objects.get(pk = i['pk'])
-            pp = pObj.product.price
+            pp = int(round(pObj.product.price)) * i['qty']
             if pp > 0:
                 a = pp - (pObj.product.discount*pp)/100
                 b = a - (request.data['promoCodeDiscount']*a)/100
             else:
                 b=0
-            totalAmount += b * i['qty']
-            print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
+            totalAmount += int(round(b))
+            print {'product':pObj,'qty':i['qty'],'totalAmount':pp,'discountAmount':pp-int(round(b))}
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':pp,'discountAmount':pp-int(round(b))})
             oQMp.append(oQMObj)
         else:
             data = {
             'user':User.objects.get(pk=request.user.pk),
-            'totalAmount' : round(totalAmount,2),
+            'totalAmount' : int(round(totalAmount)),
             'paymentMode' : str(request.data['modeOfPayment']),
             'modeOfShopping' : str(request.data['modeOfShopping']),
             'paidAmount' : str(request.data['paidAmount']),
