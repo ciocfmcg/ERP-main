@@ -71,6 +71,134 @@
           </div>
       </uib-tab>
 
+      <uib-tab>
+          <uib-tab-heading>
+              Daily Bin
+              <i class="fa fa-newspaper-o"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+
+            <h1>15 July 2018</h1>
+
+            <div ng-repeat="article in articles" class="row">
+              <div class="card container-fluid" style="padding-top:20px;padding-bottom:20px;">
+                <div class="col-md-2">
+                  <div class="col-md-2">
+                    <i class="fa fa-globe"></i>
+                  </div>
+                  <div class="col-md-10">
+                    {{article.source}}
+                  </div>
+                </div>
+
+
+                <div class="col-md-4">
+                  <h4>{{article.title}}</h4>
+                </div>
+                <div class="col-md-2">
+                  <label>Published</label> <br>
+                  {{article.publishedOn | timeAgo}}
+                </div>
+
+                <div class="col-md-2">
+                  <label>Views</label> <br>
+                  {{article.reads}}
+                </div>
+
+                <div class="col-md-2">
+                  <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-default">
+                      Read
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      Archive
+                    </button>
+                    <button type="button" class="btn btn-danger">
+                      Delete
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+
+
+
+
+          </div>
+      </uib-tab>
+
+      <uib-tab>
+          <uib-tab-heading>
+              Sources
+              <i class="fa fa-globe"></i>
+          </uib-tab-heading>
+          <div class="container-fluid" style="margin-top:20px;">
+            <div class="col-md-6">
+
+              <h3>Add a source</h3>
+
+              <div class="form-group">
+                <label>Website</label>
+                <input type="text" class="form-control" id="" placeholder="">
+              </div>
+
+
+              <div class="form-group">
+                <label>Keyword</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="">
+                  <span class="input-group-addon btn btn-primary">Add</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4" ng-repeat="key in keys">
+                  <div class="card">
+                    {{key}} <i class="fa fa-times pull-right"></i>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="form-group" style="margin-top:30px;">
+                <label>Scraping frequency</label>
+
+                <select class="form-control" name="">
+                  <option>Hourly</option>
+                  <option>Daily</option>
+                  <option>Monthly</option>
+                </select>
+
+
+                <button type="button" class="btn btn-default" style="margin-top:30px;">
+                  Save
+                </button>
+
+
+              </div>
+
+
+
+            </div>
+            <div class="col-md-6">
+
+              <div class="row" ng-repeat="source in sources">
+                <div class="card container-fluid" style="margin-bottom:30px;">
+                  Website : {{source.name}} <br>
+                  Keywords : {{source.keywords}} <br>
+                  Frequency : Daily
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+      </uib-tab>
+
+
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading >
               {{tab.title}}
