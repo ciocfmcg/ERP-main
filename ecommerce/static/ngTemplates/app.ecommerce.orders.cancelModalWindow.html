@@ -12,7 +12,7 @@
         <strong>Qty </strong>
       </div>
       <div class="col-md-3">
-        <strong>Amount </strong>
+        <strong>Amount Paid </strong>
       </div>
     </div>
     <div class="row" ng-repeat="i in items">
@@ -23,7 +23,7 @@
         {{i.qty}}
       </div>
       <div class="col-md-3">
-        <i class="fa fa-inr"></i> {{i.totalAmount * i.qty}}
+        <i class="fa fa-inr"></i> {{i.totalAmount - i.discountAmount}}
       </div>
     </div>
     <hr>
