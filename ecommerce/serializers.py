@@ -218,7 +218,7 @@ class ActivitiesSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ('pk' ,'user' , 'title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country')
+        fields = ('pk' ,'user' , 'title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark')
     def create(self , validated_data):
         print '******************'
         a = Address(**validated_data)
@@ -231,7 +231,7 @@ class AddressSerializer(serializers.ModelSerializer):
         profObj.save()
         return a
     def update(self ,instance, validated_data):
-        for key in ['title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country']:
+        for key in ['title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -250,13 +250,37 @@ class TrackingLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrackingLog
         fields = ( 'pk', 'logTxt' , 'time')
+    def create(self , validated_data):
+        print '******************'
+        print self.context['request'].data
+        l = TrackingLog(**validated_data)
+        l.save()
+        if 'qMapPk'in self.context['request'].data:
+            qMapObj = OrderQtyMap.objects.get(pk=int(self.context['request'].data['qMapPk']))
+            qMapObj.trackingLog.add(l)
+        return l
 
 class OrderQtyMapSerializer(serializers.ModelSerializer):
     productName = serializers.SerializerMethodField()
     productPrice = serializers.SerializerMethodField()
+    trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
         fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','productName','productPrice')
+    def update(self ,instance, validated_data):
+        print 'updateeeeeeeeeeeeeeeeeee'
+        for key in ['product', 'qty' ,'totalAmount' , 'status' , 'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable',]:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        if instance.status == 'cancelled' or instance.status == 'returnToOrigin':
+            instance.refundAmount = instance.totalAmount - instance.discountAmount
+            instance.refundStatus = True
+            instance.save()
+        return instance
+
     def get_productName(self, obj):
         return obj.product.product.name
     def get_productPrice(self, obj):

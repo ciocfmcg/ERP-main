@@ -37,37 +37,61 @@
   <div class="row anim-in-out anim-fade"  data-anim-speed="200" ng-if="data.showInfo">
     <hr>
     <div class="container-fluid">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="row">
-          <div class="col-md-5">
-            <strong>Address :</strong>
-          </div>
-          <div class="col-md-7">
-            {{data.street}} ,
-            {{data.city}} <br>
-            {{data.state}} ,
-            {{data.landMark}} (landmark) <br>
-            {{data.pincode}}
-          </div>
+          <strong>Address :</strong>
+          <span ng-if="data.street"> {{data.street}} ,</span>
+          <span ng-if="data.city"></span>  {{data.city}} ,
+          <span ng-if="data.state"></span>  {{data.state}} ,
+          <span ng-if="data.pincode"></span>  {{data.pincode}} ,
+         <span ng-if="data.landMark"></span> landmark - {{data.landMark}}
         </div>
         <div class="row">
-          <div class="col-md-5">
-              <strong>Mobile :</strong>
+          <strong>Mobile :</strong> <span ng-if="data.mobileNo" > {{data.mobileNo}}</span>
+        </div>
+      </div>
+      <div class="col-md-7" style="border-left: 1px solid #e0e0e0;" >
+        <div class="row">
+          <div class="col-md-offset-1 col-md-4">
+            <strong>Products </strong>
           </div>
-          <div class="col-md-7">
-            {{data.mobileNo}}
+          <div class="col-md-2">
+            <strong>Qty </strong>
+          </div>
+          <div class="col-md-2">
+            <strong>Amount </strong>
+          </div>
+          <div class="col-md-3">
+            <strong>Status </strong>
+          </div>
+        </div>
+        <div class="row" ng-repeat="i in data.orderQtyMap">
+          <div class="col-md-1">
+             <input type="checkbox" ng-model="i.selected" >
+          </div>
+          <div class="col-md-4">
+            {{i.productName.slice(0,25)}}
+          </div>
+          <div class="col-md-2">
+            {{i.qty}}
+          </div>
+          <div class="col-md-2">
+            <i class="fa fa-inr"></i> {{i.totalAmount * i.qty}}
+          </div>
+          <div class="col-md-3">
+            {{i.status}}
           </div>
         </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-2">
         <div class="row">
-          <strong>Items :</strong>
-          <div ng-repeat="i in data.orderQtyMap">
-            <span>{{i.qty}} -</span>
-            <span> {{i.productName}}</span>
-            <span>for {{i.totalAmount * i.qty}}</span>
-
-          </div>
+          <button  type="button" name="button" class="btn btn-default" ng-click="rowActionClicked('cancel')" > Cancel </button>
+        </div>
+        <div class="row" style="padding-top:10px; padding-bottom:10px;">
+          <button  type="button" name="button" class="btn btn-default" ng-click="rowActionClicked('return')" > Return </button>
+        </div>
+        <div class="row">
+          <span class="text-muted"> Select one or more item to cancel or return </span>
         </div>
       </div>
       <!-- <div class="col-md-2">

@@ -43,6 +43,7 @@ from rest_framework.decorators import api_view
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 # from .helper import *
+import datetime
 from API.permissions import *
 from HR.models import accountsKey
 from reportlab.graphics.barcode.qr import QrCodeWidget
@@ -50,6 +51,7 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.db.models import F ,Value,CharField,Prefetch
 import ast
+from reportlab.graphics import barcode , renderPDF
 from django.utils import timezone
 
 def ecommerceHome(request):
@@ -87,302 +89,6 @@ class PromoCheckAPI(APIView):
             else:
                 toReturn = 'Invalid Promocode'
             return Response({'msg':toReturn,'val':val}, status = status.HTTP_200_OK)
-
-
-themeColor = colors.HexColor('#227daa')
-
-styles=getSampleStyleSheet()
-styleN = styles['Normal']
-styleH = styles['Heading1']
-
-
-# settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
-
-
-class FullPageImage(Flowable):
-    def __init__(self , img):
-        Flowable.__init__(self)
-        self.image = img
-
-    def draw(self):
-        img = utils.ImageReader(self.image)
-
-        iw, ih = img.getSize()
-        aspect = ih / float(iw)
-        width, self.height = PAGE_SIZE
-        width -= 3.5*cm
-        self.canv.drawImage(os.path.join(BASE_DIR , self.image) , -1 *MARGIN_SIZE + 1.5*cm , -1* self.height + 5*cm , width, aspect*width)
-
-class expanseReportHead(Flowable):
-
-    def __init__(self, request , contract):
-        Flowable.__init__(self)
-        self.req = request
-        self.contract = contract
-    #----------------------------------------------------------------------
-    def draw(self):
-        """
-        draw the floable
-        """
-        print self.contract,'dgdfgdgddghgfhf'
-        now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-        # print self.contract.status
-        # if self.contract.status in ['quoted']:
-        #     docTitle = 'SALES QUOTATION'
-        # else:
-        docTitle = 'TAX INVOICE'
-
-        # passKey = '%s%s'%(str(self.req.user.date_joined.year) , self.req.user.pk) # also the user ID
-        # docID = '%s%s%s' %(self.contract.totalAmount, now.year , self.contract.pk)
-
-        pSrc = '''
-        <font size=14>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<u>%s</u></font><br/><br/><br/>
-        <font size=9>
-        <strong>Dated:</strong> %s<br/><br/>
-        </font><br/><br/>
-        ''' % ( docTitle , now.strftime("%d-%B-%Y - %H:%M:%S"))
-        story = []
-        head = Paragraph(pSrc , styleN)
-        head.wrapOn(self.canv , 200*mm, 50*mm)
-        head.drawOn(self.canv , 0*mm, -10*mm)
-
-        # barcode_value = "1234567890"
-        # barcode39 = barcode.createBarcodeDrawing('EAN13', value = barcode_value,barWidth=0.3*mm,barHeight=10*mm)
-        #
-        # barcode39.drawOn(self.canv,160*mm,0*mm)
-        # self.canv.drawImage(os.path.join(BASE_DIR , 'logo.png') , 80*mm , 0*mm , 2*cm, 2*cm)
-
-def addPageNumber(canvas, doc):
-    """
-    Add the page number
-    """
-    print doc.contract
-    now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-    passKey = '%s%s'%(str(doc.request.user.date_joined.year) , doc.request.user.pk) # also the user ID
-    docID = '%s%s%s' %(doc.contract.totalAmount, now.year , doc.contract.pk)
-
-    qrw = QrCodeWidget('http://cioc.co.in/documents?id=%s&passkey=%s&app=crmInvoice' %(docID , passKey))
-    b = qrw.getBounds()
-
-    w=b[2]-b[0]
-    h=b[3]-b[1]
-
-    # d = Drawing(60,60,transform=[60./w,0,0,60./h,0,0])
-    # d.add(qrw)
-    # renderPDF.draw(d, canvas ,180*mm,270*mm)
-
-    pass
-
-    # page_num = canvas.getPageNumber()
-    # text = "<font size='8'>Page #%s</font>" % page_num
-    # p = Paragraph(text , styleN)
-    # p.wrapOn(canvas , 50*mm , 10*mm)
-    # p.drawOn(canvas , 100*mm , 10*mm)
-
-
-
-class PageNumCanvas(canvas.Canvas):
-
-    #----------------------------------------------------------------------
-    def __init__(self, *args, **kwargs):
-        """Constructor"""
-        canvas.Canvas.__init__(self, *args, **kwargs)
-        self.pages = []
-
-    #----------------------------------------------------------------------
-    def showPage(self):
-        """
-        On a page break, add information to the list
-        """
-        self.pages.append(dict(self.__dict__))
-        self._startPage()
-
-    #----------------------------------------------------------------------
-    def save(self):
-        """
-        Add the page number to each page (page x of y)
-        """
-        page_count = len(self.pages)
-
-        for page in self.pages:
-            self.__dict__.update(page)
-            # self.draw_page_number(page_count)
-            # self.drawLetterHeadFooter()
-            canvas.Canvas.showPage(self)
-
-        canvas.Canvas.save(self)
-
-
-    #----------------------------------------------------------------------
-    def draw_page_number(self, page_count):
-        """
-        Add the page number
-        """
-
-        text = "<font size='8'>Page #%s of %s</font>" % (self._pageNumber , page_count)
-        p = Paragraph(text , styleN)
-        p.wrapOn(self , 50*mm , 10*mm)
-        p.drawOn(self , 100*mm , 10*mm)
-
-
-def genInvoice(response , contract, request):
-
-
-    MARGIN_SIZE = 8 * mm
-    PAGE_SIZE = A4
-
-    # c = canvas.Canvas("hello.pdf")
-    # c.drawString(9*cm, 19*cm, "Hello World!")
-
-    pdf_doc = SimpleDocTemplate(response, pagesize = PAGE_SIZE,
-        leftMargin = MARGIN_SIZE, rightMargin = MARGIN_SIZE,
-        topMargin = 4*MARGIN_SIZE, bottomMargin = 3*MARGIN_SIZE)
-
-    # data = [['', '', '', 'Grand Total', '' , pFooterGrandTotal]]
-
-    pdf_doc.contract = contract
-    pdf_doc.request = request
-
-    tableHeaderStyle = styles['Normal'].clone('tableHeaderStyle')
-    tableHeaderStyle.textColor = colors.white;
-    tableHeaderStyle.fontSize = 7
-
-    pHeadProd = Paragraph('<strong>Product</strong>' , tableHeaderStyle)
-    pHeadQty = Paragraph('<strong>Quantity</strong>' , tableHeaderStyle)
-    pHeadDisc = Paragraph('<strong>Discount</strong>' , tableHeaderStyle)
-    pHeadPrice = Paragraph('<strong>Price</strong>' , tableHeaderStyle)
-
-    # # bookingTotal , bookingHrs = getBookingAmount(o)
-    #
-    # pFooterQty = Paragraph('%s' % ('o.quantity') , styles['Normal'])
-    # pFooterTax = Paragraph('%s' %('tax') , styles['Normal'])
-    # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
-    # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
-
-    data = [[ pHeadProd, pHeadQty, pHeadDisc, pHeadPrice]]
-
-    totalQuant = 0
-    totalTax = 0
-    grandTotal = 0
-    tableBodyStyle = styles['Normal'].clone('tableBodyStyle')
-    tableBodyStyle.fontSize = 7
-
-    for i in contract.orderQtyMap.all():
-        print i.totalAmount,'sdfrgfdgdgfgdgdfg'
-    #     pDescSrc = i['desc']
-    #
-    #     totalQuant += i['quantity']
-    #     totalTax += i['totalTax']
-        grandTotal += i.totalAmount
-        pBodyProd = Paragraph(str(i.product.product.name) , tableBodyStyle)
-        pBodyQty = Paragraph( str(i.qty) , tableBodyStyle)
-        pBodyDisc = Paragraph(str(i.discountAmount) , tableBodyStyle)
-        pBodyPrice = Paragraph(str(i.totalAmount) , tableBodyStyle)
-    #     pBodyProd = Paragraph('Service' , tableBodyStyle)
-    #     pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
-    #     pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
-    #     pBodyPrice = Paragraph(str(i['rate']) , tableBodyStyle)
-    #     if 'taxCode' in i:
-    #         taxCode = '%s(%s %%)' %(i['taxCode'] , i['tax'])
-    #     else:
-    #         taxCode = ''
-    #
-    #     pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
-    #     pBodyTax = Paragraph(str(i['totalTax']) , tableBodyStyle)
-    #     pBodyTotal = Paragraph(str(i['quantity']*i['rate']) , tableBodyStyle)
-    #     pBodySubTotal = Paragraph(str(i['subtotal']) , tableBodyStyle)
-    #
-        data.append([pBodyProd, pBodyQty, pBodyDisc,pBodyPrice])
-    #
-    # contract.grandTotal = grandTotal
-    # contract.save()
-
-    # data.append[[ pBodyProd, pBodyQty, pBodyPrice, pBodyDisc]]
-
-    tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
-    tableGrandStyle.fontSize = 10
-
-
-    data += [['', Paragraph('Grand Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
-    t=Table(data)
-    ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
-                ('VALIGN',(0,1),(-1,-3),'TOP'),
-                ('VALIGN',(0,-2),(-1,-2),'TOP'),
-                ('VALIGN',(0,-1),(-1,-1),'TOP'),
-                ('SPAN',(-3,-1),(-2,-1)),
-                ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
-                ('BACKGROUND',(0,0),(-1,0) , themeColor),
-                ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
-                ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
-                # ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
-                ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
-                # ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
-                ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
-                # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
-            ])
-    t.setStyle(ts)
-    t._argW[0] = 6*cm
-    t._argW[1] = 2*cm
-    t._argW[2] = 2*cm
-    t._argW[3] = 2*cm
-    # t._argW[4] = 2*cm
-    # t._argW[5] = 2*cm
-    # t._argW[6] = 1.6*cm
-    # t._argW[7] = 2*cm
-
-    #add some flowables
-
-
-
-    story = []
-
-    expHead = expanseReportHead(request , contract)
-    story.append(Spacer(2.5,2*cm))
-    story.append(expHead)
-    story.append(Spacer(2.5,0.75*cm))
-
-    # adrs = contract.deal.company.address
-    #
-    # if contract.deal.company.tin is None:
-    #     tin = 'NA'
-    # else:
-    #     tin = contract.deal.company.tin
-
-    summryParaSrc = """
-    <font size='11'><strong>Customer details:</strong></font> <br/><br/>
-    <font size='9'>
-    <strong>Dispatch Address:</strong>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;<strong>Address:</strong><br/>
-    %s %s&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;%s %s <br/>
-    %s %s,&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;%s %s, <br/>
-    %s %s - %s&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;%s %s -%s
-    </font><br/><br/><br/>
-    """ %(contract.user.first_name ,contract.user.last_name,contract.user.first_name ,contract.user.last_name,contract.landMark,contract.street,contract.landMark,contract.street,contract.city,contract.state,contract.pincode,contract.city,contract.state,contract.pincode)
-    story.append(Paragraph(summryParaSrc , styleN))
-    story.append(t)
-    story.append(Spacer(2.5,0.5*cm))
-
-    # if contract.status in ['billed' , 'approved' , 'recieved']:
-    #     summryParaSrc = settingsFields.get(name = 'regulatoryDetails').value
-    #     story.append(Paragraph(summryParaSrc , styleN))
-    #
-    #     summryParaSrc = settingsFields.get(name = 'bankDetails').value
-    #     story.append(Paragraph(summryParaSrc , styleN))
-    #
-    #     tncPara = settingsFields.get(name = 'tncInvoice').value
-    #
-    # else:
-    #     tncPara = settingsFields.get(name = 'tncQuotation').value
-    #
-    # story.append(Paragraph(tncPara , styleN))
-
-    # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
-    # for s in scans:
-    #     story.append(PageBreak())
-    #     story.append(FullPageImage(s))
-
-
-    pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
-
 
 
 
@@ -433,24 +139,59 @@ class CreateOrderAPI(APIView):
             orderObj.save()
             msg = 'Sucess'
             userCart.delete()
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="order_invoice%s_%s_%s.pdf"' % (
-            orderObj.totalAmount, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, orderObj.pk)
-            genInvoice(response, orderObj, request)
-            f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/order_invoice%s%s_%s.pdf' %
-                              ( orderObj.totalAmount, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, orderObj.pk)), 'wb')
-            f.write(response.content)
-            f.close()
-            email_subject = "Order Details:"
-            msgBody = " Your Order Details"
+            # response = HttpResponse(content_type='application/pdf')
+            # response['Content-Disposition'] = 'attachment; filename="order_invoice%s_%s_%s.pdf"' % (
+            # orderObj.totalAmount, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, orderObj.pk)
+            # genInvoice(response, orderObj, request)
+            # f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/order_invoice%s%s_%s.pdf' %
+            #                   ( orderObj.totalAmount, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, orderObj.pk)), 'wb')
+            # f.write(response.content)
+            # f.close()
+            value = []
+            totalPrice = 0
+            promoAmount = 0
+            total=0
+            promoObj = Promocode.objects.all()
+            for p in promoObj:
+                if str(p.name)==str(orderObj.promoCode):
+                    promoAmount = p.discount
+            print promoAmount
+            a = datetime.date.today().year
+            print str(a),'aaaaaaaaaa',orderObj.pk
+            docID = str(a) + str(orderObj.pk)
+            print docID,'aaaaaaaaaaaaaaaaaaaaabbbbbbbbb'
+            for i in orderObj.orderQtyMap.all():
+                totalPrice=i.qty*i.totalAmount
+                total+=totalPrice
+                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":i.totalAmount})
+            ctx = {
+                'heading' : "Invoice Details",
+                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                'linkUrl': 'cioc.co.in',
+                'sendersAddress' : 'CIOC',
+                # 'sendersPhone' : '122004',
+                'total': total,
+                'value':value,
+                'docID':docID,
+                'data':orderObj,
+                'promoAmount':promoAmount,
+                'linkedinUrl' : 'https://www.linkedin.com/',
+                'fbUrl' : 'https://facebook.com',
+                'twitterUrl' : 'https://twitter.com',
+            }
+            print ctx
+            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+            # email_subject = "Order Details:"
+            # msgBody = " Your Order has been placed and details are been attached"
             contactData.append(str(orderObj.user.email))
-            print contactData,'hgghhgghh'
-            msg = EmailMessage(email_subject, msgBody,  to= contactData )
-            a = str(f).split('media_root/')[1]
-            b = str(a).split("', mode")[0]
-            msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
+            print 'aaaaaaaaaaaaaaa'
+            msg = EmailMessage("Order Details" , email_body, to= contactData  )
+            msg.content_subtype = 'html'
+            # a = str(f).split('media_root/')[1]
+            # b = str(a).split("', mode")[0]
+            # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
             msg.send()
-        return Response({}, status = status.HTTP_200_OK)
+            return Response({}, status = status.HTTP_200_OK)
 
 
 class fieldViewSet(viewsets.ModelViewSet):
@@ -654,33 +395,38 @@ class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
         emailAddr=[]
+        request.data['value'],'aaaaaaaaaaaaaa'
         oq = OrderQtyMap.objects.filter(pk = request.data['value'])
-        print c.pk
-        o = Order.objects.filter(orderQtyMap = c.pk)
-        customer = User.objects.filter(pk = d.pk)
-        emailAddr.append(customer.email)
+        for i in oq:
+            productId = i.pk
+            productStatus = i.status
+            productName = i.product.product.name
+            qty = i.qty
+        print str(productName)
+        o = Order.objects.filter(orderQtyMap = productId)
+        for j in o:
+            orderId = j.pk
+            emailAddr.append(j.user.email)
+        # emailAddr.append(customer.email)
         email_subject = "Order Details:"
-        if oq.status == 'created':
-            msgBody = "your order is been placed"
-        elif oq.status == 'packed':
-            msgBody = "packed"
-        elif oq.status == 'shipped':
-            msgBody = "shipped"
-        elif oq.status == 'inTransit':
-            msgBody = "inTransit"
-        elif oq.status == 'reachedNearestHub':
-            msgBody = "reachedNearestHub"
-        elif oq.status == 'reachedNearestHub':
-            msgBody = "reachedNearestHub"
-        elif oq.status == 'outForDelivery':
-            msgBody = "outForDelivery"
-        elif oq.status == 'delivered':
-            msgBody = "delivered"
-        elif oq.status == 'cancelled':
-            msgBody = "cancelled"
-        elif oq.status == 'returned':
-            msgBody = "returned"
-        # msgBody+=
+        if productStatus == 'created':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been placed"
+        elif productStatus == 'packed':
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been packed"
+        elif productStatus == 'shipped':
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from packed to shipped"
+        elif productStatus == 'inTransit':
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from shipped to  in Transit"
+        elif productStatus == 'reachedNearestHub':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has Reached to the nearest Hub"
+        elif productStatus == 'outForDelivery':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" is Out for delivery"
+        elif productStatus == 'delivered':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been Delivered to you"
+        elif productStatus == 'cancelled':
+            msgBody = "Your request to cancel the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+        elif productStatus == 'returned':
+            msgBody ="Your request to return the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
         msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
         msg.send()
         return Response({}, status = status.HTTP_200_OK)

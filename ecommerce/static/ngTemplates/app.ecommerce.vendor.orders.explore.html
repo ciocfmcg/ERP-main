@@ -42,14 +42,18 @@
     </div>
     <div class="col-md-9">
       <div class="row">
-        <div class="btn btn-primary pull-right">
+        <div class="text-center" ng-if="order.approved">
+          <h3>Approved <i class='fa fa-check' style="color:green"></i></h3>
+        </div>
+        <div class="btn btn-primary pull-right" ng-if="!order.approved" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk)" confirm-button-type="default" cancel-button-type="default">
           Approve This Order
         </div>
       </div>
       <div class="row" style="margin:20px 5px">
         <div class="" ng-repeat="pData in order.orderQtyMap" style="margin-bottom:10px">
           <div class="container-fluid card" style="padding:20px; border-left:4px solid #0c9a9e;position:relative;">
-            <div class="fa fa-trash pull-right fa-lg" style="cursor:pointer">
+            <div class="fa fa-trash-o pull-right fa-2x" style="cursor:pointer;color:red" mwl-confirm title="Cancel Item" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderItemCancel($index)" confirm-button-type="default"
+              cancel-button-type="default" ng-if="pData.status=='created' || pData.status=='packed'">
             </div>
             <div class="row">
               <h3> {{pData.productName}} </h3>
@@ -74,10 +78,36 @@
             <hr>
             <div class="row">
               <div class="col-md-12">
-                <div class="btn btn-warning btn-sm pull-right">
-                  Change Status
+                <div class="row">
+                  <!-- <div class="col-md-12"> -->
+                  <div class="col-md-5" style="font-size:19px">
+                    <strong>Status : {{pData.status}}</strong>
+                  </div>
+                  <div class="col-md-7 text-right" style="font-size:19px" ng-if="pData.status != 'cancelled' && pData.status!='returned'">
+                    <span class="text-muted ">Change Status To </span> &nbsp;
+                    <div class="btn btn-warning pull-right">
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'packed')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='created'">Packed</span>
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'shipped')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='packed'">Shipped</span>
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'inTransit')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='shipped'">InTransit</span>
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'reachedNearestHub')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='inTransit'">ReachedNearestHub</span>
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'outForDelivery')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='reachedNearestHub'">OutForDelivery</span>
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'delivered')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status==outForDelivery">Delivered</span>
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'returnToOrigin')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='delivered'">ReturnToOrigin</span>
+                      <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'returned')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='returnToOrigin'">Returned</span>
+                    </div>
+                    <!-- <div class="btn btn-warning btn-sm pull-right" ng-if="pData.status = 'cancelled'">
+                        <span ng-click="" ng-if="pData.status=='delivered'">ReturnToOrigin</span>
+                        <span ng-click="" ng-if="pData.status=='returned'">Returned</span>
+                      </div> -->
+
+                  </div>
+                  <!-- </div> -->
+                  <!-- <span><strong><h3>Status : {{pData.status}}</h3></strong>
+                    <div class="btn btn-warning btn-sm pull-right">
+                      Change Status
+                    </div>
+                  </span> -->
                 </div>
-                <strong>Status : {{pData.status}}</strong><br>
                 <span>Refund Amount : {{pData.refundAmount}}</span><br>
                 <span>Refund Status : {{pData.refundStatus}}</span><br>
                 <span>Cancellable : {{pData.cancellable}}</span><br>
@@ -97,15 +127,33 @@
                 </span>
               </div> -->
                   <div class="form-group">
-                    <textarea class="form-control" rows="3" cols="80" ng-model="eventScheduler.details" placeholder="Write Log Here..."></textarea>
+                    <textarea class="form-control" rows="3" cols="80" ng-model="pData.logText" placeholder="Write Log Here..."></textarea>
                   </div>
-                  <div class="btn btn-success pull-right" ng-click="">Submit</div>
+                  <div class="btn btn-success pull-right" ng-click="saveLog($index,pData.logText)">Submit</div>
                 </div>
                 <div class="col-md-12">
                   <h4>Logs History</h4>
-                  <ul>
-                    <li ng-repeat="log in pData.trackingLog"></li>
-                  </ul>
+
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr ng-repeat="log in pData.trackingLog">
+                        <td style="width:20%">{{log.time | date : 'dd-MMM-yyyy : hh:mm a'}}</td>
+                        <td style="width:80%">{{log.logTxt}}</td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+
+                  <!-- <ul>
+                    <li ng-repeat="log in pData.trackingLog" style="font-size:15px">
+                      <div class="col-md-9">
+                        {{log.logTxt}}
+                      </div>
+                      <div class="col-md-3 text-right">
+                        {{log.time | date : 'dd-MMM-yyyy : hh:mm a'}}
+                      </div>
+                      </li>
+                  </ul> -->
                 </div>
               </div>
             </div>
