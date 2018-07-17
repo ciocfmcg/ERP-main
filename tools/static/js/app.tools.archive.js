@@ -1,6 +1,29 @@
 app.controller('businessManagement.tools.archive' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions, $uibModal){
   // settings main page controller
 
+  $scope.keys = [
+    'Russia' , 'ICB' , 'Missle'
+  ]
+
+  $scope.sources = [
+    {name : 'hfs.com' , keywords : ['missle' , 'pakistan' , 'china and pakistan']},
+    {name : 'jamestown.org' , keywords : ['ICB' , 'russia' , 'china']},
+  ]
+
+
+
+  $scope.articles = [
+    {source : 'www.jamestown.com' , 'publishedOn' : new Date('2018-02-23'), title : 'Pakistani Taliban: Mullah Fazlullah’s Death Revives Mehsud Clan Fortunes', reads : 2 , pages : 18},
+    {source : 'www.hfs.com' , 'publishedOn' : new Date('2017-03-23'), title : '‘Terrorist Intent’: How Finland’s Justice System Struggles to Tackle Terrorism Offenders', reads : 0 , pages : 8},
+    {source : 'www.newyorktimes.com' , 'publishedOn' : new Date('2018-02-23'), title : 'Ominous Silence: Why Has al-Shabaab Refrained From Condemning This Year’s World Cup?', reads : 2 , pages : 18},
+    {source : 'www.jamestown.com' , 'publishedOn' : new Date('2018-02-23'), title : '‘Continuing War by Other Means’: The Case of Wagner, Russia’s Premier Private Military Company in the Middle East', reads : 2 , pages : 18},
+    {source : 'www.jamestown.com' , 'publishedOn' : new Date('2017-02-23'), title : 'Pakistani Taliban: Mullah Fazlullah’s Death Revives Mehsud Clan Fortunes', reads : 2 , pages : 18},
+    {source : 'www.hfs.com' , 'publishedOn' : new Date('2017-04-23'), title : 'Pakistani Taliban: Mullah Fazlullah’s Death Revives Mehsud Clan Fortunes', reads : 2 , pages : 18},
+    {source : 'www.jamestown.com' , 'publishedOn' : new Date('2017-03-23'), title : 'Pakistani Taliban: Mullah Fazlullah’s Death Revives Mehsud Clan Fortunes', reads : 2 , pages : 18},
+    {source : 'www.timesofindia.com' , 'publishedOn' : new Date('2018-05-23'), title : 'Pakistani Taliban: Mullah Fazlullah’s Death Revives Mehsud Clan Fortunes', reads : 2 , pages : 18},
+  ]
+
+
   $scope.data = {
     tableData: []
   };

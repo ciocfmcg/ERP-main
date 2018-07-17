@@ -314,6 +314,70 @@ app.directive('genericForm', function() {
   };
 });
 
+app.directive('chatBox', function() {
+  return {
+    templateUrl: '/static/ngTemplates/chatBox.html',
+    restrict: 'E',
+    transclude: true,
+    replace: true,
+    scope: {
+      data: '=',
+      index:'=',
+      closeChat: '=',
+    },
+    controller: function($scope, $users) {
+      $scope.me = $users.get('mySelf');
+
+      $scope.chatBox = {
+        messageToSend: '',
+        fileToSend: emptyFile
+      }
+
+      $scope.removeFile = function() {
+        $scope.chatBox.fileToSend = emptyFile;
+      }
+
+
+      $scope.send = function() {
+        console.log($scope.chatBox);
+        if ($scope.chatBox.messageToSend.length>0) {
+          $scope.data.messages.push({msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() })
+          console.log($scope.chatBox.messageToSend);
+          $scope.chatBox.messageToSend = ''
+        }
+
+        if ($scope.chatBox.fileToSend.size>0) {
+          var typ = $scope.chatBox.fileToSend.type.split('/')[0]
+          if (typ=='image') {
+            $scope.data.messages.push({msg : "",sentByMe:true, img:'/static/images/zcrm-banner-mail.jpg' , created: new Date()})
+          }else if (typ=='audio') {
+            $scope.data.messages.push({msg:"" , sentByMe: true, audioUrl:'/static/audio/notification/mp3', created: new Date() })
+          }else if (typ=='video') {
+            $scope.data.messages.push({msg : "",sentByMe:true, videoUrl:'/static/video/big_buck_bunny.mp4' , created: new Date()})
+          }else if (typ=='application') {
+            $scope.data.messages.push({msg : "",sentByMe:true, documentUrl:'static/document/invoice.pdf' , created: new Date()})
+          }
+          $scope.chatBox.fileToSend = emptyFile;
+        }
+
+      };
+
+      $scope.closeChatBox = function(indx) {
+        $scope.closeChat(indx)
+      }
+
+      $scope.attachFile = function() {
+        $('#filePickerChat' + $scope.index).click();
+      }
+
+      $scope.sendMessage = function () {
+
+      }
+
+    }
+  };
+});
+
 
 app.directive('messageStrip', function() {
   return {

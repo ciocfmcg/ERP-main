@@ -244,6 +244,9 @@ app.controller("workforceManagement.organization.units.form", function($scope, $
     then(function(response) {
       $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved')
+      if($scope.mode == 'new'){
+          $scope.resetForm ()
+      }
     })
   }
 

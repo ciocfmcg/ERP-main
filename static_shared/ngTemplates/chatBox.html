@@ -1,0 +1,56 @@
+<div>
+  <div style="min-height:75vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white; " class="container-fluid">
+    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:80px;">
+      <div class="row" style="padding:10px;">
+        <div class="col-md-5">
+            <h4> {{data.uid.split("$")[0]}} </h4>
+            <h5>{{data.name}}</h5>
+        </div>
+        <div class="col-md-5">
+           <button class="btn btn-success" type="button" name="button"> Knowledge base </button>
+        </div>
+        <div class="col-md-2" >
+          <i class="fa fa-times " aria-hidden="true" style="cursor:pointer; font-size:20px;" ng-click="closeChatBox(index)" ></i>
+        </div>
+      </div>
+    <!-- <div class="container-fluid" >
+      <label style="font-size:25px" class="text-muted">{{data.name}}</label>
+      <label class="text-muted pull-right">{{data.uid.split("$")[0]}}</label>
+    </div> -->
+  </div>
+    <div class="container-fluid" style="margin-left:10px;margin-right:10px; height:70vh; overflow-y:auto; overflow-x:hidden;">
+
+      <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
+        <div class="row container-fluid">
+          <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+            <p ng-if="message.msg != '' || message.msg != undefined" style="word-wrap: break-word;" >{{message.msg}}</p>
+           <img ng-if="message.img" ng-src="{{message.img}}" >
+           <video ng-if="message.videoUrl" ng-src="{{message.videoUrl}}" controls></video>
+           <audio ng-if="message.audioUrl" ng-src="{{message.audioUrl}}" controls></audio>
+           <p class="text-center" ng-if="message.documentUrl" style="word-wrap: break-word;"> <a ng-href="{{message.documentUrl}}" target = "_blank" ><i class="fa {{message.documentUrl.split('document/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{message.documentUrl.split('document/')[1]}}  </p>
+          </div>
+        </div>
+
+        <div class="row container-fluid" style="{{message.sentByMe ? 'padding-right:30px' : 'padding-left:30px'}};" >
+          <span style="float:{{message.sentByMe ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{message.created | timeAgo}}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="container-fluid" style="padding:;border-top:30px;background-color:#eeeeee">
+    <div class="row" style="margin:0px;margin-top:40px;margin-bottom:60px;">
+      <form>
+        <div class="input-group">
+          <input ng-if="chatBox.fileToSend.size==0" type="text" class="form-control" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend">
+          <input type="file" id="filePickerChat{{index}}" style="display:none;" file-model="chatBox.fileToSend">
+          <span ng-if="chatBox.fileToSend.size==0" class="input-group-addon"style="cursor:pointer" ng-click="attachFile()" ><i class="fa fa-paperclip"  aria-hidden="true"></i></span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="input-group-addon btn btn-default" > <i class="fa {{chatBox.fileToSend.name | fileTypeIcon }}"></i> </span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="input-group-addon btn btn-default" style="font-size:10px;" > {{chatBox.fileToSend.name.slice(0,25)}} </span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="input-group-addon btn btn-default" style="cursor:pointer" ng-click="removeFile()" > <i class="fa fa-times" aria-hidden="true"></i> </span>
+          <span class="input-group-addon" ng-click="send()" style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

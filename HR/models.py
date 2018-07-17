@@ -211,6 +211,9 @@ class payroll(models.Model):
     alHold = models.PositiveIntegerField(default=0)
     mlHold = models.PositiveIntegerField(default=0)
     adHocLeavesHold = models.PositiveIntegerField(default=0)
+    notice = models.PositiveIntegerField(null=True , default=0)
+    probation = models.PositiveIntegerField(null=True , default=0)
+    probationNotice = models.PositiveIntegerField(null=True , default=0)
 
 User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
 

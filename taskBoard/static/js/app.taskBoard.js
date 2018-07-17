@@ -295,7 +295,7 @@ app.controller('projectManagement.taskBoard.task.item' , function($scope){
 
 });
 
-app.controller('projectManagement.taskBoard.default' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions , $rootScope){
+app.controller('projectManagement.taskBoard.default' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions , $rootScope, $uibModal){
 
   $scope.forceRefetch = function() {
     $rootScope.$broadcast('forceRefetch' , {});
@@ -334,8 +334,8 @@ app.controller('projectManagement.taskBoard.default' , function($scope , $http ,
     url: '/api/taskBoard/task/',
     searchField: 'title',
     // getParams : [{key : 'to' , value : $scope.me.pk},],
-    multiselectOptions : [{icon : 'fa fa-plus' , text : 'Add' },],
-    itemsNumPerView : [9,18,27],
+    multiselectOptions : [{icon : 'fa fa-plus' , text : 'Add' },{icon : 'fa fa-plus' , text : 'Delete' }],
+    itemsNumPerView : [5,10,20],
     filters : [
       {icon : '' , key : 'orderBy' , btnClass:'default' , orderable : true, options : [
         {icon : '' , value : 'created'},
@@ -354,8 +354,33 @@ app.controller('projectManagement.taskBoard.default' , function($scope , $http ,
   $scope.tableAction = function(target , action , mode){
     console.log(target);
     if (mode == 'multi') {
-      $scope.createTask();
+      // $scope.createTask();
+
+
+      if (action == 'Delete') {
+
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/test.html',
+          size: 'lg',
+          backdrop: true,
+          controller: function($scope) {
+
+          },
+
+        }).result.then(function() {
+          console.log('here...');
+        }, function() {
+
+        });
+
+
+
+
+
+      }
+
     }else{
+
       if (action == 'taskBrowser') {
         for (var i = 0; i < $scope.data.tableData.length; i++) {
           if ($scope.data.tableData[i].pk == parseInt(target)){

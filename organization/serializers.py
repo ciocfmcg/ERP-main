@@ -24,10 +24,10 @@ class DivisionLiteSerializer(serializers.ModelSerializer):
         model = Division
         fields = ('pk' , 'name' ,'website', 'logo')
 
-# class UnitsLiteSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Units
-#         fields = ('pk' , 'name')
+class UnitsLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = ('pk' , 'name')
 
 
 class DivisionSerializer(serializers.ModelSerializer):
@@ -85,15 +85,10 @@ class UnitSerializer(serializers.ModelSerializer):
         fields = ('pk' , 'name','address','pincode','l1','l2','mobile','telephone','contacts','fax','division','parent', )
         read_only_fields=('contacts','parent')
     def create(self , validated_data):
-        print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
         d = Unit(**validated_data)
         d.division=Division.objects.get(pk=self.context['request'].data['division'])
-        # d.units=Units.objects.get(pk=self.context['request'].data['units'])
         if 'parent' in self.context['request'].data:
             d.parent = Unit.objects.get(id=self.context['request'].data['parent'])
-            # d.save()
-            # for i in self.context['request'].data['parent']:
-            #     d.parent.add(Units.objects.get(pk = i))
         d.save()
 
         for i in self.context['request'].data['contacts']:
@@ -126,27 +121,12 @@ class DepartmentsSerializer(serializers.ModelSerializer):
         fields = ('pk','dept_name','mobile','telephone','fax','contacts','unit','picture')
         read_only_fields=('contacts','unit')
     def create(self , validated_data):
-
-        print '3333333333333333333333',self.context['request'].data
-        # a=self.context['request'].data['units'].split(',')
-        # for i in a:
-        #     print i,type(i)
-        # print validated_data
-        # del validated_data['unit']
         d = Departments(**validated_data)
-        # d.units=Units.objects.get(pk=self.context['request'].data['units'])
         d.save()
-        print '111111111111111111'
-        # a=self.context['request'].data['contacts'].split(',')
-        # b=self.context['request'].data['units'].split(',')
         for i in str(self.context['request'].data['contacts']).split(','):
             d.contacts.add(User.objects.get(pk = i))
-            print 'endddddddddddddddddddddddd'
         for i in self.context['request'].data['unit'].split(','):
-            print '%%%%%%%%%%%%%%%%%%%%%',self.context['request'].data['unit']
-            print i,type(i)
             d.unit.add(Unit.objects.get(pk = i))
-            print '@@@@@@@@@@@@@@@@@',validated_data
         return d
 
     def update(self ,instance, validated_data):
@@ -155,7 +135,6 @@ class DepartmentsSerializer(serializers.ModelSerializer):
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        # instance.units=Units.objects.get(pk=self.context['request'].data['units'])
         if 'contacts' in self.context['request'].data:
             a=self.context['request'].data['contacts'].split(',')
             for i in a:
@@ -178,9 +157,6 @@ class RoleSerializer(serializers.ModelSerializer):
         d.department=Departments.objects.get(pk=self.context['request'].data['department'])
         d.save()
         return d
-
-
-
     def update(self ,instance, validated_data):
         for key in ['name']:
             try:
@@ -204,7 +180,6 @@ class ResponsibilitySerializer(serializers.ModelSerializer):
         fields = ('pk' , 'title', 'departments','data')
         read_only_fields = ('departments', )
     def create(self , validated_data):
-        print '************',validated_data
         r = Responsibility(**validated_data)
         if 'data' in validated_data:
             match=re.match(r'\d,|\d',r.data)

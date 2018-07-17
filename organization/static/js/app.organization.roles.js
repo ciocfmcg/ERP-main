@@ -44,8 +44,21 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
           var title = 'Browse Role :';
           var appType = 'rolesInfo';
         }
+
+        console.log({
+          title: title + $scope.data.tableData[i].name,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i,
+            division: $scope.data.tableData[i]
+          },
+          active: true
+        },'aaaaaaaaaaaaaaa');
+
         $scope.addTab({
-          title: title + $scope.data.tableData[i].pk,
+          title: title + $scope.data.tableData[i].name,
           cancel: true,
           app: appType,
           data: {
@@ -55,11 +68,9 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
           },
           active: true
         })
-        console.log(title);
       }
     }
   }
-
   $scope.tabs = [];
   $scope.searchTabActive = true;
 
@@ -68,7 +79,6 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -91,7 +101,6 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
 
 
 app.controller("workforceManagement.organization.roles.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
-  console.log($scope.tab);
 
   $scope.resetForm = function() {
     $scope.form = {
@@ -110,9 +119,7 @@ app.controller("workforceManagement.organization.roles.form", function($scope, $
 
 
   $scope.save = function() {
-    console.log('entered');
     var f = $scope.form;
-    console.log('kjhkhjkjkl', typeof f.emp_photo);
     var url = '/api/organization/role/';
 
     var fd = new FormData();
@@ -149,6 +156,9 @@ app.controller("workforceManagement.organization.roles.form", function($scope, $
       //  $scope.$broadcast('forceRefetch',)
       //    $scope.$broadcast('forcerefresh', response.data);
       //  $route.reload();
+      if ($scope.mode == 'new') {
+        $scope.resetForm();
+      }
     })
   }
 

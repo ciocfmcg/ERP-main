@@ -20,7 +20,7 @@
 
         <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading>
-            {{tab.name}}
+            {{tab.title}}
             <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
           <div ng-if="tab.app == 'rolesEditor'">

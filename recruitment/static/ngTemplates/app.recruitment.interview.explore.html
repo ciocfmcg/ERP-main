@@ -1,0 +1,95 @@
+<div class="container-fluid" ng-controller="workforceManagement.recruitment.interview.explore">
+  <div class="row">
+    <div class="col-md-5">
+      <div class="container-fluid" style="padding-top:20px;">
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Name :</strong>
+          </div>
+          <div class="col-md-7">
+            {{details.candidate.firstname}} {{details.candidate.lastname}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Scheduled :</strong>
+          </div>
+          <div class="col-md-7">
+            {{details.interviewDate}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Applied For :</strong>
+          </div>
+          <div class="col-md-7">
+            {{details.candidate.job.role.name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5  text-right">
+            <strong>Department :</strong>
+          </div>
+          <div class="col-md-7">
+            {{details.candidate.job.department.dept_name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5  text-right">
+            <strong>Skills Required :</strong>
+          </div>
+          <div class="col-md-7" ng-bind-html="details.candidate.job.skill">
+            <!-- {{details.candidate.job.skill}} -->
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-11">
+          <label><i class="fa fa-comments"></i> Comments:</label>
+          <div class="container-fluid card" style="margin-top:20px;padding:10px;" ng-repeat="c in comment" ng-if="c.comment" ng-style="{'background-color': c.status === 'suitable' ? 'rgb(171, 237, 172)' : '' || c.status === 'un-suitable' ? 'rgb(237, 170, 164)' : ''||c.status === 'created' ? 'rgb(189, 182, 181)' : '' || c.status === 'recommand-other-job' ? 'rgb(162, 239, 246)' : ''}">
+            <div class="row">
+              <div class="col-md-12">
+                {{c.comment}}
+              </div>
+            </div></br>
+            <div class="row">
+              <div class="col-md-12 text-right ">
+                - {{c.interviewer.first_name}} {{c.interviewer.last_name}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <object data='{{details.candidate.resume}}' type='application/pdf' width='100%' style="height:900px" />
+      </div>
+      <div class="row" style="padding-top:20px">
+        <div class="col-md-4">
+          <div class="btn-group">
+            <button style="width:150px" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="selected()" confirm-button-type="success" cancel-button-type="default"><i class="fa fa-tick">Selected</i></button>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="btn-group">
+            <button style="width:150px" class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default"><i class="fa fa-tick">Rejected</i></button>
+          </div>
+        </div>
+        <div class="col-md-4  text-right">
+          <div class="btn-group">
+            <button style="width:150px" class="btn btn-primary " mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="recommend()" confirm-button-type="primary" cancel-button-type="default"><i class="fa fa-tick">Recommend Other</i></button>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding-top:20px">
+        <div class="form-group">
+          <label><i class="fa fa-comment"></i> Leave A Comment: </label>
+          <textarea type="text" class="form-control" ng-model="comment.comment" placeholder="Your Comment Here........"></textarea>
+        </div>
+        <button class="btn btn-primary pull-right" ng-click="commented()"><i class="fa fa-tick">Submit</i></button>
+      </div>
+    </div>
+  </div>
+</div>

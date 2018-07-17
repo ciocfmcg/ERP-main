@@ -377,7 +377,31 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
 
 });
 
-app.controller("businessManagement.clientRelationships.relationships.item", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.clientRelationships.relationships.item", function($uibModal, $scope, $state, $users, $stateParams, $http, Flash) {
+
+  $scope.sendSummary = function() {
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.clientRelationships.summary.modal.html',
+      size: 'md',
+      backdrop : true,
+      resolve : {
+
+      },
+      controller: function($scope){
+
+      },
+    })
+
+
+
+  }
+
+  $scope.data2 = [300, 500, 100];
+  $scope.labels2 = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
+
+
+
 
   $scope.expanded = false;
 
