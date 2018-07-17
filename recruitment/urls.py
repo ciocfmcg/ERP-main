@@ -5,6 +5,14 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'job' , JobsViewSet , base_name = 'jobs')
+router.register(r'applyJob' , JobApplicationViewSet , base_name = 'applyJob')
+router.register(r'interview' , InterviewViewSet , base_name = 'interview')
 urlpatterns = [
      url(r'^', include(router.urls)),
+     url(r'jobsList/$' , JobsList.as_view()),
+     url(r'onlinelink/$' , SendLinkAPIView.as_view() ),
+     url(r'scheduleInterview/$' , ScheduleInterviewAPIView.as_view() ),
+     url(r'inviteInterview/$' , InviteInterviewAPIView.as_view() ),
+     url(r'downloadCallLeter/$' , DownloadCallLetter.as_view() ),
+     url(r'sendCallLetter/$' , SendCallLetter.as_view() ),
  ]

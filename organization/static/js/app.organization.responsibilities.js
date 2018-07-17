@@ -106,7 +106,7 @@ app.controller('workforceManagement.organization.responsibilities.form', functio
       return response.data;
     })
   }
-
+  // $scope.form.departments=[]
   $scope.addDepartment = function() {
     if (typeof $scope.form.departmentTxt == 'object') {
 

@@ -179,10 +179,14 @@ app.controller("workforceManagement.organization.division.form", function($scope
     then(function(response) {
       $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved')
+      if ($scope.mode == 'new') {
+        $scope.resetForm();
+      };
       // $scope.fetchData();
       //  $scope.$broadcast('forceRefetch',)
       //    $scope.$broadcast('forcerefresh', response.data);
       //  $route.reload();
+
     })
   }
 });

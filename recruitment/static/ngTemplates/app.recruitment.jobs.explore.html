@@ -1,20 +1,110 @@
 <div class="container-fluid" ng-controller="workforceManagement.recruitment.jobs.explore">
-  <div class="col-md-8">
-    <div class="row" style="padding:20px;padding-left:30px;">
-
-      <!-- <switch ng-model="form.approved" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approved :</span> -->
-    </div>{{expense}}
-    <div class="container-fluid" style="padding-top:20px;">
-      <strong>Job Type :</strong> {{jobDetails.jobtype}}
-      <hr>
-      <strong>Unit :</strong> {{jobDetails.unit.name}}
-      <hr>
-      <strong>Department:</strong> {{jobDetails.department.dept_name}}
-      <hr>
-      <strong>Position :</strong> {{jobDetails.role.name}}
-      <hr>
-      <strong>Skills Required :</strong> {{jobDetails.skill}}
-      <hr>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="container-fluid" style="padding-top:20px;">
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Job Type :</strong>
+          </div>
+          <div class="col-md-7">
+            {{jobDetails.jobtype}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Unit :</strong>
+          </div>
+          <div class="col-md-7">
+            {{jobDetails.unit.name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Department :</strong>
+          </div>
+          <div class="col-md-7">
+            {{jobDetails.department.dept_name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5  text-right">
+            <strong>Position :</strong>
+          </div>
+          <div class="col-md-7">
+            {{jobDetails.role.name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Maximum CTC :</strong>
+          </div>
+          <div class="col-md-7">
+            {{jobDetails.maximumCTC}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <strong>Skill :</strong>
+          </div>
+          <div class="col-md-7">
+            <div ng-bind-html="jobDetails.skill" style="padding-top:20px"></div>
+          </div>
+        </div>
+        <!-- <div class="row">
+          <label>Description</label>
+        </div> -->
+      </div>
     </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+          <i class="fa fa-check-circle fa-3x text-{{jobDetails.approved ? 'success': 'danger'}} pull-right" ng-model="jobDetails.approved" style="padding-top:10px" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
+            cancel-text="No" on-confirm="approve()" confirm-button-type="success" cancel-button-type="default"></i><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approved :</span>
+        </div>
+        <div class="col-md-4" ng-if="jobDetails.approved">
+          <i class="fa  fa-check-circle fa-3x text-{{jobDetails.status=='Active' ? 'success': 'danger'}} pull-right" ng-model="jobDetails.status" style="padding-top:10px" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
+            cancel-text="No" on-confirm="active()" confirm-button-type="success" cancel-button-type="default"></i><span class="pull-right" style="margin-top:10px;margin-right:20px;">Active :</span>
+        </div>
+      </div>
+    </div>
+  </div><br/>
+
+    <div class="row" ng-if="jobApplied.length>0">
+      <div class="col-md-12 text-right">
+        <div class="btn-group">
+        <button class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
+          cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default"><i class="fa fa-tick">Reject</i></button>
+        <button class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
+          cancel-text="No" on-confirm="selected()" confirm-button-type="success" cancel-button-type="default"><i class="fa fa-tick">Shortlist</i></button>
+      </div>
+      </div>
+    </div><br/>
+
+  <div class="row" ng-if="jobApplied.length>0">
+    <table class="ui fixed single line celled table striped sortable compact"  id="mytable" >
+  <thead>
+    <tr>
+      <th class="width-checkbox"><input type="checkbox" ng-model="form.checkAll" /></th>
+      <th class="width-120">Name</th>
+      <th class="width-120">Email</th>
+      <th class="width-120">Mobile</th>
+      <th class="width-120">Status</th>
+      <th class="width-120">Resume</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="i in jobApplied">
+      <td><input type="checkbox" ng-model="i.select"></td>
+      <td>{{i.firstname}} {{i.lastname}}</td>
+      <td>{{i.email}}</td>
+      <td>{{i.mobile}}</td>
+      <td>{{i.status}}</td>
+      <td ><button class="btn btn-primary" ng-if="i.resume!=none" ng-click="resumeView(i.pk)"> View <i class="fa fa-eye"></i></button></td>
+    </tr>
+  </tbody>
+</table>
   </div>
+</div>
 </div>
