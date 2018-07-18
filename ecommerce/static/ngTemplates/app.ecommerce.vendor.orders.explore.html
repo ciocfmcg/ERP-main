@@ -45,16 +45,35 @@
         <div class="text-center" ng-if="order.approved">
           <h3>Approved <i class='fa fa-check' style="color:green"></i></h3>
         </div>
-        <div class="btn btn-primary pull-right" ng-if="!order.approved" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk)" confirm-button-type="default" cancel-button-type="default">
-          Approve This Order
+        <div class="text-center" ng-if="order.approved!=null && !order.approved">
+          <h3>Rejected <i class='fa fa-times' style="color:red"></i></h3>
         </div>
+
+        <div class="btn-group pull-right" ng-if="order.approved==null">
+          <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk,true)" confirm-button-type="default" cancel-button-type="default">Approve </button>
+          <button type="button" class="btn btn-danger" mwl-confirm title="Reject" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk,false)" confirm-button-type="default" cancel-button-type="default">Reject </button>
+        </div>
+
+        <!-- <div class="btn btn-primary pull-right" ng-if="!order.approved" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk)" confirm-button-type="default" cancel-button-type="default">
+          Approve This Order
+        </div> -->
       </div>
       <div class="row" style="margin:20px 5px">
         <div class="" ng-repeat="pData in order.orderQtyMap" style="margin-bottom:10px">
           <div class="container-fluid card" style="padding:20px; border-left:4px solid #0c9a9e;position:relative;">
             <div class="fa fa-trash-o pull-right fa-2x" style="cursor:pointer;color:red" mwl-confirm title="Cancel Item" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderItemCancel($index)" confirm-button-type="default"
-              cancel-button-type="default" ng-if="pData.status=='created' || pData.status=='packed'">
+              cancel-button-type="default" ng-if="order.status!='failed' && pData.status=='created' || pData.status=='packed'">
             </div>
+            <div class="btn btn-default btn-sm pull-right" ng-if="pData.courierName==null||pData.courierAWBNo==null||pData.notes==null && order.status!='failed'" ng-click="openManifest($index)">
+              Generate Manifest
+            </div>
+            <div class="btn-group pull-right" ng-if="order.status!='failed' && pData.courierName!=null && pData.courierAWBNo!=null && pData.notes!=null">
+              <button type="button" class="btn btn-primary" ng-click="openManifest($index)">Edit Manifest </button>
+              <a href="/api/ecommerce/downloadManifest/?qPk={{pData.pk}}" target="_blank">
+               <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
+
+            </div>
+
             <div class="row">
               <h3> {{pData.productName}} </h3>
             </div>
@@ -83,7 +102,7 @@
                   <div class="col-md-5" style="font-size:19px">
                     <strong>Status : {{pData.status}}</strong>
                   </div>
-                  <div class="col-md-7 text-right" style="font-size:19px" ng-if="pData.status != 'cancelled' && pData.status!='returned'">
+                  <div class="col-md-7 text-right" style="font-size:19px" ng-if="order.status!='failed' && pData.status != 'cancelled' && pData.status!='returned'">
                     <span class="text-muted ">Change Status To </span> &nbsp;
                     <div class="btn btn-warning pull-right">
                       <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'packed')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='created'">Packed</span>

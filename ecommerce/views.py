@@ -26,12 +26,21 @@ import requests
 # related to the invoice generator
 from reportlab import *
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import cm, mm
-from reportlab.lib import colors
-from reportlab.platypus import Paragraph, Table, TableStyle, Image
+from reportlab.lib import colors, utils
+from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
+from reportlab.platypus.flowables import HRFlowable
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
+from reportlab.graphics import barcode, renderPDF
+# from reportlab.graphics.shapes import *
+from reportlab.graphics.barcode.qr import QrCodeWidget
+from reportlab.lib.pagesizes import letter, A5, A4, A3
+from reportlab.lib.colors import *
+from reportlab.lib.units import inch, cm ,mm
+from reportlab.lib.enums import TA_JUSTIFY,TA_LEFT, TA_CENTER
+from reportlab.graphics.barcode import code39
+
+from reportlab.platypus.doctemplate import Indenter
 from PIL import Image
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 
 # Related to the REST Framework
 from rest_framework import viewsets , permissions , serializers
@@ -319,7 +328,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     # queryset = Order.objects.all()
     serializer_class = OrderSerializer
     def get_queryset(self):
-        return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
+        # return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
+        return Order.objects.all().order_by('-created')
 
 class PromocodeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
@@ -334,3 +344,80 @@ class FrequentlyQuestionsViewSet(viewsets.ModelViewSet):
     serializer_class = FrequentlyQuestionsSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['ques']
+
+
+settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
+
+def manifest(response,item):
+    print '999999999999999999999999999999999999999'
+    order = item.order.get()
+    now = datetime.datetime.now()
+    print item.pk , order.pk
+    print now.year,now.month,now.day
+
+    styles = getSampleStyleSheet()
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
+    elements = []
+
+    elements.append(HRFlowable(width="100%", thickness=1, color=black,spaceAfter=10))
+    if order.paymentMode == 'card':
+        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
+    else:
+        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(item.totalAmount-item.discountAmount)
+    elements.append(Paragraph(txt1, styles['Normal']))
+    elements.append(Spacer(1, 8))
+    txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
+    elements.append(Paragraph(txt2, styles['Normal']))
+    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=5))
+    txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(item.courierName,item.courierAWBNo)
+    elements.append(Paragraph(txt3, styles['Normal']))
+    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+    txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
+    elements.append(Paragraph(txt4, styles['Normal']))
+    elements.append(Spacer(1, 10))
+    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
+    elements.append(Paragraph(txt5, styles['Normal']))
+    elements.append(Spacer(1, 10))
+    invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
+    txt6 = '<para size=10 leftIndent=150 rightIndent=150><b>Invoice No. : </b>{0} </para>'.format(invNo)
+    elements.append(Paragraph(txt6, styles['Normal']))
+    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=10))
+    pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(item.product.product.name),styles['Normal'])
+    tableData=[['Product','Price','Qty','Discount','Final Price'],[pd,item.totalAmount,item.qty,item.discountAmount,item.totalAmount-item.discountAmount],['TOTAL','','','',item.totalAmount-item.discountAmount]]
+
+    t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
+    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('BOX', (0,0), (-1,-1), 0.25, colors.black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
+    # elements.append(Indenter(left=10))
+    elements.append(t1)
+    # elements.append(Indenter(left=-10))
+    elements.append(Spacer(1, 10))
+    if order.paymentMode != 'card':
+        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(item.totalAmount-item.discountAmount)
+        elements.append(Paragraph(txt7, styles['Normal']))
+    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=20,spaceAfter=5))
+    txt8 = '<para size=10 leftIndent=150 rightIndent=150><b>Tracking ID. : </b>{0} </para>'.format(item.courierAWBNo)
+    elements.append(Paragraph(txt8, styles['Normal']))
+    elements.append(Spacer(1, 10))
+    barVal = str(item.courierAWBNo)
+    barcode=code39.Extended39(barVal,barWidth=0.4*mm,barHeight=10*mm)
+    elements.append(Indenter(left=140))
+    elements.append(barcode)
+    elements.append(Indenter(left=-140))
+    elements.append(Spacer(1, 10))
+    # orderNo = str(now.year)+str(now.month)+str(now.day)+str(item.pk)
+    txt9 = '<para size=10 leftIndent=150 rightIndent=150><b>Order ID. : </b>{0} </para>'.format(invNo)
+    elements.append(Paragraph(txt9, styles['Normal']))
+    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+
+    doc.build(elements)
+
+class DownloadManifestAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    # permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print self.request.GET
+        item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
+        manifest(response,item)
+        return response

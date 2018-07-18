@@ -198,6 +198,10 @@ class OrderQtyMap(models.Model):
     discountAmount = models.PositiveIntegerField(null = True , blank = True)
     refundStatus = models.BooleanField(default = False)
     cancellable = models.BooleanField(default = False)
+    courierName =  models.CharField(max_length=100 ,null = True , blank = True)
+    courierAWBNo =  models.CharField(max_length=50 ,null = True , blank = True)
+    notes =  models.CharField(max_length=500 ,null = True , blank = True)
+
 
 class Order(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -212,8 +216,8 @@ class Order(models.Model):
     paidAmount = models.PositiveIntegerField( default = 0)
     paymentStatus = models.BooleanField(default = False)
     promoCode = models.CharField(max_length=100 ,null = True , blank = True)
-    approved = models.BooleanField(default = False)
-    status = models.CharField(choices = ORDERSTATUS_CHOICES , max_length = 10)
+    approved = models.NullBooleanField()
+    status = models.CharField(choices = ORDERSTATUS_CHOICES , max_length = 10 , default='created')
     landMark = models.CharField(max_length=100 , null = True , blank = True)
     street = models.CharField(max_length=300 , null = True , blank = True)
     city = models.CharField(max_length=100 , null = True , blank = True)

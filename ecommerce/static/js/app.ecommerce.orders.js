@@ -143,7 +143,7 @@
 
 
 
-app.controller('businessManagement.ecommerce.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce) {
+app.controller('businessManagement.ecommerce.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce ,$uibModal) {
 
   console.log('KKKKKKKKKKKKKKKK', $scope.tab.data.order);
   $scope.order = $scope.tab.data.order
@@ -169,20 +169,79 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       }
     })(idx))
   }
-  $scope.orderApproved = function(pk) {
-    console.log(pk);
+  $scope.orderApproved = function(pk, typ) {
+    console.log(pk, typ);
+    if (typ) {
+      var tosend = {
+        approved: true,
+        status: 'ordered'
+      }
+    } else {
+      var tosend = {
+        approved: false,
+        status: 'failed'
+      }
+    }
     $http({
       method: 'PATCH',
       url: '/api/ecommerce/order/' + pk + '/',
-      data: {
-        approved: true
-      }
+      data: tosend
     }).
     then(function(response) {
       console.log(response.data);
-      Flash.create('success', 'Approved');
+      Flash.create('success', 'Saved');
       $scope.order.approved = response.data.approved
     })
+  }
+  $scope.openManifest = function(idx) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.manifestForm.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        item: function() {
+          return $scope.order.orderQtyMap[idx];
+        }
+      },
+      controller: function($scope, item , $uibModalInstance) {
+        $scope.item = item;
+        console.log($scope.item);
+        $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
+        if ($scope.item.courierName!=null&&$scope.item.courierName.length>0) {
+          $scope.courierForm.courierName = $scope.item.courierName
+          $scope.courierForm.courierAWBNo = $scope.item.courierAWBNo
+          $scope.courierForm.notes = $scope.item.notes
+        }
+        $scope.saveManifest = function(){
+          if ($scope.courierForm.courierName.length==0||$scope.courierForm.courierAWBNo.length==0||$scope.courierForm.notes.length==0) {
+            Flash.create('warning','All Fields Are Required')
+            return
+          }
+          $http({
+            method: 'PATCH',
+            url: '  /api/ecommerce/orderQtyMap/' + $scope.item.pk + '/',
+            data: {
+              courierName: $scope.courierForm.courierName,
+              courierAWBNo: $scope.courierForm.courierAWBNo,
+              notes: $scope.courierForm.notes,
+            }
+          }).
+          then(function(response) {
+            console.log(response.data);
+            Flash.create('success', 'Saved');
+            $uibModalInstance.dismiss(response.data);
+          })
+        }
+      },
+    }).result.then(function() {
+
+    }, function(res) {
+      console.log('87987987+9797987987979879',res,typeof(res));
+      console.log('ssssssssssssss',$scope.order.orderQtyMap[idx]);
+      if (typeof(res)!='string') {
+        $scope.order.orderQtyMap[idx] = res
+      }
+    });
   }
   $scope.saveLog = function(idx, msg) {
     console.log(idx, $scope.order.orderQtyMap[idx], msg);
