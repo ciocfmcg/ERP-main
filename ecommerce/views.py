@@ -176,16 +176,19 @@ class CreateOrderAPI(APIView):
                 if str(p.name)==str(orderObj.promoCode):
                     promoAmount = p.discount
             print promoAmount
-            a = datetime.date.today().year
-            print str(a),'aaaaaaaaaa',orderObj.pk
+            a = '#'
             docID = str(a) + str(orderObj.pk)
             print docID,'aaaaaaaaaaaaaaaaaaaaabbbbbbbbb'
             for i in orderObj.orderQtyMap.all():
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                price=round(price, 2)
                 totalPrice=i.qty*price
+                totalPrice=round(totalPrice, 2)
                 total+=totalPrice
+                total=round(total, 2)
                 value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
+            grandTotal=round(grandTotal, 2)
             ctx = {
                 'heading' : "Invoice Details",
                 'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
@@ -492,7 +495,7 @@ class expanseReportHead(Flowable):
         draw the floable
         """
         now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-        docTitle = 'TAX INVOICE'
+        docTitle = 'ORDER INVOICE'
         dateCreated=self.contract.created.strftime("%d-%m-%Y")
         passKey = '%s%s'%(str(self.req.user.date_joined.year) , self.req.user.pk) # also the user ID
         docID = '%s%s' %( now.year , self.contract.pk)
@@ -677,11 +680,11 @@ def genInvoice(response, contract, request):
         if str(i.status)!='cancelled':
             print i.product.product.name, i.product.product.discount, i.product.product.price
             price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-            print i.discountAmount,'aaaaaaaaaaaaa'
-            print i.totalAmount,'bbbbbbbbbbbbbb'
-            print i.refundAmount,'aaaaaaa'
+            price=round(price, 2)
             totalprice = i.qty*price
+            totalprice=round(totalprice, 2)
             total+=totalprice
+            total=round(total, 2)
             pBodyProd = Paragraph(str(i.product.product.name), tableBodyStyle)
             pBodyPrice = Paragraph(str(price), tableBodyStyle)
             pBodyQty = Paragraph(str(i.qty), tableBodyStyle)
@@ -691,7 +694,7 @@ def genInvoice(response, contract, request):
     # contract.grandTotal = grandTotal
     # contract.save()
     grandTotal=total-(promoAmount * total)/100
-    print grandTotal
+    grandTotal=round(grandTotal, 2)
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
     tableGrandStyle.fontSize = 10
     #
@@ -740,6 +743,8 @@ def genInvoice(response, contract, request):
     # else:
     #     tin = contract.deal.company.tin
     #
+
+
     summryParaSrc = """
     <font size='8'><strong>Customer details:</strong></font> <br/><br/>
     <font size='6'><strong>Your Billing Address:</strong></font> <br/>
