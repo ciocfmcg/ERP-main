@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'promoCheck/$' , PromoCheckAPI.as_view()),
     url(r'createOrder/$' , CreateOrderAPI.as_view()),
     url(r'sendStatus/$' , SendStatusAPI.as_view()),
+    url(r'downloadInvoice/$' , DownloadInvoiceAPI.as_view()),
 ]
