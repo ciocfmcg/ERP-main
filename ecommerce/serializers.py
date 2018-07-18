@@ -218,7 +218,7 @@ class ActivitiesSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ('pk' ,'user' , 'title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country')
+        fields = ('pk' ,'user' , 'title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark')
     def create(self , validated_data):
         print '******************'
         a = Address(**validated_data)
@@ -231,7 +231,7 @@ class AddressSerializer(serializers.ModelSerializer):
         profObj.save()
         return a
     def update(self ,instance, validated_data):
-        for key in ['title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country']:
+        for key in ['title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -263,10 +263,12 @@ class TrackingLogSerializer(serializers.ModelSerializer):
 class OrderQtyMapSerializer(serializers.ModelSerializer):
     productName = serializers.SerializerMethodField()
     productPrice = serializers.SerializerMethodField()
+    ppAfterDiscount = serializers.SerializerMethodField()
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount')
+
     def update(self ,instance, validated_data):
         print 'updateeeeeeeeeeeeeeeeeee'
         for key in ['product', 'qty' ,'totalAmount' , 'status' , 'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes',]:
@@ -285,6 +287,8 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
         return obj.product.product.name
     def get_productPrice(self, obj):
         return obj.product.product.price
+    def get_ppAfterDiscount(self, obj):
+        return obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
 
 # class OrderQtyMapLiteSerializer(serializers.ModelSerializer):
 #     productName = serializers.SerializerMethodField()
@@ -296,10 +300,17 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     orderQtyMap = OrderQtyMapSerializer(many = True , read_only = True)
+    promoDiscount = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo',)
+        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount')
         read_only_fields = ('user',)
+    def get_promoDiscount(self, obj):
+        pD = Promocode.objects.filter(name = obj.promoCode)
+        promoDiscount = 0
+        for i in pD:
+            promoDiscount =  i.discount
+        return promoDiscount
 
 class PromocodeSerializer(serializers.ModelSerializer):
     class Meta:

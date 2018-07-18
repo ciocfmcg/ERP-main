@@ -1,0 +1,37 @@
+<div>
+  <div class="modal-header text-center">
+    <h4>Items to be Cancelled</h4>
+    <hr>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <strong>Products </strong>
+      </div>
+      <div class="col-md-3">
+        <strong>Qty </strong>
+      </div>
+      <div class="col-md-3">
+        <strong>Amount Paid </strong>
+      </div>
+    </div>
+    <div class="row" ng-repeat="i in items">
+      <div class="col-md-6">
+        {{i.productName.slice(0,30)}}
+      </div>
+      <div class="col-md-3">
+        {{i.qty}}
+      </div>
+      <div class="col-md-3">
+        <i class="fa fa-inr"></i> {{i.totalAmount - i.discountAmount}}
+      </div>
+    </div>
+    <hr>
+    <div class="row container-fluid">
+      <span> Amount to be Refunded : <i class="fa fa-inr"></i> {{amtToBeRefunded}}  </span>
+    </div>
+    <div class="row container-fluid text-center">
+      <button type="button" class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="state=='cancel' ? cancel() : return()" confirm-button-type="default" cancel-button-type="default">{{state}}</button>
+    </div>
+  </div>
+</div>

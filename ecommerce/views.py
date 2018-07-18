@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.contrib.auth.models import User , Group
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate , login , logout
@@ -24,6 +25,7 @@ from StringIO import StringIO
 import math
 import requests
 # related to the invoice generator
+# <<<<<<< HEAD
 from reportlab import *
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors, utils
@@ -42,6 +44,9 @@ from reportlab.graphics.barcode import code39
 from reportlab.platypus.doctemplate import Indenter
 from PIL import Image
 
+# =======
+# from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
+# >>>>>>> 8761308c22a80f2dbc8c1a04cb97135e3df8c230
 # Related to the REST Framework
 from rest_framework import viewsets , permissions , serializers
 from rest_framework.exceptions import *
@@ -52,14 +57,42 @@ from rest_framework.decorators import api_view
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 # from .helper import *
+import datetime
 from API.permissions import *
 from HR.models import accountsKey
-
+from reportlab.graphics.barcode.qr import QrCodeWidget
 from django.core import serializers
 from django.http import JsonResponse
 from django.db.models import F ,Value,CharField,Prefetch
 import ast
+from reportlab.graphics import barcode , renderPDF
 from django.utils import timezone
+
+from django.shortcuts import render
+from rest_framework import viewsets , permissions , serializers
+from url_filter.integrations.drf import DjangoFilterBackend
+from .serializers import *
+from API.permissions import *
+from .models import *
+from HR.models import profile
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
+from django.core.mail import send_mail, EmailMessage
+from reportlab import *
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm, mm
+from reportlab.lib import colors, utils
+from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
+from reportlab.platypus.flowables import HRFlowable
+from PIL import Image
+from dateutil.relativedelta import relativedelta
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
+from reportlab.graphics import barcode, renderPDF
+from reportlab.graphics.shapes import *
+import calendar as pythonCal
+from ERP.models import service, appSettingsField
+# Create your views here.
 
 def ecommerceHome(request):
     return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
@@ -97,6 +130,8 @@ class PromoCheckAPI(APIView):
                 toReturn = 'Invalid Promocode'
             return Response({'msg':toReturn,'val':val}, status = status.HTTP_200_OK)
 
+
+
 class CreateOrderAPI(APIView):
     renderer_classes = (JSONRenderer,)
     # permission_classes = (permissions.IsAuthenticated ,)
@@ -105,24 +140,25 @@ class CreateOrderAPI(APIView):
         oQMp = []
         totalAmount = 0
         msg = 'Error'
-        userCart = Cart.objects.filter(user=request.user,typ='cart')
+        contactData=[]
+        userCart = Cart.objects.filter(user=request.user)
         print userCart.count(),userCart
         for i in request.data['products']:
             pObj = listing.objects.get(pk = i['pk'])
-            pp = int(round(pObj.product.price)) * i['qty']
+            pp = pObj.product.price
             if pp > 0:
                 a = pp - (pObj.product.discount*pp)/100
                 b = a - (request.data['promoCodeDiscount']*a)/100
             else:
                 b=0
-            totalAmount += int(round(b))
-            print {'product':pObj,'qty':i['qty'],'totalAmount':pp,'discountAmount':pp-int(round(b))}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':pp,'discountAmount':pp-int(round(b))})
+            totalAmount += b * i['qty']
+            print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
             oQMp.append(oQMObj)
         else:
             data = {
             'user':User.objects.get(pk=request.user.pk),
-            'totalAmount' : int(round(totalAmount)),
+            'totalAmount' : round(totalAmount,2),
             'paymentMode' : str(request.data['modeOfPayment']),
             'modeOfShopping' : str(request.data['modeOfShopping']),
             'paidAmount' : str(request.data['paidAmount']),
@@ -143,9 +179,64 @@ class CreateOrderAPI(APIView):
             orderObj.save()
             msg = 'Sucess'
             userCart.delete()
-
-
-        return Response({'msg':msg}, status = status.HTTP_200_OK)
+            # response = HttpResponse(content_type='application/pdf')
+            # response['Content-Disposition'] = 'attachment; filename="order_invoice%s_%s_%s.pdf"' % (
+            # orderObj.totalAmount, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, orderObj.pk)
+            # genInvoice(response, orderObj, request)
+            # f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/order_invoice%s%s_%s.pdf' %
+            #                   ( orderObj.totalAmount, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, orderObj.pk)), 'wb')
+            # f.write(response.content)
+            # f.close()
+            value = []
+            totalPrice = 0
+            promoAmount = 0
+            total=0
+            price = 0
+            grandTotal = 0
+            promoObj = Promocode.objects.all()
+            for p in promoObj:
+                if str(p.name)==str(orderObj.promoCode):
+                    promoAmount = p.discount
+            print promoAmount
+            a = '#'
+            print str(a),'aaaaaaaaaa',orderObj.pk
+            docID = str(a) + str(orderObj.pk)
+            print docID,'aaaaaaaaaaaaaaaaaaaaabbbbbbbbb'
+            for i in orderObj.orderQtyMap.all():
+                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                totalPrice=i.qty*price
+                total+=totalPrice
+                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+            grandTotal=total-(promoAmount * total)/100
+            ctx = {
+                'heading' : "Invoice Details",
+                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                'linkUrl': 'cioc.co.in',
+                'sendersAddress' : 'CIOC',
+                # 'sendersPhone' : '122004',
+                'grandTotal':grandTotal,
+                'total': total,
+                'value':value,
+                'docID':docID,
+                'data':orderObj,
+                'promoAmount':promoAmount,
+                'linkedinUrl' : 'https://www.linkedin.com/',
+                'fbUrl' : 'https://facebook.com',
+                'twitterUrl' : 'https://twitter.com',
+            }
+            print ctx
+            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+            # email_subject = "Order Details:"
+            # msgBody = " Your Order has been placed and details are been attached"
+            contactData.append(str(orderObj.user.email))
+            print 'aaaaaaaaaaaaaaa'
+            msg = EmailMessage("Order Details" , email_body, to= contactData  )
+            msg.content_subtype = 'html'
+            # a = str(f).split('media_root/')[1]
+            # b = str(a).split("', mode")[0]
+            # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
+            msg.send()
+            return Response({}, status = status.HTTP_200_OK)
 
 
 class fieldViewSet(viewsets.ModelViewSet):
@@ -346,10 +437,11 @@ class FrequentlyQuestionsViewSet(viewsets.ModelViewSet):
     filter_fields = ['ques']
 
 
-settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
 
 def manifest(response,item):
     print '999999999999999999999999999999999999999'
+    settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
+    print settingsFields.get(name = 'address').value
     order = item.order.get()
     now = datetime.datetime.now()
     print item.pk , order.pk
@@ -368,20 +460,26 @@ def manifest(response,item):
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
-    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=5))
+    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=5))
+    elements.append(Spacer(1, 30))
+
     txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(item.courierName,item.courierAWBNo)
     elements.append(Paragraph(txt3, styles['Normal']))
-    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+    elements.append(Spacer(1, 10))
+
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
     elements.append(Paragraph(txt4, styles['Normal']))
-    elements.append(Spacer(1, 10))
+    elements.append(Spacer(1, 3))
     txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
     txt6 = '<para size=10 leftIndent=150 rightIndent=150><b>Invoice No. : </b>{0} </para>'.format(invNo)
     elements.append(Paragraph(txt6, styles['Normal']))
-    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=10))
+    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=10))
+    elements.append(Spacer(1, 30))
+
     pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(item.product.product.name),styles['Normal'])
     tableData=[['Product','Price','Qty','Discount','Final Price'],[pd,item.totalAmount,item.qty,item.discountAmount,item.totalAmount-item.discountAmount],['TOTAL','','','',item.totalAmount-item.discountAmount]]
 
@@ -394,7 +492,9 @@ def manifest(response,item):
     if order.paymentMode != 'card':
         txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(item.totalAmount-item.discountAmount)
         elements.append(Paragraph(txt7, styles['Normal']))
-    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=20,spaceAfter=5))
+    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=20,spaceAfter=5))
+    elements.append(Spacer(1, 20))
+
     txt8 = '<para size=10 leftIndent=150 rightIndent=150><b>Tracking ID. : </b>{0} </para>'.format(item.courierAWBNo)
     elements.append(Paragraph(txt8, styles['Normal']))
     elements.append(Spacer(1, 10))
@@ -407,7 +507,9 @@ def manifest(response,item):
     # orderNo = str(now.year)+str(now.month)+str(now.day)+str(item.pk)
     txt9 = '<para size=10 leftIndent=150 rightIndent=150><b>Order ID. : </b>{0} </para>'.format(invNo)
     elements.append(Paragraph(txt9, styles['Normal']))
-    elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+    elements.append(Spacer(1, 5))
+
 
     doc.build(elements)
 
@@ -420,4 +522,397 @@ class DownloadManifestAPI(APIView):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
         manifest(response,item)
+        return response
+
+class SendStatusAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        emailAddr=[]
+        request.data['value'],'aaaaaaaaaaaaaa'
+        oq = OrderQtyMap.objects.filter(pk = request.data['value'])
+        for i in oq:
+            productId = i.pk
+            productStatus = i.status
+            productName = i.product.product.name
+            qty = i.qty
+        print str(productName)
+        o = Order.objects.filter(orderQtyMap = productId)
+        for j in o:
+            orderId = j.pk
+            emailAddr.append(j.user.email)
+        # emailAddr.append(customer.email)
+        email_subject = "Order Details:"
+        if productStatus == 'created':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been placed"
+        elif productStatus == 'packed':
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been packed"
+        elif productStatus == 'shipped':
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from packed to shipped"
+        elif productStatus == 'inTransit':
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from shipped to  in Transit"
+        elif productStatus == 'reachedNearestHub':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has Reached to the nearest Hub"
+        elif productStatus == 'outForDelivery':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" is Out for delivery"
+        elif productStatus == 'delivered':
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been Delivered to you"
+        elif productStatus == 'cancelled':
+            msgBody = "Your request to cancel the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+        elif productStatus == 'returned':
+            msgBody ="Your request to return the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+        msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+        msg.send()
+        return Response({}, status = status.HTTP_200_OK)
+
+
+
+themeColor = colors.HexColor('#227daa')
+
+styles=getSampleStyleSheet()
+styleN = styles['Normal']
+styleH = styles['Heading1']
+
+
+settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+
+
+class FullPageImage(Flowable):
+    def __init__(self , img):
+        Flowable.__init__(self)
+        self.image = img
+
+    def draw(self):
+        img = utils.ImageReader(self.image)
+
+        iw, ih = img.getSize()
+        aspect = ih / float(iw)
+        width, self.height = PAGE_SIZE
+        width -= 3.5*cm
+        self.canv.drawImage(os.path.join(BASE_DIR , self.image) , -1 *MARGIN_SIZE + 1.5*cm , -1* self.height + 5*cm , width, aspect*width)
+
+class expanseReportHead(Flowable):
+
+    def __init__(self, request , contract):
+        Flowable.__init__(self)
+        self.req = request
+        self.contract = contract
+    #----------------------------------------------------------------------
+    def draw(self):
+        """
+        draw the floable
+        """
+        now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+        docTitle = 'TAX INVOICE'
+        dateCreated=self.contract.created.strftime("%d-%m-%Y")
+        passKey = '%s%s'%(str(self.req.user.date_joined.year) , self.req.user.pk) # also the user ID
+        docID = '%s%s' %( now.year , self.contract.pk)
+
+
+        pSrc = '''
+        <font size=10>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<u>%s</u></font><br/><br/><br/>
+        <font size=8>
+        <strong>Dated:</strong> %s<br/><br/>
+        <strong>Invoice ID:</strong> %s<br/><br/>
+        </font>
+        ''' % ( docTitle  , dateCreated , docID)
+
+        story = []
+        head = Paragraph(pSrc , styleN)
+        head.wrapOn(self.canv , 200*mm, 50*mm)
+        head.drawOn(self.canv , 0*mm, -10*mm)
+
+        # barcode_value = "1234567890"
+        # barcode39 = barcode.createBarcodeDrawing('EAN13', value = barcode_value,barWidth=0.3*mm,barHeight=10*mm)
+        #
+        # barcode39.drawOn(self.canv,160*mm,0*mm)
+        # self.canv.drawImage(os.path.join(BASE_DIR , 'logo.png') , 80*mm , 0*mm , 2*cm, 2*cm)
+
+def addPageNumber(canvas, doc):
+    """
+    Add the page number
+    """
+    print doc.contract
+    now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+    passKey = '%s%s'%(str(doc.request.user.date_joined.year) , doc.request.user.pk) # also the user ID
+    docID = '%s%s' %(now.year , doc.contract.pk)
+
+    qrw = QrCodeWidget('http://cioc.co.in/documents?id=%s&passkey=%s&app=crmInvoice' %(docID , passKey))
+    b = qrw.getBounds()
+
+    w=b[2]-b[0]
+    h=b[3]-b[1]
+
+    d = Drawing(60,60,transform=[60./w,0,0,60./h,0,0])
+    d.add(qrw)
+    renderPDF.draw(d, canvas ,180*mm,270*mm)
+
+    pass
+
+    # page_num = canvas.getPageNumber()
+    # text = "<font size='8'>Page #%s</font>" % page_num
+    # p = Paragraph(text , styleN)
+    # p.wrapOn(canvas , 50*mm , 10*mm)
+    # p.drawOn(canvas , 100*mm , 10*mm)
+
+
+
+class PageNumCanvas(canvas.Canvas):
+
+    #----------------------------------------------------------------------
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self.pages = []
+
+    #----------------------------------------------------------------------
+    def showPage(self):
+        """
+        On a page break, add information to the list
+        """
+        self.pages.append(dict(self.__dict__))
+        self._startPage()
+
+    #----------------------------------------------------------------------
+    def save(self):
+        """
+        Add the page number to each page (page x of y)
+        """
+        page_count = len(self.pages)
+
+        for page in self.pages:
+            self.__dict__.update(page)
+            # self.draw_page_number(page_count)
+            self.drawLetterHeadFooter()
+            canvas.Canvas.showPage(self)
+
+        canvas.Canvas.save(self)
+
+
+    #----------------------------------------------------------------------
+    def draw_page_number(self, page_count):
+        """
+        Add the page number
+        """
+
+        text = "<font size='8'>Page #%s of %s</font>" % (self._pageNumber , page_count)
+        p = Paragraph(text , styleN)
+        p.wrapOn(self , 50*mm , 10*mm)
+        p.drawOn(self , 100*mm , 10*mm)
+
+    def drawLetterHeadFooter(self):
+        self.setStrokeColor(themeColor)
+        self.setFillColor(themeColor)
+        self.rect(0,0,1500,70, fill=True)
+        # print dir(self)
+        compNameStyle = styleN.clone('footerCompanyName')
+        compNameStyle.textColor = colors.white;
+
+        p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
+        p.wrapOn(self , 50*mm , 10*mm)
+        p.drawOn(self , 85*mm  , 18*mm)
+
+        p1 = Paragraph(settingsFields.get(name = 'companyAddress').value , compNameStyle)
+        p1.wrapOn(self , 150*mm , 10*mm)
+        p1.drawOn(self , 55*mm  , 10*mm)
+
+
+        p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)
+        p2.wrapOn(self , 200*mm , 10*mm)
+        p2.drawOn(self , 40*mm  , 4*mm)
+
+        from svglib.svglib import svg2rlg
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'cioc_icon.svg'))
+        sx=sy=0.5
+        drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
+        drawing.scale(sx,sy)
+        #if you want to see the box around the image
+        # drawing._showBoundary = True
+        renderPDF.draw(drawing, self,10*mm  , self._pagesize[1]-20*mm)
+
+        #width = self._pagesize[0]
+        # page = "Page %s of %s" % (, page_count)
+        # self.setFont("Helvetica", 9)
+        # self.drawRightString(195*mm, 272*mm, page)
+
+def genInvoice(response, contract, request):
+    MARGIN_SIZE = 8 * mm
+    PAGE_SIZE = A4
+
+    # c = canvas.Canvas("hello.pdf")
+    # c.drawString(9*cm, 19*cm, "Hello World!")
+
+    pdf_doc = SimpleDocTemplate(response, pagesize=PAGE_SIZE,
+                                leftMargin=MARGIN_SIZE, rightMargin=MARGIN_SIZE,
+                                topMargin=4 * MARGIN_SIZE, bottomMargin=3 * MARGIN_SIZE)
+
+    # data = [['', '', '', 'Grand Total', '' , pFooterGrandTotal]]
+    pdf_doc.contract = contract
+    pdf_doc.request = request
+
+
+    tableHeaderStyle = styles['Normal'].clone('tableHeaderStyle')
+    tableHeaderStyle.textColor = colors.white
+    tableHeaderStyle.fontSize = 7
+
+    pHeadProd = Paragraph(
+        '<strong>Product</strong>', tableHeaderStyle)
+    pHeadPrice = Paragraph('<strong>Price</strong>', tableHeaderStyle)
+    pHeadQuantity = Paragraph('<strong>Quantity</strong>', tableHeaderStyle)
+    pHeadTPrice = Paragraph('<strong>Total Price</strong>', tableHeaderStyle)
+    #
+    # # bookingTotal , bookingHrs = getBookingAmount(o)
+    #
+    # pFooterQty = Paragraph('%s' % ('o.quantity') , styles['Normal'])
+    # pFooterTax = Paragraph('%s' %('tax') , styles['Normal'])
+    # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
+    # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
+    #
+    data = [[pHeadProd, pHeadPrice, pHeadQuantity, pHeadTPrice]]
+    #
+    # totalQuant = 0
+    # totalTax = 0
+    totaldiscount = 0
+    total = 0
+    totalprice = 0
+    promoAmount = 0
+    discount = 0
+    tableBodyStyle = styles['Normal'].clone('tableBodyStyle')
+    tableBodyStyle.fontSize = 7
+    promoObj = Promocode.objects.all()
+    for p in promoObj:
+        if str(p.name)==str(contract.promoCode):
+            promoAmount = p.discount
+    for i in contract.orderQtyMap.all():
+        print i
+        if str(i.status)!='cancelled':
+            print i.product.product.name, i.product.product.discount, i.product.product.price
+            price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+            print i.discountAmount,'aaaaaaaaaaaaa'
+            print i.totalAmount,'bbbbbbbbbbbbbb'
+            print i.refundAmount,'aaaaaaa'
+            totalprice = i.qty*price
+            total+=totalprice
+            pBodyProd = Paragraph(str(i.product.product.name), tableBodyStyle)
+            pBodyPrice = Paragraph(str(price), tableBodyStyle)
+            pBodyQty = Paragraph(str(i.qty), tableBodyStyle)
+            pBodyTPrice = Paragraph(str(totalprice), tableBodyStyle)
+            data.append([pBodyProd, pBodyPrice, pBodyQty, pBodyTPrice])
+
+    # contract.grandTotal = grandTotal
+    # contract.save()
+    grandTotal=total-(promoAmount * total)/100
+    print grandTotal
+    tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
+    tableGrandStyle.fontSize = 10
+    #
+    data += [['',   Paragraph('Total (INR)', tableHeaderStyle), '', Paragraph(str(total), tableGrandStyle)],['',   Paragraph('Discount Coupon (%)', tableHeaderStyle), '', Paragraph(str(promoAmount), tableGrandStyle)],['',   Paragraph('Grand Total (INR)', tableHeaderStyle), '', Paragraph(str(grandTotal), tableGrandStyle)]]
+    t = Table(data)
+    ts = TableStyle([('ALIGN', (1, 1), (-3, -3), 'RIGHT'),
+                     ('VALIGN', (0, 1), (-1, -3), 'TOP'),
+                     ('VALIGN', (0, -2), (-1, -2), 'TOP'),
+                     ('VALIGN', (0, -1), (-1, -1), 'TOP'),
+                     ('SPAN', (-3, -1), (-2, -1)),
+                     ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                     ('BACKGROUND', (0, 0), (-1, 0), themeColor),
+                     ('LINEABOVE', (0, 0), (-1, 0), 0.25, themeColor),
+                     ('LINEABOVE', (0, 1), (-1, 1), 0.25, themeColor),
+                     ('BACKGROUND', (-3, -3), (-1, -2), themeColor),
+                     ('BACKGROUND', (-3, -2), (-1, -2), themeColor),
+                     ('BACKGROUND', (-3, -1), (-1, -1), themeColor),
+                     # ('LINEABOVE', (-2, -2), (-1, -2), 0.25, colors.gray),
+                     ('LINEABOVE', (0, -1), (-1, -1), 0.25, colors.gray),
+                     # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
+                     ])
+    t.setStyle(ts)
+    t._argW[0] = 6 * cm
+    t._argW[1] = 3 * cm
+    t._argW[2] = 3 * cm
+    t._argW[3] = 3 * cm
+    # t._argW[4] = 2 * cm
+    # t._argW[5] = 2 * cm
+    # t._argW[6] = 1.6 * cm
+    # t._argW[7] = 2 * cm
+
+    # add some flowables
+
+    story = []
+
+    expHead = expanseReportHead(request, contract)
+    story.append(Spacer(2.5, 2 * cm))
+    story.append(expHead)
+    story.append(Spacer(2.5, 0.75 * cm))
+
+    #
+    # adrs = contract.deal.company.address
+    #
+    # if contract.deal.company.tin is None:
+    #     tin = 'NA'
+    # else:
+    #     tin = contract.deal.company.tin
+    #
+    summryParaSrc = """
+    <font size='8'><strong>Customer details:</strong></font> <br/><br/>
+    <font size='6'><strong>Your Billing Address:</strong></font> <br/>
+    <font size='6'>
+    %s %s<br/>
+    %s <br/>
+    %s <br/>
+    %s %s - %s<br/>
+    India<br/>
+    %s<br/><br/>
+    </font>
+    <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
+    <font size='6'>
+    %s %s<br/>
+    %s <br/>
+    %s <br/>
+    %s %s - %s<br/>
+    India<br/>
+    %s<br/>
+    </font>
+    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo,contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo)
+    story.append(Paragraph(summryParaSrc , styleN))
+    story.append(t)
+    story.append(Spacer(2.5,0.5*cm))
+
+    summryParaSrc = """
+    <font size='4'><strong>Computer generated bill, no signature required</strong></font> <br/>
+    """
+    story.append(Paragraph(summryParaSrc , styleN))
+
+    #     summryParaSrc = settingsFields.get(name = 'bankDetails').value
+    #     story.append(Paragraph(summryParaSrc , styleN))
+    #
+    #     tncPara = settingsFields.get(name = 'tncInvoice').value
+    #
+    # else:
+    #     tncPara = settingsFields.get(name = 'tncQuotation').value
+
+    # story.append(Paragraph(tncPara , styleN))
+
+    # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
+    # for s in scans:
+    #     story.append(PageBreak())
+    #     story.append(FullPageImage(s))
+
+
+    pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
+
+
+
+class DownloadInvoiceAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        print request.GET['value'],'aaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbb'
+        response = HttpResponse(content_type='application/pdf')
+        o = Order.objects.get(pk=request.GET['value'])
+        print o
+        response['Content-Disposition'] = 'attachment; filename="Call_letter%s_%s.pdf"' % (
+             datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)
+        genInvoice(response, o, request)
+        f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/Call_letter%s_%s.pdf' %
+                              ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)), 'wb')
+        f.write(response.content)
+        f.close()
+        # return Response(status=status.HTTP_200_OK)
         return response

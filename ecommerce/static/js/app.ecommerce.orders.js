@@ -161,10 +161,14 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     then((function(idx) {
       return function(response) {
         console.log(response.data);
-        Flash.create('success', 'Item Has Cancelled');
         $scope.order.orderQtyMap[idx].status = response.data.status
         $scope.order.orderQtyMap[idx].refundAmount = response.data.refundAmount
         $scope.order.orderQtyMap[idx].refundStatus = response.data.refundStatus
+        var toSend = {value : response.data.pk};
+        $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
+        then(function(response) {
+        })
+        Flash.create('success', 'Item Has Cancelled');
         $scope.saveLog(idx, 'This Item Has Cancelled')
       }
     })(idx))
@@ -263,7 +267,6 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     })(idx))
   }
   $scope.changeStatus = function(idx, sts) {
-    console.log('ssssssssssssssssssssss', idx, sts);
     $http({
       method: 'PATCH',
       url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[idx].pk + '/',
@@ -274,9 +277,12 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     then((function(idx, sts) {
       return function(response) {
         Flash.create('success', 'Status Changed To ' + sts);
-        console.log(response.data);
-        $scope.order.orderQtyMap[idx].status = response.data.status
+        $scope.order.orderQtyMap[idx].status =   response.data.status
         $scope.saveLog(idx, 'This Item Has ' + sts)
+        var toSend = {value : response.data.pk};
+        $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
+        then(function(response) {
+        })
       }
     })(idx, sts))
   }

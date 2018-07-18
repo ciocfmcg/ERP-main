@@ -17,6 +17,7 @@
         <div class="col-md-3">
           <span style="font-size:15px;" > Status : {{data.status}} </span>
         </div>
+
       </div>
       <div class="row">
 
@@ -30,6 +31,7 @@
         </div>
         <div class="col-md-6">
           <!-- <button type="button" name="button" class="btn btn-success" > Cancel </button> -->
+            <a href="/api/ecommerce/downloadInvoice/?value={{data.pk}}" target="_blank"><button class="btn btn-primary pull-right"><i class="fa fa-download "></i> Download Invoice</button></a>
         </div>
       </div>
     </div>
@@ -37,37 +39,65 @@
   <div class="row anim-in-out anim-fade"  data-anim-speed="200" ng-if="data.showInfo">
     <hr>
     <div class="container-fluid">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="row">
-          <div class="col-md-5">
-            <strong>Address :</strong>
-          </div>
-          <div class="col-md-7">
-            {{data.street}} ,
-            {{data.city}} <br>
-            {{data.state}} ,
-            {{data.landMark}} (landmark) <br>
-            {{data.pincode}}
-          </div>
+          <strong>Address :</strong>
+          <span ng-if="data.street"> {{data.street}} ,</span>
+          <span ng-if="data.city"></span>  {{data.city}} ,
+          <span ng-if="data.state"></span>  {{data.state}} ,
+          <span ng-if="data.pincode"></span>  {{data.pincode}} ,
+         <span ng-if="data.landMark"></span> landmark - {{data.landMark}}
         </div>
         <div class="row">
-          <div class="col-md-5">
-              <strong>Mobile :</strong>
-          </div>
-          <div class="col-md-7">
-            {{data.mobileNo}}
-          </div>
+          <strong>Mobile :</strong> <span ng-if="data.mobileNo" > {{data.mobileNo}}</span>
         </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-6" style="border-left: 1px solid #e0e0e0;" >
         <div class="row">
-          <strong>Items :</strong>
-          <div ng-repeat="i in data.orderQtyMap">
-            <span>{{i.qty}} -</span>
-            <span> {{i.productName}}</span>
-            <span>for {{i.totalAmount * i.qty}}</span>
-
+          <div class="col-md-offset-1 col-md-4">
+            <strong>Products </strong>
           </div>
+          <div class="col-md-1">
+            <strong>Qty </strong>
+          </div>
+          <div class="col-md-3">
+            <strong>Amount</strong>
+          </div>
+          <div class="col-md-3">
+            <strong>Status </strong>
+          </div>
+        </div>
+        <div class="row" ng-repeat="i in data.orderQtyMap">
+          <div class="col-md-1">
+             <input type="checkbox" ng-model="i.selected" >
+          </div>
+          <div class="col-md-4">
+            {{i.productName.slice(0,25)}}
+          </div>
+          <div class="col-md-1">
+            {{i.qty}}
+          </div>
+          <div class="col-md-3">
+            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2)}}
+          </div>
+          <div class="col-md-3">
+            {{i.status}}
+          </div>
+        </div>
+        
+      </div>
+      <div class="col-md-3 text-center" >
+        <div class="row">
+          <div class="btn-group">
+          <button  type="button" name="button" class="btn btn-danger" ng-click="rowActionClicked('cancel')" > Cancel </button>
+          <button  type="button" name="button" class="btn btn-primary" ng-click="rowActionClicked('return')" > Return </button>
+        </div>
+        </div>
+        <div class="row">
+          <span class="text-muted"> Select one or more item to cancel or return </span>
+        </div>
+        <div class="row">
+          <span ng-if="data.promoCode" > Coupon Applied:  {{data.promoCode}} - {{data.promoDiscount}} % </span>
         </div>
       </div>
       <!-- <div class="col-md-2">

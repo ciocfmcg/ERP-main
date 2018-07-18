@@ -141,6 +141,7 @@ class Activities(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(User , related_name = 'userAddress' , null = True , blank = True)
     title = models.CharField(max_length=100 , null = True , blank = True)
+    landMark = models.CharField(max_length=100 , null = True , blank = True)
     street = models.CharField(max_length=300 , null = True , blank = True)
     city = models.CharField(max_length=100 , null = True , blank = True)
     state = models.CharField(max_length=50 , null = True , blank = True)
