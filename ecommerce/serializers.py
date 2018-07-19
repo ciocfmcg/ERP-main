@@ -267,10 +267,11 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','productName','productPrice','ppAfterDiscount')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount')
+
     def update(self ,instance, validated_data):
         print 'updateeeeeeeeeeeeeeeeeee'
-        for key in ['product', 'qty' ,'totalAmount' , 'status' , 'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable',]:
+        for key in ['product', 'qty' ,'totalAmount' , 'status' , 'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes',]:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -305,7 +306,6 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount')
         read_only_fields = ('user',)
     def get_promoDiscount(self, obj):
-        print  obj.promoCode ,'gggggggggggggggggggggggg'
         pD = Promocode.objects.filter(name = obj.promoCode)
         promoDiscount = 0
         for i in pD:

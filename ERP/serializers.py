@@ -182,6 +182,15 @@ class applicationSettingsAdminSerializer(serializers.ModelSerializer):
         s.app = validated_data.pop('app')
         s.save()
         return s
+    def update(self ,instance, validated_data):
+        print 'updateeeeeeeeeeeeeeeeeee'
+        for key in ['name', 'flag' , 'value' , 'description' , 'created' , 'app', 'fieldType']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        return instance
 
 class permissionSerializer(serializers.ModelSerializer):
     app = applicationSerializer(read_only = True, many = False)

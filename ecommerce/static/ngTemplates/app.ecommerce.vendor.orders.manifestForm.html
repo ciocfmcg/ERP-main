@@ -1,0 +1,25 @@
+<div class="modal-header">
+  Courier Details
+</div>
+
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="form-group">
+      <label>Courier Name</label>
+      <input type="text" class="form-control"  ng-model="courierForm.courierName">
+    </div>
+    <div class="form-group">
+      <label>Courier AWB No.</label>
+      <input type="text" class="form-control"  ng-model="courierForm.courierAWBNo">
+    </div>
+    <div class="form-group">
+      <label>Decription</label>
+      <textarea class="form-control" rows="5" ng-model="courierForm.notes"></textarea>
+    </div>
+    <div class="btn btn-success" ng-click="saveManifest()">
+      Save
+    </div>
+
+
+  </div>
+</div>
