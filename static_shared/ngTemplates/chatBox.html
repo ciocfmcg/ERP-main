@@ -1,31 +1,27 @@
-<div>
+<div class="animated fadeIn">
   <div style="min-height:75vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white; " class="container-fluid">
     <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:80px;">
       <div class="row" style="padding:10px;">
         <div class="col-md-5">
             <h4> {{data.uid.split("$")[0]}} </h4>
-            <h5>{{data.name}}</h5>
+            <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i> <span>{{data.name}}</span>
         </div>
         <div class="col-md-5">
-           <button class="btn btn-success" type="button" name="button"> Knowledge base </button>
+           <button class="btn btn-primary" type="button" name="button" ng-click="knowledgeBase()"> Knowledge base </button>
         </div>
         <div class="col-md-2" >
           <i class="fa fa-times " aria-hidden="true" style="cursor:pointer; font-size:20px;" ng-click="closeChatBox(index)" ></i>
         </div>
       </div>
-    <!-- <div class="container-fluid" >
-      <label style="font-size:25px" class="text-muted">{{data.name}}</label>
-      <label class="text-muted pull-right">{{data.uid.split("$")[0]}}</label>
-    </div> -->
   </div>
-    <div class="container-fluid" style="margin-left:10px;margin-right:10px; height:70vh; overflow-y:auto; overflow-x:hidden;">
+    <div class="container-fluid" style="margin-left:10px;margin-right:10px; height:65vh; overflow-y:auto; overflow-x:hidden;">
 
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
         <div class="row container-fluid">
-          <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-            <p ng-if="message.msg != '' || message.msg != undefined" style="word-wrap: break-word;" >{{message.msg}}</p>
-           <img ng-if="message.img" ng-src="{{message.img}}" >
-           <video ng-if="message.videoUrl" ng-src="{{message.videoUrl}}" controls></video>
+          <div style="float:{{message.sentByMe ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+            <p ng-if="message.msg != '' || message.msg != undefined" style="word-break: break-all !important;" >{{message.msg}}</p>
+           <img ng-if="message.img" ng-src="{{message.img}}" style="width:250px;">
+           <video ng-if="message.videoUrl" width="280" height="240" ng-src="{{message.videoUrl}}" controls></video>
            <audio ng-if="message.audioUrl" ng-src="{{message.audioUrl}}" controls></audio>
            <p class="text-center" ng-if="message.documentUrl" style="word-wrap: break-word;"> <a ng-href="{{message.documentUrl}}" target = "_blank" ><i class="fa {{message.documentUrl.split('document/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{message.documentUrl.split('document/')[1]}}  </p>
           </div>

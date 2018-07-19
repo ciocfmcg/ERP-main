@@ -58,13 +58,17 @@
         </div>
           <ul class="nav nav-sidebar-inverse" style="width:100%;"  >
             <!-- <li ng-repeat="x in newUsers" ng-click="data.xInView = $index" class="ripple "> -->
-            <li class="anim-in-out anim-fade" ng-repeat="x in myUsers"  ng-click="addToChat($index)" class="ripple">
+            <li ng-repeat="x in myUsers"  ng-click="addToChat($index)" class="ripple animated fadeIn">
               <a>
                 <div class="row" style="cursor:pointer" >
                   <div class="container-fluid">
-                    <div class="col-md-7">
-                      <span >{{x.name}}</span><br>
-                      <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span> {{x.uid.split("$")[0]}}</span>
+                    <div class="col-md-12">
+                      <div class="row">
+                        <span> {{x.uid.split("$")[0]}}</span>
+                      </div>
+                      <div class="row">
+                        <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i>  <span >{{x.name}}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -88,15 +92,19 @@
             </div>
           </div>
         </div>
-          <ul class="nav nav-sidebar-inverse" style="width:100%;"  >
+          <ul class="nav nav-sidebar-inverse" style="width:100%;">
             <!-- <li ng-repeat="x in newUsers" ng-click="data.xInView = $index" class="ripple "> -->
-            <li class="anim-in-out anim-fade" ng-repeat="x in newUsers" mwl-confirm title="Confirm" message="Do you want to assign this user to yourself?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="assignUser($index)" confirm-button-type="btn btn-success" cancel-button-type="btn btn-danger" class="ripple">
+            <li ng-repeat="x in newUsers" mwl-confirm title="Confirm" message="Do you want to assign this user to yourself?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="assignUser($index)" confirm-button-type="btn btn-success" cancel-button-type="btn btn-danger" class="ripple">
               <a>
                 <div class="row" style="cursor:pointer" >
                   <div class="container-fluid">
-                    <div class="col-md-7">
-                      <span >{{x.name}}</span><br>
-                      <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span>{{x.uid.split("$")[0]}}</span>
+                    <div class="col-md-12">
+                      <div class="row">
+                        <span >{{x.uid.split("$")[0]}}</span>
+                      </div>
+                      <div class="row">
+                        <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span> {{x.name}}</span>
+                      </div>
                     </div>
                   </div>
                 </div>

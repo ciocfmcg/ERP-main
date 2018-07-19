@@ -325,7 +325,7 @@ app.directive('chatBox', function() {
       index:'=',
       closeChat: '=',
     },
-    controller: function($scope, $users) {
+    controller: function($scope, $users , $uibModal) {
       $scope.me = $users.get('mySelf');
 
       $scope.chatBox = {
@@ -339,27 +339,25 @@ app.directive('chatBox', function() {
 
 
       $scope.send = function() {
-        console.log($scope.chatBox);
-        if ($scope.chatBox.messageToSend.length>0) {
-          $scope.data.messages.push({msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() })
-          console.log($scope.chatBox.messageToSend);
-          $scope.chatBox.messageToSend = ''
-        }
-
         if ($scope.chatBox.fileToSend.size>0) {
           var typ = $scope.chatBox.fileToSend.type.split('/')[0]
           if (typ=='image') {
-            $scope.data.messages.push({msg : "",sentByMe:true, img:'/static/images/zcrm-banner-mail.jpg' , created: new Date()})
+            $scope.data.messages.push({msg : "",sentByMe:true, img:'/static/images/career.jpg' , created: new Date()})
           }else if (typ=='audio') {
-            $scope.data.messages.push({msg:"" , sentByMe: true, audioUrl:'/static/audio/notification/mp3', created: new Date() })
+            $scope.data.messages.push({msg:"" , sentByMe: true, audioUrl:'/static/audio/notification.mp3', created: new Date() })
           }else if (typ=='video') {
-            $scope.data.messages.push({msg : "",sentByMe:true, videoUrl:'/static/video/big_buck_bunny.mp4' , created: new Date()})
+            $scope.data.messages.push({msg : "",sentByMe:true, videoUrl:'/static/videos/24tutors.mp4' , created: new Date()})
           }else if (typ=='application') {
             $scope.data.messages.push({msg : "",sentByMe:true, documentUrl:'static/document/invoice.pdf' , created: new Date()})
           }
           $scope.chatBox.fileToSend = emptyFile;
         }
 
+        if ($scope.chatBox.messageToSend.length>0) {
+          $scope.data.messages.push({msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() })
+          console.log($scope.chatBox.messageToSend);
+          $scope.chatBox.messageToSend = ''
+        }
       };
 
       $scope.closeChatBox = function(indx) {
@@ -370,8 +368,19 @@ app.directive('chatBox', function() {
         $('#filePickerChat' + $scope.index).click();
       }
 
-      $scope.sendMessage = function () {
+      $scope.knowledgeBase = function(data) {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.knowledgeBase.modal.html',
+          size: 'md',
+          backdrop: true,
+          controller: function($scope, $users , $uibModalInstance) {
 
+            $scope.closeModal = function () {
+              $uibModalInstance.close()
+            }
+
+          },
+        })
       }
 
     }
