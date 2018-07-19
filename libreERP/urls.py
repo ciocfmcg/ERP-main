@@ -6,7 +6,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from events.views import eventHome
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
-from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer,customerLoginView , customerHomeView
+from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
 from ecommerce.views import ecommerceHome
 from ERP.views import serviceRegistration
 from ERP.views import PaymentResponse
@@ -41,8 +41,8 @@ urlpatterns = [
     url(r'^refund', refund , name ='refund'),
     url(r'^contacts', contacts , name ='contacts'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
-    url(r'^customer/login/', customerLoginView , name ='customerLogin'),
-    url(r'^customerhome/', customerHomeView , name ='customerhome'),
+    # url(r'^customer/login/', customerLoginView , name ='customerLogin'),
+    # url(r'^customerhome/', customerHomeView , name ='customerhome'),
 ]
 
 if settings.DEBUG:
