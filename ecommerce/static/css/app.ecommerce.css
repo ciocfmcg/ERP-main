@@ -141,6 +141,19 @@
   -webkit-transform:rotate(45deg);
 }
 
+.activeTopTabAcnt:after{
+	content: '';
+  display: block;
+  position: absolute;
+  top: 8.3vh;
+  left:5vw;
+  width: 5vw;
+  height: 5vh;
+  background: white;
+  -moz-transform:rotate(45deg);
+  -webkit-transform:rotate(45deg);
+}
+
 .register {
     background-image: url("/static/images/register.jpg");
     background-color: #cccccc;

@@ -114,6 +114,9 @@ app.config(function($stateProvider ){
        "menu@account": {
           templateUrl: '/static/ngTemplates/app.ecommerce.account.menu.html',
         },
+        "topMenu@account": { //this is for top menu for mobile view
+           templateUrl: '/static/ngTemplates/app.ecommerce.account.topMenu.html',
+         },
         "@account": {
           templateUrl: '/static/ngTemplates/app.ecommerce.account.default.html',
         }
@@ -180,11 +183,11 @@ app.controller('controller.ecommerce.details' , function($scope ,$rootScope, $st
 
   $scope.reviews = [{heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: true} ,
     {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: true},
-    {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
+    // {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
     {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: true},
     {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: false}];
 
-  $scope.reviewsCount = 10;
+  $scope.reviewsCount = 8;
 
   $scope.pictureInView = 0;
 
@@ -249,7 +252,7 @@ app.controller('controller.ecommerce.details' , function($scope ,$rootScope, $st
   }
 
   $scope.nextReviews = function() {
-    if ($scope.reviewsCount > ($scope.reviewsPage+1)*5) {
+    if ($scope.reviewsCount > ($scope.reviewsPage+1)*4) {
       $scope.reviewsPage += 1;
       $scope.fetchReviews();
     }
@@ -266,7 +269,7 @@ app.controller('controller.ecommerce.details' , function($scope ,$rootScope, $st
     $scope.reviews = [{heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: true} ,
   {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: true},
   {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
-  {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
+  // {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
   {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: true}];
   }
   // $http({method : 'GET' , url : '/api/ecommerce/review/?listing=' + $scope.data.pk + '&limit=5&offset=' + $scope.reviewsPage * 5 }).
