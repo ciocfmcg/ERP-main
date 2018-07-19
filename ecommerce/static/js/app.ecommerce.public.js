@@ -316,10 +316,13 @@ app.controller('controller.ecommerce.categories' , function($scope , $rootScope 
 
   $scope.breadcrumbList = [];
   $scope.category = {}
+  $scope.fields;
   $http({method : 'GET' , url : '/api/ecommerce/genericProduct/?name__iexact='+ $state.params.name}).
   then(function(response){
     console.log('category',response.data);
     $scope.category = response.data[0];
+    $scope.fields = $scope.category.fields;
+    $scope.category.fields = [];
     var parent = response.data[0].parent
       while (parent) {
         $scope.breadcrumbList.push(parent.name)
@@ -331,10 +334,10 @@ app.controller('controller.ecommerce.categories' , function($scope , $rootScope 
   $scope.choices = {};
 
   $timeout(function () {
+    $scope.category.fields = $scope.fields;
     for (var i = 0; i < $scope.category.fields.length; i++) {
       if ($scope.category.fields[i].data) {
         $scope.category.fields[i].data = JSON.parse($scope.category.fields[i].data)
-
       }
       if ($scope.category.fields[i].fieldType=='choice') {
         console.log($scope.category.fields[i].data);

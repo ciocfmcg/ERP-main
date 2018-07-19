@@ -1,7 +1,7 @@
 <div class="container-fluid" style="margin-top:20px;margin-bottom:20px;">
   <div class="col-md-10 col-md-offset-1 card bg-white" style="display:block;position:relative;min-height:760px;padding-left:0px;margin-bottom:30px;">
 
-    <div class="col-md-2  bg-purple" style="position:absolute; height:100%;">
+    <div class="col-md-2 hidden-sm hidden-xs  bg-purple" style="position:absolute; height:100%;">
       <div class="row" style="padding-left:40%; padding-top:20px;">
         <i class="fa fa-shopping-cart fa-4x"></i>
       </div>
@@ -43,11 +43,51 @@
       </div>
     </div>
 
+    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; height:10vh;  padding-bottom:25px; " >
+      <div class="col-xs-2 text-center" >
+        <div class="row">
+          <i class="fa fa-shopping-cart fa-2x"></i>
+        </div>
+        <span class="text-center" style="color:white">
+          Checkout
+        </span>
+      </div>
+      <div class="col-xs-3 text-center  " ng-class="{activeTopTab: data.stage == 'review'}" >
+        <div class="row " style="padding:0px;" >
+          <i class="fa fa-check"></i>
+        </div>
+        <span style="color:white">
+          Review
+        </span>
+      </div>
+      <div class="col-xs-3 text-center" ng-class="{activeTopTab: data.stage == 'shippingDetails'}"  >
+        <div class="row " style="padding:0px;">
+          <i class="fa fa-truck"></i>
+        </div>
+        <span style="color:white">
+          Shipment
+        </span>
+      </div>
+      <div class="col-xs-3 text-center" ng-class="{activeTopTab: data.stage == 'payment'}" >
+        <div class="row " style="padding:0px;">
+          <i class="fa fa-credit-card"></i>
+        </div>
+        <span style="color:white">
+          Pay
+        </span>
+      </div>
+      <div class="col-xs-1" ng-if="data.stage=='confirmation'" ng-class="{activeTopTab: data.stage == 'confirmation'}" >
+        <div class="row">
+          <i class="fa fa-check-circle pull-left"></i>
+        </div>
+      </div>
+    </div>
+
     <div class="col-md-10 col-md-offset-2">
       <div class="container-fluid" style="margin-top:30px;">
         <div ng-if="data.stage == 'review'">
           <div class="row">
-            <div class="container-fluid">
+            <div class="container-fluid hidden-xs hidden-sm">
 
               <div class="row">
                 <div class="col-md-3 ">
@@ -129,7 +169,85 @@
               </div>
 
             </div>
+
+
+            <div class="hidden-lg hidden-md">
+
+              <div ng-if="item">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <img style="width: 100%; height:65px;" class="img" ng-src="{{item.files[0].attachment}}" ng-if="item.files.length>0">
+                    <img style="width: 100%; height:65px;" class="img" src="/static/images/ecommerce.jpg" ng-if="item.files==null">
+                  </div>
+                  <div class="col-xs-6">
+                    <div class="row" style="padding:0px" >
+                      <h6 ng-if="item.product.name.length>30" style="margin:0px;  height:50px;">{{item.product.name.slice(0,30)}}...</h6>
+                      <h6 ng-if="item.product.name.length<=30" style="margin:0px;  height:50px;">{{item.product.name}}</h6>
+                    </div>
+                    <div class="row" style="padding:0px" >
+                      <span  ng-if="item.product.discount>0" style="padding-right:5px;" > <strike> <i class="fa fa-inr"></i> {{item.product.price.toFixed(2)}} </strike> </span>
+                      <span><i class="fa fa-inr"></i>{{item.product.discountedPrice.toFixed(2)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top:20px;" >
+                  <div class="col-xs-2">
+                    <span>Qty :</span>
+                  </div>
+                  <div class="col-xs-3">
+                    <input type="number" ng-change="changeQty()" ng-model="item.qty" name="" value="" style="width: 40px;">
+                  </div>
+                  <div class="col-xs-3">
+                    <span>Total :</span>
+                  </div>
+                  <div class="col-xs-4">
+                    <p > <i class="fa fa-inr"></i>  {{(item.product.discountedPrice * item.qty).toFixed(2) }} </p>
+                  </div>
+                </div>
+              </div>
+
+
+              <div ng-if="cartItems" ng-repeat="c in cartItems">
+                <div class="col-xs-12 col-sm-6">
+
+                  <div class="row" style="padding-top:30px;">
+                    <div class="col-xs-6">
+                      <img style="width: 100%; height:65px;" class="img" ng-src="{{c.product.files[0].attachment}}" ng-if="c.product.files.length>0">
+                      <img style="width: 100%; height:65px;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="row" style="padding:0px" >
+                        <h6 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h6>
+                        <h6 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h6>
+                      </div>
+                      <div class="row" style="padding:0px" >
+                        <span  ng-if="c.product.product.discount>0" style="padding-right:5px;" > <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
+                        <span><i class="fa fa-inr"></i>{{c.product.product.discountedPrice.toFixed(2)}}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="padding-top:20px;" >
+                    <div class="col-xs-2">
+                      <span>Qty :</span>
+                    </div>
+                    <div class="col-xs-3">
+                      <input type="number"  ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 40px;">
+                    </div>
+                    <div class="col-xs-3">
+                      <span>Total :</span>
+                    </div>
+                    <div class="col-xs-4">
+                      <p > <i class="fa fa-inr"></i>  {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
           </div>
+
           <hr>
 
           <div class="row" style="margin-top:30px;padding:10px;">
@@ -148,119 +266,129 @@
 
           </div>
 
-          <div class="row" style="margin-top:30px;padding:10px;" >
-            <div class="col-md-6">
+          <div class="row" style="margin-top:30px;padding:10px;">
+            <div class="col-md-6 col-xs-6">
               <div class="row">
                 <span style="font-size:20px;">Total </span>
                 <br>
-                <i class="fa fa-2x fa-inr"></i> <span ng-if="total!=totalAfterDiscount" style="font-size:20px;"> <strike> {{total.toFixed(2)}}  </strike> </span>
+                <i class="fa fa-2x fa-inr"></i> <span ng-if="total!=totalAfterDiscount" style="font-size:20px; padding-right:10px; "> <strike> {{total.toFixed(2)}}  </strike> </span>
                 <span style="font-size:20px;"> {{totalAfterDiscount.toFixed(2)}} </span>
               </div>
-              <!-- <div ng-if="promo=='applied'" class="row">
-                <p> Promocode discount {{promoDiscount}} % </p>
-              </div> -->
-              <div ng-if="msg=='Success'" class="row">
-                <span style="font-size:20px;">  Total Payable <br>
-                <i class="fa fa-inr"></i> {{totalAfterPromo.toFixed(2)}}</span>
-                <span style="font-size:18px; padding-left:10px; " class="text-muted" >(after {{promoDiscount}} % discount )</span>
-              </div>
-              <div class="row">
-                <p ng-if="total!=totalAfterDiscount && msg!='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterDiscount).toFixed(2)}} on this order</p>
-                <p ng-if="msg=='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterPromo).toFixed(2)}} on this order</p>
-              </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 col-xs-6">
               <button type="button" class="btn btn-success pull-right" ng-click="next()">
                 Next
               </button>
             </div>
           </div>
+
+          <div class="row" ng-if="msg=='Success'" style="padding:15px;" >
+            <span style="font-size:20px;">  Total Payable <br>
+            <i class="fa fa-inr"></i> {{totalAfterPromo.toFixed(2)}}</span>
+            <span style="font-size:18px; padding-left:10px; " class="text-muted" >(after {{promoDiscount}} % discount )</span>
+          </div>
+
+          <div class="row" style="padding:15px;">
+            <p ng-if="total!=totalAfterDiscount && msg!='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterDiscount).toFixed(2)}} on this order</p>
+            <p ng-if="msg=='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterPromo).toFixed(2)}} on this order</p>
+          </div>
+
         </div>
         <!-- review page ends here  -->
         <div ng-if="data.stage == 'shippingDetails'">
           <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-7 col-xs-12">
               <h4>Address</h4>
               <div class="form-group">
                 <label for="street">Street : </label>
-                <textarea ng-model="data.address.street" class="form-control" id="street"></textarea>
+                <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.." ></textarea>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-xs-6">
                   <div class="form-group">
                     <label for="city">City : </label>
-                    <input ng-model="data.address.city" type="text" class="form-control" id="city">
+                    <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." >
                   </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-xs-6">
                   <div class="form-group">
                     <label for="state">State : </label>
-                    <input ng-model="data.address.state" type="text" class="form-control" id="state">
+                    <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State..">
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-xs-6">
                   <div class="form-group">
                     <label for="pincode">Pincode : </label>
-                    <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode">
+                    <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
                   </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-xs-6">
                   <div class="form-group">
                     <label for="country">Country : </label>
-                    <input ng-model="data.address.country" type="text" class="form-control" id="country">
+                    <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country..">
                   </div>
                 </div>
               </div>
               <div class="row" style="margin-bottom:35px">
-                <span><i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i><i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> Save for later use</i></span>
+                <div class="col-xs-6">
+                  <button type="button" class="btn btn-default" ng-click="resetAdd()" >
+                    <i class="fa fa-refresh fa-lg"></i> Reset This Address
+                  </button>
+
+                  <!-- <i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i> -->
+                </div>
+                <div class="col-xs-6">
+                  <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none" >
+                    <i class="fa fa-star fa-lg"></i> Save for later use
+                  </button>
+                  <!-- <i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> Save for later use</i> -->
+                </div>
               </div>
               <h4>Contact Details</h4>
               <div class="form-group">
                 <label for="ldm">Land Mark : </label>
-                <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark">
+                <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark.." >
               </div>
               <div class="form-group">
                 <label for="mob">Mobile no. : </label>
-                <input type="text" class="form-control" id="mob" ng-model="data.address.mobile">
+                <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile.." >
               </div>
             </div>
 
-            <div class="col-md-5" style="padding-left:55px" ng-if="savedAddress.length>0">
+            <div class="col-md-5 col-xs-12" style="padding-left:55px" ng-if="savedAddress.length>0">
               <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
               <div class="row" ng-repeat="adr in savedAddress" style="padding:5px 30px;margin-bottom:15px">
                 <div class="row card">
                   <div class="row text-center">
-                    <div class="col-md-12" style="font-size:19px">
+                    <div class="col-md-12 col-xs-12" style="font-size:19px">
                       <strong>{{adr.title}}</strong>
                     </div>
                   </div>
                   <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="col-md-12">
+                    <div class="col-md-12 col-xs-12">
                       <strong>Landmark :</strong> {{adr.landMark}}
                     </div>
                   </div>
                   <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="col-md-12">
+                    <div class="col-md-12 col-xs-12">
                       <strong>Street :</strong> {{adr.street}}
                     </div>
                   </div>
                   <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-6">
                       <strong>City :</strong> {{adr.city}}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-6">
                       <strong>State :</strong> {{adr.state}}
                     </div>
-
-
                   </div>
                   <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-6">
                       <strong>PinCode :</strong> {{adr.pincode}}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-6">
                       <strong>Country :</strong> {{adr.country}}
                     </div>
                   </div>
