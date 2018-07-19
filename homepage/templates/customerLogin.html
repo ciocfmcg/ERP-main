@@ -1,0 +1,123 @@
+{% load staticfiles%} {% load staticfiles %} {% load socialaccount %}
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  {% if useCDN %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" charset="utf-8"> {% else %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" charset="utf-8"> {% endif %}
+  <link rel="stylesheet" href="{% static 'css/signin.css' %}" charset="utf-8">
+</head>
+
+<body>
+  <div class="col-md-8" style="background-image: url('{{backgroundImage}}');background-size: cover;height:100%;position:absolute;left:0px;">
+  </div>
+  <div class="col-md-4" style="background-color:#eeeeee;height:100%;position:absolute;right:0px;">
+    <form method="post" class="form-signin" action="">{% csrf_token %}
+      <h2 class="form-signin-heading" style="color:black;margin-top:200px;">Customer Login</h2> {% if authStatus.status != 'default' %}
+      <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
+      {% endif %}
+
+      <div id="alerts">
+
+      </div>
+
+
+      <label for="username" class="sr-only">Username/Email</label>
+      <input id="id" name="username" type="text" class="form-control" placeholder="Username" required autofocus>
+      <label for="password" class="sr-only">Password</label>
+      <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
+      <button style="margin-bottom:20px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+      <!-- <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a> -->
+
+      <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
+        <span style="color:white;">
+            <i class="fa fa-mobile fa-3x" ></i> <br>
+            <span id="otptxt">Send OTP</span>
+          </span>
+      </div>
+
+      <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
+          <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
+            <i class="fa fa-google-plus pull-left"></i>Login with Google
+          </a>
+          <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
+            <i class="fa fa-facebook pull-left"></i> Login with Facebook
+          </a> -->
+    </form>
+
+
+  </div>
+  <!-- /container -->
+  {% if useCDN %}
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  {% else %}
+  <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+  <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  {% endif %}
+
+  <!-- <script type="text/javascript">
+    $(document).ready(function() {
+      $('#requestOTP').click(function(e) {
+
+        $('#alerts').empty();
+
+
+        var id = $('#id').val()
+        if (id.length == 0) {
+          $('#alerts').append('<div class="alert alert-warning">Please enter your Mobile number or Email or Username</div>')
+        } else {
+
+          var csrf = $.cookie("csrftoken")
+          $.ajax({
+            url: '/generateOTP',
+            data: {
+              id: id,
+              csrfmiddlewaretoken :csrf
+            },
+            beforeSend: function(request) {
+              request.setRequestHeader("X-CSRFToken", csrf);
+            },
+            type: 'POST',
+            success: function(data, status, jqXHR) {
+              console.log(status);
+              if (jqXHR.status == 200) {
+                $('#alerts').append('<div class="alert alert-success">OTP Has been sent</div>')
+                $('#password').attr("placeholder", "OTP");
+                $('#password').attr("name", "otp");
+                $('#password').attr("type", "text");
+
+              } else if (jqXHR.status == 400) {
+                $('#alerts').append('<div class="alert alert-danger">No account</div>')
+              } else {
+                $('#alerts').append('<div class="alert alert-danger">Error while sending OTP</div>')
+              }
+
+              $('#otptxt').empty();
+              $('#otptxt').append("Resend OTP");
+
+
+            },
+            error: function(e) {
+              $('#alerts').append('<div class="alert alert-danger">Error while sending OTP</div>')
+            }
+          });
+
+        }
+
+      });
+    });
+  </script> -->
+</body>
+
+</html>

@@ -460,7 +460,10 @@ def manifest(response,item):
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
-    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=5))
+    # elements.append(Indenter(left=150))
+    # elements.append(HRFlowable(hAlign='LEFT',thickness=1, color=black,spaceBefore=30,spaceAfter=5))
+    # elements.append(Indenter(left=-150))
+
     elements.append(Spacer(1, 30))
 
     txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(item.courierName,item.courierAWBNo)

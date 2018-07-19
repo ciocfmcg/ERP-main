@@ -14,7 +14,7 @@ from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from ERP.models import application, permission , module
+from ERP.models import application, permission , module ,service
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
@@ -23,8 +23,43 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from PIM.models import blogPost
 
+
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME})
+
+
+def customerLoginView(request):
+    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    authStatus = {'status' : 'default' , 'message' : '' }
+    def loginRender(authStatus):
+        return render(request, 'customerLogin.html', {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT} )
+
+    if 'GET' == request.method:
+        return loginRender(authStatus)
+    elif 'POST' == request.method:
+        print request.POST
+        userObj = User.objects.filter(username = request.POST['username'])
+        if len(userObj)>0:
+            print userObj
+            sObj = userObj[0].servicesContactPerson.all()
+            print len(sObj)
+            if len(sObj)>0:
+                user = authenticate(username = request.POST['username'] , password = request.POST['password'])
+                if user is not None:
+                    login(request , user)
+                    return redirect('libreERP:customerhome')
+                else:
+                    authStatus = {'status' : 'danger' , 'message' : "Incorrect username or password."}
+                    return loginRender(authStatus)
+            else:
+                authStatus = {'status' : 'danger' , 'message' : "Not A Right Person"}
+                return loginRender(authStatus)
+        else:
+            authStatus = {'status' : 'danger' , 'message' : "You Don't Have An Account"}
+            return loginRender(authStatus)
+
+def customerHomeView(request):
+    return render(request, 'customerHome.html' )
 
 
 def blogDetails(request, blogname):

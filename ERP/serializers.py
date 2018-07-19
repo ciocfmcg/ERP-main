@@ -15,7 +15,7 @@ class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:
         model = profile
-        fields = ('displayPicture' , 'prefix' )
+        fields = ('displayPicture' , 'prefix' , 'mobile')
 
 class userSearchSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -31,9 +31,10 @@ class addressSerializer(serializers.ModelSerializer):
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
     address = addressSerializer(many = False, read_only = True)
+    contactPerson = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web' ,'contactPerson')
 
     def assignValues(self , instance , validated_data):
         if 'cin' in validated_data:
@@ -54,6 +55,8 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.web = validated_data['web']
         if 'address' in self.context['request'].data and self.context['request'].data['address'] is not None:
             instance.address_id = int(self.context['request'].data['address'])
+        if 'contactPerson' in self.context['request'].data and self.context['request'].data['contactPerson'] is not None:
+            instance.contactPerson_id = int(self.context['request'].data['contactPerson'])
         instance.save()
 
     def create(self , validated_data):
