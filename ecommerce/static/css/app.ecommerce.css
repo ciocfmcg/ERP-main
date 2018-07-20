@@ -88,7 +88,7 @@
   color:white;
 }
 
-.sidebar-checkout> li > a:hover, .sidebar-checkout > li >a:focus , .sidebar-checkout> .active > a , .sidebarList> li > a:focus , .sidebarList> li > a:active , .activeTab{
+.sidebar-checkout> li > a:hover, .sidebar-checkout > li >a:focus , .sidebar-checkout> .active > a , .sidebarList> li > a:focus , .sidebarList> li > a:active , .activeTab .activeTopTab{
 	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;
 	color: #fff;
 }
@@ -99,6 +99,7 @@
   border-top: solid 2px #8a8a8a;
 
 }
+
 .activeSlideTab:before {
   content: '';
   display: block;
@@ -125,6 +126,32 @@
   background: white;
   -moz-transform:rotate(-45deg);
   -webkit-transform:rotate(-45deg);
+}
+
+.activeTopTab:after{
+	content: '';
+  display: block;
+  position: absolute;
+  top: 8.3vh;
+  left:9vw;
+  width: 5vw;
+  height: 5vh;
+  background: white;
+  -moz-transform:rotate(45deg);
+  -webkit-transform:rotate(45deg);
+}
+
+.activeTopTabAcnt:after{
+	content: '';
+  display: block;
+  position: absolute;
+  top: 8.3vh;
+  left:5vw;
+  width: 5vw;
+  height: 5vh;
+  background: white;
+  -moz-transform:rotate(45deg);
+  -webkit-transform:rotate(45deg);
 }
 
 .register {

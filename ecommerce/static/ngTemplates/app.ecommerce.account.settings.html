@@ -1,48 +1,48 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 col-xs-12">
       <h4>Create New Address</h4>
       <div class="form-group" style="padding-top:25px">
         <label>Title : </label>
-        <input ng-model="form.title" type="text" class="form-control">
+        <input ng-model="form.title" type="text" class="form-control" placeholder="Tittle...">
       </div>
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-6">
           <div class="form-group" >
             <label>Landmark : </label>
-            <textarea ng-model="form.landMark" class="form-control"></textarea>
+            <textarea ng-model="form.landMark" class="form-control" placeholder="Landmark..."></textarea>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-6">
           <div class="form-group" >
             <label>Street : </label>
-            <textarea ng-model="form.street" class="form-control"></textarea>
+            <textarea ng-model="form.street" class="form-control" placeholder="Street..."></textarea>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-6" >
           <div class="form-group">
             <label>City : </label>
-            <input ng-model="form.city" type="text" class="form-control">
+            <input ng-model="form.city" type="text" class="form-control" placeholder="City...">
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-6">
           <div class="form-group">
             <label>State : </label>
-            <input ng-model="form.state" type="text" class="form-control">
+            <input ng-model="form.state" type="text" class="form-control" placeholder="State...">
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-6">
           <div class="form-group">
             <label>Pincode : </label>
-            <input ng-model="form.pincode" type="text" class="form-control">
+            <input ng-model="form.pincode" type="text" class="form-control" placeholder="Pincode...">
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-6">
           <div class="form-group">
             <label>Country : </label>
             <input ng-model="form.country" type="text" class="form-control">
@@ -59,7 +59,7 @@
         </button>
       </div>
     </div>
-    <div class="col-md-6" style="padding-left:55px" ng-if="savedAddress.length>0">
+    <div class="col-md-6 col-xs-12" style="padding-left:55px" ng-if="savedAddress.length>0">
       <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
       <div class="row card" ng-repeat="adr in savedAddress" style="padding:15px;margin-bottom:15px">
         <div class="row text-center">
@@ -78,20 +78,20 @@
           </div>
         </div>
         <div class="row" style="font-size:16px">
-          <div class="col-md-6">
+          <div class="col-md-6 col-xs-6">
             <strong>City :</strong> {{adr.city}}
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 col-xs-6">
             <strong>State :</strong> {{adr.state}}
           </div>
 
 
         </div>
         <div class="row" style="font-size:16px">
-          <div class="col-md-6">
+          <div class="col-md-6 col-xs-6">
             <strong>PinCode :</strong> {{adr.pincode}}
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 col-xs-6">
             <strong>Country :</strong> {{adr.country}}
           </div>
         </div>

@@ -3,35 +3,57 @@
     <strong> Order No. : #{{data.pk}} </strong>
   </div>
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-9 hidden-sm hidden-xs">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 hidden-sm hidden-xs">
           <span style="font-size:15px;" > Total Amount : <i class="fa fa-inr"></i> {{data.totalAmount}} </span>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 hidden-sm hidden-xs">
           <span style="font-size:15px;" > Payment Mode : {{data.paymentMode}} </span>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 hidden-sm hidden-xs">
           <span style="font-size:15px;" >  Approved :{{data.approved}} </span>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 hidden-sm hidden-xs">
           <span style="font-size:15px;" > Status : {{data.status}} </span>
         </div>
-
       </div>
-      <div class="row">
-
-      </div>
-
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 hidden-sm hidden-xs">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6  hidden-sm hidden-xs">
            <i class="fa fa-info fa-2x" style="cursor:pointer;" ng-click="rowActionClicked('toggleInfo')"></i>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6  hidden-sm hidden-xs">
           <!-- <button type="button" name="button" class="btn btn-success" > Cancel </button> -->
-            <a href="/api/ecommerce/downloadInvoice/?value={{data.pk}}" target="_blank"><button class="btn btn-primary pull-right"><i class="fa fa-download "></i> Download Invoice</button></a>
+            <a href="/api/ecommerce/downloadInvoice/?value={{data.pk}}" target="_blank"><button style="width:140px" class="btn btn-primary pull-right"><i class="fa fa-download "></i> Invoice</button></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-8 col-sm-8 hidden-md hidden-lg">
+      <div class="row">
+        <div class="col-xs-12 col-sm-3 hidden-md hidden-lg">
+          <span style="font-size:10px;" > Total Amount : <i class="fa fa-inr"></i> {{data.totalAmount}} </span>
+        </div>
+        <div class="col-xs-12 col-sm-3 hidden-md hidden-lg">
+          <span style="font-size:10px;" > Payment Mode : {{data.paymentMode}} </span>
+        </div>
+        <div class="col-xs-12 col-sm-3 hidden-md hidden-lg">
+          <span style="font-size:10px;" >  Approved :{{data.approved}} </span>
+        </div>
+        <div class="col-xs-12 col-sm-3 hidden-md hidden-lg">
+          <span style="font-size:10px;" > Status : {{data.status}} </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4 col-sm-4 hidden-md hidden-lg">
+      <div class="row">
+        <div class="col-xs-6 col-sm-6 hidden-md hidden-lg">
+           <i class="fa fa-info fa-2x" style="cursor:pointer;" ng-click="rowActionClicked('toggleInfo')"></i>
+        </div>
+        <div class="col-xs-6 col-sm-6 hidden-md hidden-lg">
+          <!-- <button type="button" name="button" class="btn btn-success" > Cancel </button> -->
+            <a href="/api/ecommerce/downloadInvoice/?value={{data.pk}}" target="_blank"><i class="fa fa-download fa-2x "></i> </a>
         </div>
       </div>
     </div>
@@ -39,7 +61,7 @@
   <div class="row anim-in-out anim-fade"  data-anim-speed="200" ng-if="data.showInfo">
     <hr>
     <div class="container-fluid">
-      <div class="col-md-3">
+      <div class="col-md-3 col-sm-12 col-xs-12">
         <div class="row">
           <strong>Address :</strong>
           <span ng-if="data.street"> {{data.street}} ,</span>
@@ -52,39 +74,61 @@
           <strong>Mobile :</strong> <span ng-if="data.mobileNo" > {{data.mobileNo}}</span>
         </div>
       </div>
-      <div class="col-md-6" style="border-left: 1px solid #e0e0e0;" >
+      <div class="col-md-6 col-sm-12 col-xs-12" style="border-left: 1px solid #e0e0e0;" >
         <div class="row">
-          <div class="col-md-offset-1 col-md-4">
+          <div class="col-md-offset-1 col-sm-offset-1 col-md-4 col-sm-4 hidden-xs">
             <strong>Products </strong>
           </div>
-          <div class="col-md-1">
+          <div class="col-md-1 col-sm-1 hidden-xs">
             <strong>Qty </strong>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3 col-sm-3  hidden-xs">
             <strong>Amount</strong>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3 col-sm-3  hidden-xs">
             <strong>Status </strong>
           </div>
         </div>
         <div class="row" ng-repeat="i in data.orderQtyMap">
-          <div class="col-md-1">
+          <div class="col-md-1 col-sm-1 hidden-xs">
              <input type="checkbox" ng-model="i.selected" >
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-4 hidden-xs">
             {{i.productName.slice(0,25)}}
           </div>
-          <div class="col-md-1">
+          <div class="col-md-1 col-sm-1 hidden-xs">
             {{i.qty}}
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3 col-sm-3 hidden-xs">
             <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2)}}
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3 col-sm-3 hidden-xs">
             {{i.status}}
           </div>
         </div>
-        
+        <div class="row" ng-repeat="i in data.orderQtyMap">
+          <div class="col-xs-12  ">
+            <div class="row">
+          <div class="col-xs-1  hidden-sm  hidden-md hidden-lg">
+             <input type="checkbox" ng-model="i.selected" >
+          </div>
+          <div class="col-xs-10 hidden-sm  hidden-md hidden-lg">
+            {{i.productName.slice(0,25)}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-1 hidden-sm  hidden-md hidden-lg">
+            {{i.qty}}
+          </div>
+          <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
+            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2)}}
+          </div>
+          <div class="col-xs-5 hidden-sm  hidden-md hidden-lg">
+            {{i.status}}
+          </div>
+        </div>
+        </div>
+        </div>
       </div>
       <div class="col-md-3 text-center" >
         <div class="row">
@@ -97,7 +141,7 @@
           <span class="text-muted"> Select one or more item to cancel or return </span>
         </div>
         <div class="row">
-          <span ng-if="data.promoCode" > Coupon Applied:  {{data.promoCode}} - {{data.promoDiscount}} % </span>
+          <span ng-if="data.promoCode"> Coupon Applied:  {{data.promoCode}} - {{data.promoDiscount}}% </span>
         </div>
       </div>
       <!-- <div class="col-md-2">

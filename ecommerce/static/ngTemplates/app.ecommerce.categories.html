@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <div class="col-md-2 hidden-xs hidden-sm card bg-white">
+  <div class="col-md-2 hidden-sm hidden-xs  card bg-white ">
     <div class="row" style="padding-top:80px; ">
-      <div class="container-fluid">
+      <div class="container-fluid ">
         <form>
           <span><b>Select Price Range</b></span>
           <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
@@ -18,21 +18,21 @@
               </div>
             </span>
             <span ng-if="f.fieldType=='char'">
-              <span><b>Enter {{f.name}}</b></span>
-              <input type="text" name="" value="" ng-model="f.val"  >
+              <span><b>Enter {{f.name}}</b></span> <br>
+            <input type="text" name="" value="" ng-model="f.val" style="width:100%">
             </span>
             <span ng-if="f.fieldType=='float'">
-              <span><b>Enter {{f.name}}</b></span>
-              <input type="text" name="" value="" ng-model="f.val"  >
+              <span><b>Enter {{f.name}}</b></span> <br>
+            <input type="text" name="" value="" ng-model="f.val" style="width:100%">
             </span>
             <span ng-if="f.fieldType=='date'">
               <span><b>Select {{f.name}}</b></span>
-              <div class="input-group" style="margin-top:35px;">
-                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="f.val" is-open="status.opened" />
-                <span class="input-group-btn">
+            <div class="input-group" style="margin-top:35px;">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="f.val" is-open="status.opened" />
+              <span class="input-group-btn">
                   <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
-              </div>
+            </div>
             </span>
           </div>
           <div class="text-center">
@@ -42,9 +42,108 @@
       </div>
     </div>
   </div>
-  <div class="col-md-8 col-xs-12 card bg-white" style="margin-left:15px; margin-right:15px; padding-top:20px; ">
+
+
+  <div class="row hidden-lg hidden-md card bg-white" style="margin:15px; padding:15px;">
+
+    <div class="col-xs-12">
+      <span><b>Select Price Range</b></span>
+      <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
+        <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
+      </div>
+    </div>
+
+    <div class="col-xs-6" ng-repeat="f in category.fields">
+      <span ng-if="f.fieldType=='boolean'">
+         <input type="checkbox" ng-model="f.val" > {{f.name}}
+      </span>
+      <span ng-if="f.fieldType=='choice'">
+        <span><b>Select {{f.name}}</b></span>
+      <div class="checkbox" ng-repeat="c in f.data track by $index">
+        <label><input type="checkbox" ng-model='c.selected'  >{{c.name}}</label>
+      </div>
+      </span>
+      <span ng-if="f.fieldType=='char'">
+        <span><b>Enter {{f.name}}</b></span> <br>
+      <input type="text" name="" value="" ng-model="f.val" style="width:100%" >
+      </span>
+      <span ng-if="f.fieldType=='float'">
+        <span><b>Enter {{f.name}}</b></span> <br>
+      <input type="text" name="" value="" ng-model="f.val" style="width:100%">
+      </span>
+      <span ng-if="f.fieldType=='date'">
+        <span><b>Select {{f.name}}</b></span> <br>
+        <div class="input-group" style="margin-top:35px;">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="f.val" is-open="status.opened" />
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </div>
+      </span>
+    </div>
+
+    <div class="col-xs-12">
+      <div class="text-center">
+        <button type="button" class="btn btn-default" ng-click="filter()">Filter</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-md-8 card bg-white" style="margin-left:15px; margin-right:15px; padding-top:20px;">
+
+    <!-- <div class="row hidden-lg hidden-md">
+
+      <div class="col-xs-4" >
+        <div class="row" ng-repeat="f in category.fields" style="padding-top:20px;">
+          <span style="cursor:pointer;" >  {{f.name}} </span>
+        </div>
+      </div>
+      <div class="col-xs-8">
+        <div class="row" style="height:30px;">
+        </div>
+      </div>
+
+
+
+      <div class="col-xs-12 col-sm-6" ng-repeat="f in category.fields" style="padding-bottom:20px;">
+        <span ng-if="f.fieldType=='boolean'">
+           <input type="checkbox" ng-model="f.val" > {{f.name}}
+        </span>
+        <span ng-if="f.fieldType=='choice'">
+          <span><b>Select {{f.name}}</b></span>
+        <div class="checkbox" ng-repeat="c in f.data track by $index">
+          <label><input type="checkbox" ng-model='c.selected'  >{{c.name}}</label>
+        </div>
+        </span>
+        <span ng-if="f.fieldType=='char'">
+          <span><b>Enter {{f.name}}</b></span> <br>
+        <input type="text" name="" value="" ng-model="f.val">
+        </span>
+        <span ng-if="f.fieldType=='float'">
+          <span><b>Enter {{f.name}}</b></span> <br>
+        <input type="text" name="" value="" ng-model="f.val">
+        </span>
+        <span ng-if="f.fieldType=='date'">
+          <span><b>Select {{f.name}}</b></span> <br>
+        <div class="input-group" style="margin-top:35px;">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="f.val" is-open="status.opened" />
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </div>
+        </span>
+      </div>
+
+
+
+    </div> -->
+
+
+
+
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
+      <ol class="breadcrumb" style="margin-left:-15px;margin-right:-15px;">
         <li class="breadcrumb-item" ng-repeat="b in breadcrumbList"><a style="cursor:pointer" ng-click="$state.go('categories', {name : b})">{{b}}</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{category.name}}</li>
       </ol>
@@ -53,7 +152,9 @@
     <div class="row">
       <div ng-if="listingSearch.length>0">
         <div ng-repeat="l in listingSearch">
-          <div class="col-md-3 col-sm-4 col-xs-6 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+
+
+          <div class="col-md-3  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="margin-bottom:15px;">
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
               <div class="row">
                 <img style="width: 100%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
@@ -61,15 +162,15 @@
               </div>
               <div class="row">
                 <div class=" card bg-white" style="padding-bottom:0px;">
-                  <div class="row container-fluid" style="padding:10px 20px; " >
+                  <div class="row container-fluid" style="padding:10px 20px; ">
                     <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;">{{l.product.name.slice(0,28)}}...</h5>
                     <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;">{{l.product.name}}</h5>
-                    <span style="font-size:15px;" > Price : </span>
+                    <span style="font-size:15px;"> Price : </span>
                     <span class="pull-right" style="font-size:15px; padding-left:10px; ">
                       <span ng-if="l.product.discount>0" class="text-muted" >
                         <strike>{{l.product.price}}</strike>
                       </span>
-                      <span ng-if="l.product.discount==0" >
+                    <span ng-if="l.product.discount==0">
                         {{l.product.price}} <i class="fa fa-inr"></i>
                       </span>
                     </span>
@@ -82,6 +183,40 @@
               </div>
             </div>
           </div>
+
+
+          <div class="col-xs-12 col-sm-6 hidden-lg hidden-md anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+            <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
+              <div class="row">
+                <img style="width: 100%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+                <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+              </div>
+              <div class="row">
+                <div class=" card bg-white" style="padding-bottom:0px;">
+                  <div class="row container-fluid" style="padding:10px 20px; ">
+                    <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;">{{l.product.name.slice(0,28)}}...</h5>
+                    <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;">{{l.product.name}}</h5>
+                    <span style="font-size:15px;"> Price : </span>
+                    <span class="pull-right" style="font-size:15px; padding-left:10px; ">
+                      <span ng-if="l.product.discount>0" class="text-muted" >
+                        <strike>{{l.product.price}}</strike>
+                      </span>
+                    <span ng-if="l.product.discount==0">
+                        {{l.product.price}} <i class="fa fa-inr"></i>
+                      </span>
+                    </span>
+
+                    <span ng-if="l.product.discount>0" class="pull-right" style="font-size:15px;">
+                    {{l.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
         </div>
       </div>
 

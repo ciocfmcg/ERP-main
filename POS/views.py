@@ -51,7 +51,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
     search_fields = ('name', 'serialNo', 'description', 'serialId')
-    filter_fields = ['name','haveComposition']
+    filter_fields = ['name','haveComposition','serialNo',]
     # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):

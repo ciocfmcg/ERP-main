@@ -25,7 +25,6 @@ from StringIO import StringIO
 import math
 import requests
 # related to the invoice generator
-# <<<<<<< HEAD
 from reportlab import *
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors, utils
@@ -40,14 +39,8 @@ from reportlab.lib.colors import *
 from reportlab.lib.units import inch, cm ,mm
 from reportlab.lib.enums import TA_JUSTIFY,TA_LEFT, TA_CENTER
 from reportlab.graphics.barcode import code39
-
 from reportlab.platypus.doctemplate import Indenter
 from PIL import Image
-
-# =======
-# from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
-# >>>>>>> 8761308c22a80f2dbc8c1a04cb97135e3df8c230
-# Related to the REST Framework
 from rest_framework import viewsets , permissions , serializers
 from rest_framework.exceptions import *
 from rest_framework.response import Response
@@ -78,7 +71,6 @@ from HR.models import profile
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from django.core.mail import send_mail, EmailMessage
-from reportlab import *
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm, mm
@@ -199,15 +191,18 @@ class CreateOrderAPI(APIView):
                     promoAmount = p.discount
             print promoAmount
             a = '#'
-            print str(a),'aaaaaaaaaa',orderObj.pk
             docID = str(a) + str(orderObj.pk)
             print docID,'aaaaaaaaaaaaaaaaaaaaabbbbbbbbb'
             for i in orderObj.orderQtyMap.all():
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                price=round(price, 2)
                 totalPrice=i.qty*price
+                totalPrice=round(totalPrice, 2)
                 total+=totalPrice
+                total=round(total, 2)
                 value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
+            grandTotal=round(grandTotal, 2)
             ctx = {
                 'heading' : "Invoice Details",
                 'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
@@ -266,7 +261,7 @@ def getProducts(lst , node):
     return lst
 
 class listingViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     serializer_class = listingSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['parentType']
@@ -372,14 +367,14 @@ class offerBannerViewSet(viewsets.ModelViewSet):
         # return offerBanner.objects.filter(active = True)
 
 class CartViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','typ']
 
 class ActivitiesViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     serializer_class = ActivitiesSerializer
     # queryset = Activities.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -398,24 +393,24 @@ class ActivitiesViewSet(viewsets.ModelViewSet):
         return Activities.objects.filter(pk__in=aPk).order_by('-created')
 
 class AddressViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','pincode']
 
 class TrackingLogViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     queryset = TrackingLog.objects.all()
     serializer_class = TrackingLogSerializer
 
 class OrderQtyMapViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     queryset = OrderQtyMap.objects.all()
     serializer_class = OrderQtyMapSerializer
 
 class OrderViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     # queryset = Order.objects.all()
     serializer_class = OrderSerializer
     def get_queryset(self):
@@ -423,14 +418,14 @@ class OrderViewSet(viewsets.ModelViewSet):
         return Order.objects.all().order_by('-created')
 
 class PromocodeViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     queryset = Promocode.objects.all()
     serializer_class = PromocodeSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
 
 class FrequentlyQuestionsViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    permission_classes = (permissions.AllowAny , )
     queryset = FrequentlyQuestions.objects.all()
     serializer_class = FrequentlyQuestionsSerializer
     filter_backends = [DjangoFilterBackend]
@@ -605,7 +600,7 @@ class expanseReportHead(Flowable):
         draw the floable
         """
         now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-        docTitle = 'TAX INVOICE'
+        docTitle = 'ORDER INVOICE'
         dateCreated=self.contract.created.strftime("%d-%m-%Y")
         passKey = '%s%s'%(str(self.req.user.date_joined.year) , self.req.user.pk) # also the user ID
         docID = '%s%s' %( now.year , self.contract.pk)
@@ -757,21 +752,7 @@ def genInvoice(response, contract, request):
     tableHeaderStyle.textColor = colors.white
     tableHeaderStyle.fontSize = 7
 
-    pHeadProd = Paragraph(
-        '<strong>Product</strong>', tableHeaderStyle)
-    pHeadPrice = Paragraph('<strong>Price</strong>', tableHeaderStyle)
-    pHeadQuantity = Paragraph('<strong>Quantity</strong>', tableHeaderStyle)
-    pHeadTPrice = Paragraph('<strong>Total Price</strong>', tableHeaderStyle)
-    #
-    # # bookingTotal , bookingHrs = getBookingAmount(o)
-    #
-    # pFooterQty = Paragraph('%s' % ('o.quantity') , styles['Normal'])
-    # pFooterTax = Paragraph('%s' %('tax') , styles['Normal'])
-    # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
-    # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
-    #
-    data = [[pHeadProd, pHeadPrice, pHeadQuantity, pHeadTPrice]]
-    #
+
     # totalQuant = 0
     # totalTax = 0
     totaldiscount = 0
@@ -781,62 +762,36 @@ def genInvoice(response, contract, request):
     discount = 0
     tableBodyStyle = styles['Normal'].clone('tableBodyStyle')
     tableBodyStyle.fontSize = 7
+    tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
+    tableGrandStyle.fontSize = 10
     promoObj = Promocode.objects.all()
-    for p in promoObj:
-        if str(p.name)==str(contract.promoCode):
-            promoAmount = p.discount
+    if contract.promoCode:
+        for p in promoObj:
+            if str(p.name)==str(contract.promoCode):
+                promoAmount = p.discount
+                promoCode = p.name
+    else:
+        promoCode="None"
+    tableData=[['Product','Quantity','Price','Total Price']]
     for i in contract.orderQtyMap.all():
-        print i
         if str(i.status)!='cancelled':
             print i.product.product.name, i.product.product.discount, i.product.product.price
             price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-            print i.discountAmount,'aaaaaaaaaaaaa'
-            print i.totalAmount,'bbbbbbbbbbbbbb'
-            print i.refundAmount,'aaaaaaa'
+            price=round(price, 2)
             totalprice = i.qty*price
+            totalprice=round(totalprice, 2)
             total+=totalprice
-            pBodyProd = Paragraph(str(i.product.product.name), tableBodyStyle)
-            pBodyPrice = Paragraph(str(price), tableBodyStyle)
-            pBodyQty = Paragraph(str(i.qty), tableBodyStyle)
-            pBodyTPrice = Paragraph(str(totalprice), tableBodyStyle)
-            data.append([pBodyProd, pBodyPrice, pBodyQty, pBodyTPrice])
-
-    # contract.grandTotal = grandTotal
-    # contract.save()
+            total=round(total, 2)
+            tableData.append([i.product.product.name,i.qty,price,totalprice])
     grandTotal=total-(promoAmount * total)/100
-    print grandTotal
-    tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
-    tableGrandStyle.fontSize = 10
-    #
-    data += [['',   Paragraph('Total (INR)', tableHeaderStyle), '', Paragraph(str(total), tableGrandStyle)],['',   Paragraph('Discount Coupon (%)', tableHeaderStyle), '', Paragraph(str(promoAmount), tableGrandStyle)],['',   Paragraph('Grand Total (INR)', tableHeaderStyle), '', Paragraph(str(grandTotal), tableGrandStyle)]]
-    t = Table(data)
-    ts = TableStyle([('ALIGN', (1, 1), (-3, -3), 'RIGHT'),
-                     ('VALIGN', (0, 1), (-1, -3), 'TOP'),
-                     ('VALIGN', (0, -2), (-1, -2), 'TOP'),
-                     ('VALIGN', (0, -1), (-1, -1), 'TOP'),
-                     ('SPAN', (-3, -1), (-2, -1)),
-                     ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-                     ('BACKGROUND', (0, 0), (-1, 0), themeColor),
-                     ('LINEABOVE', (0, 0), (-1, 0), 0.25, themeColor),
-                     ('LINEABOVE', (0, 1), (-1, 1), 0.25, themeColor),
-                     ('BACKGROUND', (-3, -3), (-1, -2), themeColor),
-                     ('BACKGROUND', (-3, -2), (-1, -2), themeColor),
-                     ('BACKGROUND', (-3, -1), (-1, -1), themeColor),
-                     # ('LINEABOVE', (-2, -2), (-1, -2), 0.25, colors.gray),
-                     ('LINEABOVE', (0, -1), (-1, -1), 0.25, colors.gray),
-                     # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
-                     ])
-    t.setStyle(ts)
-    t._argW[0] = 6 * cm
-    t._argW[1] = 3 * cm
-    t._argW[2] = 3 * cm
-    t._argW[3] = 3 * cm
-    # t._argW[4] = 2 * cm
-    # t._argW[5] = 2 * cm
-    # t._argW[6] = 1.6 * cm
-    # t._argW[7] = 2 * cm
+    grandTotal=round(grandTotal, 2)
+    tableData.append(['','','TOTAL (INR)',total])
+    tableData.append(['','COUPON APPLIED(%)',promoCode,promoAmount])
+    tableData.append(['','','GRAND TOTAL (INR)',grandTotal])
+    t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 1.5*inch , 1.5*inch])
+    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#bdd3f4')) ]))
 
-    # add some flowables
+
 
     story = []
 
@@ -853,18 +808,14 @@ def genInvoice(response, contract, request):
     # else:
     #     tin = contract.deal.company.tin
     #
-    summryParaSrc = """
-    <font size='8'><strong>Customer details:</strong></font> <br/><br/>
+    summryParaSrc3 = """
+    <font size='8'><strong>Customer details:</strong></font> <br/>
+    """
+    story.append(Paragraph(summryParaSrc3 , styleN))
+
+    summryParaSrc = Paragraph("""
+    <para backColor = '#bdd3f4' leftIndent = 10>
     <font size='6'><strong>Your Billing Address:</strong></font> <br/>
-    <font size='6'>
-    %s %s<br/>
-    %s <br/>
-    %s <br/>
-    %s %s - %s<br/>
-    India<br/>
-    %s<br/><br/>
-    </font>
-    <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
     <font size='6'>
     %s %s<br/>
     %s <br/>
@@ -873,30 +824,41 @@ def genInvoice(response, contract, request):
     India<br/>
     %s<br/>
     </font>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo,contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo)
-    story.append(Paragraph(summryParaSrc , styleN))
+    </para>
+    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo),styles['Normal'])
+
+
+    summryParaSrc1 = Paragraph("""
+    <para backColor = #bdd3f4 leftIndent = 10>
+    <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
+    <font size='6'>
+    %s %s<br/>
+    %s <br/>
+    %s <br/>
+    %s %s - %s<br/>
+    India<br/>
+    %s<br/>
+    </font></para>
+    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo),styles['Normal'])
+
+
+    td=[[summryParaSrc,' ',summryParaSrc1]]
+    # story.append(Paragraph(summryParaSrc , styleN))
+    t=Table(td,colWidths=[3*inch , 1*inch , 3*inch])
+    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (0, 0),colors.HexColor('#bdd3f4')),('BACKGROUND', (-1, -1), (-1,-1 ),colors.HexColor('#bdd3f4')) ]))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
+    summryParaSrc4 = """
+    <font size='8'><strong>Order details:</strong></font> <br/>
+    """
+    story.append(Paragraph(summryParaSrc4 , styleN))
+    story.append(t1)
+    story.append(Spacer(2.5,0.5*cm))
 
-    summryParaSrc = """
+    summryParaSrc2 = """
     <font size='4'><strong>Computer generated bill, no signature required</strong></font> <br/>
     """
-    story.append(Paragraph(summryParaSrc , styleN))
-
-    #     summryParaSrc = settingsFields.get(name = 'bankDetails').value
-    #     story.append(Paragraph(summryParaSrc , styleN))
-    #
-    #     tncPara = settingsFields.get(name = 'tncInvoice').value
-    #
-    # else:
-    #     tncPara = settingsFields.get(name = 'tncQuotation').value
-
-    # story.append(Paragraph(tncPara , styleN))
-
-    # scans = ['scan.jpg' , 'scan2.jpg', 'scan3.jpg']
-    # for s in scans:
-    #     story.append(PageBreak())
-    #     story.append(FullPageImage(s))
+    story.append(Paragraph(summryParaSrc2 , styleN))
 
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)

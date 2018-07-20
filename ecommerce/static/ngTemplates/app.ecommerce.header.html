@@ -17,7 +17,7 @@
   </div>
 
   <div class="col-xs-1 text-center dropdown hidden-xs hidden-sm">
-    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer" ng-if="me.pk" > {{me.pk | getName}}</span>
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px" ng-if="me.pk" > {{me.pk | getName}}</span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" >Orders</a></li>
@@ -27,7 +27,7 @@
   </div>
 
   <div class="col-xs-2 text-center hidden-xs hidden-sm">
-    <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+    <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
   </div>
 
 
@@ -49,7 +49,7 @@
 <div class="row bg-blue ecomNav hidden-lg hidden-md" style="padding-bottom:10px; height:7vh" >
   <div class="col-xs-10" style="padding-right:0px; padding-left:30px;">
     <!-- <input type="text" class="" style="width:100%;color: #000;text-indent: 10px;outline: none;" placeholder="Search for products, brands and more.."> -->
-    <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="Search for products, brands and more..">
+    <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="Products, brands and more..">
   </div>
   <div class="col-xs-2 text-center" style="padding:0px;">
     <div style="width:50px;height:29px;padding-top:3px;background-color:#e2e2e2;color:grey; cursor:pointer;" ng-click="search()">

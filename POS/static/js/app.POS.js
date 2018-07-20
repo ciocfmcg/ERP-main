@@ -923,6 +923,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }],
       // returnquater : 'jan-march'
     }
+    $scope.wampData = []
 
     $scope.getInvoiceID();
 
@@ -935,8 +936,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.subTotal = function() {
     var subTotal = 0;
     angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != undefined) {
+      if (item.data.productMeta != null && item.data.productMeta != undefined) {
         subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
+      }else {
+        subTotal += (item.quantity * item.data.price);
       }
     })
     return subTotal.toFixed(2);
@@ -944,7 +947,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.subTotalTax = function() {
     var subTotalTax = 0;
     angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != undefined) {
+      if (item.data.productMeta != null && item.data.productMeta != undefined) {
         subTotalTax += (item.data.productMeta.taxRate * item.data.price / 100);
       }
     })
@@ -978,6 +981,49 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     }
 
   });
+
+
+  $scope.sai='kiran'
+
+  $scope.processScannerNotification = function(a){
+    console.log(a);
+    $http({
+      method: 'GET',
+      url: '/api/POS/product/?serialNo=' + a
+    }).
+    then(function(response) {
+      console.log('resssssssss',response.data);
+      if (response.data.length>0) {
+        if ($scope.wampData.indexOf(a) >= 0) {
+          var idx = $scope.wampData.indexOf(a)
+        }else {
+          $scope.wampData.push(a)
+          var idx = -1
+        }
+        console.log($scope.wampData);
+        if ($scope.wampData.length==1) {
+          if (idx>=0) {
+            $scope.form.products[idx].quantity += 1
+          }else {
+            $scope.form.products=[{
+              data: response.data[0],
+              quantity: 1
+            }]
+          }
+        }else {
+          if (idx>=0) {
+            $scope.form.products[idx].quantity += 1
+          }else {
+            $scope.form.products.push({
+              data: response.data[0],
+              quantity: 1
+            })
+          }
+        }
+      }
+    })
+  }
+
 
 
   $scope.createInvoice = function() {

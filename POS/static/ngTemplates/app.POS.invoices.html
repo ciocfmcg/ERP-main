@@ -187,11 +187,11 @@
         <input type="float" class="form-control-pos" ng-model="item.data.price" ng-if="item.data.pk">
       </td>
       <td>
-        <span ng-if="item.data.pk">{{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}</span>
+        <span ng-if="item.data.pk">{{item.data.productMeta!= none?(item.data.productMeta.taxRate*item.data.price/100).toFixed(2):0}}</span>
 
       </td>
       <td>
-        <span ng-if="item.data.pk">{{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}</span>
+        <span ng-if="item.data.pk">{{item.data.productMeta!= none?(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2):(item.quantity*item.data.price).toFixed(2)}}</span>
 
       </td>
       <td>

@@ -1,24 +1,24 @@
 <div class="container-fluid bg-blue" style="position:relative; width:100%; bottom:0px; padding:20px;">
-  <div class="row">
-    <div class="col-xs-2 col-xs-offset-1" ng-if="settings.playstoreLink.indexOf('http')!=-1 || settings.appstoreLink.indexOf('http')!=-1">
+  <div class="row hidden-xs hidden-sm">
+    <div class="col-md-2 col-md-offset-1" ng-if="settings.playstoreLink.indexOf('http')!=-1 || settings.appstoreLink.indexOf('http')!=-1">
       <strong>Downloads the apps</strong><br>
       <a ng-if="settings.playstoreLink.indexOf('http')!=-1" ng-href="{{settings.playstoreLink}}"><img src="/static/images/playStore.png" alt="" /> <br> <br></a>
       <a ng-if="settings.appstoreLink.indexOf('http')!=-1" ng-href="{{settings.appstoreLink}}"><img src="/static/images/appStore.png" alt="" /></a>
     </div>
-    <div class="col-xs-3 {{settings.playstoreLink.indexOf('http')==-1 && settings.appstoreLink.indexOf('http')==-1 ? 'col-md-offset-2 col-xs-offset-1' :''}}">
+    <div class="col-md-3 {{settings.playstoreLink.indexOf('http')==-1 && settings.appstoreLink.indexOf('http')==-1 ? 'col-md-offset-2 col-md-offset-1' :''}}">
       <strong style="font-size:15px;">HELP</strong><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'payment'})"> Payment </span><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'cancellationAndRefund'})">Cancellationa and Returns</span> <br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'faq'})">FAQ</span>
     </div>
-    <div class="col-xs-3 col-md-2 text-center">
+    <div class="col-md-3 text-center">
       <strong style="font-size:15px;">ECOMMERCE</strong><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'contactUs'})"> Contact Us </span><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'about'})">About us</span> <br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'careers'})">Careers</span> <br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'press'})">Press</span>
     </div>
-    <div class="col-xs-4 col-md-3 text-right">
+    <div class="col-md-4 text-right">
       <div class="row">
         <a ng-href="{{settings.twitterLink}}" target="_blank" class="fa-stack fa-lg" style="color:white;cursor:pointer;">
           <i class="fa fa-square-o fa-stack-2x"></i>
@@ -42,4 +42,61 @@
       </div>
     </div>
   </div>
+
+
+
+  <div class="row hidden-md hidden-lg">
+    <!-- <div class="col-xs-2">
+      <div class="row">
+        <span style="font-size:12px;" >Download the apps</span>
+      </div>
+      <div class="row">
+        <a ng-href="{{settings.playstoreLink}}"><img src="/static/images/playStore.png" style="width:50px;" alt="" /></a>
+      </div>
+      <div class="row">
+        <a ng-href="{{settings.appstoreLink}}"><img src="/static/images/appStore.png" style="width:50px;" alt="" /></a>
+      </div>
+    </div> -->
+
+    <div class="col-xs-6 text-center">
+      <strong style="font-size:12px;">HELP</strong><br>
+      <span style="cursor:pointer; font-size:12px" ng-click="$state.go('pages' , {title : 'payment'})"> Payment </span><br>
+      <span style="cursor:pointer; font-size:12px" ng-click="$state.go('pages' , {title : 'cancellationAndRefund'})">Cancellationa and Returns</span> <br>
+      <span style="cursor:pointer; font-size:12px" ng-click="$state.go('pages' , {title : 'faq'})">FAQ</span>
+    </div>
+
+    <div class="col-xs-6 text-center">
+      <strong style="font-size:12px;">ECOMMERCE</strong><br>
+      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'contactUs'})"> Contact Us </span><br>
+      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'about'})">About us</span> <br>
+      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'careers'})">Careers</span> <br>
+      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'press'})">Press</span>
+    </div>
+
+    <div class="col-xs-12 text-center">
+      <div class="row">
+        <a ng-href="{{settings.twitterLink}}" target="_blank" class="fa-stack fa-lg" style="color:white;cursor:pointer;">
+          <i class="fa fa-twitter fa-stack-1x"></i>
+        </a>
+        <a ng-href="{{settings.linkedInLink}}" target="_blank" class="fa-stack fa-lg" style="color:white;cursor:pointer;">
+          <i class="fa fa-linkedin fa-stack-1x"></i>
+        </a>
+        <a ng-href="{{settings.facebookLink}}" target="_blank" class="fa-stack fa-lg" style="color:white;cursor:pointer;">
+          <i style="font-size:12px;" class="fa fa-facebook fa-stack-1x"></i>
+        </a>
+      </div>
+      <div class="row">
+        <span style="font-size:12px;">Copyright &copy; {{settings.copyrightHolder}} {{settings.copyrightYear}}</span>
+      </div>
+      <div class="row">
+        <a href="#" style="color:white;font-size:10px;">Privacy Policy</a>
+        <a href="#" style="color:white;font-size:10px;">Terms of Use</a>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
 </div>

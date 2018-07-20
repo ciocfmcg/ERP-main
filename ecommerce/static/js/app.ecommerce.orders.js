@@ -180,11 +180,13 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         approved: true,
         status: 'ordered'
       }
+      $scope.msg='Order Has Been Approved'
     } else {
       var tosend = {
         approved: false,
         status: 'failed'
       }
+      $scope.msg='Order Has Been Rejected'
     }
     $http({
       method: 'PATCH',
@@ -195,6 +197,9 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       console.log(response.data);
       Flash.create('success', 'Saved');
       $scope.order.approved = response.data.approved
+      for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+        $scope.saveLog(i, $scope.msg)
+      }
     })
   }
   $scope.openManifest = function(idx) {
@@ -231,7 +236,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             }
           }).
           then(function(response) {
-            console.log(response.data);
+            console.log(response.data,$scope.item);
             Flash.create('success', 'Saved');
             $uibModalInstance.dismiss(response.data);
           })
@@ -243,6 +248,12 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       console.log('87987987+9797987987979879',res,typeof(res));
       console.log('ssssssssssssss',$scope.order.orderQtyMap[idx]);
       if (typeof(res)!='string') {
+        console.log('saveddddddddddddd');
+        if ($scope.order.orderQtyMap[idx].courierName != null && $scope.order.orderQtyMap[idx].courierName.length >0) {
+          $scope.saveLog(idx, 'Manifest Has Been Updated')
+        }else {
+          $scope.saveLog(idx, 'Manifest Has Been Created')
+        }
         $scope.order.orderQtyMap[idx] = res
       }
     });
@@ -276,6 +287,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     }).
     then((function(idx, sts) {
       return function(response) {
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         Flash.create('success', 'Status Changed To ' + sts);
         $scope.order.orderQtyMap[idx].status =   response.data.status
         if (sts=='reachedNearestHub') {

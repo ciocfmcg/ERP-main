@@ -3,31 +3,21 @@
     <div class="row" style="margin:20px 0px 30px 0px">
 
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb" style="margin-left:-15px;margin-right:-15px">
           <li class="breadcrumb-item" ng-repeat="b in breadcrumbList" ><a style="cursor:pointer" ng-click="$state.go('categories', {name : b})" >{{b}}</a></li>
           <li class="breadcrumb-item active" aria-current="page">{{details.product.name}}</li>
         </ol>
       </nav>
 
-
-      <!-- <span style="font-size:20px;">
-        <span style="cursor:pointer;" ng-if="parent.parent.name" ng-click="$state.go('categories', {name : parent.parent.name})">
-          {{parent.parent.name}} <span style="font-size:23px;"> &gt; </span>
-        </span>
-        <span style="cursor:pointer;" ng-if="parent.name" ng-click="$state.go('categories', {name : parent.name})">
-          {{parent.name}} <span style="font-size:23px;" > &gt; </span>
-        </span>
-        <span >{{details.product.name}}</span>
-      </span> -->
     </div>
     <div class="row container-fluid" style="padding:0px;">
-      <div class="col-md-1" style="padding:0px; cursor:pointer;">
+      <div class="col-md-1 col-xs-3" style="padding:0px; cursor:pointer;">
         <img ng-repeat="f in details.files" ng-click="changePicture($index)" style="{{details.files[pictureInView].attachment==f.attachment?'width: 100%; border:1px solid #b4acb0':'width: 100%'}}" class="img" ng-src="{{f.attachment}}">
       </div>
-      <div class="col-md-5" style="padding:0px;">
+      <div class="col-md-5 col-xs-9" style="padding:0px;">
         <img style="width: 100%; height:300px;" class="img" ng-src="{{details.files[pictureInView].attachment}}">
       </div>
-      <div class="col-md-6" style="height:100%;right:0px;">
+      <div class="col-md-6 col-xs-12" style="height:100%;right:0px;">
         <div class="row container-fluid">
           <p style="padding-bottom:0px;">
             <strong style="font-size:20px;">{{details.product.name}}</strong>
@@ -35,7 +25,7 @@
           <hr style="margin-top:0px;margin-bottom:5px;">
         </div>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6 col-xs-6 ">
             <div class="row container-fluid">
               <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
               <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;"> {{ratings.averageRating}} <i class="fa fa-star" aria-hidden="true"></i></span> 400 Ratings & 23 Reviews
@@ -45,7 +35,7 @@
               <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 col-xs-6">
             <!-- <span style="position:absolute;bottom:50px;right:15px;">
               <span style="font-size:30px;"><i class="fa fa-inr"></i> {{data.providerOptions[offeringInView].rate}}</span>
               <span ng-if="data.priceModel=='time'">/ per Hour</span>
@@ -53,14 +43,14 @@
               <span ng-if="data.priceModel=='weight'">/ per Kg</span>
             </span> -->
             <div class="row">
-              <span style="font-size:30px;"><i class="fa fa-inr"></i>
+              <span style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
                 <span ng-if="details.product.discount>0"> {{details.product.discountedPrice.toFixed(2)}} </span>
                 <span ng-if="details.product.discount>0" class="text-muted" > <strike> {{details.product.price}} </strike> </span>
                 <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
             </div>
             <div class="row">
-              <span ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;" >{{details.product.discount}} % Off</span>
+              <span style="padding-left:10px;" ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;" >{{details.product.discount}} % Off</span>
             </div>
 
           </div>
@@ -134,19 +124,19 @@
           <h5 style="color:white;">Ratings and Review</h5>
         </div>
         <div class="row">
-          <div class="col-md-4" style="padding-top:20px;">
-            <div class="col-md-5 text-center">
+          <div class="col-md-4 col-sm-4 col-xs-12" style="padding-top:20px;">
+            <div class="col-md-5 col-sm-4 col-xs-12 text-center">
               <span>{{ratings.averageRating == null ? 0 : ratings.averageRating}}/5</span> <br>
               <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-7 col-sm-8 col-xs-12">
               <div class="container-fluid" ng-repeat="m in ratings.meta">
                 <span style="margin-right:10px;">{{ratings.counts[$index]}}</span>
                 <uib-rating ng-model="m" max="m" readonly="true" style="font-size:15px;color:#e2a900;"></uib-rating> <br>
               </div>
             </div>
           </div>
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-8 col-xs-12">
             <h5>Have you used this product before ?  <small style="margin-left:20px;">Give us your review</small> </h5>
             <uib-rating ng-model="form.rating" max="5" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" on-leave="sendReview('rating')"></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
@@ -173,11 +163,12 @@
           <h4>No reviews yet. Be the first to review</h4>
         </div>
         <div class="row" ng-if="reviewsCount>0">
+
           <div class="container-fluid">
-            <h5>Recent reviews <small>{{reviewsCount < 5 ? reviewsCount : 5}} out of {{reviewsCount}}</small> </h5>
+            <h5>Recent reviews <small>{{reviewsCount < 4 ? reviewsCount : 4}} out of {{reviewsCount}}</small> </h5>
           </div>
           <div class="container-fluid">
-            <div ng-repeat="r in reviews">
+            <div class="col-md-12 col-xs-12 col-sm-6" ng-repeat="r in reviews">
               <div class="row container-fluid">
                 <div class="col-md-3" style="padding-left:50px;">
                   <div class="row">
@@ -214,7 +205,7 @@
     </div>
   </div>
 
-  <div class="col-md-2 " style="margin-left:15px; position:sticky; top:10px; ">
+  <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; ">
     <h4>Recently Viewed</h4>
     <div style="padding:10px;" class="row card bg-white">
         <div class="col-md-12 anim-in-out anim-zoom-out">
