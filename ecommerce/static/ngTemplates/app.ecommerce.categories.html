@@ -143,7 +143,7 @@
 
 
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
+      <ol class="breadcrumb" style="margin-left:-15px;margin-right:-15px;">
         <li class="breadcrumb-item" ng-repeat="b in breadcrumbList"><a style="cursor:pointer" ng-click="$state.go('categories', {name : b})">{{b}}</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{category.name}}</li>
       </ol>

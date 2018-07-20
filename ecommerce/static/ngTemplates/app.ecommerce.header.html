@@ -17,7 +17,7 @@
   </div>
 
   <div class="col-xs-1 text-center dropdown hidden-xs hidden-sm">
-    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer" ng-if="me.pk" > {{me.pk | getName}}</span>
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px" ng-if="me.pk" > {{me.pk | getName}}</span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" >Orders</a></li>
@@ -27,7 +27,7 @@
   </div>
 
   <div class="col-xs-2 text-center hidden-xs hidden-sm">
-    <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+    <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
   </div>
 
 

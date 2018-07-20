@@ -276,6 +276,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     }).
     then((function(idx, sts) {
       return function(response) {
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         Flash.create('success', 'Status Changed To ' + sts);
         $scope.order.orderQtyMap[idx].status =   response.data.status
         $scope.saveLog(idx, 'This Item Has ' + sts)
