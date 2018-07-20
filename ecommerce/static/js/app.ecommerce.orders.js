@@ -168,8 +168,8 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
         then(function(response) {
         })
-        Flash.create('success', 'Item Has Cancelled');
-        $scope.saveLog(idx, 'This Item Has Cancelled')
+        Flash.create('success', 'Item Has Been Cancelled');
+        $scope.saveLog(idx, 'This Item Has Been Cancelled')
       }
     })(idx))
   }
@@ -278,7 +278,14 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       return function(response) {
         Flash.create('success', 'Status Changed To ' + sts);
         $scope.order.orderQtyMap[idx].status =   response.data.status
-        $scope.saveLog(idx, 'This Item Has ' + sts)
+        if (sts=='reachedNearestHub') {
+          sts = 'reached To Nearest Hub'
+        }else if (sts=='outForDelivery') {
+          sts = 'out For Delivery'
+        }else if (sts=='returnToOrigin') {
+          sts = 'return To Origin'
+        }
+        $scope.saveLog(idx, 'This Item Has Been ' + sts)
         var toSend = {value : response.data.pk};
         $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
         then(function(response) {
