@@ -1,0 +1,101 @@
+<div class="container-fluid" ng-controller="businessManagement.customers.form">
+  <div class="col-md-6">
+    <div class="row" style="padding-left:25px;padding-bottom:10px">
+      <h3>{{mode=='new'?'Create':'Edit'}} Company</h3>
+    </div>
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text " class="form-control" ng-model="form.name">
+    </div>
+    <div class="form-group">
+      <label>Telephone</label>
+      <input type="text " class="form-control" ng-model="form.telephone">
+    </div>
+    <div class="form-group">
+      <label>About</label>
+      <textarea class="form-control" rows="5" ng-model="form.about"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Contact Person</label>
+      <input type="text " class="form-control" ng-model="form.contactPerson" uib-typeahead="u as u.first_name for u in userSearch($viewValue)">
+    </div>
+    <div class="row" ng-if="form.contactPerson.pk!=none">
+      <div class="col-md-6 col-md-offset-1 card" style="padding:10px;font-size:16px">
+        <strong>Name:</strong> {{form.contactPerson.first_name}} {{form.contactPerson.last_name}}<br>
+        <strong>Mobile:</strong> {{form.contactPerson.profile.mobile}} <br>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Mobile</label>
+      <input type="text " class="form-control" ng-model="form.mobile">
+    </div>
+    <div style="cursor:pointer;margin:20px;" ng-click="companyAdvanceOptions = !companyAdvanceOptions">
+      <div class="text-primary">
+        <i class="fa fa-lg fa-sort-{{companyAdvanceOptions? 'up':'desc'}}" style="margin-right:20px;"></i> Show Advance Options
+      </div>
+    </div>
+    <div ng-if="companyAdvanceOptions" class="animated fadeIn">
+      <div class="form-group">
+        <label>Address</label>
+        <input placeholder="Street" type="text " class="form-control" ng-model="form.address.street">
+        <div class="row" style="margin-top:5px;">
+          <div class=" col-md-6">
+            <input placeholder="City" type="text " class="form-control" ng-model="form.address.city">
+          </div>
+          <div class="col-md-6">
+            <input placeholder="State" type="text " class="form-control" ng-model="form.address.state">
+          </div>
+        </div>
+        <div class="row" style="margin-top:5px;">
+          <div class=" col-md-6">
+            <input placeholder="pincode" type="text " class="form-control" ng-model="form.address.pincode">
+          </div>
+          <div class="col-md-6">
+            <input placeholder="Country" type="text " class="form-control" ng-model="form.address.country">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>CIN</label>
+        <input type="text " class="form-control" ng-model="form.cin">
+      </div>
+      <div class="form-group">
+        <label>TIN</label>
+        <input type="text " class="form-control" ng-model="form.tin">
+      </div>
+      <div class="form-group">
+        <label>Logo</label>
+        <input type="text " class="form-control" ng-model="form.logo">
+      </div>
+      <div class="form-group">
+        <label>web</label>
+        <input type="text " class="form-control" ng-model="form.web">
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary pull-right col-md-3 pull-right" ng-click="saveCompanyDetails()" ng-if="form.pk==none">Save Company Details</button>
+  </div>
+  <div class="col-md-6" style="padding-left:50px;font-size:18px" ng-if="form.pk">
+    <span class="text-center"><h3>Supports</h3><br></span>
+    <div class="row">
+      <div class="form-group">
+        <i class="fa fa-comment-o"></i> &nbsp; <label>Chart</label> &nbsp;<input type="checkbox" ng-model="cpForm.chat">
+      </div>
+      <div class="form-group">
+        <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input type="checkbox" ng-model="cpForm.call">
+      </div>
+      <div class="form-group">
+        <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input type="checkbox" ng-model="cpForm.email">
+      </div>
+      <div class="form-group">
+        <i class="fa fa-video-camera"></i> &nbsp; <label>Video&Audio</label> &nbsp;<input type="checkbox" ng-model="cpForm.videoAndAudio">
+      </div>
+      <div class="form-group">
+        <i class="fa fa-bar-chart-o"></i> &nbsp; <label>VR</label> &nbsp;<input type="checkbox" ng-model="cpForm.vr">
+      </div>
+      <div class="form-group">
+        <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input type="color" ng-model="cpForm.windowColor">
+      </div>
+    </div><br>
+    <button type="button" class="btn btn-primary btn-lg col-md-2 col-md-offset-5" ng-click="saveCustomerProfile()">Save</button>
+  </div>
+</div>
