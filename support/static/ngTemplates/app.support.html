@@ -7,39 +7,6 @@
        <div class="col-md-10" style="padding:0px; min-height:88vh;">
         <div class="col-md-3 anim-in-out anim-fade" style="padding:0px;" ng-repeat="cust in chatsInView">
           <chat-box data = "cust" index="$index" close-chat="closeChatBox" ></chat-box>
-
-
-
-          <!-- <div style="min-height:75vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white;" class="container-fluid">
-            <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:60px;">
-            <div class="container-fluid" >
-              <label style="font-size:25px" class="text-muted">{{cust.name}}</label>
-              <label class="text-muted pull-right">{{cust.uid.split("$")[0]}}</label>
-            </div>
-          </div>
-            <div class="container-fluid" style="margin-left:10px;margin-right:10px">
-              <div class="row" style="padding:0px;" ng-repeat="message in cust.messages track by $index">
-                <div style="float:{{message.sentByMe ? 'right':'left'}};background-color:#eeeeee;padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-                  <p ng-if="message.msg != '' || message.msg != undefined">{{message.msg}}</p>
-                   <img ng-if="message.img" ng-src="{{message.img}}" >
-                   <video ng-if="message.videoUrl" ng-src="{{message.videoUrl}}" controls></video>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="container-fluid" style="padding:;border-top:30px;background-color:#eeeeee">
-            <div class="row" style="margin:0px;margin-top:40px;margin-bottom:60px;">
-              <form>
-                <div class="input-group">
-                  <input type="text" class="form-control"placeholder="Message">
-                  <span class="input-group-addon"style="cursor:pointer"><i class="fa fa-paperclip" aria-hidden="true"></i></span>
-                  <span class="input-group-addon" ng-click="send()" style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
-                </div>
-              </form>
-            </div>
-          </div> -->
-
-
         </div>
       </div>
       <!-- right side part -->
@@ -78,9 +45,6 @@
         </div>
 
 
-
-
-
         <div class="container-fluid" style="padding:0px;">
           <div class="container-fluid"style="border:1px solid #474444">
           <div class="row" style="margin-top:10px;margin-bottom:10px;">
@@ -112,6 +76,7 @@
             </li>
           </ul>
         </div>
+
       </div>
     </div>
   </div>
