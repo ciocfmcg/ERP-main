@@ -105,7 +105,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
         print validated_data,'**************'
         print self.context['request'].data
         i = Invoice(**validated_data)
-        i.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
+        if 'customer' in self.context['request'].data:
+            i.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
         i.save()
         return i
     # def update(self ,instance, validated_data):
