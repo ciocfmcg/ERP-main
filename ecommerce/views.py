@@ -338,9 +338,11 @@ class listingViewSet(viewsets.ModelViewSet):
 class listingLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (readOnly, )
     serializer_class = listingLiteSerializer
+    # queryset = listing.objects.all()
     def get_queryset(self):
-        # u = self.request.user
-        # has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+        print "fffffffffffffffffffff"
+        u = self.request.user
+        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
         if 'mode' in  self.request.GET:
             if self.request.GET['mode'] == 'vendor':
                 s = service.objects.get(user = u)
@@ -523,7 +525,7 @@ class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
         emailAddr=[]
-        request.data['value'],'aaaaaaaaaaaaaa'
+        print request.data['value'],'aaaaaaaaaaaaaa'
         oq = OrderQtyMap.objects.filter(pk = request.data['value'])
         for i in oq:
             productId = i.pk
@@ -549,13 +551,75 @@ class SendStatusAPI(APIView):
             msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has Reached to the nearest Hub"
         elif productStatus == 'outForDelivery':
             msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" is Out for delivery"
-        elif productStatus == 'delivered':
-            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been Delivered to you"
         elif productStatus == 'cancelled':
             msgBody = "Your request to cancel the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+        elif productStatus == 'returnToOrigin':
+            msgBody = "Your return of product: " + str(productName) + ", Quantity of: " +str(qty)+" has been returned to origin"
         elif productStatus == 'returned':
             msgBody ="Your request to return the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
         msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+        msg.send()
+        return Response({}, status = status.HTTP_200_OK)
+
+class SendDeliveredStatus(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        emailAddr=[]
+        oq = []
+        o = []
+        m=[]
+        promoAmount=0
+        # oq = list(OrderQtyMap.objects.filter(pk = request.data['value']).values().annotate(pname=F('product__product__name'),pPrice=F('product__product__price'),pDiscount=F('product__product__discount'),dp=F('product__files__attachment')))
+        # productId = oq[0]['id']
+        # o = list(Order.objects.filter(orderQtyMap = productId).values().annotate(userEmail=F('user__email'),fname=F('user__first_name'),lname=F('user__last_name')))
+        # emailAddr.append(str( o[0]['userEmail']))
+        oq=OrderQtyMap.objects.get(pk = request.data['value'])
+        print oq.pk
+        price = oq.product.product.price - (oq.product.product.discount * oq.product.product.price)/100
+        total = oq.qty * price
+        o=Order.objects.get(orderQtyMap = oq.pk)
+        emailAddr.append(o.user.email)
+        promoObj = Promocode.objects.all()
+        for p in promoObj:
+            if str(p.name)==str(o.promoCode):
+                promoAmount = p.discount
+        print promoAmount
+        grandTotal=total-(promoAmount * total)/100
+        grandTotal=round(grandTotal, 2)
+        attachment =  oq.product.files.values_list('attachment', flat=True)
+        print attachment[0]
+        # media=oq.product.files
+        # for m in media:
+        #     print m.pk,'aaaaaaaaa'
+        # m=Media.objects.get(pk=o.product.files)
+        print '**************************'
+        ctx = {
+            'heading' : "Invoice Details",
+            # 'recieverName' : name,
+            'linkUrl': 'cioc.co.in',
+            'sendersAddress' : 'CIOC',
+            # 'sendersPhone' : '122004',
+            # 'grandTotal':grandTotal,
+            'promoAmount':promoAmount,
+            'attachment': attachment[0],
+            'grandTotal':grandTotal,
+            'total':total,
+            'order': o,
+            'price':price,
+            'orderQTY':oq,
+            'linkedinUrl' : 'https://www.linkedin.com/',
+            'fbUrl' : 'https://facebook.com',
+            'twitterUrl' : 'https://twitter.com',
+        }
+        print ctx
+        email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
+        # email_subject = "Order Details:"
+        # msgBody = " Your Order has been placed and details are been attached"
+        # contactData.append(str(orderObj.user.email))
+        print 'aaaaaaaaaaaaaaa'
+        msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
+        msg.content_subtype = 'html'
+        # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
@@ -869,10 +933,10 @@ class DownloadInvoiceAPI(APIView):
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
         print o
-        response['Content-Disposition'] = 'attachment; filename="Call_letter%s_%s.pdf"' % (
+        response['Content-Disposition'] = 'attachment; filename="invoice%s_%s.pdf"' % (
              datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)
         genInvoice(response, o, request)
-        f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/Call_letter%s_%s.pdf' %
+        f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
                               ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)), 'wb')
         f.write(response.content)
         f.close()

@@ -44,15 +44,15 @@
     </div>
 
     <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; height:10vh;  padding-bottom:25px; " >
-      <div class="col-xs-2 text-center" >
-        <div class="row">
-          <i class="fa fa-shopping-cart fa-2x"></i>
-        </div>
-        <span class="text-center" style="color:white">
-          Checkout
-        </span>
+      <div class="col-xs-12" >
+          <h4 style="color:white;">
+        <i class="fa fa-shopping-cart fa-2x"></i> Checkout
+      </h4>
       </div>
-      <div class="col-xs-3 text-center  " ng-class="{activeTopTab: data.stage == 'review'}" >
+    </div>
+
+    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; height:10vh;  padding-bottom:25px; " >
+      <div class="col-xs-4 text-center  " ng-class="{activeTopTab: data.stage == 'review'}" >
         <div class="row " style="padding:0px;" >
           <i class="fa fa-check"></i>
         </div>
@@ -60,7 +60,7 @@
           Review
         </span>
       </div>
-      <div class="col-xs-3 text-center" ng-class="{activeTopTab: data.stage == 'shippingDetails'}"  >
+      <div class="col-xs-4 text-center" ng-class="{activeTopTab: data.stage == 'shippingDetails'}"  >
         <div class="row " style="padding:0px;">
           <i class="fa fa-truck"></i>
         </div>
@@ -68,7 +68,7 @@
           Shipment
         </span>
       </div>
-      <div class="col-xs-3 text-center" ng-class="{activeTopTab: data.stage == 'payment'}" >
+      <div class="col-xs-4 text-center" ng-class="{activeTopTab: data.stage == 'payment'}" >
         <div class="row " style="padding:0px;">
           <i class="fa fa-credit-card"></i>
         </div>
@@ -303,6 +303,10 @@
                 <label for="street">Street : </label>
                 <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.." ></textarea>
               </div>
+              <div class="form-group">
+                <label for="ldm">Land Mark : </label>
+                <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark.." >
+              </div>
               <div class="row">
                 <div class="col-md-6 col-xs-6">
                   <div class="form-group">
@@ -347,10 +351,6 @@
                 </div>
               </div>
               <h4>Contact Details</h4>
-              <div class="form-group">
-                <label for="ldm">Land Mark : </label>
-                <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark.." >
-              </div>
               <div class="form-group">
                 <label for="mob">Mobile no. : </label>
                 <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile.." >

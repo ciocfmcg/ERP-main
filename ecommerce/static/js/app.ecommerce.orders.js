@@ -280,10 +280,21 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         Flash.create('success', 'Status Changed To ' + sts);
         $scope.order.orderQtyMap[idx].status =   response.data.status
         $scope.saveLog(idx, 'This Item Has ' + sts)
-        var toSend = {value : response.data.pk};
-        $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
-        then(function(response) {
-        })
+        console.log(response.data.status,'aaaaahhhhh');
+        if (response.data.status=='delivered'){
+          console.log("delivered");
+          var toSend = {value : response.data.pk};
+          $http({method : 'POST' , url : '/api/ecommerce/sendDeliveredStatus/' , data : toSend}).
+          then(function(response) {
+            console.log(response.data);
+          })
+        }else{
+          console.log("notdelivered");
+          var toSend = {value : response.data.pk};
+          $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
+          then(function(response) {
+          })
+        }
       }
     })(idx, sts))
   }

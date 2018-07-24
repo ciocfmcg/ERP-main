@@ -52,7 +52,16 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
     search_fields = ('name', 'serialNo', 'description', 'serialId')
     filter_fields = ['name','haveComposition']
-    # filter_backends = (filters.SearchFilter,)
+    # def get_queryset(self):
+    #     product=[]
+    #     if self.request.GET['search']:
+    #         product = Product.objects.filter(name__contains=str(self.request.GET['search']))
+    #         product1  = Product.objects.filter(serialNo__contains=str(self.request.GET['search']))
+    #         return product
+    #     else:
+    #         return Product.objects.all()
+
+
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
 #     permission_classes = (permissions.IsAuthenticated, )

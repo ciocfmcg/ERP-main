@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'downloadManifest/$' , DownloadManifestAPI.as_view()),
     url(r'sendStatus/$' , SendStatusAPI.as_view()),
     url(r'downloadInvoice/$' , DownloadInvoiceAPI.as_view()),
+    url(r'sendDeliveredStatus/$' , SendDeliveredStatus.as_view()),
 ]

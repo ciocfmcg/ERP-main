@@ -237,6 +237,7 @@ app.controller('controller.ecommerce.details' , function($scope ,$rootScope, $st
   }
 
   $scope.sendReview = function(mode) {
+    console.log($scope.form);
     if (mode == 'rating') {
       if ($scope.form.rating == 0 || !$scope.form.ratable) {
         return;
@@ -751,7 +752,6 @@ app.controller('controller.ecommerce.account.orders' , function($scope ,$rootSco
                     var pk = $scope.items[i].pk
                        $http({method : 'PATCH' , url : '/api/ecommerce/orderQtyMap/' + pk + '/' , data : {status: 'returned' } }).
                        then(function(response){
-                         console.log(response.data);
                          var toSend = {value : response.data.pk};
                          $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
                          then(function(response) {
@@ -1394,7 +1394,9 @@ app.controller('controller.ecommerce.list' , function($scope ,$rootScope, $state
 
   // $scope.fetchListings()
 
+if (true) {
 
+}
   $http({method : 'GET' , url : '/api/ecommerce/listingLite/'}).
   then(function(response) {
     $scope.listingProducts = response.data;

@@ -101,6 +101,7 @@ def generateOTP(request):
 def loginView(request):
 
     # print request.META['HTTP_USER_AGENT']
+    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
