@@ -58,13 +58,13 @@
         <div class="col-md-3" style="background-color:{{custDetails.windowColor}};margin-top:10px">
           <h3> </h3>
         </div>
-      </div>
+      </div><br>
       <div class="row" style="padding-left:25px">
-        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i></h4>
-        <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></i></h4>
-        <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></i></h4>
-        <h4><i class="fa fa-video-camera"></i> &nbsp; Video&Audio &nbsp;<i class="fa {{custDetails.videoAndAudio?'fa-check':'fa-times'}}" style="color:{{custDetails.videoAndAudio?'green':'red'}}"></i></i></h4>
-        <h4><i class="fa fa-bar-chart-o"></i> &nbsp; VR &nbsp;<i class="fa {{custDetails.vr?'fa-check':'fa-times'}}" style="color:{{custDetails.vr?'green':'red'}}"></i></i></h4>
+        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-primary" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails.pk)">Chat</span></h4><br>
+        <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></i></h4><br>
+        <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></i></h4><br>
+        <h4><i class="fa fa-video-camera"></i> &nbsp; Video&Audio &nbsp;<i class="fa {{custDetails.videoAndAudio?'fa-check':'fa-times'}}" style="color:{{custDetails.videoAndAudio?'green':'red'}}"></i></i></h4><br>
+        <h4><i class="fa fa-bar-chart-o"></i> &nbsp; VR &nbsp;<i class="fa {{custDetails.vr?'fa-check':'fa-times'}}" style="color:{{custDetails.vr?'green':'red'}}"></i></i></h4><br>
       </div>
     </div>
   </div>
