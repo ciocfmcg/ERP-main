@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'ws://'+ wampServer +':8080/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'ws://'+ '192.168.1.105' +':8080/ws', realm: 'default'});
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function (session) {
@@ -70,6 +70,67 @@ connection.onopen = function (session) {
       });
     }
   };
+
+  supportChatResponse = function(args) {
+      var scope = angular.element(document.getElementById('chatTab')).scope();
+      console.log(scope);
+      console.log(args);
+      // console.log(scope.);
+
+      console.log(args);
+
+      function userExist() {
+        for (var i = 0; i < scope.newUsers.length; i++) {
+          if (scope.newUsers[i].uid == args[0] ) {
+            if (args[1]=='M') {
+              scope.newUsers[i].messages.push( {msg : args[2], sentByMe:false , created:  args[3] })
+              return true
+            }else if (args[1]=='MF') {
+              scope.newUsers[i].messages.push( {msg:"", img : args[2], sentByMe:false , created:  args[3] })
+              return true
+            }
+          }
+        }
+        for (var i = 0; i < scope.myUsers.length; i++) {
+          if (scope.myUsers[i].uid == args[0] ) {
+            if(args[1]=='M') {
+              scope.myUsers[i].messages.push( {msg : args[2], sentByMe:false , created:  args[3] })
+              return true
+            }else if (args[1]=='MF') {
+              scope.myUsers[i].messages.push( {msg:"", img : args[2], sentByMe:false , created:  args[3] })
+              return true
+            }
+
+          }
+        }
+      }
+
+      if (userExist()) {
+        var s =  angular.element(document.getElementById('chatBox'+ args[0])).scope();
+        console.log(s);
+        // scope.$apply(function() {
+        //   console.log(scope);
+        //   scope.$$childHead.scroll()
+        // });
+      }else {
+        if(args[1]=='M') {
+          scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg : args[2], sentByMe:false , created:  args[3] }], isOnline:true }  )
+        }else if (args[1]=='MF') {
+          scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : args[2], sentByMe:false , created:  args[3] }], isOnline:true }  )
+        }
+      }
+
+  };
+
+  session.subscribe('service.support.agent', supportChatResponse).then(
+    function (sub) {
+      console.log("subscribed to topic 'supportChatResponse'");
+    },
+    function (err) {
+      console.log("failed to subscribed: " + err);
+    }
+  );
+
 
   session.subscribe('service.chat.'+wampBindName, chatResonse).then(
     function (sub) {

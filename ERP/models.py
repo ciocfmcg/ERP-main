@@ -131,6 +131,8 @@ class service(models.Model): # contains other companies datails
     logo = models.CharField(max_length = 200 , null = True) # image/svg link to the logo
     web = models.TextField(max_length = 100 , null = True) # image/svg link to the logo
     doc  = models.ForeignKey(media , related_name = 'services' , null = True)
+    contactPerson = models.ForeignKey(User , related_name = 'servicesContactPerson' , null = True)
+
 
     def __unicode__(self):
         return '< name :%s>,<user :%s>,<address :%s>' %(self.name ,self.user.username, self.address)

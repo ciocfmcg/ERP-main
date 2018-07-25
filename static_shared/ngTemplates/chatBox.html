@@ -1,9 +1,9 @@
-<div class="animated fadeIn">
+<div class="animated fadeIn" id="chatBox">
   <div style="min-height:75vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white; " class="container-fluid">
     <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:80px;">
       <div class="row" style="padding:10px;">
         <div class="col-md-5">
-            <h4> {{data.uid.split("$")[0]}} </h4>
+            <h4 > {{data.uid.split("$")[1]}} </h4>
             <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i> <span>{{data.name}}</span>
         </div>
         <div class="col-md-5">
@@ -14,7 +14,7 @@
         </div>
       </div>
   </div>
-    <div class="container-fluid" style="margin-left:10px;margin-right:10px; height:65vh; overflow-y:auto; overflow-x:hidden;">
+    <div class="container-fluid" id="scrollArea{{index}}" style="margin-left:10px;margin-right:10px; height:65vh; overflow-y:auto; overflow-x:hidden;">
 
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
         <div class="row container-fluid">

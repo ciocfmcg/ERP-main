@@ -350,13 +350,35 @@ app.directive('chatBox', function() {
           }else if (typ=='application') {
             $scope.data.messages.push({msg : "",sentByMe:true, documentUrl:'static/document/invoice.pdf' , created: new Date()})
           }
+          $scope.status = 'MF';
+
+          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.chatBox.fileToSend , new Date() ], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+
           $scope.chatBox.fileToSend = emptyFile;
+          $scope.scroll()
+
         }
 
         if ($scope.chatBox.messageToSend.length>0) {
           $scope.data.messages.push({msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() })
           console.log($scope.chatBox.messageToSend);
+          $scope.status = 'M';
+
+          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.chatBox.messageToSend , new Date() ], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+
+
           $scope.chatBox.messageToSend = ''
+          $scope.scroll()
         }
       };
 
@@ -366,6 +388,13 @@ app.directive('chatBox', function() {
 
       $scope.attachFile = function() {
         $('#filePickerChat' + $scope.index).click();
+      }
+
+      $scope.scroll = function () {
+        setTimeout(function () {
+          var id = document.getElementById("scrollArea"+ $scope.index);
+          id.scrollTop = id.scrollHeight;
+        }, 200);
       }
 
       $scope.knowledgeBase = function(data) {

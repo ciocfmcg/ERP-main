@@ -1,0 +1,30 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+  <div class="container-fluid card" style="padding-bottom:10px;">
+    <div class="row text-center" style="border-bottom: 1px solid #dedede;height:90px">
+      <div class="col-md-12" style="position:relative;display:block;">
+        <div class="row" style="padding-left:10px;">
+          <h3>{{data.name}}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="row container-fluid" style="padding-top:20px;height:70px;">
+      <div class="col-md-10">
+        <strong>Telephone:</strong> {{data.telephone}} <br>
+        <strong>Contact Person:</strong> {{data.contactPerson.first_name}} {{data.contactPerson.last_name}}<br>
+        <strong>Mobile:</strong> {{data.mobile}} <br>
+      </div>
+      <div class="col-md-2">
+        <div style="padding-right:20px;">
+          <div class="row">
+            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
+            <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+            </span> <br><br>
+            <span class="pull-right" style="cursor:pointer;">
+              <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

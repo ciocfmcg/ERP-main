@@ -1,12 +1,12 @@
 <!-- <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;"> -->
   <breadcrumb></breadcrumb>
-  <div class="container-fluid" style="margin-top: -20px;" ng-controller="businessManagement.support">
+  <div class="container-fluid" id="chatTab" style="margin-top: -20px;">
     <div class="row" style="background-color: white;">
 
       <!-- middle part -->
        <div class="col-md-10" style="padding:0px; min-height:88vh;">
         <div class="col-md-3 anim-in-out anim-fade" style="padding:0px;" ng-repeat="cust in chatsInView">
-          <chat-box data = "cust" index="$index" close-chat="closeChatBox" ></chat-box>
+          <chat-box data = "cust" index="$index" id="chatBox{{cust.uid}}" close-chat="closeChatBox" ></chat-box>
         </div>
       </div>
       <!-- right side part -->
@@ -23,7 +23,7 @@
             </div>
           </div>
         </div>
-          <ul class="nav nav-sidebar-inverse" style="width:100%;"  >
+          <ul class="nav nav-sidebar-inverse" style="width:100%;">
             <!-- <li ng-repeat="x in newUsers" ng-click="data.xInView = $index" class="ripple "> -->
             <li ng-repeat="x in myUsers"  ng-click="addToChat($index)" class="ripple animated fadeIn">
               <a>
@@ -31,7 +31,7 @@
                   <div class="container-fluid">
                     <div class="col-md-12">
                       <div class="row">
-                        <span> {{x.uid.split("$")[0]}}</span>
+                        <span> {{x.uid.split("$")[1]}}</span>
                       </div>
                       <div class="row">
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i>  <span >{{x.name}}</span>
@@ -64,10 +64,11 @@
                   <div class="container-fluid">
                     <div class="col-md-12">
                       <div class="row">
-                        <span >{{x.uid.split("$")[0]}}</span>
+                        <span >{{x.uid.split("$")[1]}}</span>
                       </div>
                       <div class="row">
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span> {{x.name}}</span>
+                        <span>( {{x.messages.length}} )</span>
                       </div>
                     </div>
                   </div>
