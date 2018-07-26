@@ -96,7 +96,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     $scope.custDetails = response.data[0]
   });
   $scope.openChartPopoup = function(pk){
-    console.log('cameeeeeeeeeeeeee',pk);
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
       size: 'md',
@@ -108,8 +107,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       },
       controller: function($scope, $users , $uibModalInstance,cPk) {
         console.log('sssssssssssss',cPk);
-        $scope.cPk = cPk
-        $scope.srcName = "/static/js/chatter.js"
+        $scope.src = '<script src="' + "http://localhost:8000/static/js/chatter-" + cPk + ".js" + '"></script>'
 
       },
     })
