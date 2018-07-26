@@ -67,13 +67,26 @@ connection.onopen = function (session) {
     }
   };
 
+
+  posWampdata = function(args){
+    console.log('saaaaaaaaaaaaaaaaaaaaaaa',args[0].parent);
+    var scope = angular.element(document.getElementById('POS')).scope();
+    if (typeof scope != 'undefined') {
+      scope.$apply(function() {
+        console.log(scope.sai);
+        scope.processScannerNotification(args[0].parent)
+        // console.log(scope.sai);
+      });
+    }
+  };
+
+
   tutoringSubjects = [1];
   tutoringTopics = [2];
   tutorsOnline = [];
 
   if (DEFAULT_ROUTE == 'tutorHome') {
     processTutoringRequests = function(args) {
-
       console.log("Raw args : " , args);
       if (tutorOnline) {
         console.log(args);
@@ -86,8 +99,6 @@ connection.onopen = function (session) {
         }
       }
     }
-
-
     session.subscribe('service.tutor.online', processTutoringRequests).then(
       function (sub) {
         console.log("subscribed to topic 'tutoring'");
@@ -96,9 +107,7 @@ connection.onopen = function (session) {
         console.log("failed to subscribed: " + err);
       }
     );
-
     window.addEventListener("message", receiveMessage, false);
-
     function receiveMessage(event)
     {
       console.log("will make", event.data);
@@ -108,26 +117,17 @@ connection.onopen = function (session) {
         tutorOnline= false;
       }
     }
-
-
     handleTutoringCall = function(args) {
       // call recieved
-
       console.log(args);
-
       var scope = angular.element(document.getElementById('main')).scope();
       console.log(scope);
-
       if (typeof scope != 'undefined') {
         scope.$apply(function() {
           scope.tutoringCall(args[0]);
         });
       }
-
-
     }
-
-
     session.subscribe('service.tutoring.call.'+wampBindName, handleTutoringCall).then(
       function (sub) {
         console.log("subscribed to topic 'chatResonse'");
@@ -136,15 +136,12 @@ connection.onopen = function (session) {
         console.log("failed to subscribed: " + err);
       }
     );
-
-
   }else if (DEFAULT_ROUTE == 'studentHome') {
     // in response to student's request the tutors will share their availability
     processTutorOnlineRequests = function(args) {
       console.log("Tutor online response " , args);
       tutorsOnline.push(args[0]);
     }
-
     session.subscribe('service.tutor.onlineResponse.' + wampBindName , processTutorOnlineRequests).then(
       function (sub) {
         console.log("subscribed to topic 'tutoring'");
@@ -153,28 +150,19 @@ connection.onopen = function (session) {
         console.log("failed to subscribed: " + err);
       }
     );
-
-
-
-
-
     handleJoinSession = function(args) {
-
       console.log("Will join the accepted session " , args);
       var scope = angular.element(document.getElementById('newTutoringSession')).scope();
       console.log(scope);
-
       if (typeof scope != 'undefined') {
         scope.$apply(function() {
           scope.dismiss();
         });
       }
-
       var url = '/studentHome/?session=' + args[0].sessionID;
       window.location = "http://" + window.location.host + url;
       // win.focus();
     }
-
     session.subscribe('service.tutoring.startSession.'+wampBindName, handleJoinSession).then(
       function (sub) {
         console.log("subscribed to topic 'chatResonse'");
@@ -185,6 +173,17 @@ connection.onopen = function (session) {
     );
   }
 
+
+
+
+  session.subscribe('service.POS.'+wampBindName, posWampdata).then(
+    function (sub) {
+      console.log("subscribed to 'POS'");
+    },
+    function (err) {
+      console.log("failed to subscribed: " + err);
+    }
+  );
 
 
   session.subscribe('service.chat.'+wampBindName, chatResonse).then(

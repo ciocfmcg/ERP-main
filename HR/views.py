@@ -185,6 +185,7 @@ def registerView(request):
     	password = request.POST['password']
         if User.objects.filter(email = email).exists():
             msg = {'status' : 'danger' , 'message' : 'Email ID already exists' }
+            print msg,'emaillllllllll'
         else:
             user = User.objects.create(username = email.replace('@' , '').replace('.' ,''))
             user.first_name = name

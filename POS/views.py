@@ -48,20 +48,31 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    # queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
-    search_fields = ('name', 'serialNo', 'description', 'serialId')
-    filter_fields = ['name','haveComposition']
-    # def get_queryset(self):
-    #     product=[]
-    #     if self.request.GET['search']:
-    #         product = Product.objects.filter(name__contains=str(self.request.GET['search']))
-    #         product1  = Product.objects.filter(serialNo__contains=str(self.request.GET['search']))
-    #         return product
-    #     else:
-    #         return Product.objects.all()
+    # search_fields = ('name', 'serialNo', 'description', 'serialId')
+    filter_fields = ['name','haveComposition','serialNo',]
+
+    # filter_fields = ['name','haveComposition']
+    def get_queryset(self):
+        product=[]
+        if 'search' in self.request.GET:
+            product = Product.objects.filter(name__contains=str(self.request.GET['search']))
+            product1  = Product.objects.filter(serialNo__contains=str(self.request.GET['search']))
+            product2 = list(ProductVerient.objects.filter(sku__contains=str(self.request.GET['search'])).values_list('parent',flat=True))
+            # if len(product2) > 0:
+            product3  = Product.objects.filter(pk__in=product2)
+            print product3,'llllllllllll'
+            # for i in product2:
+            #     print i.parent,'ggggggggggggggg'
+            #     print type(i.parent),'aaaaaaaaaaaaaa'
+            #     # product.append(i.parent)
+            return product | product1 | product3
+        else:
+            return Product.objects.all()
 
 
+    # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
 #     permission_classes = (permissions.IsAuthenticated, )
@@ -324,13 +335,14 @@ def genInvoice(response , invoice, request):
     tableHeaderStyle.textColor = colors.white;
     tableHeaderStyle.fontSize = 7
 
-    pHeadProd = Paragraph('<strong>Product/<br/>Service</strong>' , tableHeaderStyle)
+    pHeadProd = Paragraph('<strong>Product /<br/>Service</strong>' , tableHeaderStyle)
     pHeadDetails = Paragraph('<strong>Details</strong>' , tableHeaderStyle)
-    pHeadTaxCode = Paragraph('<strong>HSN/<br/>SAC</strong>' , tableHeaderStyle)
-    pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
+    pHeadTaxCode = Paragraph('<strong>HSN / SAC</strong>' , tableHeaderStyle)
     pHeadPrice = Paragraph('<strong>Rate</strong>' , tableHeaderStyle)
+    pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
     # pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
-    pHeadsubTotalTax  = Paragraph('<strong>IGST <br/> Tax</strong>' , tableHeaderStyle)
+    # pHeadTotalPrice  = Paragraph('<strong>Total Price</strong>' , tableHeaderStyle)
+    pHeadsubTotalTax = Paragraph('<strong>IGST / Tax</strong>' , tableHeaderStyle)
     pHeadsubTotal = Paragraph('<strong>Sub Total</strong>' , tableHeaderStyle)
 
     # # bookingTotal , bookingHrs = getBookingAmount(o)
@@ -340,7 +352,7 @@ def genInvoice(response , invoice, request):
     # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
     # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
 
-    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty, pHeadsubTotalTax ,pHeadsubTotal ]]
+    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty,pHeadsubTotalTax,pHeadsubTotal ]]
 
 
     totalQuant = 0
@@ -355,7 +367,6 @@ def genInvoice(response , invoice, request):
 
         totalQuant += i['quantity']
 
-        print i
         #
         # if 'price' not in i:
         #     print "Continuing"
@@ -367,22 +378,21 @@ def genInvoice(response , invoice, request):
 
         totalTax += i['subTotalTax']
         grandTotal += i['subTotal']
+        if  i['data']['productMeta']['code'] and i['data']['productMeta']['taxRate']:
+            taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
+        else:
+            taxCode = ''
 
-        pBodyProd = Paragraph('Product' , tableBodyStyle)
+        pBodyProd = Paragraph('Service' if i['data']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
-        pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
-        pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
-        # if 'taxCode' in i:
-        taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
-        # else:
-            # taxCode = ''
-
         pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
-        pBodysubTotalTax = Paragraph(str(i['subTotalTax']) , tableBodyStyle)
-        pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
-        pBodySubTotal = Paragraph(str(i['subTotal']) , tableBodyStyle)
+        pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
+        pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
+        # pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
+        pBodysubTotalTax = Paragraph(str(round(i['subTotalTax'],2)) , tableBodyStyle)
+        pBodySubTotal = Paragraph(str(round(i['subTotal'],2)) , tableBodyStyle)
 
-        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodyTotal, pBodysubTotalTax , pBodySubTotal])
+        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodysubTotalTax , pBodySubTotal])
 
     invoice.subTotal = grandTotal
     # invoice.saveInvoiceForm()
@@ -391,8 +401,8 @@ def genInvoice(response , invoice, request):
     tableGrandStyle.fontSize = 10
 
 
-    data += [['', '','','', '', '',Paragraph(str(totalTax) , tableBodyStyle)  , Paragraph(str(grandTotal) , tableBodyStyle) ],
-            ['', '', '', '', '',  Paragraph('sub Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
+    data += [['', '','','', '',Paragraph(str(round(totalTax,2)) , tableBodyStyle)  , Paragraph(str(round(grandTotal,2)) , tableBodyStyle) ],
+            ['', '', '', '',  Paragraph('Sub Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
     t=Table(data)
     ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
                 ('VALIGN',(0,1),(-1,-3),'TOP'),
@@ -412,12 +422,11 @@ def genInvoice(response , invoice, request):
     t.setStyle(ts)
     t._argW[0] = 1.5*cm
     t._argW[1] = 6*cm
-    t._argW[2] = 2.4*cm
-    t._argW[3] = 2*cm
-    t._argW[4] = 2*cm
-    t._argW[5] = 2*cm
-    t._argW[6] = 1.6*cm
-    t._argW[7] = 2*cm
+    t._argW[2] = 2.7*cm
+    t._argW[3] = 2.3*cm
+    t._argW[4] = 1.8*cm
+    t._argW[5] = 2.5*cm
+    t._argW[6] = 3*cm
 
 
     story = []
@@ -428,24 +437,32 @@ def genInvoice(response , invoice, request):
     story.append(Spacer(2.5,0.75*cm))
 
     adrs = invoice.customer
+    print '***********',invoice.customer
+    if invoice.customer is not None:
+        if invoice.customer.gst is None:
+            tin = 'NA'
+        else:
+            tin = invoice.customer.gst
 
-    if invoice.customer.gst is None:
-        tin = 'NA'
+        summryParaSrc = """
+        <font size='11'><strong>Customer details :</strong></font> <br/><br/>
+        <font size='9'>
+        %s<br/>
+        %s<br/>
+        %s<br/>
+        %s<br/>
+        %s , %s<br/>
+        %s<br/>
+        <strong>GSTIN : </strong>%s<br/>
+        </font>
+        """ %(invoice.customer.name , invoice.customer.company , invoice.customer.street , invoice.customer.city ,invoice.customer.state , invoice.customer.pincode , invoice.customer.country , tin)
     else:
-        tin = invoice.customer.gst
-
-    summryParaSrc = """
-    <font size='11'><strong>Customer details:</strong></font> <br/><br/>
-    <font size='9'>
-    %s<br/>
-    %s<br/>
-    %s<br/>
-    %s<br/>
-    %s , %s<br/>
-    %s<br/>
-    <strong>GSTIN:</strong>%s<br/>
-    </font>
-    """ %(invoice.customer.name , invoice.customer.company , invoice.customer.street , invoice.customer.city ,invoice.customer.state , invoice.customer.pincode , invoice.customer.country , tin)
+        summryParaSrc = """
+        <font size='11'><strong>Customer details:</strong></font> <br/><br/>
+        <font size='9'>
+        <strong>GSTIN:</strong><br/>
+        </font>
+        """
     story.append(Paragraph(summryParaSrc , styleN))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))

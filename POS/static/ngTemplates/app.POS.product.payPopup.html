@@ -1,0 +1,122 @@
+<div class="modal-header">
+  <span style="font-size:45px;padding-top:25px;color:{{posSaved?'green':''}}">{{posSaved?'Payment Done !':'Payment Details'}}<span class="pull-right">Amount : {{amount | number}}<br>Quantity : {{qty | number}}</span></span>
+
+</div>
+<div class="modal-body">
+  <div class="row" style="margin:5px 20px">
+    <div class="col-md-4 btn btn-success text-center" style="font-size:55px" ng-click="payMode='cash'">
+      CASH
+    </div>
+    <div class="col-md-4 btn btn-warning text-center" style="font-size:55px" ng-click="payMode='card'">
+      CARD
+    </div>
+    <div class="col-md-4 btn btn-primary text-center" style="font-size:55px" ng-click="payMode='wallet';typ='paytm'">
+      WALLET
+    </div>
+  </div>
+  <div class="row" ng-if="payMode=='card'" style="margin-top:40px">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="form-group" style="font-size:50px">
+        <label>Payment Reference number</label>
+        <input type="text" class="form-control" ng-model="cardTyp.refNumber" style="font-size:40px;height:70px">
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="payMode=='cash'" style="margin-top:30px;margin-left:20px">
+    <div class="col-md-6" ng-if="!posSaved">
+      <span style="font-size:55px"><b>Received Amount</b></span><br>
+      <span style="font-size:70px;color:green" class="text-center"><b>{{receivedAmount | number}}</b></span><br><br>
+      <span style="font-size:55px" ng-if="receivedAmount.length>0"><b>Return Amount</b></span><br>
+      <span style="font-size:70px;color:red" ng-if="receivedAmount.length>0" class="text-center"><b>{{returnAmount | number}}</b></span>
+    </div>
+    <!-- <div class="col-md-6" ng-if="receivedAmount.length>0">
+      <span style="font-size:55px"><b>Return Amount</b></span><br>
+      <span style="font-size:70px" class="text-center"><b>{{returnAmount}}</b></span>
+    </div> -->
+    <div class="col-md-6" style="padding-left:100px">
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('7')">
+        7
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('8')">
+        8
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('9')">
+        9
+      </div><br>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('4')">
+        4
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('5')">
+        5
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('6')">
+        6
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('1')">
+        1
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('2')">
+        2
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('3')">
+        3
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('clear')">
+        <i class="fa fa-arrow-left"></i>
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('0')">
+        0
+      </div>
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('.')">
+        .
+      </div>
+    </div>
+  </div>
+  <!-- <div class="row" ng-if="payMode=='wallet'" style="margin-top:20px">
+    <div class="col-md-6">
+      <div class="col-md-10 col-md-offset-1">
+        <img src="/static/images/Paytm_logo.png" class="img" style="width:70%;height:100px" alt=""><br><br>
+        <img src="/static/images/paytmQrCode.png" class="img" style="width:70%;height:335px" alt="">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="col-md-10 col-md-offset-1 text-right">
+        <img src="/static/images/mobikwik.png" class="img" style="width:70%;height:100px" alt=""><br><br>
+        <img src="/static/images/mobikwikQrCode.png" class="img" style="width:70%;height:335px" alt="">
+      </div>
+    </div>
+  </div> -->
+  <div class="row" ng-if="payMode=='wallet'" style="margin-top:20px">
+    <div class="col-md-4">
+      <span style="cursor:pointer"><img src="/static/images/Paytm_logo.png" class="img" style="width:80%;height:80px" alt="" ng-click="typ='paytm'"><br><br><br><br></span>
+
+      <span style="cursor:pointer"><img src="/static/images/mobikwik.png" class="img" style="width:80%;height:80px" alt="" ng-click="typ='mobikwik'"><br><br></span>
+    </div>
+    <div class="col-md-8" ng-if="typ=='paytm'">
+      <div class="col-md-10 col-md-offset-1 text-right">
+        <img src="/static/images/Paytm_logo.png" class="img" style="width:70%;height:100px" alt=""><br><br>
+        <img src="/static/images/paytmQrCode.png" class="img" style="width:70%;height:335px" alt="">
+      </div>
+    </div>
+    <div class="col-md-8" ng-if="typ=='mobikwik'">
+      <div class="col-md-10 col-md-offset-1 text-right">
+        <img src="/static/images/mobikwik.png" class="img" style="width:70%;height:100px" alt=""><br><br>
+        <img src="/static/images/mobikwikQrCode.png" class="img" style="width:70%;height:335px" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="row text-center" style="margin-top:20px">
+      <div class="btn btn-default" style="font-size:40px" ng-click="savePosPopup()" ng-if="!posSaved">
+        Save
+      </div>
+      <div class="btn btn-default" style="font-size:40px" ng-click="CancelPosPopup()" ng-if="posSaved">
+        Cancel
+      </div>
+      <!-- <div class="btn-group" ng-if="posSaved">
+      <button  type="button" name="button" class="btn btn-success" style="font-size:50px"> Saved </button>
+      <button  type="button" name="button" class="btn btn-default" style="font-size:50px" ng-click="rowActionClicked('return')" > Cancel </button>
+    </div> -->
+      <!-- <button ng-click="save()" type="button" class="btn btn-success">Save</button> -->
+  </div>
+
+</div>

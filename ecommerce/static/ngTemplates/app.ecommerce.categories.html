@@ -18,11 +18,11 @@
               </div>
             </span>
             <span ng-if="f.fieldType=='char'">
-              <span><b>Enter {{f.name}}</b></span> <br>
+              <span><b>Enter {{f.name}}</b></span> <span ng-if="f.unit"> (in {{f.unit}}) </span> <br>
             <input type="text" name="" value="" ng-model="f.val" style="width:100%">
             </span>
             <span ng-if="f.fieldType=='float'">
-              <span><b>Enter {{f.name}}</b></span> <br>
+              <span><b>Enter {{f.name}}</b></span> <span ng-if="f.unit"> (in {{f.unit}}) </span> <br>
             <input type="text" name="" value="" ng-model="f.val" style="width:100%">
             </span>
             <span ng-if="f.fieldType=='date'">

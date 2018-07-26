@@ -415,11 +415,18 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 
     console.log(f.amountRecieved);
     console.log(f.modeOfPayment);
+    console.log(f.receivedDate);
     var toSend = {
       amountRecieved: f.amountRecieved,
       modeOfPayment: f.modeOfPayment,
       paymentRefNum: f.paymentRefNum,
-      receivedDate: f.receivedDate.toJSON().split('T')[0]
+    }
+    if (f.receivedDate != null) {
+      if (typeof f.receivedDate == 'object') {
+        toSend.receivedDate = f.receivedDate.toJSON().split('T')[0]
+      }else {
+        toSend.receivedDate = f.receivedDate
+      }
     }
     console.log(toSend);
 
@@ -680,6 +687,15 @@ function getMonday( date ) {
 app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
+  $scope.posShowAll = true
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=posScanner').
+  then(function(response) {
+    console.log('Scennerrrrrrrrrrrrrrr',response.data);
+    if (response.data[0].flag) {
+      $scope.posShowAll = false
+    }
+    console.log($scope.posScanner);
+  })
 
   $scope.today = new Date();
   $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 1);
@@ -925,6 +941,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }],
       // returnquater : 'jan-march'
     }
+    $scope.wampData = []
 
     $scope.getInvoiceID();
 
@@ -933,23 +950,28 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   $scope.returnquaters = ['jan-march', 'april-june', 'july-sep', 'oct-dec']
 
   $scope.resetForm();
+  $scope.posSubtotal = 0
 
   $scope.subTotal = function() {
     var subTotal = 0;
     angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != undefined) {
+      if (item.data.productMeta != null && item.data.productMeta != undefined) {
         subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
+      }else {
+        subTotal += (item.quantity * item.data.price);
       }
     })
+    $scope.posSubtotal = Math.round(subTotal)
     return subTotal.toFixed(2);
   }
   $scope.subTotalTax = function() {
     var subTotalTax = 0;
     angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != undefined) {
+      if (item.data.productMeta != null && item.data.productMeta != undefined) {
         subTotalTax += (item.data.productMeta.taxRate * item.data.price / 100);
       }
     })
+
     return subTotalTax.toFixed(2);
   }
 
@@ -979,6 +1001,134 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       $scope.customerExist = false;
     }
 
+  });
+
+
+  $scope.sai='kiran'
+
+  $scope.processScannerNotification = function(a){
+    console.log(a);
+    $http({
+      method: 'GET',
+      url: '/api/POS/product/?serialNo=' + a
+    }).
+    then(function(response) {
+      console.log('resssssssss',response.data);
+      if (response.data.length>0) {
+        if ($scope.wampData.indexOf(a) >= 0) {
+          var idx = $scope.wampData.indexOf(a)
+        }else {
+          $scope.wampData.push(a)
+          var idx = -1
+        }
+        console.log($scope.wampData);
+        if ($scope.wampData.length==1) {
+          if (idx>=0) {
+            $scope.form.products[idx].quantity += 1
+          }else {
+            $scope.form.products=[{
+              data: response.data[0],
+              quantity: 1
+            }]
+          }
+        }else {
+          if (idx>=0) {
+            $scope.form.products[idx].quantity += 1
+          }else {
+            $scope.form.products.push({
+              data: response.data[0],
+              quantity: 1
+            })
+          }
+        }
+      }
+    })
+  }
+  $scope.payPopup = function(){
+    if ($scope.form.products.length==0 || $scope.form.products.length == 1 &&  $scope.form.products[0].data == "" ) {
+      Flash.create('danger' , 'There is no product to generate invoice for')
+      return;
+    }
+    $scope.qty = 0
+    for (var i = 0; i < $scope.form.products.length; i++) {
+      $scope.qty += $scope.form.products[i].quantity
+    }
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.POS.product.payPopup.html',
+      size: 'xl',
+      backdrop: true,
+      resolve: {
+        amount: function() {
+          return $scope.posSubtotal
+        },
+        qty: function() {
+          return $scope.qty
+        }
+      },
+      controller: function($scope,amount,qty,$uibModalInstance) {
+
+        console.log('in popupppppp',amount,typeof(amount));
+        $scope.payMode = 'cash'
+        $scope.receivedAmount = ''
+        $scope.posSaved = false
+        $scope.amount = amount
+        $scope.qty = qty
+        $scope.returnAmount = 0
+        $scope.cardTyp = {refNumber:''}
+        $scope.addNum = function(num){
+          if (num=='clear') {
+            $scope.receivedAmount = $scope.receivedAmount.slice(0,-1)
+          }else {
+            $scope.receivedAmount += num
+          }
+          if ($scope.receivedAmount.length>0) {
+            $scope.returnAmount = parseInt($scope.receivedAmount) - $scope.amount
+          }
+          else {
+            $scope.returnAmount = $scope.amount
+          }
+        }
+        $scope.savePosPopup = function(){
+            if ($scope.payMode == 'cash') {
+              if ($scope.receivedAmount.length>0) {
+                $scope.returnAmount = parseInt($scope.receivedAmount) - $scope.amount
+                console.log($scope.returnAmount);
+              }else {
+                Flash.create('warning','Please Enter Receivd Amount')
+                return
+              }
+            }else if ($scope.payMode == 'card') {
+              if ($scope.cardTyp.refNumber.length==0) {
+                Flash.create('warning','Please Enter Payment Reference number')
+                return
+              }
+            }
+
+            $rootScope.$broadcast('POSPayPopup' , {payMode:$scope.payMode ,amountRecieved:$scope.amount,paymentRefNum:$scope.cardTyp.refNumber})
+            setTimeout(function () {
+              $scope.posSaved = true
+              $scope.CancelPosPopup()
+            }, 500);
+        }
+        $scope.CancelPosPopup = function(){
+          $uibModalInstance.dismiss()
+        }
+
+      },
+    }).result.then(function() {
+
+    }, function(a) {
+      console.log(a);
+      // Flash.create('sucess','Payment Done !')
+
+    });
+
+  }
+
+  $scope.$on('POSPayPopup', function(event, input) {
+    console.log("recieved");
+    console.log(input);
+    $scope.saveInvoice(input)
   });
 
 
@@ -1355,10 +1505,59 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.form.products.splice(index, 1);
   };
 
-  $scope.saveInvoice = function() {
+  $scope.saveInvoice = function(a) {
+    console.log(a);
 
     var f = $scope.form;
     console.log(f);
+
+    if (a==undefined) {
+      if (f.serialNumber.length == 0) {
+        Flash.create('warning', 'serialNumber can not be left blank');
+        return;
+      }
+
+      if (f.customer.pk == undefined) {
+        Flash.create('warning' , 'Please select a customer');
+        return;
+      }
+
+
+      if (f.products.length == 1 &&  f.products[0].data == "" ) {
+        Flash.create('danger' , 'There is no product to generate invoice for')
+        return;
+      }
+      var toSend = {
+        serialNumber: f.serialNumber,
+        invoicedate: f.invoiceDate.toJSON().split('T')[0],
+        reference: f.reference,
+        duedate: f.deuDate.toJSON().split('T')[0],
+        returnquater: f.returnquater,
+        modeOfPayment : f.modeOfPayment,
+        products: JSON.stringify(f.products),
+        customer: f.customer.pk,
+        grandTotal: $scope.subTotal(),
+        totalTax: $scope.subTotalTax(),
+        amountRecieved : f.amountRecieved,
+        paymentRefNum : f.paymentRefNum,
+        receivedDate : f.receivedDate.toJSON().split('T')[0],
+      }
+    }else {
+      var toSend = {
+        serialNumber: f.serialNumber,
+        modeOfPayment : a.payMode,
+        products: JSON.stringify(f.products),
+        grandTotal: $scope.subTotal(),
+        totalTax: $scope.subTotalTax(),
+
+      }
+      if (a.payMode == 'cash') {
+        toSend.amountRecieved = a.amountRecieved
+      }else if (a.payMode == 'card') {
+        toSend.paymentRefNum = a.paymentRefNum
+      }
+    }
+
     for (var i = 0; i < f.products.length; i++) {
       var fd = new FormData();
       fd.append('inStock', (f.products[i].data.inStock - f.products[i].quantity));
@@ -1368,6 +1567,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }
 
       var url = '/api/POS/product/' + f.products[i].data.pk + '/'
+      console.log(fd,url,f.products[i].data.inStock,f.products[i].quantity);
       $http({
         method: 'PATCH',
         url: url,
@@ -1381,38 +1581,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
       })
     }
-    if (f.serialNumber.length == 0) {
-      Flash.create('warning', 'serialNumber can not be left blank');
-      return;
-    }
-
-    if (f.customer.pk == undefined) {
-      Flash.create('warning' , 'Please select a customer');
-      return;
-    }
 
 
-    if (f.products.length == 1 &&  f.products[0].data == "" ) {
-      Flash.create('danger' , 'There is no product to generate invoice for')
-      return;
-    }
-
-
-    var toSend = {
-      serialNumber: f.serialNumber,
-      invoicedate: f.invoiceDate.toJSON().split('T')[0],
-      reference: f.reference,
-      duedate: f.deuDate.toJSON().split('T')[0],
-      returnquater: f.returnquater,
-      modeOfPayment : f.modeOfPayment,
-      products: JSON.stringify(f.products),
-      customer: f.customer.pk,
-      grandTotal: $scope.subTotal(),
-      totalTax: $scope.subTotalTax(),
-      amountRecieved : f.amountRecieved,
-      paymentRefNum : f.paymentRefNum,
-      receivedDate : f.receivedDate.toJSON().split('T')[0],
-    }
     // var returnquaterParts=toSend.returnquater.split('/');
     // toSend.returnquater=returnquaterParts[2]+'-'+returnquaterParts[0]+'-'+returnquaterParts[1];
     // var returndateParts=toSend.returndate.split('/');
@@ -1433,8 +1603,12 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       data: toSend
     }).
     then(function(response) {
+      console.log('sssssssssssss',a);
       $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved');
+      if (a!=undefined) {
+        $scope.resetForm()
+      }
     })
   }
 

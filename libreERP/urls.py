@@ -41,6 +41,8 @@ urlpatterns = [
     url(r'^refund', refund , name ='refund'),
     url(r'^contacts', contacts , name ='contacts'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
+    # url(r'^customer/login/', customerLoginView , name ='customerLogin'),
+    # url(r'^customerhome/', customerHomeView , name ='customerhome'),
 ]
 
 if settings.DEBUG:

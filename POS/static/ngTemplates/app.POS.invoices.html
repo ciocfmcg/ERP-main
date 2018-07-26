@@ -1,6 +1,8 @@
 
-
-<div class="row">
+<div class="row text-center" ng-if="!posShowAll" style="font-size:35px">
+  <label>Invoice Serial Number</label> - {{form.serialNumber}}
+</div>
+<div class="row" ng-if="posShowAll">
   <div class="col-md-5">
     <div class="row">
       <div class="col-md-7">
@@ -72,7 +74,7 @@
   </div>
 </div>
 <hr>
-<div class="row">
+<div class="row" ng-if="posShowAll">
   <div class="col-md-5">
     <div class="col-md-10" style="padding-left: 0px;">
       <div class="form-group">
@@ -156,46 +158,46 @@
 </div>
 
 <div class="container-fluid" style="padding:0px">
-  <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
+  <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;font-size:{{posShowAll?'17px':'35px'}}">
     <tr style="background-color: #eeeeee;height: 96px;">
       <th>#</th>
-      <th>Item Description</th>
-      <th>Item Type</th>
-      <th>HSN/SAC</th>
+      <th style="font-size:{{posShowAll?'17px':'25px'}}">Item Description</th>
+      <th ng-if="posShowAll">Item Type</th>
+      <th ng-if="posShowAll">HSN/SAC</th>
       <th>Qty</th>
       <th>Rate(Rs.)</th>
-      <th>Tax</th>
+      <th ng-if="posShowAll">Tax</th>
       <th>Subtotal</th>
       <th></th>
     </tr>
     <tr ng-repeat="item in form.products" >
       <td>{{$index + 1}}</td>
       <td>
-        <input type="text" class="form-control-pos"  ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)">
+        <input type="text" class="form-control-pos"  ng-model="item.data" uib-typeahead="p as p.name for p in productSearch($viewValue)" style="font-size:{{posShowAll?'17px':'25px'}}">
       </td>
-      <td>
+      <td ng-if="posShowAll">
           <span ng-if="item.data.pk">{{item.data.productMeta.typ == 'SAC'? 'Service' : 'Product'}}</span>
       </td>
-      <td>
+      <td ng-if="posShowAll">
         <span ng-if="item.data.pk">{{item.data.productMeta.code}} ( {{item.data.productMeta.taxRate}} %)</span>
+      </td>
+      <td>
+        <input type="number" class="form-control-pos" ng-model="item.quantity" ng-if="item.data.pk" style="font-size:{{posShowAll?'17px':'35px'}};text-align: center;height:40px" min="1">
+      </td>
+      <td>
+        <input type="float" class="form-control-pos" ng-model="item.data.price" ng-if="item.data.pk&&posShowAll" style="font-size:17px;text-align: center;">
+        <input type="float" class="form-control-pos" value="{{(item.data.price + (item.data.productMeta!= none?(item.data.productMeta.taxRate*item.data.price/100):0)).toFixed(2)}}" ng-if="item.data.pk&&!posShowAll" style="font-size:35px;text-align: center;" >
+      </td>
+      <td ng-if="posShowAll">
+        <span ng-if="item.data.pk">{{item.data.productMeta!= none?(item.data.productMeta.taxRate*item.data.price/100).toFixed(2):0}}</span>
 
       </td>
       <td>
-        <input type="number" class="form-control-pos" ng-model="item.quantity" ng-if="item.data.pk">
-      </td>
-      <td>
-        <input type="float" class="form-control-pos" ng-model="item.data.price" ng-if="item.data.pk">
-      </td>
-      <td>
-        <span ng-if="item.data.pk">{{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}</span>
+        <span ng-if="item.data.pk">{{item.data.productMeta!= none?(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2):(item.quantity*item.data.price).toFixed(2)}}</span>
 
       </td>
       <td>
-        <span ng-if="item.data.pk">{{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}</span>
-
-      </td>
-      <td>
-        <button type="button" class="btn btn-danger btn-sm"  ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
+        <button type="button" class="btn btn-danger btn-sm"  ng-click="delete($index)" style="font-size:{{posShowAll?'17px':'25px'}}"> <i class="fa fa-trash"></i> </button>
       </td>
 
     </tr>
@@ -207,12 +209,13 @@
         </div>
       </td>
       <td style="border:none;"></td>
+      <td style="border:none;" ng-if="posShowAll"></td>
+      <td style="border:none;" ng-if="posShowAll"></td>
       <td style="border:none;"></td>
       <td style="border:none;"></td>
-      <td style="border:none;"></td>
-      <td style="border:none;"></td>
-      <td ng-if="form.products[0].data.pk" >{{subTotalTax()}}</td>
-      <td ng-if="form.products[0].data.pk" >{{subTotal()}}</td>
+      <td ng-if="form.products[0].data.pk&&posShowAll">{{subTotalTax()}}</td>
+      <td ng-if="form.products[0].data.pk&&posShowAll" style="font-size:17px">{{subTotal()}}</td>
+      <td ng-if="form.products[0].data.pk&&!posShowAll" style="font-size:50px;background-color:black;color:white"><b>{{subTotal()}}</b></td>
 
     </tr>
   </table>
@@ -220,14 +223,25 @@
 </div>
 
 <div class="down-part">
-  <div class="row">
+  <div class="row" ng-if="posShowAll">
     <div class="col-md-12 text-center" style="margin-top: 27px;">
       <button type="button" class="btn btn-default" ng-click="goHome()">Back</button>
-      <button type="button" class="btn btn-success" ng-click="saveInvoice()">Save</button>
+      <button type="button" class="btn btn-success" ng-click="saveInvoice()" >Save</button>
 
       <a ng-if="form.pk" class="btn btn-default"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
 
       <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button>
+    </div>
+  </div>
+  <div class="row" ng-if="!posShowAll">
+    <div class="col-md-12 " style="margin-top: 30px;">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default btn-lg" ng-click="goHome()" style="font-size:25px">Back</button>
+        <button type="button" class="btn btn-danger btn-lg" ng-click="resetForm()" style="font-size:25px">Reset Form</button>
+    </div>
+    <div class="pull-right btn btn-primary btn-lg" style="margin-right:30px;font-size:25px;" ng-click="payPopup()">
+      PAY
+    </div>
     </div>
   </div>
 </div>

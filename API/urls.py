@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^recruitment/', include('recruitment.urls')),
     url(r'^payroll/', include('payroll.urls')),
     url(r'^homepage/', include('homepage.urls')),
+    url(r'^support/', include('support.urls')),
 ]

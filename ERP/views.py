@@ -312,7 +312,7 @@ class applicationSettingsViewSet(viewsets.ModelViewSet):
     queryset = appSettingsField.objects.all()
     serializer_class = applicationSettingsSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['app']
+    filter_fields = ['app' , 'name']
 
 class applicationSettingsAdminViewSet(viewsets.ModelViewSet):
     # permission_classes = (isAdmin,)

@@ -202,7 +202,7 @@
       <!-- <button type="button" class="btn btn-default" ng-click="goHome()">Back</button> -->
       <button type="button" class="btn btn-success" ng-click="saveInvoiceForm()">Save Invoice</button>
 
-      <a class="btn btn-default" target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}">Print <i class="fa fa-print" ></i></a>
+      <a class="btn btn-default" target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}" ng-if="invoice.customer.pk!=none">Print <i class="fa fa-print" ></i></a>
 
       <!-- <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset Form</button> -->
     </div>

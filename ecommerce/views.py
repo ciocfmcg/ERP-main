@@ -20,7 +20,10 @@ from time import time
 import pytz
 import math
 import json
+from email.mime.image import MIMEImage
 
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from StringIO import StringIO
 import math
 import requests
@@ -83,6 +86,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
 from reportlab.graphics import barcode, renderPDF
 from reportlab.graphics.shapes import *
 import calendar as pythonCal
+from POS.models import *
 from ERP.models import service, appSettingsField
 # Create your views here.
 
@@ -91,8 +95,9 @@ def ecommerceHome(request):
 
 class SearchProductAPI(APIView):
     renderer_classes = (JSONRenderer,)
-    # permission_classes = (permissions.IsAuthenticated ,)
+    permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
+        print 'aaaaaaaaaaaaaaaaa'
         if 'search' in self.request.GET:
             search = str(self.request.GET['search'])
             l = int(self.request.GET['limit'])
@@ -271,6 +276,7 @@ class listingViewSet(viewsets.ModelViewSet):
         data = self.request.GET
         if 'recursive' in data:
             if data['recursive'] == '1':
+                print data['parent'] , type(data['parent'])
                 prnt = genericProduct.objects.get(id = data['parent'])
                 toReturn = listing.objects.filter(parentType = prnt)
                 for child in prnt.children.all():
@@ -331,6 +337,19 @@ class listingViewSet(viewsets.ModelViewSet):
                 #             qry = qry | Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
 
                     # toReturn = toReturn.filter(qry)
+                # print toReturn
+                # for i in toReturn:
+                #     print i.product
+                #
+                #     product  = Product.objects.filter(pk__in=i.product)
+                #     print product ,'aaaaaaaaaaaaaa'
+                #     prductSku =  ProductVerient.objects.all()
+                #     for i in product:
+                #         print i,'jjjjj'
+                #         for j in prductSku:
+                #             print j.parent,'bbbbbbbbbbbbbbbb'
+                #             if i == j.parent:
+                #                 print 'kkkkkkkkkkkkkkkkkk'
                 return toReturn
         else:
             return listing.objects.all()
@@ -340,9 +359,10 @@ class listingLiteViewSet(viewsets.ModelViewSet):
     serializer_class = listingLiteSerializer
     # queryset = listing.objects.all()
     def get_queryset(self):
-        print "fffffffffffffffffffff"
-        u = self.request.user
-        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+        print "fffffffffffffffffffff",self.request.user.is_authenticated
+        if self.request.user.is_authenticated:
+            u = self.request.user
+            has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
         if 'mode' in  self.request.GET:
             if self.request.GET['mode'] == 'vendor':
                 s = service.objects.get(user = u)
@@ -457,7 +477,10 @@ def manifest(response,item):
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
-    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=5))
+    # elements.append(Indenter(left=150))
+    # elements.append(HRFlowable(hAlign='LEFT',thickness=1, color=black,spaceBefore=30,spaceAfter=5))
+    # elements.append(Indenter(left=-150))
+
     elements.append(Spacer(1, 30))
 
     txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(item.courierName,item.courierAWBNo)
@@ -546,17 +569,17 @@ class SendStatusAPI(APIView):
         elif productStatus == 'shipped':
             msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from packed to shipped"
         elif productStatus == 'inTransit':
-            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from shipped to  in Transit"
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from shipped to In Transit"
         elif productStatus == 'reachedNearestHub':
-            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has Reached to the nearest Hub"
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been Reached to the nearest Hub"
         elif productStatus == 'outForDelivery':
             msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" is Out for delivery"
         elif productStatus == 'cancelled':
-            msgBody = "Your request to cancel the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been cancelled"
         elif productStatus == 'returnToOrigin':
-            msgBody = "Your return of product: " + str(productName) + ", Quantity of: " +str(qty)+" has been returned to origin"
+            msgBody = "Product has been returned to origin"
         elif productStatus == 'returned':
-            msgBody ="Your request to return the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+            msgBody ="Product has been returned"
         msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
@@ -587,7 +610,6 @@ class SendDeliveredStatus(APIView):
         grandTotal=total-(promoAmount * total)/100
         grandTotal=round(grandTotal, 2)
         attachment =  oq.product.files.values_list('attachment', flat=True)
-        print attachment[0]
         # media=oq.product.files
         # for m in media:
         #     print m.pk,'aaaaaaaaa'
@@ -601,7 +623,7 @@ class SendDeliveredStatus(APIView):
             # 'sendersPhone' : '122004',
             # 'grandTotal':grandTotal,
             'promoAmount':promoAmount,
-            'attachment': attachment[0],
+            'attachment':"https://media/"+attachment[0],
             'grandTotal':grandTotal,
             'total':total,
             'order': o,
