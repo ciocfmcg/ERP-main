@@ -94,31 +94,31 @@ INSTALLED_APPS = (
     'robots',
     'API', # uncategorised REST points
     'ERP', # permissions, overall management of the platform
+    'homepage', # landing page
     'HR', # people aspect of the platform
+    'businessManagement', # BM application
+    'support',# canvas
     'PIM', # personal information manager
     'social', # social networking client
-    'homepage', # landing page
     'mail', # mail application
-    'businessManagement', # BM application
-    'projectManagement',
     'gitweb', # github.com local server with file browsing and diff viewer
-    'taskBoard',
-    'projects',
-    'virtualWorkforce',
-	'finance',# billing , invoicing , finance etc
-	'tools',# general purpose tools like OCR, AI or big data related stuffs
-	'clientRelationships',# CRM like sales force
+    'tools',# general purpose tools like OCR, AI or big data related stuffs
+    'clientRelationships',# CRM like sales force
+    'organization',# organization
+    # 'projects',
+    # 'performance',# performance
+    # 'taskBoard',
+    # 'logistic',# logistics
+    # 'projectManagement',
+    # 'virtualWorkforce',
+	# 'finance',# billing , invoicing , finance etc
 	# 'LMS',# LMS
-	'workforceManagement',# canvas
-    'support',# canvas
-	'employees',# employees details
-	'payroll',# payroll
-	'performance',# performance
-	'recruitment',# recruitment
-	'organization',# organization
-	'logistic',# logistics
-	'assets',# assets
-	'marketing',# Marketing Application
+	# 'workforceManagement',# canvas
+	# 'employees',# employees details
+	# 'payroll',# payroll
+	# 'recruitment',# recruitment
+	# 'assets',# assets
+	# 'marketing',# Marketing Application
 )
 
 

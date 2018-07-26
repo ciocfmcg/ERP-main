@@ -58,7 +58,7 @@ class repoSerializer(serializers.ModelSerializer):
     groups = groupPermissionSerializer(many = True , read_only = True)
     class Meta:
         model = repo
-        fields = ('pk', 'perms' , 'name' , 'groups' , 'description' , 'project' ,'creator')
+        fields = ('pk', 'perms' , 'name' , 'groups' , 'description' , 'creator')
         read_only_fields = ('creator',)
     def create(self , validated_data):
         u = self.context['request'].user

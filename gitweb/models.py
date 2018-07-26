@@ -8,7 +8,7 @@ from django.dispatch import receiver
 import requests
 from django.conf import settings as globalSettings
 from PIM.models import notification
-from projects.models import project
+# from projects.models import project
 # Create your models here.
 
 
@@ -39,7 +39,7 @@ class repo(models.Model):
     groups = models.ManyToManyField(groupPermission , related_name = 'repos')
     description = models.TextField(max_length=500, null = False)
     lastNotified = models.DateTimeField(default = timezone.now) # used to check the latest commits when gitolite notify the same
-    project = models.ForeignKey(project,null = True , related_name='repos')
+    # project = models.ForeignKey(project,null = True , related_name='repos')
     def __unicode__(self):
         return self.name
 
