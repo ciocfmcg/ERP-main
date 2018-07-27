@@ -36,9 +36,10 @@ class ProductLiteSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
     compositions=ProductLiteSerializer(many=True,read_only=True)
+    skuUnitpack = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -94,6 +95,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+    def get_skuUnitpack(self, obj):
+        if 'search' in self.context['request'].GET and len(self.context['request'].GET['search'])>0:
+            pvObj = ProductVerient.objects.filter(sku__icontains=self.context['request'].GET['search'],parent=obj.pk).values('unitPerpack')
+            if len(pvObj)>0:
+                return list(pvObj)[0]['unitPerpack']
+        return None
 
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)

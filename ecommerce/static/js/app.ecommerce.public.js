@@ -1657,7 +1657,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 });
 
-app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, $users) {
+app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, $users,$interval) {
 
   // $scope.fetchListings = function(){
   //   url = '/api/ecommerce/listingLite/?'
@@ -1727,15 +1727,25 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
 
   // $scope.fetchListings()
 
-
+// $scope.offset = 0
+//
+// $scope.load=function(offset){
   $http({
     method: 'GET',
-    url: '/api/ecommerce/listingLite/'
+    url: '/api/ecommerce/listingLite/?limit=16'
   }).
   then(function(response) {
-    $scope.listingProducts = response.data;
+    $scope.listingProducts = response.data.results;
     console.log('sssssssssss', $scope.listingProducts);
   })
+// }
+// $scope.load($scope.offset)
+// $interval(function(){
+// $scope.offset += 10;
+// $scope.load($scope.offset)
+// },10);
+
+
 
   $http({
     method: 'GET',

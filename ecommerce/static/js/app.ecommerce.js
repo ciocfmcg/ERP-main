@@ -12,7 +12,10 @@ app.config(function($stateProvider){
           controller : 'controller.generic.menu',
         },
         "@businessManagement.ecommerce": {
-          templateUrl: '/static/ngTemplates/app.ecommerce.vendor.default.html',
+          templateUrl: '/static/ngTemplates/app.POS.default.html',
+          controller: 'businessManagement.POS.default',
+          // templateUrl: '/static/ngTemplates/app.ecommerce.vendor.default.html',
+          // controller: 'businessManagement.ecommerce.default',
         }
     }
   })
