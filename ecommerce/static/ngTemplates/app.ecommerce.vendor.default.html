@@ -1,10 +1,158 @@
-<div >
-  <breadcrumb></breadcrumb>
-  <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-shopping-cart fa-5x "></i>
-    <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for Ecommerce Vendor's portal</h3>
-  </p>
+<div class="shaddowed card bg-white " style="position:relative;min-height:92vh;" id="POS">
+  <div class="container-fluid" style="padding:0px;">
+    <breadcrumb></breadcrumb>
+    <!-- <div class="container-fluid" ng-if="mode == 'invoice'" ng-include="'/static/ngTemplates/app.POS.invoices.html'">
+    </div> -->
+    <div class="container-fluid" ng-if="mode == 'home'">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group" style="margin-top:10px;">
+                <div class="row">
+                  <div class="col-md-4 text-center">
+                    <img src="/static/images/monthicon.png" class="img" style="width:80px;height:80px;" alt=""> <br>
+                    <label>Month</label>
+                    <input ng-model="graphForm.graphType" type="radio" name="type" value="month">
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <img src="/static/images/weekicon.png" class="img" style="width:80px;height:80px;" alt=""> <br>
+                    <label>Week</label>
+                    <input ng-model="graphForm.graphType" type="radio" name="type" value="week">
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <img src="/static/images/dayicon.jpg" class="img" style="width:80px;height:80px;" alt=""> <br>
+                    <label>Day</label>
+                    <input ng-model="graphForm.graphType" type="radio" name="type" value="day">
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="margin-bottom:30px;">
+                <div class="col-md-12">
+                  <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2" style="width: 700px;height: 100%;">
+                  </canvas>
+                </div>
+                <!-- <div class="col-md-4" style="padding-top: 60px;font-size: 20px;">
+                  <div class="row">
+                    <div class="col-md-6 text-right">
+                      <strong>Sales:</strong>
+                    </div>
+                    <div class="col-md-6">
+                      <i class="fa fa-inr"></i> {{stats.totalSales.grandTotal__sum}}
+                    </div>
+                  </div>
 
+                  <div class="row">
+                    <div class="col-md-6 text-right">
+                      <strong>Products:</strong>
+                    </div>
+                    <div class="col-md-6">
+                      <i class="fa fa-inr"></i> 5000
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="small-box bg-aqua">
+                    <div class="inner">
+                      <h3>{{stats.sales}}</h3>
+                      <p>New Orders</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <!-- <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a> -->
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="small-box bg-green">
+                    <div class="inner">
+                      <h3>{{stats.custCount}}</h3>
+                      <!-- <h3>53<sup style="font-size: 20px">%</sup></h3> -->
+                      <p>New Customer</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <!-- <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a> -->
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="row">
+                <div class="col-md-6">
+                  <div class="small-box bg-red">
+                    <div class="inner">
+                      <h3><i class="fa fa-inr"></i> 6500</h3>
+                      <p>Cash in Bank</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-university"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">
+                      More info <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="small-box bg-yellow">
+                    <div class="inner">
+                      <h3><i class="fa fa-inr"></i> 5000</h3>
+                      <p>Cash in Hand</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-money"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a>
+                  </div>
+                </div>
+              </div> -->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="small-box bg-blue">
+                    <div class="inner">
+                      <h3>
+                        <i class="fa fa-inr"></i> {{stats.totalCollections}}</h3>
+                      <p>Total collections</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-money"></i>
+                    </div>
+                    <!-- <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a> -->
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="small-box bg-red">
+                    <div class="inner">
+                      <h3><i class="fa fa-inr"></i> {{stats.totalSales.totalAmount__sum}}</h3>
+                      <p>Total Sales</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-pie-chart"></i>
+                    </div>
+                    <!-- <a href="#" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                  </a> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+          <div class="col-md-5 md-offset-1">
+            <canvas id="line" class="chart chart-line" chart-data="trendData" chart-labels="labels" chart-legend="true"  chart-click="onClick" style="width: 632px;height: 305px;">
+            </canvas>
+          </div>
+      </div>
+    </div>
+  </div>
 </div>

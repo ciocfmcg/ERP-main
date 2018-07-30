@@ -964,3 +964,69 @@ class DownloadInvoiceAPI(APIView):
         f.close()
         # return Response(status=status.HTTP_200_OK)
         return response
+
+from datetime import timedelta
+from django.db.models import Sum
+class OnlineSalesGraphAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        totalCollections=0
+        if "date" in request.data:
+            # one day sale
+            d = datetime.datetime.strptime(request.data["date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            order = Order.objects.filter(created__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+            custs = User.objects.filter(date_joined__range= (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+            orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+        else:
+            frm = datetime.datetime.strptime(request.data["from"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            to = datetime.datetime.strptime(request.data["to"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            order = Order.objects.filter(created__range=(datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+            orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+            custs = User.objects.filter(date_joined__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+
+        totalSales = order.aggregate(Sum('totalAmount'))
+        for i in orderQty:
+            if str(i.status) == 'delivered':
+                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                orderD = Order.objects.filter(orderQtyMap=i.pk)
+                for j in orderD:
+                    if str(j.paymentMode) == 'COD':
+                            if j.promoCode!=None:
+                                promo = Promocode.objects.filter(name__iexact=j.promoCode)
+                                for p in promo:
+                                    promocode = p.discount
+                                    priceVal = price-(promocode * price)/100
+                                    totalCollections += priceVal
+                            else:
+                                totalCollections += price
+                print totalCollections,'bbbbbbbbbbbbbbbbbbb', i.pk
+            orderD = Order.objects.filter(orderQtyMap=i.pk)
+            for j in orderD:
+                if str(j.paymentMode) == 'card':
+                    price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                    print j.pk,'ppppppppppppkkkkkkkkkkkkkk'
+                    if j.promoCode!=None:
+                        promo = Promocode.objects.filter(name__iexact=j.promoCode)
+                        for p in promo:
+                            promocode = p.discount
+                            priceVal = price-(promocode * price)/100
+                            totalCollections += priceVal
+                    else:
+                        totalCollections += price
+                print totalCollections,'aaaaaaaaaaaaaaaa' , i.pk
+        totalCollections = round(totalCollections, 2)
+        sales =  order.count()
+        custCount = custs.count()
+
+
+        last_month = datetime.datetime.now() - timedelta(days=30)
+
+        data = (Order.objects.all()
+            .extra(select={'created': 'date(created)'})
+            .values('created')
+            .annotate(sum=Sum('totalAmount')))
+
+
+        # return Response({"totalSales" : totalSales , "totalCollections" : totalCollections ,  "sales" : sales , "custCount" : custCount , "trend" : data},status=status.HTTP_200_OK)
+        return Response({"totalSales" : totalSales , "totalCollections" : totalCollections ,  "sales" : sales , "custCount" : custCount , "trend" : data},status=status.HTTP_200_OK)
