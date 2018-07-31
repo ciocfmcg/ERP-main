@@ -2,26 +2,26 @@
 app.config(function($stateProvider){
 
   $stateProvider
-  .state('workforceManagement.organization', {
+  .state('businessManagement.organization', {
     url: "/organization",
     views: {
        "": {
           templateUrl: '/static/ngTemplates/genericAppBase.html',
        },
-       "menu@workforceManagement.organization": {
+       "menu@businessManagement.organization": {
           templateUrl: '/static/ngTemplates/genericMenu.html',
           controller : 'controller.generic.menu',
         },
-        "@workforceManagement.organization": {
+        "@businessManagement.organization": {
           templateUrl: '/static/ngTemplates/app.organization.dash.html',
-          controller : 'workforceManagement.organization.dash',
+          controller : 'businessManagement.organization.dash',
         }
     }
   })
 });
 
 
-app.controller("workforceManagement.organization.dash",function($scope, $state, $users, $stateParams, $http, Flash, $uibModal ,$aside) {
+app.controller("businessManagement.organization.dash",function($scope, $state, $users, $stateParams, $http, Flash, $uibModal ,$aside) {
 
   $scope.form = {division : '' , datasource : {}}
 
@@ -191,7 +191,7 @@ $scope.viewUnit = function(idx) {
 });
 
 
-app.controller("workforceManagement.organization", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = {
     tableData: []

@@ -12,7 +12,7 @@ from ERP.views import serviceRegistration
 app_name="libreERP"
 
 urlpatterns = [
-    url(r'^$', index , name ='root'),
+    url(r'^$', home , name ='root'),
     url(r'^CRM/', crmHome , name ='CRM'),
     url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),

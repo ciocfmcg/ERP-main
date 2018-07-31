@@ -29,16 +29,16 @@ File: scss
 /*Normal Color*/
 /*Extra Variable*/
 /*Preloader*/
-@import url(../scss/icons/font-awesome/css/font-awesome.min.css);
-@import url(../scss/icons/simple-line-icons/css/simple-line-icons.css);
-@import url(../scss/icons/weather-icons/css/weather-icons.min.css);
-@import url(../scss/icons/linea-icons/linea.css);
-@import url(../scss/icons/themify-icons/themify-icons.css);
-@import url(../scss/icons/flag-icon-css/flag-icon.min.css);
-@import url(../scss/icons/material-design-iconic-font/css/materialdesignicons.min.css);
+@import url(font-awesome.min.css);
+@import url(simple-line-icons.css);
+@import url(weather-icons.min.css);
+@import url(linea.css);
+@import url(themify-icons.css);
+@import url(flag-icon.min.css);
+@import url(materialdesignicons.min.css);
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
-@import url(../css/spinners.css);
-@import url(../css/animate.css);
+@import url(spinners.css);
+@import url(animate.css);
 .preloader {
   width: 100%;
   height: 100%;
@@ -69,8 +69,8 @@ File: scss
  *	7. Widgets
  *	8. Custom Templates
  */
-/******************* 
-Global Styles 
+/*******************
+Global Styles
 *******************/
 * {
   outline: none; }
@@ -1478,7 +1478,7 @@ Notify
     opacity: 0.0; } }
 
 /*******************
-File Upload 
+File Upload
 ******************/
 .fileupload {
   overflow: hidden;
@@ -1666,8 +1666,8 @@ Author: Themedesigner
 Email: niravjoshi87@gmail.com
 File: scss
 */
-/*============================================================== 
- For all pages 
+/*==============================================================
+ For all pages
  ============================================================== */
 #main-wrapper {
   width: 100%; }
@@ -2143,7 +2143,7 @@ ul#themecolors {
   background: #00897b;
   border-color: #00897b; }
 
-/*============================================================== 
+/*==============================================================
  Buttons page
  ============================================================== */
 .button-group .btn {
@@ -2163,7 +2163,7 @@ ul#themecolors {
 .btn.active .text {
   display: none; }
 
-/*============================================================== 
+/*==============================================================
  Cards page
  ============================================================== */
 .card-actions {
@@ -2229,7 +2229,7 @@ ul#themecolors {
     background: #7460ee;
     border-color: #7460ee; }
 
-/*============================================================== 
+/*==============================================================
 Breadcrumb
  ============================================================== */
 .bc-colored .breadcrumb-item,
@@ -2245,7 +2245,7 @@ Breadcrumb
 .breadcrumb {
   margin-bottom: 0px; }
 
-/*============================================================== 
+/*==============================================================
  Ui-bootstrap
  ============================================================== */
 ul.list-icons {
@@ -2279,7 +2279,7 @@ ul.two-part {
 html body .accordion .card {
   margin-bottom: 0px; }
 
-/*============================================================== 
+/*==============================================================
  flot chart
  ============================================================== */
 .flot-chart {
@@ -2298,8 +2298,8 @@ html body .flotTip {
   color: #ffffff;
   padding: 5px 10px; }
 
-/*============================================================== 
-Easy pie chart 
+/*==============================================================
+Easy pie chart
  ============================================================== */
 .chart {
   position: relative;
@@ -2355,7 +2355,7 @@ Easy pie chart
     margin-left: 0.1em;
     font-size: .8em; }
 
-/*============================================================== 
+/*==============================================================
 Dashboard1 chart
  ============================================================== */
 .ct-charts {
@@ -2397,7 +2397,7 @@ html body #visitor .c3-chart-arcs-title {
     line-height: 12px;
     white-space: nowrap; }
 
-/*============================================================== 
+/*==============================================================
 Dashboard2 chart
  ============================================================== */
 .campaign {
@@ -2440,7 +2440,7 @@ Dashboard2 chart
   stroke-width: 3px;
   stroke: rgba(255, 255, 255, 0.5); }
 
-/*============================================================== 
+/*==============================================================
 Dashboard3 chart
  ============================================================== */
 .total-sales {
@@ -2488,7 +2488,7 @@ Dashboard3 chart
   .calendar-events i {
     margin-right: 8px; }
 
-/*============================================================== 
+/*==============================================================
 Dashboard4 chart
  ============================================================== */
 .total-revenue4 {
@@ -2512,19 +2512,19 @@ Dashboard4 chart
     fill: #26c6da;
     fill-opacity: 0.2; }
 
-/*============================================================== 
+/*==============================================================
 Dashboard6 chart
  ============================================================== */
 .product-overview.table tbody tr td {
   vertical-align: middle; }
 
-/*============================================================== 
+/*==============================================================
 Widget-data
  ============================================================== */
 .sparkchart {
   margin-bottom: -2px; }
 
-/*============================================================== 
+/*==============================================================
 File upload
  ============================================================== */
 .btn-file {
@@ -2594,7 +2594,7 @@ File upload
 .fileinput.input-group > .btn-file {
   z-index: 1; }
 
-/*============================================================== 
+/*==============================================================
 widget-chart-page product review
  ============================================================== */
 .product-review {
@@ -2623,7 +2623,7 @@ widget-chart-page product review
   .profile-tab li a.nav-link:hover, .customtab li a.nav-link:hover {
     color: #009efb; }
 
-/*============================================================== 
+/*==============================================================
 Form addons page
 ============================================================== */
 /*Bootstrap select*/
@@ -2661,7 +2661,7 @@ Form addons page
 .input-form .btn {
   padding: 10px 12px; }
 
-/*============================================================== 
+/*==============================================================
 Form Material page
  ============================================================== */
 /*Material inputs*/
@@ -5289,18 +5289,18 @@ use profile section
   position: relative;
   background-size: cover; }
   .user-profile .profile-img {
-    width: 50px;
+    width: 70px;
     margin-left: 30px;
-    padding: 35px 0;
+    padding: 25px 0;
     border-radius: 100%; }
     .user-profile .profile-img::before {
       -webkit-animation: 2.5s blow 0s linear infinite;
       animation: 2.5s blow 0s linear infinite;
       position: absolute;
       content: '';
-      width: 50px;
-      height: 50px;
-      top: 35px;
+      width: 70px;
+      height: 70px;
+      top: 25px;
       margin: 0 auto;
       border-radius: 50%;
       z-index: 0; }
@@ -5362,7 +5362,7 @@ use profile section
         top: 20px; }
   .user-profile .dropdown-menu {
     left: 0px;
-    right: 0px;
+    right: 25px;
     width: 180px;
     margin: 0 auto; }
 
@@ -6576,8 +6576,8 @@ Author: Themedesigner
 Email: niravjoshi87@gmail.com
 File: scss
 */
-/*============================================================== 
- For Laptop & above all (1650px) 
+/*==============================================================
+ For Laptop & above all (1650px)
  ============================================================== */
 @media (min-width: 1650px) {
   .widget-app-columns {
@@ -6586,16 +6586,16 @@ File: scss
   .campaign {
     height: 365px !important; } }
 
-/*============================================================== 
- For Laptop & above all (1370px) 
+/*==============================================================
+ For Laptop & above all (1370px)
  ============================================================== */
 @media (max-width: 1370px) {
   .widget-app-columns {
     -webkit-column-count: 2;
     column-count: 2; } }
 
-/*-- ============================================================== 
- Small Desktop & above all (1024px) 
+/*-- ==============================================================
+ Small Desktop & above all (1024px)
  ============================================================== */
 @media (min-width: 1024px) {
   .page-wrapper {
@@ -6617,8 +6617,8 @@ File: scss
   .inbox-center a {
     width: 200px; } }
 
-/*-- ============================================================== 
- Ipad & above all(768px) 
+/*-- ==============================================================
+ Ipad & above all(768px)
  ============================================================== */
 @media (min-width: 768px) {
   .navbar-header {
@@ -6641,8 +6641,8 @@ File: scss
     flex-wrap: nowrap !important;
     -webkit-flex-wrap: nowrap !important; } }
 
-/*-- ============================================================== 
- Phone and below ipad(767px) 
+/*-- ==============================================================
+ Phone and below ipad(767px)
  ============================================================== */
 @media (max-width: 767px) {
   /*Header*/

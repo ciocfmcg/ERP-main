@@ -1,17 +1,17 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('workforceManagement.organization.departments', {
+    .state('businessManagement.organization.departments', {
       url: "/departments",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.organization.departments.html',
-          controller: 'workforceManagement.organization.departments',
+          controller: 'businessManagement.organization.departments',
         }
       }
     })
 });
-app.controller("workforceManagement.organization.departments", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.departments", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = {
     tableData: []
@@ -88,7 +88,7 @@ app.controller("workforceManagement.organization.departments", function($scope, 
 });
 
 
-app.controller("workforceManagement.organization.departments.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.departments.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
   $scope.resetForm = function() {
@@ -222,7 +222,7 @@ app.controller("workforceManagement.organization.departments.form", function($sc
 
 
 
-app.controller("workforceManagement.organization.departments.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.departments.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.departments = $scope.tab.data.departments;
 

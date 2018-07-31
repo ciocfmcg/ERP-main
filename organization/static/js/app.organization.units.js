@@ -1,17 +1,17 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('workforceManagement.organization.units', {
+    .state('businessManagement.organization.units', {
       url: "/units",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.organization.units.html',
-          controller: 'workforceManagement.organization.units',
+          controller: 'businessManagement.organization.units',
         }
       }
     })
 });
-app.controller("workforceManagement.organization.units", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.units", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = {
     tableData: []
@@ -112,7 +112,7 @@ app.controller("workforceManagement.organization.units", function($scope, $state
 });
 
 
-app.controller("workforceManagement.organization.unit.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.unit.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.unit = $scope.tab.data.unit;
 
@@ -120,7 +120,7 @@ app.controller("workforceManagement.organization.unit.info", function($scope, $s
 });
 
 
-app.controller("workforceManagement.organization.units.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.units.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
 

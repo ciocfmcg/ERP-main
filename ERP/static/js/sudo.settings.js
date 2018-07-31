@@ -177,13 +177,22 @@ app.controller('admin.settings.configure' , function($scope , $stateParams , $ht
 app.controller('admin.settings.menu' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
   // settings main page controller
 
+  // var getState = function(input){
+  //   parts = input.name.split('.');
+  //   // console.log(parts);
+  //   if (parts[0] == 'configure') {
+  //     return  'admin.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
+  //   } else {
+  //     return input.name.replace('sudo' , 'admin')
+  //   }
+  // }
   var getState = function(input){
     parts = input.name.split('.');
     // console.log(parts);
     if (parts[0] == 'configure') {
-      return  'admin.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
+      return  'home.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
     } else {
-      return input.name.replace('sudo' , 'admin')
+      return input.name.replace('sudo' , 'home')
     }
   }
 

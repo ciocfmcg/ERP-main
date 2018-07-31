@@ -1,17 +1,17 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('workforceManagement.organization.divisions', {
+    .state('businessManagement.organization.divisions', {
       url: "/divisions",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.organization.division.html',
-          controller: 'workforceManagement.organization.division',
+          controller: 'businessManagement.organization.division',
         }
       }
     })
 });
-app.controller("workforceManagement.organization.division", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.division", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = {
     tableData: []
@@ -101,7 +101,7 @@ app.controller("workforceManagement.organization.division", function($scope, $st
   }
 });
 
-app.controller("workforceManagement.organization.division.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.division.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   console.log($scope.tab);
 
@@ -192,13 +192,13 @@ app.controller("workforceManagement.organization.division.form", function($scope
 });
 
 
-app.controller("workforceManagement.organization.division.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.division.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.division = $scope.tab.data.division;
 
 });
 
-app.controller("workforceManagement.organization.division.item", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.division.item", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
   //

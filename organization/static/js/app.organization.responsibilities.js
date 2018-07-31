@@ -1,19 +1,19 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('workforceManagement.organization.responsibilities', {
+    .state('businessManagement.organization.responsibilities', {
       url: "/responsibilities",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.organization.responsibilities.html',
-          controller: 'workforceManagement.organization.responsibilities',
+          controller: 'businessManagement.organization.responsibilities',
         }
       }
     })
 });
 
 
-app.controller("workforceManagement.organization.responsibilities", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.responsibilities", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = {
     tableData: []
@@ -88,7 +88,7 @@ app.controller("workforceManagement.organization.responsibilities", function($sc
 
 });
 
-app.controller('workforceManagement.organization.responsibilities.form', function($scope, $http, $aside, $state, Flash, $users, $timeout, $uibModal) {
+app.controller('businessManagement.organization.responsibilities.form', function($scope, $http, $aside, $state, Flash, $users, $timeout, $uibModal) {
   $scope.resetForm = function() {
     $scope.mode = 'new';
     $scope.form = {

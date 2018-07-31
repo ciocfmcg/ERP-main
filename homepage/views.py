@@ -65,7 +65,7 @@ def customerLoginView(request):
 
 @login_required(login_url = '/customer/login')
 def customerHomeView(request):
-    return render(request, 'customerHome.html' )
+    return render(request, 'customerHome.html' ,{'user':request.user})
 
 
 def blogDetails(request, blogname):

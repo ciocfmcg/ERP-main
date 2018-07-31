@@ -1,17 +1,17 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('workforceManagement.organization.roles', {
+    .state('businessManagement.organization.roles', {
       url: "/roles",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.organization.roles.html',
-          controller: 'workforceManagement.organization.roles',
+          controller: 'businessManagement.organization.roles',
         }
       }
     })
 });
-app.controller("workforceManagement.organization.roles", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.roles", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
 
   $scope.data = {
@@ -100,7 +100,7 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
 
 
 
-app.controller("workforceManagement.organization.roles.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.roles.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.resetForm = function() {
     $scope.form = {
@@ -199,7 +199,7 @@ app.controller("workforceManagement.organization.roles.form", function($scope, $
 
 
 
-app.controller("workforceManagement.organization.roles.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.organization.roles.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.roles = $scope.tab.data.roles;
 

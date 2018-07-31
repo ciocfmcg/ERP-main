@@ -18,7 +18,6 @@ app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $stat
   console.log($scope.data);
 
 
-  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.data.pk);
   $http({
     method: 'GET',
     url: '/api/HR/payroll/?user=' + $scope.data.userPK
@@ -27,13 +26,11 @@ app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $stat
     $scope.payroll = response.data[0];
     console.log($scope.payroll);
   })
-  console.log('((((((((((((((()))))))))))))))', $scope.data.userPK);
   $http({
     method: 'GET',
     url: '/api/HR/designation/?user=' + $scope.data.userPK
   }).
   then(function(response) {
-    console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
     $scope.designation = response.data[0];
     console.log($scope.designation);
 
@@ -479,8 +476,13 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
       bloodGroup: prof.bloodGroup,
     }
     if (prof.married) {
+      console.log(prof.anivarsary,typeof prof.anivarsary);
       dataToSend.married = prof.married;
-      dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
+      if (typeof prof.anivarsary == 'object') {
+        dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
+      }else {
+        dataToSend.anivarsary = prof.anivarsary
+      }
     }
 
     if (typeof prof.dateOfBirth == 'object') {

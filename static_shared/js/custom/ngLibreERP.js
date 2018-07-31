@@ -6,7 +6,8 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
     tabReplace: '    '
   });
 
-  $urlRouterProvider.otherwise('/businessManagement');
+  // $urlRouterProvider.otherwise('/businessManagement');
+  $urlRouterProvider.otherwise('/home');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
@@ -544,10 +545,10 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
   $scope.user = $users.get('mySelf');
 
   $scope.fixedApps = [
-    {icon : 'home' , state : 'home'},
-    {icon : 'envelope-o' , state : 'home.mail'},
-    {icon : 'calendar' , state : 'home.calendar'},
-    {icon : 'sticky-note-o' , state : 'home.notes'},
+    // {icon : 'home' , state : 'home'},
+    // {icon : 'envelope-o' , state : 'home.mail'},
+    // {icon : 'calendar' , state : 'home.calendar'},
+    // {icon : 'sticky-note-o' , state : 'home.notes'},
   ]
 
   var parts = $state.current.name.split('.');
@@ -604,7 +605,7 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
     for (var i = 0; i < $scope.modules.length; i++) {
       if ($scope.modules[i].name == $scope.moduleName) {
         for (var j = 0; j < $scope.rawApps.length; j++) {
-          if ($scope.rawApps[j].module == $scope.modules[i].pk ) {
+          if (true ) {
             var a = $scope.rawApps[j];
             var parts = a.name.split('.');
             if (parts.length>2 || $scope.inExcludedApps(a)) {

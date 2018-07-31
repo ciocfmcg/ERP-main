@@ -1,5 +1,6 @@
 {% load staticfiles%} {% load staticfiles %} {% load socialaccount %}
 
+{% load i18n %}
 
 
 <!DOCTYPE html>
@@ -12,14 +13,13 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" charset="utf-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" charset="utf-8"> {% else %}
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8">
-  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" charset="utf-8">
-  {% endif %}
-  <link  href="{% static 'css/style.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" charset="utf-8"> {% endif %}
+  <link href="{% static 'customer/css/style.css' %}" rel="stylesheet">
   <!-- <link rel="stylesheet" href="{% static 'css/signin.css' %}" charset="utf-8"> -->
 </head>
 
 <body>
-<!--
+  <!--
   <div class="col-md-12" style="background-image:url(/static/images/login-register.jpg);background-size: cover;height:125%;position:absolute;left:0px;">
   </div> -->
 
@@ -47,45 +47,65 @@
   <!-- ============================================================== -->
   <section id="wrapper">
     <div class="login-register" style="background-image:url(/static/images/login-register.jpg);">
-      <div class="login-box card">
-        <div class="card-body">
-          <form class="form-horizontal form-material" id="loginform" action="index.html">
-            <h3 class="box-title m-b-20">Sign In</h3>
+      <div class="login-box card" style="background-color:#fff">
+        <div class="card-body" style="padding:10px 20px;">
+          <!-- <form class="form-horizontal form-material" id="loginform" action="index.html"> -->
+            <form method="post" id="mainloginform" class="form-horizontal form-material" action="">
+              {% csrf_token %}
+            <h3 class="box-title" style="margin-bottom:20px;">Sign In</h3>
+            {% if authStatus.status != 'default' %}
+            <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
+            {% endif %}
             <div class="form-group ">
               <div class="col-xs-12">
-                <input class="form-control" type="text" required="" placeholder="Username"> </div>
+                <!-- <input class="form-control" type="text" required="" placeholder="Username">  -->
+                <input id="id" name="username" type="text" class="form-control" placeholder="Username" required autofocus>
+              </div>
             </div>
             <div class="form-group">
               <div class="col-xs-12">
-                <input class="form-control" type="password" required="" placeholder="Password"> </div>
+                <!-- <input class="form-control" type="password" required="" placeholder="Password">  -->
+                <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
+              </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="padding:0px 15px;">
               <div class="col-md-12">
-                <div class="checkbox checkbox-primary pull-left p-t-0">
+                <!-- <div class="checkbox checkbox-primary pull-left" style="padding-top:0px;">
                   <input id="checkbox-signup" type="checkbox">
                   <label for="checkbox-signup"> Remember me </label>
-                </div> <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
+                </div> -->
+                <span  id="to-recover" class="text-dark pull-right" style="cursor:pointer"><i class="fa fa-lock" style="margin-right:5px;" ></i> Forgot Password?</span>
+                <!-- <a style="color:#ff7033;" href="/accounts/password/reset/">Forgot password?</a> -->
+              </div>
             </div>
-            <div class="form-group text-center m-t-20">
+            <div class="form-group text-center" style="margin-top:20px;">
               <div class="col-xs-12">
-                <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Log In</button>
+                <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" style="font-size:18px; padding:15px 0px;">Log In</button>
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-12 col-sm-12 col-md-12 m-t-10 text-center">
+              <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin-top:10px;">
                 <div class="social">
-                  <a href="javascript:void(0)" class="btn  btn-facebook" data-toggle="tooltip" title="Login with Facebook"> <i aria-hidden="true" class="fa fa-facebook"></i> </a>
-                  <a href="javascript:void(0)" class="btn btn-googleplus" data-toggle="tooltip" title="Login with Google"> <i aria-hidden="true" class="fa fa-google-plus"></i> </a>
+                  <!-- <a href="javascript:void(0)" class="btn  btn-facebook" data-toggle="tooltip" title="Login with Facebook"> <i aria-hidden="true" class="fa fa-facebook"></i> </a>
+                  <a href="javascript:void(0)" class="btn btn-googleplus" data-toggle="tooltip" title="Login with Google"> <i aria-hidden="true" class="fa fa-google-plus"></i> </a> -->
+                  <a title="Google" class="btn btn-danger " href="{% provider_login_url "google" method="oauth2" %}">
+                    <i class="fa fa-google-plus pull-left" style="padding-top:3px"></i> &nbsp;Login with Google
+                  </a>
+                  <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary ">
+                    <i class="fa fa-facebook pull-left" style="padding-top:3px"></i> &nbsp;Login with Facebook
+                  </a>
                 </div>
               </div>
             </div>
-            <div class="form-group m-b-0">
+            <!-- <div class="form-group " style="margin:5px;">
               <div class="col-sm-12 text-center">
-                <p>Don't have an account? <a href="register.html" class="text-info m-l-5"><b>Sign Up</b></a></p>
+                <p>Don't have an account? <a href="register.html" class="text-info " style="margin-left:5px;"><b>Sign Up</b></a></p>
               </div>
-            </div>
+            </div> -->
           </form>
-          <form class="form-horizontal" id="recoverform" action="index.html">
+
+          <form class="form-horizontal" id="recoverform" action="/accounts/password/reset/" method="POST">
+            {% csrf_token %}
             <div class="form-group ">
               <div class="col-xs-12">
                 <h3>Recover Password</h3>
@@ -94,13 +114,22 @@
             </div>
             <div class="form-group ">
               <div class="col-xs-12">
-                <input class="form-control" type="text" required="" placeholder="Email"> </div>
+                <input class="form-control" type="text" required="" placeholder="Email" name="email" type="email"> </div>
             </div>
-            <div class="form-group text-center m-t-20">
+            <div class="form-group text-center" style="margin-top:20px">
               <div class="col-xs-12">
-                <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button>
+                <!-- <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button> -->
+                <div class="form-actions" >
+                  <input class="btn btn-primary btn-block" type="submit" value="{% trans "Reset My Password" %}" />
+                </div>
               </div>
             </div>
+            <!-- <label for="id_email">E-mail:</label>
+            <input id="id_email" class="form-control" name="email" size="30" type="email">
+            <div class="form-actions" style="margin-top:20px;">
+              <input class="btn btn-primary" type="submit" value="{% trans "Reset My Password" %}" />
+            </div> -->
+            <h6>{% blocktrans %}Please contact us if you have any trouble resetting your password.{% endblocktrans %}</h6>
           </form>
         </div>
       </div>
@@ -121,58 +150,14 @@
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   {% endif %}
 
-  <!-- <script type="text/javascript">
-    $(document).ready(function() {
-      $('#requestOTP').click(function(e) {
+  <script type="text/javascript">
+  document.getElementById("recoverform").style.display="none"
+  document.getElementById("to-recover").addEventListener("click", function(){
+    document.getElementById("mainloginform").style.display="none"
+    document.getElementById("recoverform").style.display="block"
+  });
+  </script>
 
-        $('#alerts').empty();
-
-
-        var id = $('#id').val()
-        if (id.length == 0) {
-          $('#alerts').append('<div class="alert alert-warning">Please enter your Mobile number or Email or Username</div>')
-        } else {
-
-          var csrf = $.cookie("csrftoken")
-          $.ajax({
-            url: '/generateOTP',
-            data: {
-              id: id,
-              csrfmiddlewaretoken :csrf
-            },
-            beforeSend: function(request) {
-              request.setRequestHeader("X-CSRFToken", csrf);
-            },
-            type: 'POST',
-            success: function(data, status, jqXHR) {
-              console.log(status);
-              if (jqXHR.status == 200) {
-                $('#alerts').append('<div class="alert alert-success">OTP Has been sent</div>')
-                $('#password').attr("placeholder", "OTP");
-                $('#password').attr("name", "otp");
-                $('#password').attr("type", "text");
-
-              } else if (jqXHR.status == 400) {
-                $('#alerts').append('<div class="alert alert-danger">No account</div>')
-              } else {
-                $('#alerts').append('<div class="alert alert-danger">Error while sending OTP</div>')
-              }
-
-              $('#otptxt').empty();
-              $('#otptxt').append("Resend OTP");
-
-
-            },
-            error: function(e) {
-              $('#alerts').append('<div class="alert alert-danger">Error while sending OTP</div>')
-            }
-          });
-
-        }
-
-      });
-    });
-  </script> -->
 </body>
 
 </html>

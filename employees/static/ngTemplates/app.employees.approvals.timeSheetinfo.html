@@ -1,0 +1,88 @@
+<div ng-controller="businessManagement.employees.timeSheet.info" style="padding-top:20px;">
+  <div class="col-md-12">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:50vh;position:relative;">
+      <div class="row">
+        <h3>Time Sheet For:</h3>
+      </div>
+      <div class="row text-center">
+        <img ng-src="{{data.user | getDP}}" style="width:100px;">
+      </div>
+      <div class="row text-center">
+        <h4>{{data.user | getName}}</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right ">
+          Date:
+        </div>
+        <div class="col-md-6">
+          <span>
+            {{data.date | date}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right ">
+          Approved:
+        </div>
+        <div class="col-md-6">
+          <span>
+              {{data.approved? 'YES':'NO'}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 text-right ">
+          Status
+        </div>
+        <div class="col-md-6">
+          <span>
+            {{data.status}}
+          </span>
+        </div>
+      </div>
+      <div class="row" ng-if="data.status == 'approved'">
+        <div class="col-md-6 text-right ">
+          Approved By:
+        </div>
+        <div class="col-md-6">
+          <span ng-repeat="u in data.approvedBy">
+            {{u | getName}}
+          </span> <br>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7 text-center" style="padding:20px;border-left:solid 1px #eeeeee;">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th class="text-center">Project</th>
+            <th class="text-center">Time(Hrs.)</th>
+            <th class="text-center">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="a in data.items">
+            <td>{{a.project.title}}</td>
+            <td>{{a.duration}}</td>
+            <td>{{a.comment}}</td>
+          </tr>
+          <tr>
+            <td style="border:none;">Total time:</td>
+            <td>{{totalTime()}} Hrs.</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row" ng-if="data.status == 'submitted'">
+
+      <div class="col-md-1 text-right">
+        <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="save()" confirm-button-type="danger" cancel-button-type="default"
+          style="position:relative;top:30px;right:-15px;cursor:pointer;">Approve</button>
+      </div>
+      <div class="col-md-1 text-right">
+        <button type="button" class="btn btn-danger" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="reject()" confirm-button-type="danger" cancel-button-type="default"
+          style="position:relative;top:30px;right:-15px;cursor:pointer;">Reject</button>
+      </div>
+    </div>
+  </div>
