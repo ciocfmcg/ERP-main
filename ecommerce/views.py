@@ -1000,21 +1000,19 @@ class OnlineSalesGraphAPIView(APIView):
                                     totalCollections += priceVal
                             else:
                                 totalCollections += price
-                print totalCollections,'bbbbbbbbbbbbbbbbbbb', i.pk
-            orderD = Order.objects.filter(orderQtyMap=i.pk)
-            for j in orderD:
-                if str(j.paymentMode) == 'card':
-                    price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-                    print j.pk,'ppppppppppppkkkkkkkkkkkkkk'
-                    if j.promoCode!=None:
-                        promo = Promocode.objects.filter(name__iexact=j.promoCode)
-                        for p in promo:
-                            promocode = p.discount
-                            priceVal = price-(promocode * price)/100
-                            totalCollections += priceVal
-                    else:
-                        totalCollections += price
-                print totalCollections,'aaaaaaaaaaaaaaaa' , i.pk
+            elif str(i.status) != 'delivered':
+                orderD = Order.objects.filter(orderQtyMap=i.pk)
+                for j in orderD:
+                    if str(j.paymentMode) == 'card':
+                        price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                        if j.promoCode!=None:
+                            promo = Promocode.objects.filter(name__iexact=j.promoCode)
+                            for p in promo:
+                                promocode = p.discount
+                                priceVal = price-(promocode * price)/100
+                                totalCollections += priceVal
+                        else:
+                            totalCollections += price
         totalCollections = round(totalCollections, 2)
         sales =  order.count()
         custCount = custs.count()
