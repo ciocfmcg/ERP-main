@@ -159,20 +159,21 @@
           </div>
         </div>
         <hr>
-        <div class="row text-center" ng-if="reviewsCount==0">
+        <div class="row text-center" ng-if="reviews.length==0">
           <h4>No reviews yet. Be the first to review</h4>
         </div>
         <div class="row" ng-if="reviewsCount>0">
 
-          <div class="container-fluid">
-            <h5>Recent reviews <small>{{reviewsCount < 4 ? reviewsCount : 4}} out of {{reviewsCount}}</small> </h5>
-          </div>
+          <!-- <div class="container-fluid">
+            <h5>Recent reviews <small>{{reviews.length < 4 ? reviews.length : 4}} out of {{reviews.length}}</small> </h5>
+          </div> -->
           <div class="container-fluid">
             <div class="col-md-12 col-xs-12 col-sm-6" ng-repeat="r in reviews">
               <div class="row container-fluid">
                 <div class="col-md-3" style="padding-left:50px;">
                   <div class="row">
-                    <uib-rating ng-model="r.rating" max="5" readonly="false" style="font-size:17px;color:#e2a900;"></uib-rating> <br>
+                    <uib-rating ng-model="r.rating" max="5" readonly="false" style="font-size:17px;color:#e2a900;"></uib-rating>
+                    <span class="label success" style="background-color:green">Verified User</span>
                   </div>
                   <!-- <div class="row" ng-if="me != null">
                     {{r.user | getName}} <br> {{r.created | date : 'dd-MMM-yyyy'}} <br>
@@ -184,7 +185,7 @@
                 </div>
                 <div class="col-md-9">
                   <div class="row container-fluid">
-                    <h5>{{r.headingVal}}</h5>
+                    <h5>{{r.headingVal}} </h5>
                     <p>
                       {{r.textVal}}
                     </p>
@@ -195,7 +196,7 @@
             </div>
             <nav>
               <ul class="pager">
-                <li><a href="" ng-click="prevReviews()">Previous</a></li>
+                <li><a href="" ng-if="offset>0" ng-click="prevReviews()">Previous</a></li>
                 <li><a href="" ng-click="nextReviews()">Next</a></li>
               </ul>
             </nav>

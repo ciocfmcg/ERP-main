@@ -183,6 +183,19 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.breadcrumbList = [];
   $scope.details = {};
   $window.scrollTo(0, 0)
+  $scope.offset = 0
+  $scope.reviews =[]
+  $scope.getRatings = function(offset){
+  console.log(offset,'aaaaaaaaaaaaaaaa')
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/rating/?productDetail=' +  $scope.details.pk +'&limit=4&offset='+offset
+    }).
+    then(function(response) {
+      console.log(response.data.length,'kkkkkkkkkkkkkk');
+      $scope.reviews = response.data.results
+    });
+  }
   $http({
     method: 'GET',
     url: '/api/ecommerce/listingLite/' + $state.params.id + '/'
@@ -195,14 +208,8 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       $scope.breadcrumbList.push(parent.name)
       parent = parent.parent
     }
-    $http({
-      method: 'GET',
-      url: '/api/ecommerce/rating/?productDetail=' +  $scope.details.pk 
-    }).
-    then(function(response) {
-      console.log(response.data,'kkkkkkkkkkkkkk');
-      $scope.reviews = response.data
-    });
+    $scope.getRatings($scope.offset)
+
   });
 
   $timeout(function() {
@@ -224,7 +231,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
   $scope.reviewsPage = 0;
 
-$scope.reviews =[]
+
   // $scope.reviews = [{
   //     heading: 'Quality',
   //     text: 'Good in terms of quality',
@@ -326,12 +333,12 @@ $scope.reviews =[]
   $scope.sendReview = function() {
 
     // if (mode == 'rating') {
-      // if ($scope.form.rating == 0 || !$scope.form.ratable) {
-      //   return;
+      // if ($scope.form.rating == 0 ) {
+      //   Flash.create('danger', 'Please provide rating')
       // }
     // } else {
-      // if ($scope.form.reviewText == '' || $scope.form.reviewHeading == '') {
-      //   Flash.create('danger', 'No review to post.')
+      // if ($scope.form.reviewText == '' ) {
+      //   Flash.create('danger', 'No review to post')
       //   return;
       // }
       //post request
@@ -349,6 +356,9 @@ $scope.reviews =[]
       }).
       then(function(response) {
         $scope.reviews.push(response.data)
+        $scope.form.rating=0
+        $scope.form.reviewText=''
+        $scope.form.reviewHeading=''
 
       })
 
@@ -357,55 +367,59 @@ $scope.reviews =[]
   }
 
   $scope.nextReviews = function() {
-    if ($scope.reviewsCount > ($scope.reviewsPage + 1) * 4) {
-      $scope.reviewsPage += 1;
-      $scope.fetchReviews();
-    }
+    $scope.offset = $scope.offset + 4
+    $scope.getRatings($scope.offset)
+    // if ($scope.reviews.length > ($scope.reviewsPage + 1) * 4) {
+    //   $scope.reviewsPage += 1;
+    //   $scope.fetchReviews();
+    // }
   }
   $scope.prevReviews = function() {
-    if ($scope.reviewsPage > 0) {
-      $scope.reviewsPage -= 1;
-      $scope.fetchReviews();
-    }
+    $scope.offset = $scope.offset - 4
+    $scope.getRatings($scope.offset)
+    // if ($scope.reviewsPage > 0) {
+    //   $scope.reviewsPage -= 1;
+    //   $scope.fetchReviews();
+    // }
   }
 
-  $scope.fetchReviews = function() {
-    console.log('coming in fetchReviews');
-    $scope.reviews = [{
-        heading: 'Reasonable Price',
-        text: 'This product is very cheap',
-        rating: 4,
-        user: 1,
-        created: '12/4/12',
-        verified: true
-      },
-      {
-        heading: 'Reasonable Price',
-        text: 'This product is very cheap',
-        rating: 4,
-        user: 1,
-        created: '12/4/12',
-        verified: true
-      },
-      {
-        heading: 'Reasonable Price',
-        text: 'This product is very cheap',
-        rating: 4,
-        user: 1,
-        created: '12/4/12',
-        verified: false
-      },
-      // {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
-      {
-        heading: 'Reasonable Price',
-        text: 'This product is very cheap',
-        rating: 4,
-        user: 1,
-        created: '12/4/12',
-        verified: true
-      }
-    ];
-  }
+  // $scope.fetchReviews = function() {
+  //   console.log('coming in fetchReviews');
+  //   $scope.reviews = [{
+  //       heading: 'Reasonable Price',
+  //       text: 'This product is very cheap',
+  //       rating: 4,
+  //       user: 1,
+  //       created: '12/4/12',
+  //       verified: true
+  //     },
+  //     {
+  //       heading: 'Reasonable Price',
+  //       text: 'This product is very cheap',
+  //       rating: 4,
+  //       user: 1,
+  //       created: '12/4/12',
+  //       verified: true
+  //     },
+  //     {
+  //       heading: 'Reasonable Price',
+  //       text: 'This product is very cheap',
+  //       rating: 4,
+  //       user: 1,
+  //       created: '12/4/12',
+  //       verified: false
+  //     },
+  //     // {heading:'Reasonable Price',text:'This product is very cheap' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
+  //     {
+  //       heading: 'Reasonable Price',
+  //       text: 'This product is very cheap',
+  //       rating: 4,
+  //       user: 1,
+  //       created: '12/4/12',
+  //       verified: true
+  //     }
+  //   ];
+  // }
   // $http({method : 'GET' , url : '/api/ecommerce/review/?listing=' + $scope.data.pk + '&limit=5&offset=' + $scope.reviewsPage * 5 }).
   // then(function(response) {
   //
