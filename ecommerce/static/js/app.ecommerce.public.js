@@ -177,6 +177,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   $scope.me = $users.get('mySelf');
   console.log('cominggggggggggggggggggggg', $scope.me);
+  $scope.next = ''
 
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime'
   console.log($scope.data);
@@ -186,14 +187,14 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.offset = 0
   $scope.reviews =[]
   $scope.getRatings = function(offset){
-  console.log(offset,'aaaaaaaaaaaaaaaa')
     $http({
       method: 'GET',
       url: '/api/ecommerce/rating/?productDetail=' +  $scope.details.pk +'&limit=4&offset='+offset
     }).
     then(function(response) {
-      console.log(response.data.length,'kkkkkkkkkkkkkk');
       $scope.reviews = response.data.results
+      $scope.next = response.data.next
+      console.log( $scope.next ,'ddddddddddddddddddddddddd');
     });
   }
   $http({
@@ -229,7 +230,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     reviewEditor: false,
     ratable: true
   }
-  $scope.reviewsPage = 0;
+  // $scope.reviewsPage = 0;
 
 
   // $scope.reviews = [{
@@ -267,7 +268,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   //   }
   // ];
 
-  $scope.reviewsCount = 8;
+  // $scope.reviewsCount = 8;
 
   $scope.pictureInView = 0;
 
@@ -333,14 +334,18 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.sendReview = function() {
 
     // if (mode == 'rating') {
-      // if ($scope.form.rating == 0 ) {
+      // if ($scope.form.rating == '' ) {
       //   Flash.create('danger', 'Please provide rating')
       // }
     // } else {
-      // if ($scope.form.reviewText == '' ) {
-      //   Flash.create('danger', 'No review to post')
-      //   return;
-      // }
+      if ($scope.form.reviewText == '' ) {
+        Flash.create('danger', 'No review heading to post')
+        return;
+      }
+      if ($scope.form.reviewHeading == '' ) {
+        Flash.create('danger', 'No review to post')
+        return;
+      }
       //post request
     var toSend = {
         rating: $scope.form.rating,
@@ -355,7 +360,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
         data: toSend
       }).
       then(function(response) {
-        $scope.reviews.push(response.data)
+        if($scope.reviews.length<4){
+          $scope.reviews.push(response.data)
+        }else{
+          $scope.offset+=4
+          $scope.getRatings($scope.offset)
+        }
         $scope.form.rating=0
         $scope.form.reviewText=''
         $scope.form.reviewHeading=''

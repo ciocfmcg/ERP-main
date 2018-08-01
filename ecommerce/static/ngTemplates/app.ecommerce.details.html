@@ -160,9 +160,10 @@
         </div>
         <hr>
         <div class="row text-center" ng-if="reviews.length==0">
-          <h4>No reviews yet. Be the first to review</h4>
+          <!-- <h4>No reviews yet. Be the first to review</h4> -->
+            <h4>Write a review</h4>
         </div>
-        <div class="row" ng-if="reviewsCount>0">
+        <div class="row" ng-if="reviewsCount!=0">
 
           <!-- <div class="container-fluid">
             <h5>Recent reviews <small>{{reviews.length < 4 ? reviews.length : 4}} out of {{reviews.length}}</small> </h5>
@@ -197,7 +198,7 @@
             <nav>
               <ul class="pager">
                 <li><a href="" ng-if="offset>0" ng-click="prevReviews()">Previous</a></li>
-                <li><a href="" ng-click="nextReviews()">Next</a></li>
+                <li><a href="" ng-if="next!=none"  ng-click="nextReviews()">Next</a></li>
               </ul>
             </nav>
           </div>
