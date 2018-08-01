@@ -170,10 +170,10 @@
         <input type="float" class="form-control-pos" ng-model="item.data.price">
       </td>
       <td>
-        {{(item.data.productMeta.taxRate*item.data.price/100).toFixed(2)}}
+        {{item.data.productMeta!= none?item.quantity*(item.data.productMeta.taxRate*item.data.price/100).toFixed(2):0}}
       </td>
       <td>
-        {{(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2)}}
+        {{item.data.productMeta!= none?(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2):(item.quantity*item.data.price).toFixed(2)}}
       </td>
       <td>
         <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>

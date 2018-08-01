@@ -208,7 +208,7 @@
         <input type="float" class="form-control-pos" value="{{(item.data.price + (item.data.productMeta!= none?(item.data.productMeta.taxRate*item.data.price/100):0)).toFixed(2)}}" ng-if="item.data.pk&&!posShowAll" style="font-size:35px;text-align: center;" >
       </td>
       <td ng-if="posShowAll">
-        <span ng-if="item.data.pk">{{item.data.productMeta!= none?(item.data.productMeta.taxRate*item.data.price/100).toFixed(2):0}}</span>
+        <span ng-if="item.data.pk">{{item.data.productMeta!= none?item.quantity*(item.data.productMeta.taxRate*item.data.price/100).toFixed(2):0}}</span>
 
       </td>
       <td>

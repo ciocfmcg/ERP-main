@@ -90,19 +90,23 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
   $scope.subTotal = function() {
     var subTotal = 0;
     angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != undefined) {
+      if (item.data.productMeta != null && item.data.productMeta != undefined) {
         subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
+      }else {
+        subTotal += (item.quantity * item.data.price);
       }
     })
+    $scope.posSubtotal = Math.round(subTotal)
     return subTotal.toFixed(2);
   }
   $scope.subTotalTax = function() {
     var subTotalTax = 0;
     angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != undefined) {
-        subTotalTax += (item.data.productMeta.taxRate * item.data.price / 100);
+      if (item.data.productMeta != null && item.data.productMeta != undefined) {
+        subTotalTax += item.quantity * (item.data.productMeta.taxRate * item.data.price / 100);
       }
     })
+
     return subTotalTax.toFixed(2);
   }
   $scope.productSearch = function(query) {
@@ -1058,7 +1062,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     var subTotalTax = 0;
     angular.forEach($scope.form.products, function(item) {
       if (item.data.productMeta != null && item.data.productMeta != undefined) {
-        subTotalTax += (item.data.productMeta.taxRate * item.data.price / 100);
+        subTotalTax += item.quantity * (item.data.productMeta.taxRate * item.data.price / 100);
       }
     })
 
@@ -1668,7 +1672,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   },true)
 
   $scope.saveInvoice = function(a) {
-     $scope.form.invoiceDate =
+    //  $scope.form.invoiceDate =
 
     $scope.form.invoiceDateVal = new Date($scope.form.invoiceDate);
     $scope.form.invoiceDt = new Date($scope.form.invoiceDateVal.getTime() + (24*60*60*1000));
