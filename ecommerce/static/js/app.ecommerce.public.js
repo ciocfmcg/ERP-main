@@ -194,7 +194,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }
     $http({
       method: 'GET',
-      url: '/api/ecommerce/rating/?productDetail' +  $scope.details.pk + '/'
+      url: '/api/ecommerce/rating/?productDetail=' +  $scope.details.pk 
     }).
     then(function(response) {
       console.log(response.data,'kkkkkkkkkkkkkk');
@@ -318,6 +318,8 @@ $scope.reviews =[]
     })
   }
 
+
+
   $scope.sendReview = function() {
 
     // if (mode == 'rating') {
@@ -342,7 +344,10 @@ $scope.reviews =[]
         url: '/api/ecommerce/rating/',
         data: toSend
       }).
-      then(function(response) {})
+      then(function(response) {
+        $scope.reviews.push(response.data)
+
+      })
 
 
     // }

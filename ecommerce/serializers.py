@@ -337,11 +337,10 @@ class RatingSerializer(serializers.ModelSerializer):
         model = Rating
         fields = ( 'pk', 'created' , 'rating', 'textVal' ,'headingVal' , 'productDetail' , 'user')
         read_only_fields = ('user',)
-        def create(self , validated_data):
-            print validated_data
-            a = Rating(**validated_data)
-            if 'productDetail'in self.context['request'].data:
-                a.productDetail = listing.objects.get(pk = self.context['request'].data['productDetail'])
-            f.user=self.context['request'].user
-            a.save()
-            return a
+    def create(self , validated_data):
+        print validated_data
+        a = Rating(**validated_data)
+        a.productDetail = listing.objects.get(pk = self.context['request'].data['productDetail'])
+        a.user=self.context['request'].user
+        a.save()
+        return a

@@ -886,4 +886,5 @@ class RatingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
-    filter_fields = ['productDetail']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['productDetail',]

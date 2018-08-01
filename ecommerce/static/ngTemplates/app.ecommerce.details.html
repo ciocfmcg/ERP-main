@@ -138,7 +138,7 @@
           </div>
           <div class="col-md-8 col-sm-8 col-xs-12">
             <h5>Have you used this product before ?  <small style="margin-left:20px;">Give us your review</small> </h5>
-            <uib-rating ng-model="form.rating" max="5" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" on-leave="sendReview('rating')"></uib-rating> <br>
+            <uib-rating ng-model="form.rating" max="5" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
               <i class="fa fa-pencil-square-o"></i>  Write a review
             </button>
@@ -184,9 +184,9 @@
                 </div>
                 <div class="col-md-9">
                   <div class="row container-fluid">
-                    <h5>{{r.heading}}</h5>
+                    <h5>{{r.headingVal}}</h5>
                     <p>
-                      {{r.text}}
+                      {{r.textVal}}
                     </p>
                   </div>
                 </div>
