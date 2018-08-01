@@ -881,3 +881,9 @@ class DownloadInvoiceAPI(APIView):
         f.close()
         # return Response(status=status.HTTP_200_OK)
         return response
+
+class RatingViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    filter_fields = ['productDetail']

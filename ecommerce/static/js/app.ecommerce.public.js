@@ -192,6 +192,14 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       $scope.breadcrumbList.push(parent.name)
       parent = parent.parent
     }
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/rating/?productDetail' +  $scope.details.pk + '/'
+    }).
+    then(function(response) {
+      console.log(response.data,'kkkkkkkkkkkkkk');
+      $scope.reviews = response.data
+    });
   });
 
   $timeout(function() {
@@ -213,40 +221,41 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
   $scope.reviewsPage = 0;
 
-  $scope.reviews = [{
-      heading: 'Quality',
-      text: 'Good in terms of quality',
-      rating: 4,
-      user: 1,
-      created: '12/4/12',
-      verified: true
-    },
-    {
-      heading: 'Quality',
-      text: 'Good in terms of quality',
-      rating: 4,
-      user: 1,
-      created: '12/4/12',
-      verified: true
-    },
-    // {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
-    {
-      heading: 'Quality',
-      text: 'Good in terms of quality',
-      rating: 4,
-      user: 1,
-      created: '12/4/12',
-      verified: true
-    },
-    {
-      heading: 'Quality',
-      text: 'Good in terms of quality',
-      rating: 4,
-      user: 1,
-      created: '12/4/12',
-      verified: false
-    }
-  ];
+$scope.reviews =[]
+  // $scope.reviews = [{
+  //     heading: 'Quality',
+  //     text: 'Good in terms of quality',
+  //     rating: 4,
+  //     user: 1,
+  //     created: '12/4/12',
+  //     verified: true
+  //   },
+  //   {
+  //     heading: 'Quality',
+  //     text: 'Good in terms of quality',
+  //     rating: 4,
+  //     user: 1,
+  //     created: '12/4/12',
+  //     verified: true
+  //   },
+  //   // {heading:'Quality',text:'Good in terms of quality' ,rating: 4 , user:1 , created: '12/4/12' , verified: false},
+  //   {
+  //     heading: 'Quality',
+  //     text: 'Good in terms of quality',
+  //     rating: 4,
+  //     user: 1,
+  //     created: '12/4/12',
+  //     verified: true
+  //   },
+  //   {
+  //     heading: 'Quality',
+  //     text: 'Good in terms of quality',
+  //     rating: 4,
+  //     user: 1,
+  //     created: '12/4/12',
+  //     verified: false
+  //   }
+  // ];
 
   $scope.reviewsCount = 8;
 
@@ -309,25 +318,34 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     })
   }
 
-  $scope.sendReview = function(mode) {
-    if (mode == 'rating') {
-      if ($scope.form.rating == 0 || !$scope.form.ratable) {
-        return;
-      }
-    } else {
-      if ($scope.form.reviewText == '' || $scope.form.reviewHeading == '') {
-        Flash.create('danger', 'No review to post.')
-        return;
-      }
+  $scope.sendReview = function() {
+
+    // if (mode == 'rating') {
+      // if ($scope.form.rating == 0 || !$scope.form.ratable) {
+      //   return;
+      // }
+    // } else {
+      // if ($scope.form.reviewText == '' || $scope.form.reviewHeading == '') {
+      //   Flash.create('danger', 'No review to post.')
+      //   return;
+      // }
       //post request
-      $scope.form = {
-        rating: 0,
-        reviewText: '',
-        reviewHeading: '',
-        reviewEditor: false,
-        ratable: true
+    var toSend = {
+        rating: $scope.form.rating,
+        textVal:$scope.form.reviewText,
+        headingVal: $scope.form.reviewHeading,
+        // user:$scope.me.pk,
+        productDetail : $scope.details.pk
       }
-    }
+      $http({
+        method: 'POST',
+        url: '/api/ecommerce/rating/',
+        data: toSend
+      }).
+      then(function(response) {})
+
+
+    // }
   }
 
   $scope.nextReviews = function() {
