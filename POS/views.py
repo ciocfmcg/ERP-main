@@ -348,7 +348,10 @@ def genInvoice(response , invoice, request):
     # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
     # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
 
-    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty,pHeadsubTotalTax,pHeadsubTotal ]]
+    if invoice.customer is not None:
+        data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty,pHeadsubTotalTax,pHeadsubTotal ]]
+    else:
+        data = [[ pHeadDetails, pHeadQty, pHeadPrice ,pHeadsubTotal ]]
 
 
     totalQuant = 0
@@ -390,7 +393,10 @@ def genInvoice(response , invoice, request):
         pBodysubTotalTax = Paragraph(str(round(i['subTotalTax'],2)) , tableBodyStyle)
         pBodySubTotal = Paragraph(str(round(i['subTotal'],2)) , tableBodyStyle)
 
-        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodysubTotalTax , pBodySubTotal])
+        if invoice.customer is not None:
+            data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodysubTotalTax , pBodySubTotal])
+        else:
+            data.append([pBodyTitle, pBodyQty, pBodyPrice, pBodySubTotal])
 
     invoice.subTotal = grandTotal
     # invoice.saveInvoiceForm()
@@ -398,33 +404,59 @@ def genInvoice(response , invoice, request):
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
     tableGrandStyle.fontSize = 10
 
+    if invoice.customer is not None:
+        data += [['', '','','', '',Paragraph(str(round(totalTax,2)) , tableBodyStyle)  , Paragraph(str(round(grandTotal,2)) , tableBodyStyle) ],
+                ['', '', '', '',  Paragraph('Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
+    else:
+        data += [['', '', Paragraph('Total (INR)' , tableGrandStyle), Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
 
-    data += [['', '','','', '',Paragraph(str(round(totalTax,2)) , tableBodyStyle)  , Paragraph(str(round(grandTotal,2)) , tableBodyStyle) ],
-            ['', '', '', '',  Paragraph('Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
     t=Table(data)
-    ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
-                ('VALIGN',(0,1),(-1,-3),'TOP'),
-                ('VALIGN',(0,-2),(-1,-2),'TOP'),
-                ('VALIGN',(0,-1),(-1,-1),'TOP'),
-                ('SPAN',(-3,-1),(-2,-1)),
-                ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
-                ('BACKGROUND',(0,0),(-1,0) , themeColor),
-                ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
-                ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
-                ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
-                ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
-                ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
-                ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
-                # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
-            ])
-    t.setStyle(ts)
-    t._argW[0] = 1.5*cm
-    t._argW[1] = 6*cm
-    t._argW[2] = 2.7*cm
-    t._argW[3] = 2.3*cm
-    t._argW[4] = 1.8*cm
-    t._argW[5] = 2.5*cm
-    t._argW[6] = 3*cm
+
+    if invoice.customer is not None:
+        ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                    ('VALIGN',(0,1),(-1,-3),'TOP'),
+                    ('VALIGN',(0,-2),(-1,-2),'TOP'),
+                    ('VALIGN',(0,-1),(-1,-1),'TOP'),
+                    ('SPAN',(-3,-1),(-2,-1)),
+                    ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
+                    ('BACKGROUND',(0,0),(-1,0) , themeColor),
+                    ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
+                    ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
+                    ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
+                    ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
+                    ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
+                    ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
+                    # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
+                ])
+        t.setStyle(ts)
+        t._argW[0] = 1.5*cm
+        t._argW[1] = 6*cm
+        t._argW[2] = 2.7*cm
+        t._argW[3] = 2.3*cm
+        t._argW[4] = 1.8*cm
+        t._argW[5] = 2.5*cm
+        t._argW[6] = 3*cm
+    else:
+        ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                    ('VALIGN',(0,1),(-1,-3),'TOP'),
+                    ('VALIGN',(0,-2),(-1,-2),'TOP'),
+                    ('VALIGN',(0,-1),(-1,-1),'TOP'),
+                    ('SPAN',(-3,-1),(-2,-1)),
+                    ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
+                    ('BACKGROUND',(0,0),(-1,0) , themeColor),
+                    ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
+                    ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
+                    ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
+                    ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
+                    ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
+                    ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
+                    # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
+                ])
+        t.setStyle(ts)
+        t._argW[0] = 8*cm
+        t._argW[1] = 4*cm
+        t._argW[2] = 3*cm
+        t._argW[3] = 5*cm
 
 
     story = []
@@ -455,12 +487,7 @@ def genInvoice(response , invoice, request):
         </font>
         """ %(invoice.customer.name , invoice.customer.company , invoice.customer.street , invoice.customer.city ,invoice.customer.state , invoice.customer.pincode , invoice.customer.country , tin)
     else:
-        summryParaSrc = """
-        <font size='11'><strong>Customer details:</strong></font> <br/><br/>
-        <font size='9'>
-        <strong>GSTIN:</strong><br/>
-        </font>
-        """
+        summryParaSrc = ''
     story.append(Paragraph(summryParaSrc , styleN))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))

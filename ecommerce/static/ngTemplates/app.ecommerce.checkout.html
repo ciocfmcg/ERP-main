@@ -516,13 +516,13 @@
       <div ng-if="data.stage == 'confirmation'">
         <h1>Thank you</h1>
         <h2>Your order details are as follows</h2>
-        <strong> Order No. : </strong> {{data.order.id}}<br>
-        <strong> Order date and time : </strong> {{data.order.created | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
-        <strong> Item ID : </strong> {{data.order.offer}}<br>
-        <strong> Payment mode. : </strong> {{data.order.paymentType}}<br>
+        <strong> Order No. : </strong> #{{order.odnumber}}<br>
+        <strong> Order date and time : </strong> {{order.dt| date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+        <!-- <strong> Item ID : </strong> {{data.order.offer}}<br> -->
+        <strong> Payment mode. : </strong> {{order.paymentMode}}<br>
         <hr>
-        <strong> Booking starts from : </strong> {{data.order.start | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
-        <strong> Booking ends at : </strong> {{data.order.end | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+        <!-- <strong> Booking starts from : </strong> {{data.order.start | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+        <strong> Booking ends at : </strong> {{data.order.end | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br> -->
       </div>
     </div>
 

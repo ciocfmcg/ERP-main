@@ -1427,7 +1427,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       data: $scope.dataToSend
     }).
     then(function(response) {
-      console.log(response.data);
+      $scope.order = response.data
       $scope.data.stage = 'confirmation';
       $rootScope.inCart = [];
       console.log('in cart', $rootScope.inCart);

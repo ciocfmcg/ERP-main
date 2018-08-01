@@ -236,7 +236,7 @@ class CreateOrderAPI(APIView):
             # b = str(a).split("', mode")[0]
             # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
             msg.send()
-            return Response({}, status = status.HTTP_200_OK)
+            return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
 class fieldViewSet(viewsets.ModelViewSet):
