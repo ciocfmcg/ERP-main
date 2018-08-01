@@ -1001,9 +1001,11 @@ class OnlineSalesGraphAPIView(APIView):
                             else:
                                 totalCollections += price
             elif str(i.status) != 'delivered':
+                print 'aaaaaaaaaaaaaa'
                 orderD = Order.objects.filter(orderQtyMap=i.pk)
                 for j in orderD:
                     if str(j.paymentMode) == 'card':
+                        print 'aaaaaaaaaaaaaavvvvvvvvvv'
                         price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                         if j.promoCode!=None:
                             promo = Promocode.objects.filter(name__iexact=j.promoCode)

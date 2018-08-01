@@ -225,6 +225,8 @@ class InventoryLog(models.Model):
     typ = models.CharField(choices = TYPE_CHOICES , max_length = 10 , null = True)
     before = models.PositiveIntegerField(default = 0)
     after = models.PositiveIntegerField(default = 0)
+    internalOrder = models.PositiveIntegerField(null = True)
+    internalInvoice = models.ForeignKey(Invoice,null=True, related_name ="log")
     externalOrder = models.ForeignKey(ExternalOrders ,null = True , related_name ="externalOrders")
 
     class Meta:

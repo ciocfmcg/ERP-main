@@ -18,6 +18,7 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
     $scope.mode = 'edit';
     $scope.invoice = invoice;
     $scope.form = invoice;
+    $scope.DuplicateData = invoice;
 
     $scope.form.receivedDate = new Date($scope.form.receivedDate);
     $scope.form.duedate = new Date($scope.form.duedate);
@@ -41,9 +42,50 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
     });
     console.log($scope.form.products);
   }
+  // $scope.deletedProducts = []
+  // $scope.productBackup = []
   $scope.deleteTable = function(index) {
+    // var pData = $scope.form.products[index]
+    // $scope.deletedProducts.push({url:'/api/POS/product/' + pData.data.pk + '/',inStock:pData.data.inStock + pData.quantity})
+    // $scope.productBackup.splice(index,1)
     $scope.form.products.splice(index, 1);
+    $scope.productsPks.splice(index,1)
+    $scope.onDelete = true
   };
+
+  $scope.onDelete = false
+  $scope.productsPks = []
+  for (var i = 0; i < $scope.form.products.length; i++) {
+    $scope.productsPks.push($scope.form.products[i].data.pk)
+    // $scope.productBackup.push({pk:$scope.form.products[i].data.pk,qty:$scope.form.products[i].data.inStock + $scope.form.products[i].quantity})
+  }
+  $scope.$watch('form.products', function(newValue, oldValue) {
+    if ($scope.onDelete) {
+      $scope.onDelete = false
+      return
+    }
+    console.log('ssssssssssssssssssss',oldValue.length,newValue.length,oldValue,newValue);
+    if (oldValue.length != newValue.length || typeof oldValue[oldValue.length-1].data =='string') {
+      if (newValue.length == 1) {
+        if (typeof newValue[0].data == 'object') {
+          $scope.productsPks.push(newValue[0].data.pk)
+        }
+      }
+      if (newValue.length >1) {
+        if (typeof newValue[newValue.length-1].data == 'object') {
+          if ($scope.productsPks.indexOf(newValue[newValue.length-1].data.pk) >=0 ) {
+            Flash.create('warning','This Product Has Already Added')
+            $scope.form.products[newValue.length-1].data = ''
+          }else {
+            console.log('pushingggggggggggggggg');
+            $scope.productsPks.push(newValue[newValue.length-1].data.pk)
+          }
+        }
+      }
+    }
+    console.log('pkssssssssssssssss',$scope.productsPks);
+
+  },true)
 
   $scope.subTotal = function() {
     var subTotal = 0;
@@ -69,15 +111,56 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
       return response.data;
     })
   }
+  $scope.instockUpdate = function(url,inStockData){
+    $http({
+      method: 'PATCH',
+      url: url,
+      data: inStockData,
+    }).
+    then(function(response) {
+
+    })
+  }
 
   $scope.saveInvoiceForm = function() {
-
     var f = $scope.form;
     if (typeof $scope.invoice.duedate == 'object') {
       var date = $scope.invoice.duedate.toJSON().split('T')[0];
     } else {
       var date = $scope.invoice.duedate
     }
+    // for (var i = 0; i < $scope.deletedProducts.length; i++) {
+    //   console.log('dellllllllll',$scope.deletedProducts[i].url,$scope.deletedProducts['inStock']);
+    //   // $scope.instockUpdate($scope.deletedProducts[i].url,{'inStock':$scope.deletedProducts['inStock']})
+    // }
+    // for (var i = 0; i < f.products.length; i++) {
+    //   console.log("products............................",f.products[i].data.inStock ,f.products[i].quantity);
+    //   if (f.products[i].data.pk == undefined) {
+    //     continue;
+    //   }
+    //
+    //   var inStockData = {'inStock':f.products[i].data.inStock - f.products[i].quantity};
+    //
+    //   for (var j = 0; j < $scope.productBackup.length; j++) {
+    //     if (f.products[i].data.pk == $scope.productBackup[j].pk) {
+    //       if (f.products[i].quantity > $scope.productBackup[j].qty) {
+    //         var val = f.products[i].quantity - $scope.productBackup[j].qty
+    //         var inStockData = {'inStock':f.products[i].data.inStock - val};
+    //       }else if ($scope.productBackup[j].qty > f.products[i].quantity) {
+    //         var val = $scope.productBackup[j].qty - f.products[i].quantity
+    //         var inStockData = {'inStock':f.products[i].data.inStock + val};
+    //       }else {
+    //         var inStockData = {'inStock':f.products[i].data.inStock};
+    //       }
+    //       $scope.productBackup.splice(j,1)
+    //     }
+    //   }
+    //
+    //   var url = '/api/POS/product/' + f.products[i].data.pk + '/'
+    //   console.log('alllllllll',url,inStockData);
+    //   // $scope.instockUpdate(url,inStockData)
+    //
+    // }
     var toSend = {
       // invoicedate: date,
       duedate: date,
@@ -98,6 +181,8 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
       Flash.create('success', 'Saved');
     })
   }
+
+
 
 
 })
@@ -405,6 +490,7 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 
   $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
   $scope.save = function() {
+
 
     var f = $scope.form;
     console.log(f);
@@ -944,6 +1030,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       // returnquater : 'jan-march'
     }
     $scope.wampData = []
+    $scope.productsPks = []
 
     $scope.getInvoiceID();
 
@@ -1505,13 +1592,53 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.delete = function(index) {
     $scope.form.products.splice(index, 1);
+    $scope.productsPks.splice(index,1)
+    $scope.onDelete = true
   };
 
+  $scope.onDelete = false
+  $scope.productsPks = []
+  $scope.$watch('form.products', function(newValue, oldValue) {
+    if ($scope.onDelete) {
+      $scope.onDelete = false
+      return
+    }
+    console.log('ssssssssssssssssssss',oldValue.length,newValue.length,oldValue,newValue);
+    if (oldValue.length != newValue.length || typeof oldValue[oldValue.length-1].data =='string') {
+      if (newValue.length == 1) {
+        if (typeof newValue[0].data == 'object') {
+          $scope.productsPks.push(newValue[0].data.pk)
+        }
+      }
+      if (newValue.length >1) {
+        if (typeof newValue[newValue.length-1].data == 'object') {
+          if ($scope.productsPks.indexOf(newValue[newValue.length-1].data.pk) >=0 ) {
+            Flash.create('warning','This Product Has Already Added')
+            $scope.form.products[newValue.length-1].data = ''
+          }else {
+            console.log('pushingggggggggggggggg');
+            $scope.productsPks.push(newValue[newValue.length-1].data.pk)
+          }
+        }
+      }
+    }
+    console.log('pkssssssssssssssss',$scope.productsPks);
+
+  },true)
+
   $scope.saveInvoice = function(a) {
-    console.log(a);
+     $scope.form.invoiceDate =
+
+    $scope.form.invoiceDateVal = new Date($scope.form.invoiceDate);
+    $scope.form.invoiceDt = new Date($scope.form.invoiceDateVal.getTime() + (24*60*60*1000));
+
+    $scope.form.deuDateVal = new Date($scope.form.deuDate);
+    $scope.form.deuDt = new Date($scope.form.deuDateVal.getTime() + (24*60*60*1000));
+
+
 
     var f = $scope.form;
-    console.log(f);
+
 
     if (a==undefined) {
       if (f.serialNumber.length == 0) {
@@ -1531,9 +1658,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }
       var toSend = {
         serialNumber: f.serialNumber,
-        invoicedate: f.invoiceDate.toJSON().split('T')[0],
+        invoicedate: f.invoiceDt.toJSON().split('T')[0],
         reference: f.reference,
-        duedate: f.deuDate.toJSON().split('T')[0],
+        duedate: f.deuDt.toJSON().split('T')[0],
         returnquater: f.returnquater,
         modeOfPayment : f.modeOfPayment,
         products: JSON.stringify(f.products),
@@ -1560,29 +1687,30 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }
     }
 
-    for (var i = 0; i < f.products.length; i++) {
-      var fd = new FormData();
-      fd.append('inStock', (f.products[i].data.inStock - f.products[i].quantity));
-
-      if (f.products[i].data.pk == undefined) {
-        continue;
-      }
-
-      var url = '/api/POS/product/' + f.products[i].data.pk + '/'
-      console.log(fd,url,f.products[i].data.inStock,f.products[i].quantity);
-      $http({
-        method: 'PATCH',
-        url: url,
-        data: fd,
-        transformRequest: angular.identity,
-        headers: {
-          'Content-Type': undefined
-        }
-      }).
-      then(function(response) {
-
-      })
-    }
+    // for (var i = 0; i < f.products.length; i++) {
+    //   console.log("products............................");
+    //   var fd = new FormData();
+    //   fd.append('inStock', (f.products[i].data.inStock - f.products[i].quantity));
+    //
+    //   if (f.products[i].data.pk == undefined) {
+    //     continue;
+    //   }
+    //
+    //   console.log(fd,url,f.products[i].data.inStock,f.products[i].quantity,'jjjjjjjjjjjjjjjjjjjjjjjjjjj');
+    //   var url = '/api/POS/product/' + f.products[i].data.pk + '/'
+    //   $http({
+    //     method: 'PATCH',
+    //     url: url,
+    //     data: fd,
+    //     transformRequest: angular.identity,
+    //     headers: {
+    //       'Content-Type': undefined
+    //     }
+    //   }).
+    //   then(function(response) {
+    //
+    //   })
+    // }
 
 
     // var returnquaterParts=toSend.returnquater.split('/');
@@ -1605,7 +1733,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       data: toSend
     }).
     then(function(response) {
-      console.log('sssssssssssss',a);
+      console.log('sssssssssssss',response.data);
       $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved');
       if (a!=undefined) {
