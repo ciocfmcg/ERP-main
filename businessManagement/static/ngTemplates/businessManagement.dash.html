@@ -1,4 +1,7 @@
 <div class="shaddowed card bg-white" style="min-height:93vh;">
+  <div class="row">
+
+
 
   <breadcrumb></breadcrumb>
 
@@ -42,7 +45,161 @@
 
 
 
-  <div class="col-md-8 col-md-offset-1" style="margin-top:30px;">
+
+  <div class="col-md-9 " style="margin:30px;">
+    <div class="col-md-6" style="padding-right:50px">
+      <span class="text-center"><h3>Online</h3></span>
+      <div class="row" style="padding:25px 15px">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="small-box bg-aqua">
+              <div class="inner">
+                <h3>{{stats.sales}}</h3>
+                <p>New Orders</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-shopping-cart"></i>
+              </div>
+              <!-- <a href="#" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a> -->
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="small-box bg-green">
+              <div class="inner">
+                <h3>{{stats.custCount}}</h3>
+                <!-- <h3>53<sup style="font-size: 20px">%</sup></h3> -->
+                <p>New Customer</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-user"></i>
+              </div>
+              <!-- <a href="#" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a> -->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="small-box bg-blue">
+              <div class="inner">
+                <h3>
+                  <i class="fa fa-inr"></i> {{stats.totalCollections}}</h3>
+                <p>Total collections</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-money"></i>
+              </div>
+              <!-- <a href="#" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a> -->
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="small-box bg-red">
+              <div class="inner">
+                <h3><i class="fa fa-inr"></i> {{stats.totalSales.totalAmount__sum}}</h3>
+                <p>Total Sales</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-pie-chart"></i>
+              </div>
+              <!-- <a href="#" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a> -->
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top:25px">
+          <div class="col-md-12">
+            <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2" style="width: 700px;height: 100%;">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6" style="padding-left:50px">
+      <span class="text-center"><h3>Offline</h3></span>
+      <div class="row" style="padding:25px 15px">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="small-box bg-aqua">
+              <div class="inner">
+                <h3>{{offlinestats.sales}}</h3>
+                <p>New Orders</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-shopping-cart"></i>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="small-box bg-green">
+              <div class="inner">
+                <h3>{{offlinestats.custCount}}</h3>
+                <p>New Customer</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-user"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="small-box bg-blue">
+              <div class="inner">
+                <h3>
+                  <i class="fa fa-inr"></i> {{offlinestats.totalCollections.amountRecieved__sum}}</h3>
+                <p>Total collections</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-money"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="small-box bg-red">
+              <div class="inner">
+                <h3><i class="fa fa-inr"></i> {{offlinestats.totalSales.grandTotal__sum}}</h3>
+                <p>Total Sales</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-pie-chart"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top:25px">
+          <div class="col-md-12">
+            <canvas id="doughnut" class="chart chart-doughnut" chart-data="offlinedata2" chart-labels="offlinelabels2" style="width: 700px;height: 100%;">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="padding-top:40px">
+      <div class="col-md-12">
+        <canvas id="line" class="chart chart-line" chart-data="trendData" chart-labels="labels" chart-legend="true"  chart-click="onClick" style="width: 70%;height: 400px;">
+        </canvas>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+
+
+
+
+
+  <!-- <div class="col-md-8 col-md-offset-1" style="margin-top:30px;">
     <div class="row">
       <div class="col-md-12">
         <div class="row">
@@ -55,24 +212,19 @@
               <div class="icon">
                 <img src="/static/images/amazon.png" style="width:70px;">
               </div>
-              <!-- <a href="#" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
-            </a> -->
+
             </div>
           </div>
           <div class="col-md-4">
             <div class="small-box bg-green" style="height:120px;">
               <div class="inner">
                 <h3>{{stats.flipkart}}</h3>
-                <!-- <h3>53<sup style="font-size: 20px">%</sup></h3> -->
                 <p>New Orders</p>
               </div>
               <div class="icon">
                 <img src="/static/images/flipkart.png" style="width:70px;">
               </div>
-              <!-- <a href="#" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
-            </a> -->
+
             </div>
           </div>
 
@@ -85,9 +237,7 @@
               <div class="icon">
                 <span style="font-size:30px;color:#eeeeee;">theskinstore.in</span>
               </div>
-              <!-- <a href="#" class="small-box-footer">
-                More info <i class="fa fa-arrow-circle-right"></i>
-              </a> -->
+
             </div>
           </div>
 
@@ -105,6 +255,7 @@
       </div>
     </div>
 
+  </div> -->
   </div>
 
 </div>

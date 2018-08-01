@@ -93,6 +93,8 @@ app.controller("businessManagement.ecommerce.default", function($scope, $state, 
       console.log($scope.stats,'aaaaaaaaaaa');
 
       $scope.data2 = [$scope.stats.totalCollections, $scope.stats.totalSales.totalAmount__sum];
+      $scope.labels2 = ["Sales", "Collections"];
+
       console.log($scope.data2,'kkkkkkkkkkkkkkkkkkk')
 
       $scope.labels = [];
@@ -108,22 +110,11 @@ app.controller("businessManagement.ecommerce.default", function($scope, $state, 
       }
 
 
-      // $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      // $scope.series = ['Series A'];
-      // $scope.data = [
-      //   [65, 59, 80, 81, 56, 55, 50, 60, 71, 66, 77, 44]
-      // ];
-
-
     })
 
 
 
   })
-
-
-
-
 
   $scope.mode = 'home';
   // $scope.mode = 'invoice'
@@ -132,26 +123,6 @@ app.controller("businessManagement.ecommerce.default", function($scope, $state, 
   var dummyDate = new Date();
 
   var onlyDate = new Date(dummyDate.getFullYear(), dummyDate.getMonth(), dummyDate.getDate()); // 2013-07-30 23:59:59
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  $scope.labels2 = ["Sales", "Collections"];
-
 
 
 

@@ -359,6 +359,8 @@ def genInvoice(response , invoice, request):
 
     for i in json.loads(invoice.products):
         print '***********',i
+        print i['data']['price']
+        print i['data']['productMeta']
         pDescSrc = i['data']['name']
 
         totalQuant += i['quantity']
@@ -368,18 +370,18 @@ def genInvoice(response , invoice, request):
         #     print "Continuing"
         #     continue
 
-        i['subTotalTax'] = i['data']['price'] * i['quantity'] * ( i['data']['productMeta']['taxRate']/float(100))
+        i['subTotalTax'] = i['data']['price'] * i['quantity'] * ( i['data']['productMeta']['taxRate']/float(100)) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0
 
-        i['subTotal'] = i['data']['price'] * i['quantity'] * (1+ i['data']['productMeta']['taxRate']/float(100))
+        i['subTotal'] = i['data']['price'] * i['quantity'] + i['subTotalTax']
 
         totalTax += i['subTotalTax']
         grandTotal += i['subTotal']
-        if  i['data']['productMeta']['code'] and i['data']['productMeta']['taxRate']:
+        if  i['data']['productMeta'] and i['data']['productMeta']['code'] and i['data']['productMeta']['taxRate']:
             taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
         else:
             taxCode = ''
 
-        pBodyProd = Paragraph('Service' if i['data']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
+        pBodyProd = Paragraph('Service' if i['data']['productMeta'] and i['data']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
         pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
         pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
@@ -398,7 +400,7 @@ def genInvoice(response , invoice, request):
 
 
     data += [['', '','','', '',Paragraph(str(round(totalTax,2)) , tableBodyStyle)  , Paragraph(str(round(grandTotal,2)) , tableBodyStyle) ],
-            ['', '', '', '',  Paragraph('Sub Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
+            ['', '', '', '',  Paragraph('Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
     t=Table(data)
     ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
                 ('VALIGN',(0,1),(-1,-3),'TOP'),
