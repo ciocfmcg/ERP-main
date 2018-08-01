@@ -133,7 +133,7 @@
   display: block;
   position: absolute;
   top: 8.3vh;
-  left:9vw;
+  left:12vw;
   width: 5vw;
   height: 5vh;
   background: white;
@@ -145,8 +145,8 @@
 	content: '';
   display: block;
   position: absolute;
-  top: 8.3vh;
-  left:5vw;
+  top: 9.5vh;
+  left:5.2vw;
   width: 5vw;
   height: 5vh;
   background: white;

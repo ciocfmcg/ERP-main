@@ -16,38 +16,50 @@
     </div>
   </div>
 
-  <div class="col-xs-1 text-center dropdown hidden-xs hidden-sm">
+  <div class="col-md-1 text-center dropdown hidden-xs hidden-sm">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px" ng-if="me.pk" > {{me.pk | getName}}</span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" >Orders</a></li>
       <li><a ui-sref="account">Account</a></li>
-      <li><a href="/logout">Logout</a></li>
+      <li><a href="" ng-click="logoutPage()">Logout</a></li>
     </ul>
   </div>
 
-  <div class="col-xs-2 text-center hidden-xs hidden-sm">
+  <div class="col-md-2 text-center hidden-xs hidden-sm" ng-if="me.pk">
     <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
   </div>
 
+  <div class="col-md-2 text-center hidden-xs hidden-sm" ng-if="!me.pk">
+    <span style="cursor:pointer;font-size:17px;padding-right:10px" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
+    <span style="cursor:pointer;font-size:17px" ng-click="registerPage()"> Register <i class="fa fa-registered fa-lg"></i></span>
 
-  <div class="col-xs-offset-3 col-xs-3 text-center hidden-lg hidden-md">
+
+  </div>
+  <!-- <span ng-click="loginPage()"> <i class="fa fa-sign-in"></i> Login</span> -->
+  <div class="col-xs-9 text-right hidden-md hidden-lg" ng-if="!me.pk">
+    <span style="cursor:pointer;font-size:17px;padding-right:10px" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
+    <span style="cursor:pointer;font-size:17px" ng-click="registerPage()"> Register <i class="fa fa-registered fa-lg"></i></span>
+  </div>
+
+  <div class="col-xs-offset-3 col-xs-3 text-center hidden-lg hidden-md" ng-if="me.pk">
     <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
   </div>
 
-  <div class="col-xs-3 text-center dropdown hidden-lg hidden-md ">
+  <div class="col-xs-1 text-center dropdown hidden-lg hidden-md ">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer" ng-if="me.pk" > {{me.pk | getName}}</span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px; left:-80px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" >Orders</a></li>
       <li><a ui-sref="account">Account</a></li>
-      <li><a href="/logout">Logout</a></li>
+      <li><a href="" ng-click="logoutPage()">Logout</a></li>
+      <!-- <li><a href="/logout">Logout</a></li> -->
     </ul>
   </div>
 
 </div>
 <div class="row bg-blue ecomNav hidden-lg hidden-md" style="padding-bottom:10px; height:7vh" >
-  <div class="col-xs-10" style="padding-right:0px; padding-left:30px;">
+  <div class="col-xs-10" style="padding-right:0px; padding-left:0px;">
     <!-- <input type="text" class="" style="width:100%;color: #000;text-indent: 10px;outline: none;" placeholder="Search for products, brands and more.."> -->
     <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="Products, brands and more..">
   </div>

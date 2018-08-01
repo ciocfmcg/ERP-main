@@ -13,6 +13,7 @@ from django.conf import settings as globalSettings
 from clientRelationships.models import ProductMeta
 from clientRelationships.serializers import ProductMetaSerializer
 from ERP.models import service
+import json
 
 
 
@@ -36,9 +37,10 @@ class ProductLiteSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
     compositions=ProductLiteSerializer(many=True,read_only=True)
+    skuUnitpack = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -75,7 +77,7 @@ class ProductSerializer(serializers.ModelSerializer):
             il = InventoryLog(before = instance.inStock , after = validated_data['inStock'],product = instance,typ = 'user' , user = self.context['request'].user)
             il.save()
 
-        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap']:
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -95,30 +97,94 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+    def get_skuUnitpack(self, obj):
+        if 'search' in self.context['request'].GET and len(self.context['request'].GET['search'])>0:
+            pvObj = ProductVerient.objects.filter(sku__icontains=self.context['request'].GET['search'],parent=obj.pk).values('unitPerpack')
+            if len(pvObj)>0:
+                return list(pvObj)[0]['unitPerpack']
+        return None
+
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
     class Meta:
         model = Invoice
         fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate')
         read_only_fields = ( 'user' , 'customer')
+
     def create(self , validated_data):
         print validated_data,'**************'
-        print self.context['request'].data
-        i = Invoice(**validated_data)
+        print '****************************'
+        inv = Invoice(**validated_data)
         if 'customer' in self.context['request'].data:
-            i.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
-        i.save()
-        return i
-    # def update(self ,instance, validated_data):
-    #     for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returndate' ,'returnquater' ,'products']:
-    #         try:
-    #             setattr(instance , key , validated_data[key])
-    #         except:
-    #             pass
-    #     if 'customer' in self.context['request'].data:
-    #         instance.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
-    #     instance.save()
-    #     return instance
+            inv.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
+        inv.save()
+        if 'products' in validated_data:
+            productList = json.loads(validated_data['products'])
+            for i in productList:
+                print i['data']['pk'],i['quantity']
+                pObj = Product.objects.get(pk=i['data']['pk'])
+                pObj.inStock = pObj.inStock - i['quantity']
+                pObj.save()
+                data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
+                InventoryLog.objects.create(**data)
+        return inv
+
+
+    def update(self ,instance, validated_data):
+        oldData = json.loads(instance.products)
+        if 'products' in validated_data:
+            productList = json.loads(validated_data['products'])
+        else:
+            productList = []
+        print 'sssssssssssssss',oldData,productList
+        # sameDataPk = []
+        for idx1,i in enumerate(oldData):
+            pObj = Product.objects.get(pk=i['data']['pk'])
+            for idx2,j in enumerate(productList):
+                if i['data']['pk']==j['data']['pk']:
+                    if i['quantity'] > j['quantity']:
+                        print 'increasedddddddddddddddd and inventory created'
+                        pObj.inStock = pObj.inStock + (i['quantity'] - j['quantity'])
+                        pObj.save()
+                        data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
+                        InventoryLog.objects.create(**data)
+                    elif j['quantity'] > i['quantity']:
+                        print 'decreasedddddddddddddddd and inventory created'
+                        pObj.inStock = pObj.inStock - (j['quantity'] - i['quantity'])
+                        pObj.save()
+                        data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
+                        InventoryLog.objects.create(**data)
+                    else:
+                        print 'no changeeeeeeeeee'
+                    del productList[idx2]
+                    # sameDataPk.append(idx2)
+                    break
+            else:
+                print 'deletedddddddddddddddd and inventory created'
+                pObj.inStock = pObj.inStock + i['quantity']
+                pObj.save()
+                data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'internalInvoice':instance}
+                InventoryLog.objects.create(**data)
+        for idx3,i in enumerate(productList):
+            # if idx3 in sameDataPk:
+            #     continue
+            print 'new producttttttttttttttt and inventory created'
+            pObj = Product.objects.get(pk=i['data']['pk'])
+            pObj.inStock = pObj.inStock - i['quantity']
+            pObj.save()
+            data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':instance}
+            InventoryLog.objects.create(**data)
+
+
+        for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'customer' in self.context['request'].data:
+            instance.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
+        instance.save()
+        return instance
 
 
 

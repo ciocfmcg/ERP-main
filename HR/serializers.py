@@ -100,7 +100,7 @@ class userSerializer(serializers.ModelSerializer):
 class userAdminSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url' , 'username' , 'email' , 'first_name' , 'last_name' , 'is_staff' ,'is_active' )
+        fields = ('url' , 'username' , 'email' , 'first_name' , 'last_name' , 'is_staff' ,'is_active', 'date_joined' )
     def create(self , validated_data):
         print "In create"
         print  self.context['request'].user.is_superuser

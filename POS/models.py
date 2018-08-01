@@ -46,11 +46,21 @@ class Customer(models.Model):
 
 from clientRelationships.models import ProductMeta
 
+UNIT_CHOICES = (
+    ('Ton' , 'Ton'),
+    ('Kilogram' , 'Kilogram'),
+    ('Gram' , 'Gram'),
+    ('Litre' , 'Litre'),
+    ('Millilitre' , 'Millilitre'),
+    ('Quantity' , 'Quantity'),
+)
+
 class Product(models.Model):
     user = models.ForeignKey(User , related_name = 'posProducts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length = 100 , null = False)
+    unit = models.CharField(choices = UNIT_CHOICES , max_length = 10 , null = True)
     productMeta = models.ForeignKey(ProductMeta , related_name="POSProducts" , null = True, blank = True)
     price = models.FloatField(null=False)
     displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True, blank = True)
@@ -215,6 +225,8 @@ class InventoryLog(models.Model):
     typ = models.CharField(choices = TYPE_CHOICES , max_length = 10 , null = True)
     before = models.PositiveIntegerField(default = 0)
     after = models.PositiveIntegerField(default = 0)
+    internalOrder = models.PositiveIntegerField(null = True)
+    internalInvoice = models.ForeignKey(Invoice,null=True, related_name ="log")
     externalOrder = models.ForeignKey(ExternalOrders ,null = True , related_name ="externalOrders")
 
     class Meta:

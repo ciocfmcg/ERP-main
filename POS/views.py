@@ -35,6 +35,7 @@ from django.core.mail import send_mail, EmailMessage
 from io import BytesIO
 import re
 from rest_framework import filters
+from django.db.models import F ,Value,CharField
 
 
 
@@ -48,10 +49,25 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    # queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
-    search_fields = ('name', 'serialNo', 'description', 'serialId')
+    # search_fields = ('name', 'serialNo', 'description', 'serialId')
     filter_fields = ['name','haveComposition','serialNo',]
+
+    # filter_fields = ['name','haveComposition']
+    def get_queryset(self):
+        product=[]
+        unit=0
+        if 'search' in self.request.GET:
+            product = Product.objects.filter(name__contains=str(self.request.GET['search']))
+            product1  = Product.objects.filter(serialNo__contains=str(self.request.GET['search']))
+            product2 = list(ProductVerient.objects.filter(sku__contains=str(self.request.GET['search'])).values_list('parent',flat=True))
+            product3  = Product.objects.filter(pk__in=product2).annotate(myUnit=Value(unit, output_field=CharField()))
+            return product | product1 | product3
+        else:
+            return Product.objects.all()
+
+
     # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
@@ -469,6 +485,7 @@ class SalesGraphAPIView(APIView):
             custs = Customer.objects.filter(created__range = (frm , to))
 
         totalSales = invcs.aggregate(Sum('grandTotal'))
+        print type(totalSales),'kkkk'
         totalCollections = invcs.aggregate(Sum('amountRecieved'))
         sales =  invcs.count()
         custCount = custs.count()

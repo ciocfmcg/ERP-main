@@ -20,7 +20,8 @@ MESSAGE_TAGS = {
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEFAULT_APPS_ON_REGISTER = ['app.tutor.account' , 'app.tutor.previousSessions' , 'app.tutor.studentHome']
+# DEFAULT_APPS_ON_REGISTER = ['app.tutor.account' , 'app.tutor.previousSessions' , 'app.tutor.studentHome']
+DEFAULT_APPS_ON_REGISTER = []
 # the apps to which the user will be given access to upon registeration through public registeration site
 
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
@@ -58,10 +59,10 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.106', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.105','192.168.1.109']
+ALLOWED_HOSTS = ['192.168.1.106', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.121']
 
 
-LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
+LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
 
 LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out

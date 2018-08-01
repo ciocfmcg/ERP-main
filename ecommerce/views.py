@@ -20,7 +20,10 @@ from time import time
 import pytz
 import math
 import json
+from email.mime.image import MIMEImage
 
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from StringIO import StringIO
 import math
 import requests
@@ -83,6 +86,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet, TA_CENTER
 from reportlab.graphics import barcode, renderPDF
 from reportlab.graphics.shapes import *
 import calendar as pythonCal
+from POS.models import *
 from ERP.models import service, appSettingsField
 # Create your views here.
 
@@ -91,8 +95,9 @@ def ecommerceHome(request):
 
 class SearchProductAPI(APIView):
     renderer_classes = (JSONRenderer,)
-    # permission_classes = (permissions.IsAuthenticated ,)
+    permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
+        print 'aaaaaaaaaaaaaaaaa'
         if 'search' in self.request.GET:
             search = str(self.request.GET['search'])
             l = int(self.request.GET['limit'])
@@ -271,6 +276,7 @@ class listingViewSet(viewsets.ModelViewSet):
         data = self.request.GET
         if 'recursive' in data:
             if data['recursive'] == '1':
+                print data['parent'] , type(data['parent'])
                 prnt = genericProduct.objects.get(id = data['parent'])
                 toReturn = listing.objects.filter(parentType = prnt)
                 for child in prnt.children.all():
@@ -331,6 +337,19 @@ class listingViewSet(viewsets.ModelViewSet):
                 #             qry = qry | Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
 
                     # toReturn = toReturn.filter(qry)
+                # print toReturn
+                # for i in toReturn:
+                #     print i.product
+                #
+                #     product  = Product.objects.filter(pk__in=i.product)
+                #     print product ,'aaaaaaaaaaaaaa'
+                #     prductSku =  ProductVerient.objects.all()
+                #     for i in product:
+                #         print i,'jjjjj'
+                #         for j in prductSku:
+                #             print j.parent,'bbbbbbbbbbbbbbbb'
+                #             if i == j.parent:
+                #                 print 'kkkkkkkkkkkkkkkkkk'
                 return toReturn
         else:
             return listing.objects.all()
@@ -338,9 +357,12 @@ class listingViewSet(viewsets.ModelViewSet):
 class listingLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (readOnly, )
     serializer_class = listingLiteSerializer
+    # queryset = listing.objects.all()
     def get_queryset(self):
-        # u = self.request.user
-        # has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+        print "fffffffffffffffffffff",self.request.user.is_authenticated
+        if self.request.user.is_authenticated:
+            u = self.request.user
+            has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
         if 'mode' in  self.request.GET:
             if self.request.GET['mode'] == 'vendor':
                 s = service.objects.get(user = u)
@@ -526,7 +548,7 @@ class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
         emailAddr=[]
-        request.data['value'],'aaaaaaaaaaaaaa'
+        print request.data['value'],'aaaaaaaaaaaaaa'
         oq = OrderQtyMap.objects.filter(pk = request.data['value'])
         for i in oq:
             productId = i.pk
@@ -547,18 +569,79 @@ class SendStatusAPI(APIView):
         elif productStatus == 'shipped':
             msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from packed to shipped"
         elif productStatus == 'inTransit':
-            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from shipped to  in Transit"
+            msgBody = "Your order status with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been changed from shipped to In Transit"
         elif productStatus == 'reachedNearestHub':
-            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has Reached to the nearest Hub"
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been Reached to the nearest Hub"
         elif productStatus == 'outForDelivery':
             msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" is Out for delivery"
-        elif productStatus == 'delivered':
-            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been Delivered to you"
         elif productStatus == 'cancelled':
-            msgBody = "Your request to cancel the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+            msgBody = "Your order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been cancelled"
+        elif productStatus == 'returnToOrigin':
+            msgBody = "Product has been returned to origin"
         elif productStatus == 'returned':
-            msgBody ="Your request to return the order with  product name: " + str(productName) + ", Quantity of: " +str(qty)+" has been accepted"
+            msgBody ="Product has been returned"
         msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+        msg.send()
+        return Response({}, status = status.HTTP_200_OK)
+
+class SendDeliveredStatus(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        emailAddr=[]
+        oq = []
+        o = []
+        m=[]
+        promoAmount=0
+        # oq = list(OrderQtyMap.objects.filter(pk = request.data['value']).values().annotate(pname=F('product__product__name'),pPrice=F('product__product__price'),pDiscount=F('product__product__discount'),dp=F('product__files__attachment')))
+        # productId = oq[0]['id']
+        # o = list(Order.objects.filter(orderQtyMap = productId).values().annotate(userEmail=F('user__email'),fname=F('user__first_name'),lname=F('user__last_name')))
+        # emailAddr.append(str( o[0]['userEmail']))
+        oq=OrderQtyMap.objects.get(pk = request.data['value'])
+        print oq.pk
+        price = oq.product.product.price - (oq.product.product.discount * oq.product.product.price)/100
+        total = oq.qty * price
+        o=Order.objects.get(orderQtyMap = oq.pk)
+        emailAddr.append(o.user.email)
+        promoObj = Promocode.objects.all()
+        for p in promoObj:
+            if str(p.name)==str(o.promoCode):
+                promoAmount = p.discount
+        print promoAmount
+        grandTotal=total-(promoAmount * total)/100
+        grandTotal=round(grandTotal, 2)
+        attachment =  oq.product.files.values_list('attachment', flat=True)
+        # media=oq.product.files
+        # for m in media:
+        #     print m.pk,'aaaaaaaaa'
+        # m=Media.objects.get(pk=o.product.files)
+        print '**************************'
+        ctx = {
+            'heading' : "Invoice Details",
+            # 'recieverName' : name,
+            'linkUrl': 'cioc.co.in',
+            'sendersAddress' : 'CIOC',
+            # 'sendersPhone' : '122004',
+            # 'grandTotal':grandTotal,
+            'promoAmount':promoAmount,
+            'attachment':"https://media/"+attachment[0],
+            'grandTotal':grandTotal,
+            'total':total,
+            'order': o,
+            'price':price,
+            'orderQTY':oq,
+            'linkedinUrl' : 'https://www.linkedin.com/',
+            'fbUrl' : 'https://facebook.com',
+            'twitterUrl' : 'https://twitter.com',
+        }
+        print ctx
+        email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
+        # email_subject = "Order Details:"
+        # msgBody = " Your Order has been placed and details are been attached"
+        # contactData.append(str(orderObj.user.email))
+        print 'aaaaaaaaaaaaaaa'
+        msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
+        msg.content_subtype = 'html'
+        # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
@@ -872,10 +955,10 @@ class DownloadInvoiceAPI(APIView):
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
         print o
-        response['Content-Disposition'] = 'attachment; filename="Call_letter%s_%s.pdf"' % (
+        response['Content-Disposition'] = 'attachment; filename="invoice%s_%s.pdf"' % (
              datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)
         genInvoice(response, o, request)
-        f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/Call_letter%s_%s.pdf' %
+        f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
                               ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)), 'wb')
         f.write(response.content)
         f.close()
@@ -888,3 +971,69 @@ class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['productDetail',]
+
+from datetime import timedelta
+from django.db.models import Sum
+class OnlineSalesGraphAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        totalCollections=0
+        if "date" in request.data:
+            # one day sale
+            d = datetime.datetime.strptime(request.data["date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            order = Order.objects.filter(created__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+            custs = User.objects.filter(date_joined__range= (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+            orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
+        else:
+            frm = datetime.datetime.strptime(request.data["from"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            to = datetime.datetime.strptime(request.data["to"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            order = Order.objects.filter(created__range=(datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+            orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+            custs = User.objects.filter(date_joined__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+
+        totalSales = order.aggregate(Sum('totalAmount'))
+        for i in orderQty:
+            if str(i.status) == 'delivered':
+                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                orderD = Order.objects.filter(orderQtyMap=i.pk)
+                for j in orderD:
+                    if str(j.paymentMode) == 'COD':
+                            if j.promoCode!=None:
+                                promo = Promocode.objects.filter(name__iexact=j.promoCode)
+                                for p in promo:
+                                    promocode = p.discount
+                                    priceVal = price-(promocode * price)/100
+                                    totalCollections += priceVal
+                            else:
+                                totalCollections += price
+            elif str(i.status) != 'delivered':
+                print 'aaaaaaaaaaaaaa'
+                orderD = Order.objects.filter(orderQtyMap=i.pk)
+                for j in orderD:
+                    if str(j.paymentMode) == 'card':
+                        print 'aaaaaaaaaaaaaavvvvvvvvvv'
+                        price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                        if j.promoCode!=None:
+                            promo = Promocode.objects.filter(name__iexact=j.promoCode)
+                            for p in promo:
+                                promocode = p.discount
+                                priceVal = price-(promocode * price)/100
+                                totalCollections += priceVal
+                        else:
+                            totalCollections += price
+        totalCollections = round(totalCollections, 2)
+        sales =  order.count()
+        custCount = custs.count()
+
+
+        last_month = datetime.datetime.now() - timedelta(days=30)
+
+        data = (Order.objects.all()
+            .extra(select={'created': 'date(created)'})
+            .values('created')
+            .annotate(sum=Sum('totalAmount')))
+
+
+        # return Response({"totalSales" : totalSales , "totalCollections" : totalCollections ,  "sales" : sales , "custCount" : custCount , "trend" : data},status=status.HTTP_200_OK)
+        return Response({"totalSales" : totalSales , "totalCollections" : totalCollections ,  "sales" : sales , "custCount" : custCount , "trend" : data},status=status.HTTP_200_OK)

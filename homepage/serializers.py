@@ -29,10 +29,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ('pk', 'created' , 'token' , 'mobileOTP' , 'emailOTP' , 'email', 'mobile')
         read_only_fields = ( 'token' , 'mobileOTP' , 'emailOTP')
     def update(self , instance , validated_data):
+        print "updateeeeaaaaaaaaaaa", self.context['request'].data;
         print instance
         print validated_data
         d = self.context['request'].data;
-
         if( d['token'] == instance.token and d['mobileOTP'] == instance.mobileOTP and d['emailOTP']== instance.emailOTP ):
             print "will create a new user"
 
@@ -47,22 +47,19 @@ class RegistrationSerializer(serializers.ModelSerializer):
             u.set_password(d['password'])
             u.is_active = True
             u.save()
-
+            print 'ddddddddddddddddd'
             for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+                print a ,'gggggggggggggggggggggg'
                 app = application.objects.get(name = a)
                 p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
-
-
             login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
             instance.delete()
             return instance
-
         else:
             raise SuspiciousOperation('Expired')
-
-
         return instance
     def create(self , validated_data):
+        print "createaaaaaaaaaa"
 
         reg = Registration(**validated_data)
 
@@ -79,10 +76,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP) ]
 
         ctx = {
-            'heading' : 'Welcome to 24Tutors.com , your buddy in your studies',
-            'recieverName' : 'Student',
+            'heading' : 'Welcome to Ecommerce',
+            'recieverName' : 'Customer',
             'message': msgBody,
-            'linkUrl': '24tutors.com',
+            'linkUrl': 'monomerce.com',
             'linkText' : 'View Online',
             'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
             'sendersPhone' : '841101',
@@ -95,13 +92,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         email_body = get_template('app.homepage.emailOTP.html').render(ctx)
         print email_body
         email_subject = '[24Tutors.com] Email OTP'
-
-        msg = EmailMessage(email_subject, email_body, to= [reg.email] , from_email= 'do_not_reply@cioc.co.in' )
+        sentEmail=[]
+        sentEmail.append(str(reg.email))
+        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+        msg = EmailMessage(email_subject, email_body, to= sentEmail)
         msg.content_subtype = 'html'
         msg.send()
 
-        url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Student,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
-        # print url
+        url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
         requests.get(url)
 
         reg.save()

@@ -164,7 +164,7 @@
         {{item.data.productMeta.code}} ( {{item.data.productMeta.taxRate}} %)
       </td>
       <td>
-        <input type="number" class="form-control-pos" ng-model="item.quantity">
+        <input type="number" class="form-control-pos" ng-model="item.quantity" min="1">
       </td>
       <td>
         <input type="float" class="form-control-pos" ng-model="item.data.price">
