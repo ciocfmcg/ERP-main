@@ -965,6 +965,13 @@ class DownloadInvoiceAPI(APIView):
         # return Response(status=status.HTTP_200_OK)
         return response
 
+class RatingViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['productDetail',]
+
 from datetime import timedelta
 from django.db.models import Sum
 class OnlineSalesGraphAPIView(APIView):

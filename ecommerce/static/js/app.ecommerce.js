@@ -65,7 +65,7 @@ app.controller("businessManagement.ecommerce.default", function($scope, $state, 
   }
 
   $scope.today = new Date();
-  $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 1);
+  $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 2);
   $scope.monday = getMonday(new Date());
 
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

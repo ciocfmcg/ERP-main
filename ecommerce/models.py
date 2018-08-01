@@ -3,8 +3,7 @@ from time import time
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save , pre_delete
-from django.dispatch import receiver
-from ERP.models import address , service
+# from django.dispatch import receive
 from POS.models import Product
 # Create your models here.
 
@@ -241,3 +240,11 @@ class FrequentlyQuestions(models.Model):
     user =  models.ForeignKey(User, null = False , related_name = 'frequentlyQuestions')
     ques = models.CharField(max_length=500 , null = False)
     ans = models.CharField(max_length=5000 , null = False)
+
+class Rating(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    rating =  models.PositiveIntegerField(null = False)
+    textVal = models.CharField( null = False , max_length = 1000)
+    headingVal = models.CharField( null = False , max_length = 100 )
+    productDetail =  models.ForeignKey(listing , null = True)
+    user = models.ForeignKey(User , related_name = 'ecommerceUser' , null = False)

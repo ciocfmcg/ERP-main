@@ -17,6 +17,7 @@ router.register(r'trackingLog' , TrackingLogViewSet , base_name='trackingLog')
 router.register(r'orderQtyMap' , OrderQtyMapViewSet , base_name='orderQtyMap')
 router.register(r'order' , OrderViewSet , base_name='order')
 router.register(r'promocode' , PromocodeViewSet , base_name='promocode')
+router.register(r'rating' , RatingViewSet , base_name='rating')
 router.register(r'frequentlyQuestions' , FrequentlyQuestionsViewSet , base_name='frequentlyQuestions')
 
 urlpatterns = [

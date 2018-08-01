@@ -11,7 +11,8 @@ from ERP.serializers import serviceLiteSerializer, addressSerializer
 from POS.models import Product
 from POS.serializers import ProductSerializer
 import json
-from HR.models import profile
+from HR.models import *
+from HR.serializers import *
 
 
 class fieldSerializer(serializers.ModelSerializer):
@@ -328,3 +329,18 @@ class FrequentlyQuestionsSerializer(serializers.ModelSerializer):
         f.user=self.context['request'].user
         f.save()
         return f
+
+class RatingSerializer(serializers.ModelSerializer):
+    productDetail = listingLiteSerializer(many = False , read_only = True)
+    user = userSearchSerializer(many = False , read_only = True)
+    class Meta:
+        model = Rating
+        fields = ( 'pk', 'created' , 'rating', 'textVal' ,'headingVal' , 'productDetail' , 'user')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        print validated_data
+        a = Rating(**validated_data)
+        a.productDetail = listing.objects.get(pk = self.context['request'].data['productDetail'])
+        a.user=self.context['request'].user
+        a.save()
+        return a

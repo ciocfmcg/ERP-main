@@ -993,6 +993,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   }
 
 
+
   $scope.mode = 'home';
   // $scope.mode = 'invoice'
   $scope.tabs = [];
@@ -1095,19 +1096,58 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.sai='kiran'
 
-  $scope.processScannerNotification = function(a){
-    console.log(a);
+  $scope.connectData = {deviceID:'123'}
+  $scope.connected = false
+  $scope.connectDevice = function() {
+    if ($scope.connectData.deviceID.length == 0) {
+      Flash.create('danger','Please Enter Device Id')
+      return
+    }
+    console.log($scope.connectData.deviceID);
+
+    wampSession.subscribe('service.POS.device.'+ $scope.connectData.deviceID, $scope.processScannerNotification).then(
+      function (sub) {
+        console.log('sssssssssssssss',sub);
+        $scope.subId = sub
+        console.log("subscribed to 'POS'");
+        $scope.connected = true
+      },
+      function (err) {
+        console.log("failed to subscribed: " + err);
+      }
+    );
+
+  }
+  $scope.disconnectDevice = function(){
+    console.log($scope.subId);
+    wampSession.unsubscribe($scope.subId).then(
+      function () {
+        console.log("unSubscribed to 'POS'");
+        $scope.connectData = {deviceID:'123'}
+        $scope.connected = false
+      },
+      function () {
+        console.log("failed to subscribed: " + err);
+      }
+    );
+  }
+
+  $scope.processScannerNotification = function(args){
+    console.log('cameeeeeeeeeeeeeee');
+    console.log(args);
+    $scope.a = args[0].parent
+    console.log($scope.a);
     $http({
       method: 'GET',
-      url: '/api/POS/product/?serialNo=' + a
+      url: '/api/POS/product/?serialNo=' + $scope.a
     }).
     then(function(response) {
       console.log('resssssssss',response.data);
       if (response.data.length>0) {
-        if ($scope.wampData.indexOf(a) >= 0) {
-          var idx = $scope.wampData.indexOf(a)
+        if ($scope.wampData.indexOf($scope.a) >= 0) {
+          var idx = $scope.wampData.indexOf($scope.a)
         }else {
-          $scope.wampData.push(a)
+          $scope.wampData.push($scope.a)
           var idx = -1
         }
         console.log($scope.wampData);
@@ -1592,6 +1632,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.delete = function(index) {
     $scope.form.products.splice(index, 1);
+    $scope.wampData.splice(index,1)
     $scope.productsPks.splice(index,1)
     $scope.onDelete = true
   };
