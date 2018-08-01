@@ -194,7 +194,6 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     then(function(response) {
       $scope.reviews = response.data.results
       $scope.next = response.data.next
-      console.log( $scope.next ,'ddddddddddddddddddddddddd');
     });
   }
   $http({
@@ -210,6 +209,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       parent = parent.parent
     }
     $scope.getRatings($scope.offset)
+    $scope.getReview()
 
   });
 
@@ -230,6 +230,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     reviewEditor: false,
     ratable: true
   }
+
+
+
   // $scope.reviewsPage = 0;
 
 
@@ -392,6 +395,18 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     //   $scope.fetchReviews();
     // }
   }
+  $scope.rating=[]
+    $scope.getReview = function(){
+      console.log($scope.details.pk,'aaaaaaaaaaaaaa');
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/rating/?productDetail=' +  $scope.details.pk
+      }).
+      then(function(response) {
+        $scope.rating = response.data
+      });
+    }
+
 
   // $scope.fetchReviews = function() {
   //   console.log('coming in fetchReviews');

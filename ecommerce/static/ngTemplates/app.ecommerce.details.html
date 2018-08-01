@@ -28,11 +28,12 @@
           <div class="col-md-6 col-xs-6 ">
             <div class="row container-fluid">
               <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
-              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;"> {{ratings.averageRating}} <i class="fa fa-star" aria-hidden="true"></i></span> 400 Ratings & 23 Reviews
+              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;"> {{ratings.averageRating}} <i class="fa fa-star" aria-hidden="true"></i></span> {{rating.length}} Ratings & Reviews
             </div>
             <div class="row container-fluid" style="padding-top:14px;">
-              <i class="fa fa-money fa-1x text-muted"></i> Cash on {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br>
-              <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br>
+              <i class="fa fa-money fa-1x text-muted"></i> Cash on delivery : Yes
+               <!-- {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br> -->
+              <!-- <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br> -->
             </div>
           </div>
           <div class="col-md-6 col-xs-6">
