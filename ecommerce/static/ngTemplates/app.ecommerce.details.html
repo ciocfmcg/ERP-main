@@ -28,7 +28,8 @@
           <div class="col-md-6 col-xs-6 ">
             <div class="row container-fluid">
               <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
-              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;"> {{ratings.averageRating}} <i class="fa fa-star" aria-hidden="true"></i></span> {{rating.length}} Ratings & Reviews
+              <!-- <span style="background-color:red; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg==none"> 0.0 <i class="fa fa-star" aria-hidden="true"></i></span> -->
+              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span> {{details.rating_count}} Ratings & Reviews
             </div>
             <div class="row container-fluid" style="padding-top:14px;">
               <i class="fa fa-money fa-1x text-muted"></i> Cash on delivery : Yes

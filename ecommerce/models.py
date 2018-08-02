@@ -246,5 +246,12 @@ class Rating(models.Model):
     rating =  models.PositiveIntegerField(null = False)
     textVal = models.CharField( null = False , max_length = 1000)
     headingVal = models.CharField( null = False , max_length = 100 )
-    productDetail =  models.ForeignKey(listing , null = True)
+    productDetail =  models.ForeignKey(listing , null = True , related_name = "ratings")
     user = models.ForeignKey(User , related_name = 'ecommerceUser' , null = False)
+
+class SupportFeed(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    user = models.ForeignKey(User , related_name = 'supportUser' , null = True)
+    email = models.CharField(max_length = 35, blank = True)
+    mobile = models.CharField(null = False , max_length = 14)
+    message = models.CharField( null = False , max_length = 1000)

@@ -111,6 +111,7 @@ class listingSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
     product = POSProductSerializer(many = False , read_only = True)
     # parentType = genericProductSerializer(many = False , read_only = True)
+
     class Meta:
         model = listing
         fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs' )
@@ -136,6 +137,8 @@ class listingSerializer(serializers.ModelSerializer):
 
         l.save()
         return l
+
+
 
     def update(self , instance , validated_data):
         u = self.context['request'].user
@@ -165,14 +168,25 @@ class listingSerializer(serializers.ModelSerializer):
                 instance.files.add(media.objects.get(pk = m))
         instance.save()
         return instance
+from django.db.models import Avg
 
 class listingLiteSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
     product = POSProductSerializer(many = False , read_only = True)
     parentType = genericProductSerializer(many = False , read_only = True)
+    rating = serializers.SerializerMethodField()
+    rating_count = serializers.SerializerMethodField()
+
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count')
+    def get_rating(self , obj):
+        return obj.ratings.all().aggregate(Avg('rating'))
+
+    def get_rating_count(self , obj):
+        return obj.ratings.all().count()
+
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -342,5 +356,19 @@ class RatingSerializer(serializers.ModelSerializer):
         a = Rating(**validated_data)
         a.productDetail = listing.objects.get(pk = self.context['request'].data['productDetail'])
         a.user=self.context['request'].user
+        a.save()
+        return a
+
+class SupportFeedSerializer(serializers.ModelSerializer):
+    user = userSearchSerializer(many = False , read_only = True)
+    class Meta:
+        model = SupportFeed
+        fields = ( 'pk', 'created' , 'email', 'mobile' ,'message' , 'user')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        print 'hhhhhhhhhhhhhhhhhhhhj',self.context['request'].user
+        a = SupportFeed(**validated_data)
+        if self.context['request'].user.is_authenticated :
+            a.user=User.objects.get(pk = self.context['request'].user.pk)
         a.save()
         return a

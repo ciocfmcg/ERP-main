@@ -38,6 +38,7 @@ class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
     compositions=ProductLiteSerializer(many=True,read_only=True)
     skuUnitpack = serializers.SerializerMethodField()
+    
     class Meta:
         model = Product
         fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack')
@@ -58,6 +59,10 @@ class ProductSerializer(serializers.ModelSerializer):
             p.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
         p.save()
         return p
+
+
+
+
     # def update(self ,instance, validated_data):
     #     print 'entered','***************'
     #     # print self.context['request'].data

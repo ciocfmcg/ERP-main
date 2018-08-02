@@ -355,14 +355,15 @@ class listingViewSet(viewsets.ModelViewSet):
             return listing.objects.all()
 
 class listingLiteViewSet(viewsets.ModelViewSet):
-    permission_classes = (readOnly, )
+    permission_classes = (isAdminOrReadOnly, )
     serializer_class = listingLiteSerializer
     # queryset = listing.objects.all()
     def get_queryset(self):
         print "fffffffffffffffffffff",self.request.user.is_authenticated
-        if self.request.user.is_authenticated:
-            u = self.request.user
-            has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+        # if self.request.user.is_authenticated:
+        #     print "gggggggggggggggggggggg", self.request.user
+        #     u = self.request.user
+        #     has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
         if 'mode' in  self.request.GET:
             if self.request.GET['mode'] == 'vendor':
                 s = service.objects.get(user = u)
@@ -951,7 +952,6 @@ def genInvoice(response, contract, request):
 class DownloadInvoiceAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
-        print request.GET['value'],'aaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbb'
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
         print o
@@ -971,6 +971,13 @@ class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['productDetail',]
+
+class SupportFeedViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = SupportFeed.objects.all()
+    serializer_class = SupportFeedSerializer
+    filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['productDetail',]
 
 from datetime import timedelta
 from django.db.models import Sum
@@ -998,21 +1005,18 @@ class OnlineSalesGraphAPIView(APIView):
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                 orderD = Order.objects.filter(orderQtyMap=i.pk)
                 for j in orderD:
-                    if str(j.paymentMode) == 'COD':
-                            if j.promoCode!=None:
-                                promo = Promocode.objects.filter(name__iexact=j.promoCode)
-                                for p in promo:
-                                    promocode = p.discount
-                                    priceVal = price-(promocode * price)/100
-                                    totalCollections += priceVal
+                        if j.promoCode!=None:
+                            promo = Promocode.objects.filter(name__iexact=j.promoCode)
+                            for p in promo:
+                                promocode = p.discount
+                                priceVal = price-(promocode * price)/100
+                                totalCollections += priceVal
                             else:
                                 totalCollections += price
             elif str(i.status) != 'delivered':
-                print 'aaaaaaaaaaaaaa'
                 orderD = Order.objects.filter(orderQtyMap=i.pk)
                 for j in orderD:
                     if str(j.paymentMode) == 'card':
-                        print 'aaaaaaaaaaaaaavvvvvvvvvv'
                         price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                         if j.promoCode!=None:
                             promo = Promocode.objects.filter(name__iexact=j.promoCode)

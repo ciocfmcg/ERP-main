@@ -1,3 +1,16 @@
+getPK = function(input){
+  // for any object url like /api/HR/uses/1/  : this can give the pk of the object
+  if (typeof input == 'number') {
+    return input;
+  }
+  parts = input.match(/\/\d*\//g);
+  if (parts.length == 1) {
+    return parseInt(parts[0].match(/\d+/));
+  }
+  return parseInt(input.match(/\/\d*\//g)[1].match(/\d+/))
+}
+
+
 app.factory('$users', function(){
   var userProfiles = [];
 

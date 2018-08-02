@@ -45,6 +45,7 @@ class isOwnerOrReadOnly(permissions.BasePermission):
 def has_application_permission(user , apps):
     a = application.objects.filter(name__in = apps)
     p = erp_permission.objects.filter(user = user , app__in = a)
+    print 'permissionnnnnnnn',a,p
     if p.count() == a.count() or user.is_superuser:
         return True
     else:
